@@ -938,14 +938,10 @@ logging.basicConfig(
 )
 logger = logging.getLogger()
 
-class SigilPatchEncoder:
-    """
-    Encoder for generating patches and entropy calculations.
-    """
-    def __init__(self, entropy_threshold=0.25):
-        self.entropy_threshold = entropy_threshold
+# Import the canonical SigilPatchEncoder implementation
+from .sigil_patch_encoder import SigilPatchEncoder
         
-    def analyze_entropy(self, text):
+def analyze_entropy(self, text):
         """Analyzes text and returns patches with entropy scores."""
         if not text or not isinstance(text, str):
             return None, []
@@ -966,7 +962,7 @@ class SigilPatchEncoder:
             
         return patches, entropy_scores
         
-    def compute_average_entropy(self, text: str) -> float:
+def compute_average_entropy(self, text: str) -> float:
         """
         Computes the average entropy score for the given text.
         
