@@ -47,7 +47,7 @@ except ImportError:
 # Define paths
 DEFAULT_VOXSİGİL_LIBRARY_PATH = Path(__file__).resolve().parent.parent / "voxsigil-Library"
 DEFAULT_EMBEDDING_MODEL = "all-MiniLM-L6-v2" # Common default, good for CPU
-DEFAULT_EMBEDDINGS_CACHE_PATH = Path(__file__).resolve().parent.parent / "cache" / "embeddings_cache.npz"
+DEFAULT_EMBEDDINGS_CACHE_PATH = Path("/kaggle/working/voxsigil_cache/embeddings_cache.npz")
 
 # FEATURE 10: Sigil Schema (Example)
 DEFAULT_SIGIL_SCHEMA = {
