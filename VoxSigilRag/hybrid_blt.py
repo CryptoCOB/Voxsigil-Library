@@ -101,76 +101,8 @@ except Exception as e:
 # These represent your actual VoxSigil components.
 # Ensure they are robust, efficient, and well-tested.
 
-class SigilPatchEncoder:
-    """
-    Placeholder for VoxSigil's SigilPatchEncoder.
-    Responsible for text analysis, patch generation, and entropy calculation.
-    """
-    def __init__(self):
-        # In a real scenario, this might load models or precomputed data.
-        logger.info("SigilPatchEncoder initialized (stub).")
-
-    def analyze_entropy(self, text: str) -> Tuple[Optional[List[str]], List[float]]:
-        """
-        Analyzes text to produce patches and their entropy scores.
-        - Patches: Meaningful segments of text (e.g., code blocks, structured data).
-        - Entropy Scores: Numerical values indicating the "randomness" or "information content"
-                          of each patch or the overall text. Low entropy might mean structured/predictable.
-        """
-        if not text:
-            return None, []
-        
-        # Simplified mock implementation for demonstration
-        # A real implementation would use NLP techniques, statistical models, or ML models.
-        patches = []
-        entropy_scores = []
-
-        # Heuristic: check for common structured data markers
-        if any(c in text for c in ['<', '>', '{', '}', '[', ']']) and len(text) < 500 :
-            # Assume more structured, lower entropy
-            avg_entropy = np.random.uniform(0.1, 0.3)
-            num_segments = max(1, len(text) // 50) # Break into segments
-            for i in range(num_segments):
-                patches.append(text[i*50:(i+1)*50]) # Dummy patches
-                entropy_scores.append(np.random.uniform(avg_entropy - 0.05, avg_entropy + 0.05))
-        elif "explain" in text.lower() or "what are" in text.lower() or len(text) > 300:
-            # Assume more natural language, higher entropy
-            avg_entropy = np.random.uniform(0.6, 0.8)
-            num_segments = max(1, len(text) // 100)
-            for i in range(num_segments):
-                patches.append(text[i*100:(i+1)*100]) # Dummy patches
-                entropy_scores.append(np.random.uniform(avg_entropy - 0.1, avg_entropy + 0.1))
-        else: # Default to medium-ish entropy if no clear signals
-            avg_entropy = np.random.uniform(0.35, 0.55)
-            entropy_scores = [avg_entropy]
-            patches = [text]
-
-        # Ensure scores are within [0, 1]
-        entropy_scores = [max(0.0, min(1.0, s)) for s in entropy_scores if s is not None]
-        if not entropy_scores: entropy_scores = [0.5] # Default if somehow empty
-
-        logger.debug(f"Analyzed entropy for text (first 50 chars): '{text[:50]}...'. Avg score: {sum(entropy_scores)/len(entropy_scores):.4f}")
-        return patches, entropy_scores
-        
-    def compute_average_entropy(self, text: str) -> float:
-        """
-        Computes the average entropy score for the given text.
-        
-        Args:
-            text: The text to analyze
-            
-        Returns:
-            Average entropy score between 0 and 1
-        """
-        _, entropy_scores = self.analyze_entropy(text)
-        if not entropy_scores:
-            logger.warning(f"No entropy scores generated for text: '{text[:50]}...'")
-            return 0.5  # Default medium entropy
-            
-        avg_entropy = sum(entropy_scores) / len(entropy_scores)
-        logger.debug(f"Average entropy for text: {avg_entropy:.4f}")
-        return avg_entropy
-
+# Import the canonical SigilPatchEncoder implementation
+from .sigil_patch_encoder import SigilPatchEncoder
 
 # Move MockEmbeddingModel to top-level to avoid multiprocessing pickling issues
 class MockEmbeddingModel:
@@ -1555,9 +1487,12 @@ def entropy_router(text, config=None):
     """
     if config is None:
         config = HybridMiddlewareConfig()
-    
-    router = EntropyRouter(config)
-    patch_encoder = SigilPatchEncoder(entropy_threshold=config.entropy_threshold)
+        router = EntropyRouter(config)
+    # Initialize SigilPatchEncoder with the appropriate parameters
+    patch_encoder = SigilPatchEncoder(
+        entropy_threshold=config.entropy_threshold,
+        use_blt=True
+    )
     
     # Get patches and entropy scores
     _, entropy_scores = patch_encoder.analyze_entropy(text)
