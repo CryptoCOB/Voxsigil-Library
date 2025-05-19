@@ -13,7 +13,8 @@ from .voxsigil_rag import VoxSigilRAG
 from .voxsigil_evaluator import VoxSigilResponseEvaluator
 from .voxsigil_evaluator import VoxSigilConfig, VoxSigilError
 from .voxsigil_rag_compression import RAGCompressionEngine, RAGCompressionError
-from .voxsigil_blt import ByteLatentTransformerEncoder, SigilPatchEncoder, BLTEnhancedMiddleware
+from .voxsigil_blt import ByteLatentTransformerEncoder, BLTEnhancedMiddleware
+from .sigil_patch_encoder import SigilPatchEncoder
 from .hybrid_blt import HybridMiddleware
 from .voxsigil_semantic_cache import SemanticCacheManager
 
