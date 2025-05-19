@@ -37,76 +37,8 @@ else:
 
 # --- VoxSigil Component Stubs/Interfaces (from previous script, simplified) ---
 # Ensure these are your actual, robust implementations.
-class SigilPatchEncoder: # Placeholder for actual BLT entropy/patch model
-    def __init__(self, base_embedding_model=None, entropy_threshold=0.5):
-        self.entropy_threshold = entropy_threshold
-        logger.info(f"SigilPatchEncoder (BLT stub) initialized, threshold: {entropy_threshold}")
-    
-    def analyze_entropy(self, text: str) -> Tuple[Optional[List[str]], List[float]]:
-        """
-        Calculate entropy scores for text segments.
-        This implementation actually calculates Shannon entropy and adds heuristic adjustments
-        for certain text patterns, ensuring entropy values are never stuck at 0.0.
-        """
-        if not text: 
-            return None, []
-            
-        # Split text into manageable patches
-        patches = []
-        entropy_scores = []
-        
-        # Determine patch size based on text length
-        avg_patch_size = min(80, max(20, len(text) // 10))
-        
-        # Create patches
-        for i in range(0, len(text), avg_patch_size):
-            end = min(i + avg_patch_size, len(text))
-            patch = text[i:end]
-            patches.append(patch)
-            
-            # Shannon entropy calculation
-            char_count = {}
-            for char in patch:
-                char_count[char] = char_count.get(char, 0) + 1
-                
-            patch_entropy = 0.0
-            patch_len = len(patch)
-            
-            if patch_len > 0:
-                for count in char_count.values():
-                    freq = count / patch_len
-                    patch_entropy -= freq * np.log2(freq)
-                
-                # Normalize to 0-1 range (typical text has entropy between 3.5-5)
-                norm_entropy = min(1.0, patch_entropy / 8.0)
-                
-                # Apply heuristic adjustments based on content type
-                if any(c in patch for c in ['<', '>', '{', '}', '[', ']']):
-                    # Structured text tends to have lower entropy
-                    norm_entropy = norm_entropy * 0.6
-                elif any(keyword in patch.lower() for keyword in ['explain', 'describe', 'what is']):
-                    # Natural language queries tend to have higher entropy
-                    norm_entropy = norm_entropy * 1.2
-                    
-                entropy_scores.append(max(0.01, min(0.99, norm_entropy)))  # Never use 0.0
-            else:
-                entropy_scores.append(0.5)  # Default for empty patch
-        
-        # Ensure we have at least one patch and score
-        if not patches:
-            patches = [text]
-        if not entropy_scores:
-            entropy_scores = [0.5]
-        
-        # Log the calculated entropy
-        avg_entropy = sum(entropy_scores) / len(entropy_scores)
-        logger.debug(f"Calculated {len(patches)} patches with avg entropy {avg_entropy:.4f}")
-        
-        return patches, entropy_scores
-        
-    def encode(self, text:str) -> np.ndarray: # For BLT RAG embedding
-        h = hashlib.sha256(f"blt_patch_emb_{text}".encode()).digest()
-        return np.frombuffer(h, dtype=np.float32)[:128]
+# Import the canonical SigilPatchEncoder implementation
+from .sigil_patch_encoder import SigilPatchEncoder
 
 class VoxSigilRAG: # Placeholder for standard RAG
     def __init__(self):
@@ -154,7 +86,7 @@ class PatchAwareValidator: # Stub
                 return False, [{"message": "Input must be a non-empty string"}]
                 
             # Create a mock patch encoder for entropy calculation
-            encoder = SigilPatchEncoder(entropy_threshold=self.entropy_threshold)
+            encoder = SigilPatchEncoder(entropy_threshold=self.entropy_threshold, use_blt=True)
             _, entropy_scores = encoder.analyze_entropy(text)
             
             # Calculate average entropy
@@ -269,7 +201,7 @@ class BLTEntropyRouter: # Feature 1 & 2 & 8
     def __init__(self, config: BLTMiddlewareConfig):
         self.config = config
         # For BLT-Enhanced, SigilPatchEncoder is primary for entropy
-        self.patch_encoder = SigilPatchEncoder(entropy_threshold=config.entropy_threshold)
+        self.patch_encoder = SigilPatchEncoder(entropy_threshold=config.entropy_threshold, use_blt=True)
         logger.info(f"BLTEntropyRouter initialized: threshold={config.entropy_threshold}, fallback_rag={config.entropy_router_fallback}")
         
     def route(self, text: str) -> Tuple[str, Optional[List[str]], List[float]]:
@@ -1030,7 +962,7 @@ if __name__ == "__main__":
     # Test True Hybrid Embedding Utility
     print("\n\n--- Testing True Hybrid Embedding Utility ---")
     standard_rag_for_util = VoxSigilRAG() # Get a standard RAG instance
-    patch_encoder_for_util = SigilPatchEncoder(entropy_threshold=0.4) # Get a patch encoder
+    patch_encoder_for_util = SigilPatchEncoder(entropy_threshold=0.4, use_blt=True) # Get a patch encoder
     
     hybrid_emb_test = compute_true_hybrid_embedding(
         "Test query for hybrid embedding.",
