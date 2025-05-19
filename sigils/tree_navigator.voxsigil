@@ -1,0 +1,225 @@
+sigil: 🐾TREE_NAVIGATOR
+alias: ThoughtTreeTraversal
+tag: MetaCognitiveAction
+tags:
+- DecisionMaking
+- PathSelection
+- TreeSearch
+- ExplorationStrategy
+- Backtracking
+is_cognitive_primitive: false
+principle: 'The 🐾TREE_NAVIGATOR sigil represents the cognitive action of an agent
+  deliberately
+
+  traversing, evaluating, and selecting paths within an existing or actively growing
+
+  🌳TREETHOUGHT (Tree of Thoughts) structure. While 🌳TREETHOUGHT defines the generation
+
+  of the tree, 🐾TREE_NAVIGATOR embodies the agent''s process of ''climbing'' this
+  tree –
+
+  making choices at nodes, backtracking from unpromising branches, focusing on specific
+  subtrees,
+
+  or identifying the optimal path to a solution based on evolving criteria or new
+  information.
+
+  It enables dynamic, agent-driven interaction with complex thought explorations.
+
+  '
+structure:
+  composite_type: sequential
+  components:
+  - name: NodeSelector
+    description: Mechanism for choosing the next node or branch to explore/evaluate.
+    sigil_ref: 👆FOCUS_DIRECTOR
+  - name: PathEvaluator
+    description: Evaluates the promise or utility of a current path segment.
+    sigil_ref: 📊PATH_METRICS
+  - name: BacktrackingController
+    description: Manages the decision to abandon a current path and return to a previous
+      choice point.
+    sigil_ref: ↩️RETRACE_STEP
+  - name: GoalProximityAssessor
+    description: Estimates how close a current node/path is to achieving the overall
+      goal.
+usage:
+  description: Enables an agent to actively navigate a Tree of Thoughts, make decisions
+    at branch points, backtrack, and select optimal paths, effectively 'climbing'
+    the tree to find a solution.
+  example: "// Assuming a ToT has been partially generated for 'problem_X'\n// Agent\
+    \ (e.g., Vanta) decides to re-evaluate a specific branch:\n\nnavigator_action\
+    \ = TREE_NAVIGATOR.execute(\n    tree_id=\"ToT_problem_X_run_001\",\n    current_node_id=\"\
+    node_branch_A_depth_3\",\n    action_type=\"explore_children_prioritized\", //\
+    \ or \"backtrack\", \"evaluate_path_to_root\"\n    heuristic=\"maximize_novelty_score\"\
+    , // Optional heuristic for NodeSelector\n    max_steps=2\n);\n// navigator_action\
+    \ might result in a new current_node_id or a decision to prune.\n"
+  explanation: '🐾TREE_NAVIGATOR is used when an agent needs more fine-grained control
+    over the exploration of
+
+    a thought tree than what the automated search strategy of 🌳TREETHOUGHT might provide.
+
+    It can be used interactively, allowing an agent (or even a human supervisor) to
+    guide the
+
+    search, focus on specific areas, re-evaluate branches based on new insights, or
+    perform
+
+    "what-if" explorations within the tree. It''s about the metacognitive actions
+    *on* the tree.
+
+    '
+activation_context:
+  trigger_conditions:
+  - A Tree of Thoughts (🌳TREETHOUGHT) structure exists or is being actively built.
+  - Need for focused exploration of specific ToT branches.
+  - Automated ToT search strategy is stuck or needs guidance.
+  - Interactive problem-solving session involving a ToT.
+  - Agent decides to reflect on and re-evaluate its thought process (the tree).
+  preconditions:
+  - Access to a representation of a Tree of Thoughts (nodes, edges, evaluations).
+  - A defined goal or problem context for the ToT.
+  required_capabilities:
+  - structured_data_access
+  - decision_making_logic
+  - llm_evaluation
+  supported_modalities:
+  - symbolic_input
+  - programmatic_api
+  contraindications:
+  - No Tree of Thoughts structure is available.
+  - The problem is simple enough not to require tree-based exploration.
+parameterization_schema:
+  parameters:
+  - name: tree_id
+    type: string
+    description: Identifier of the specific Tree of Thoughts instance to navigate.
+    is_required: true
+  - name: start_node_id
+    type: string
+    description: The ID of the node in the tree from which navigation begins (defaults
+      to root or current agent focus).
+    is_required: false
+  - name: navigation_action
+    type: enum
+    allowed_values:
+    - explore_best_child
+    - explore_child_by_criteria
+    - expand_current_node
+    - evaluate_current_node
+    - evaluate_path_to_current
+    - backtrack_to_parent
+    - backtrack_to_ancestor_n
+    - prune_branch_at_current
+    - select_solution_path
+    description: The specific navigation or interaction to perform on the tree.
+    is_required: true
+  - name: selection_heuristic_or_prompt
+    type: string
+    description: Optional. If action involves selection (e.g., 'explore_child_by_criteria'),
+      provides criteria for an LLM or rule.
+    is_required: false
+  - name: max_navigation_steps
+    type: integer
+    description: For iterative navigation actions, the maximum number of steps to
+      take.
+    default_value: 1
+  - name: target_node_id_or_criteria
+    type: string
+    description: Optional. For actions like 'navigate_to', specifies the target.
+    is_required: false
+prompt_template:
+  role: system_instruction
+  content: "**Agent Action: Navigate Thought Tree \U0001F43ETREE_NAVIGATOR**\n\n**Objective:**\
+    \ Perform '{{navigation_action}}' on Tree of Thoughts (ID: '{{tree_id}}').\n**Current/Start\
+    \ Node:** '{{start_node_id | default(\"root\")}}'\n{{#if selection_heuristic_or_prompt}}\n\
+    **Selection Criteria/Heuristic:** {{selection_heuristic_or_prompt}}\n{{/if}}\n\
+    {{#if target_node_id_or_criteria}}\n**Target:** {{target_node_id_or_criteria}}\n\
+    {{/if}}\n**Max Steps for this action:** {{max_navigation_steps | default(1)}}\n\
+    \n**Instructions for Agent:**\n1. Access the specified Tree of Thoughts ('{{tree_id}}').\n\
+    2. Locate the start node ('{{start_node_id | default(\"root\")}}').\n3. Execute\
+    \ the navigation action: '{{navigation_action}}'.\n   - If exploring, apply '{{selection_heuristic_or_prompt}}'\
+    \ if provided.\n   - If evaluating, use relevant evaluation sigils/prompts.\n\
+    \   - If backtracking/pruning, update tree state accordingly.\n4. Report the outcome:\
+    \ new current node, evaluation results, or status of the action.\n\n**Example\
+    \ Outcome Format (JSON):**\n{\n  \"action_performed\": \"{{navigation_action}}\"\
+    ,\n  \"tree_id\": \"{{tree_id}}\",\n  \"previous_node_id\": \"{{start_node_id\
+    \ | default(\"root\")}}\",\n  \"new_current_node_id\": \"...\", // if applicable\n\
+    \  \"action_status\": \"success/failure/pending\",\n  \"details\": \"...\", //\
+    \ e.g., evaluation score, pruned node list\n  \"next_suggested_action\": \"...\"\
+    \ // Optional, if navigator has an idea\n}\n"
+  execution_mode: command
+  variables:
+  - name: tree_id
+    description: ID of the ToT instance.
+  - name: start_node_id
+    description: Node to start navigation from.
+  - name: navigation_action
+    description: The specific tree navigation action to take.
+  - name: selection_heuristic_or_prompt
+    description: Criteria for selecting nodes/paths.
+  - name: max_navigation_steps
+    description: Limit for iterative actions.
+  - name: target_node_id_or_criteria
+    description: Target for certain navigation actions.
+  output_schema:
+    type: object
+    description: A JSON object reporting the outcome of the navigation action.
+relationships:
+- target_sigil: 🌳TREETHOUGHT
+  relationship_type: operates_on
+  description: This sigil defines actions performed upon a structure generated or
+    managed by 🌳TREETHOUGHT.
+  strength: 1.0
+- target_sigil: 👆FOCUS_DIRECTOR
+  relationship_type: uses_method_from
+  description: May use focusing mechanisms to select nodes.
+  strength: 0.7
+- target_sigil: ⚖️STATE_ASSESSOR
+  relationship_type: uses_method_from
+  description: Can invoke evaluators for specific paths or nodes during navigation.
+  strength: 0.6
+- target_sigil: 🤔META_REASONER
+  relationship_type: component_of
+  description: Represents a specific set of metacognitive actions available to a meta-reasoner.
+  strength: 0.85
+SMART_MRAP:
+  Specific: Enables an agent to perform deliberate navigation actions (explore, evaluate,
+    backtrack, prune, select) on a Tree of Thoughts structure.
+  Measurable: Efficiency of pathfinding to solution; reduction in explored nodes compared
+    to exhaustive search; successful recovery from 'stuck' states in ToT; quality
+    of agent-selected paths.
+  Achievable: Implementable as a set of functions or an agent capability that interacts
+    with a ToT data structure, potentially using LLM calls for heuristic decisions
+    within navigation.
+  Relevant: Provides crucial interactivity and intelligent control over complex reasoning
+    processes, allowing agents to guide and refine explorations rather than passively
+    relying on automated search. Essential for reflective AI and human-AI collaborative
+    problem-solving.
+  Transferable: The concept of navigating tree-like exploratory structures is applicable
+    to many domains beyond LLM thought processes, e.g., game tree search, decision
+    tree traversal, debugging program execution paths.
+metadata:
+  definition_version: '1.0'
+  definition_status: proposed
+  author_agent_id: System_Architect_AI_Collab_Marc.pglyph
+  created_timestamp: '2023-10-29T12:00:00Z'
+  last_updated_timestamp: '2023-10-29T12:00:00Z'
+  authorship_context:
+    motivation: To provide agents with explicit control and interaction capabilities
+      for Tree of Thoughts structures, enabling more dynamic and reflective reasoning.
+    theoretical_framework: Metacognition, Interactive Search, Agent-Based Reasoning.
+    source_inspiration: The need for agents to 'climb' and 'prune' generated thought
+      trees, moving beyond simple generation.
+  impact_metrics:
+    estimated_cognitive_load: medium
+    estimated_resource_cost: variable
+advanced_cognitive_modeling:
+  strategic_intent:
+  - goal_id: IMPROVE_ToT_EFFICIENCY_AND_CONTROL
+    alignment_strength: 0.9
+    justification: Allows targeted exploration and pruning, making ToT more efficient.
+    contribution_type: enabler
+cognitive_scaffold: true
+symbolic_scaffold: true
+name: Tree Navigator

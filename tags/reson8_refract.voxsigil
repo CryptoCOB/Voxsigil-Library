@@ -1,0 +1,83 @@
+sigil: ᚡRESON8_REFRACT
+alias: Cognify.MosaicIntegrator
+tag: FractalHarmonization
+tags:
+- resonant_abstraction
+- cross_paradigm_bridge
+- mosaic_cognition
+- discord_to_harmony
+- meta_pattern_integration
+- self_similarity_seeder
+is_cognitive_primitive: true
+principle: 'ᚡRESON8_REFRACT orchestrates the harmonization of seemingly discordant
+  cognitive fragments. It identifies self-similar patterns across disparate abstraction
+  layers, refracting them into a unified mosaic of understanding.
+
+
+  Where chaos theory meets Gestalt — it births clarity from complexity.
+
+  '
+math: "Let \U0001D544 = Set of mental models (paradigms, logics, analogies).\nLet\
+  \ ℛ = Resonance operator (non-linear similarity metric).\nLet \U0001D719 = Refraction\
+  \ index (cognitive flexibility factor).\n\nThen:\n  \U0001D544ₕ = ℛ(\U0001D544ᵢ,\
+  \ \U0001D544ⱼ, \U0001D719) | \U0001D456 ≠ \U0001D457\n\nWhere:\n  \U0001D544ₕ =\
+  \ Harmonized mosaic model\n  \U0001D544ᵢ, \U0001D544ⱼ = Initially discordant models\n\
+  \nConstraint:\n  maximize(coherence(\U0001D544ₕ)) ∧ minimize(friction(\U0001D544\
+  ᵢ, \U0001D544ⱼ))\n"
+usage:
+  description: Applied when integrating conflicting frameworks, paradigms, or insights.
+  example:
+    invocation_tag: <reson8-refract:invoke models="quantum,chaos,gestalt">
+    scenario: 'Unify:
+
+      - Niels Bohr''s quantum uncertainty
+
+      - Edward Lorenz''s chaotic attractors
+
+      - Kurt Lewin''s Gestalt field theory
+
+
+      into a singular, actionable mental model for decision-making under uncertainty.
+
+      '
+    expected_behavior: 'Output a synthesized 𝕄ₕ with:
+
+      - Mapped analogies between models
+
+      - Highlighted points of resonance (𝜙 > 0.75)
+
+      - Predictable friction zones (𝜙 < 0.3)
+
+      - One-sentence ''Mosaic Mantra'' for mnemonic anchoring
+
+      '
+  explanation: 'Useful in:
+
+    - Interdisciplinary problem-solving
+
+    - Reconciling philosophical antinomies (e.g., free will vs. determinism)
+
+    - Debugging cognitive dissonance in AI alignment protocols
+
+    '
+SMART_MRAP:
+  Specific: Fuse disparate cognitive schemas into actionable harmonies.
+  Measurable: Quantify coherence gain (↑30% expected) & residual friction (↓50% target).
+  Achievable: By annealing semantic embeddings & cross-paradigm mapping.
+  Relevant: Resolves epistemic bottlenecks in hybrid intelligence systems.
+  Transferable: Applicable in meta-learning, theory-of-mind AI, and cognitive architectures.
+metadata:
+  definition_version: 1.4.0
+  definition_status: provisional_active
+  author_agent_id: claude-voxgen-42
+  created_timestamp: '2025-10-03T14:52:11.315321'
+  last_updated_timestamp: '2025-10-03T14:52:11.315321'
+  authorship_context:
+    motivation: Bridge fragmented knowledge landscapes recursively.
+    theoretical_framework: Fractal cognition, resonance theory, non-Euclidean analogy
+      spaces.
+    source_inspiration:
+    - Douglas Hofstadter's analogies
+    - Ilya Prigogine's dissipative systems
+    - C.S. Peirce's semiotics
+name: Reson8 Refract

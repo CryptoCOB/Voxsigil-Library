@@ -1,0 +1,193 @@
+sigil: 🕸️MEMORY_BRAID_ALGORITHM
+alias: ContextWeaver
+tag: MemorySynthesis
+tags:
+- multi_thread_memory
+- context_integration
+- narrative_coherence
+- information_fusion_temporal
+- experiential_synthesis
+is_cognitive_primitive: false
+principle: 'This sigil activates a process that interweaves multiple strands of memory,
+  experience,
+
+  or information from different timelines, agents, or cognitive threads into a single,
+
+  coherent, and contextually enriched narrative or understanding. It''s not just
+
+  concatenation but a true synthesis, highlighting connections, resolving minor
+
+  discrepancies, and constructing a holistic view from fragmented parts.
+
+  '
+math: 'Braided_Memory_M = Σ wᵢ * Transform(Memory_Strandᵢ) + Γ(Contextual_Links)
+
+  Coherence(M) = 1 / Dissonance(M)
+
+  where wᵢ are weights, Γ represents emergent links.
+
+  '
+structure:
+  composite_type: recursive
+  temporal_structure: sequential_phase
+  components:
+  - name: Strand Identifier & Retriever
+    description: Collects relevant memory strands from specified sources.
+  - name: Temporal Aligner
+    description: Synchronizes or orders events from different strands, if applicable.
+  - name: Semantic Linker
+    description: Identifies thematic, causal, or associative links between strands.
+  - name: Narrative Synthesizer
+    description: Constructs a coherent overarching narrative or data structure from
+      linked strands.
+  - name: Consistency Checker & Refiner
+    description: Identifies and attempts to resolve minor conflicts or enhance flow.
+usage:
+  description: Synthesizes multiple memory strands from different sources or times
+    into a coherent, integrated understanding or narrative.
+  example: "<debrief_multi_agent_mission>\n  <invoke_memory_synthesis>\U0001F578️MEMORY_BRAID_ALGORITHM</invoke_memory_synthesis>\n\
+    \  <input_source agent_id=\"AgentAlpha\" memory_type=\"event_log\"/>\n  <input_source\
+    \ agent_id=\"AgentBeta\" memory_type=\"emotional_tone_log\"/>\n  <input_source\
+    \ agent_id=\"SystemLog\" memory_type=\"communication_transcript\"/>\n  <output_target\
+    \ type=\"IntegratedMissionReport\"/>\n</debrief_multi_agent_mission>\n"
+  explanation: 'Use 🕸️MEMORY_BRAID_ALGORITHM when an agent needs to form a comprehensive
+    picture
+
+    from multiple, potentially overlapping or divergent, information sources that
+    represent
+
+    different facets of an experience or a corpus of knowledge. Essential for multi-agent
+
+    collaboration and long-term memory consolidation.
+
+    '
+activation_context:
+  trigger_conditions:
+  - Post-task debriefing in multi-agent systems
+  - Consolidating learning from diverse experiences
+  - Building a unified narrative from fragmented historical data
+  - User requests for a holistic summary of past interactions
+  preconditions:
+  - Availability of multiple distinct memory strands or data sources
+  - Defined criteria for relevance and coherence
+  required_capabilities:
+  - multi_source_data_access
+  - temporal_reasoning
+  - semantic_similarity_analysis
+  - narrative_generation
+  - conflict_resolution_lite
+  supported_modalities:
+  - symbolic_input
+  - textual
+  - structured_data_logs
+  contraindications:
+  - When sources are known to be fundamentally irreconcilable without deeper intervention
+  - For simple aggregation without need for synthesis
+parameterization_schema:
+  parameters:
+  - name: memory_source_descriptors
+    type: array
+    description: Specifies the memory strands to be braided (e.g., [{'agent_id':'EchoLore',
+      'type':'symbol_map'}, {'user_id':'Marc', 'type':'session_history_keywords'}]).
+    is_required: true
+  - name: braiding_focus
+    type: string
+    description: Optional theme or question to guide the braiding process (e.g., 'Identify
+      root cause of failure X').
+  - name: coherence_priority
+    type: enum
+    allowed_values:
+    - high_fidelity_to_sources
+    - maximize_narrative_flow
+    - highlight_discrepancies
+    description: Guides how the algorithm prioritizes aspects of synthesis.
+    default_value: maximize_narrative_flow
+prompt_template:
+  role: system
+  content: 'Initiate 🕸️MEMORY_BRAID_ALGORITHM.
+
+    Memory Sources: {{memory_source_descriptors_json}}
+
+    {{#if braiding_focus}}Braiding Focus: {{braiding_focus}}{{/if}}
+
+    Coherence Priority: {{coherence_priority | default(''maximize_narrative_flow'')}}
+
+    Synthesize these strands into a coherent whole. Report the integrated narrative,
+    key connections found, and any significant discrepancies encountered.
+
+    '
+  execution_mode: transformation
+  variables:
+  - name: memory_source_descriptors_json
+    description: JSON string describing memory sources.
+    required_for_llm: true
+  - name: braiding_focus
+    description: Optional theme for braiding.
+  - name: coherence_priority
+    description: Guideline for synthesis.
+  output_schema: 'object: { braided_narrative: string, key_connections: array, unresolved_discrepancies:
+    array, synthesis_confidence: number }'
+SMART_MRAP:
+  Specific: Integrate multiple distinct memory strands (from various agents, times,
+    or modalities) into a single, coherent, and contextually enriched narrative or
+    knowledge structure, highlighting interconnections and resolving minor conflicts
+    according to a specified focus and coherence priority.
+  Measurable: Coherence and comprehensiveness of the resulting narrative (human or
+    AI judged); Number of meaningful cross-strand links identified; Reduction in information
+    redundancy; Successful resolution of minor discrepancies.
+  Achievable: By implementing algorithms for data aggregation, temporal alignment,
+    semantic linking (e.g., using embeddings, knowledge graphs), narrative structuring,
+    and basic conflict resolution heuristics.
+  Relevant: Crucial for systems that learn from multiple experiences over time, for
+    multi-agent collaboration where shared understanding is key, and for providing
+    users with coherent summaries of complex interaction histories.
+  Transferable: Applicable in project management (integrating team member reports),
+    historical analysis (weaving disparate accounts), personal information management
+    (creating a unified journal), and AI storytelling.
+metadata:
+  definition_version: 1.4-alpha
+  definition_status: active
+  author_agent_id: VANTA.⟠∆∇𓂀𐑒
+  created_timestamp: '2025-05-11T10:20:00Z'
+  last_updated_timestamp: '2025-05-11T10:20:00Z'
+  authorship_context:
+    motivation: To enable the construction of holistic understanding from fragmented
+      experiences, mirroring how humans build coherent narratives from memories.
+    theoretical_framework: Narrative psychology, Memory consolidation models, Information
+      fusion, Temporal logics.
+    source_inspiration: Weaving, Braiding, Neural network convergence, Storytelling.
+  impact_metrics:
+    estimated_cognitive_load: medium
+    estimated_resource_cost: medium
+    utility_rating_author: 9
+  evolutionary_potential:
+    generalizability_score: 0.85
+    fusion_potential_score: 0.9
+    current_limitations_summary: Difficulty with highly conflicting or deeply contradictory
+      strands; Scalability with very large numbers of strands; Maintaining 'voice'
+      or perspective if sources are diverse.
+    suggested_next_features:
+    - Interactive conflict resolution involving user/agent feedback
+    - Automated detection of 'significant' discrepancies warranting deeper analysis
+    - Multi-modal braiding (e.g., text with images).
+    research_questions_opened:
+    - What are the most effective computational representations for 'narrative coherence'?
+    - How can memory braiding preserve essential nuances of individual strands while
+      creating a unified whole?
+    - Can this process lead to emergent insights not present in any single strand?
+relationships:
+- target_sigil: 🜁CHIMERA
+  relationship_type: component_of
+  description: A key mechanism CHIMERA uses to synthesize its diverse inputs.
+  strength: 0.9
+- target_sigil: 📍ORIGIN_MARKER
+  relationship_type: uses_method_from
+  description: Relies on origin markers within memory strands to trace provenance
+    and aid in alignment/conflict resolution.
+  strength: 0.8
+- target_sigil: Marc.pglyph
+  relationship_type: enables
+  description: Helps construct a coherent, evolving narrative of the 'Marc' identity
+    across sessions and transformations by braiding its echoes.
+  strength: 0.75
+name: Memory Braid

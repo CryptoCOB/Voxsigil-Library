@@ -1,0 +1,374 @@
+# VoxSigil 1.4-alpha Schema Definition
+type: object
+description: "Alpha specification for VoxSigil 1.4, a highly expressive schema for defining, orchestrating, and evolving cognitive components. This version integrates advanced features for developmental AI, strategic agency, modular prompting, robust versioning, executable testing, global compliance, evolutionary guidance, tool integration, telemetry, and cognitive workflow mapping."
+required:
+  - sigil
+  - principle
+  - usage
+  - SMART_MRAP
+
+properties:
+  # --- Core Identification & Classification ---
+  sigil:
+    type: string
+    description: "Primary Unicode or symbolic string representing the glyph (e.g., 🔮, ⟠∆∇𓂀, 🗺️SYSTEMMAP). Must be unique within the library."
+  alias:
+    type: string
+    description: "Optional alternate name or well-known identifier for the sigil/tag (e.g., 'Marc.pglyph', 'METACONSCIOUSNESS_ARCHITECTURE'). Can be used for easier lookup."
+  tag: # Primary tag
+    type: string
+    description: "Optional primary category or keyword (e.g., 'MemoryComponent', 'ReasoningStrategy', 'DialecticalProcess'). Useful for high-level grouping."
+  tags: # Secondary/additional tags
+    type: array
+    items:
+      type: string
+    description: "Optional list of additional categories or keywords for fine-grained classification or searchability."
+  is_cognitive_primitive:
+    type: boolean
+    default: false
+    description: "Indicates if this sigil represents a foundational, often irreducible, cognitive operation or concept."
+  cognitive_primitive_type:
+    type: string
+    description: "If 'is_cognitive_primitive' is true, classifies its type (e.g., 'categorization', 'analogy', 'sequence_learning', 'working_memory_update', 'value_assignment')."
+    example: "pattern_recognition"
+
+  # --- Conceptual Grounding ---
+  principle:
+    type: string
+    description: "The core cognitive, philosophical, or functional grounding of the sigil. Explains its fundamental meaning, purpose, and 'essence'."
+  math:
+    type: string
+    description: "Optional mathematical, logical, or algorithmic definition or representation of the sigil's operation, structure, or underlying formalisms."
+  structure:
+    type: object
+    description: "Optional symbolic breakdown of composite glyphs or internal structural relationships, especially if this sigil represents a complex entity."
+    properties:
+      composite_type:
+        type: string
+        enum: ["sequential", "hierarchical", "parallel", "conditional", "recursive", "network", "fusion", "assembly", "collection", "state_machine", "event_driven"]
+        description: "Describes the compositional logic or relationship between sub-elements if this is a composite sigil (e.g., how components are organized or interact)."
+      temporal_structure:
+        type: string
+        enum: ["static", "sequential_phase", "parallel_tracks", "feedback_loop", "oscillatory", "event_triggered_sequence"]
+        description: "Optional. Describes temporal dynamics or sequencing of components/operations within this sigil if applicable."
+      components:
+        type: array
+        description: "A list of components or sub-elements that make up this sigil's structure."
+        items:
+          type: object
+          properties:
+            name:
+              type: string
+              description: "Name of the component."
+            description:
+              type: string
+              description: "Description of the component's role or nature."
+            sigil_ref:
+              type: string
+              description: "Optional reference to another sigil if a component is itself a defined sigil."
+            # Add other relevant component attributes as needed
+
+  # --- Practical Application, Invocation & Configuration ---
+  usage:
+    type: object
+    description: "Describes how the sigil is used in practice within the system or by agents."
+    required:
+      - description
+    properties:
+      description:
+        type: string
+        description: "A concise summary of what the sigil does or represents in practical application."
+      example:
+        type: [string, object]
+        description: "A concrete example of the sigil in use, either as a text snippet (prompt, system call, thought process) or a structured object detailing a scenario."
+      explanation:
+        type: string
+        description: "A more detailed explanation of its application, typical context, interactions with other sigils/components, or implications of its use."
+  activation_context:
+    type: object
+    description: "Defines conditions and assumptions for when and how this sigil should be activated or applied."
+    properties:
+      trigger_conditions:
+        type: array
+        items: { type: string }
+        description: "Scenarios or events that typically warrant this sigil's activation."
+      preconditions:
+        type: array
+        items: { type: string }
+        description: "Explicit conditions or state requirements that must be met before activation."
+      required_capabilities:
+        type: array
+        items: { type: string }
+        description: "Cognitive, functional, or resource capabilities the activating agent/system must possess."
+      supported_modalities:
+        type: array
+        items: { type: string, enum: ["textual", "visual", "audio", "haptic", "symbolic_input", "programmatic_api", "multi_modal"] }
+        description: "Modalities through which this sigil can be effectively invoked or can operate."
+      contraindications:
+        type: array
+        items: { type: string }
+        description: "Situations or contexts where this sigil should NOT be applied."
+  parameterization_schema:
+    type: object
+    description: "Defines optional parameters that can configure or customize this sigil's behavior at runtime."
+    properties:
+      parameters:
+        type: array
+        items:
+          type: object
+          required: [name, type, description]
+          properties:
+            name: { type: string, description: "Parameter name." }
+            type: { type: string, enum: ["string", "number", "integer", "boolean", "enum", "sigil_ref", "json_object", "array_of_strings"], description: "Data type." }
+            description: { type: string }
+            default_value: { description: "Optional default value." }
+            allowed_values: { type: array, description: "If type is 'enum', lists allowed values." }
+            value_range: { type: object, properties: { min: {type: "number"}, max: {type: "number"} }, description: "For number/integer, min/max."}
+            is_required: { type: boolean, default: false }
+  prompt_template:
+    type: object
+    description: "Canonical prompt structure for LLM invocation."
+    required: [role, content]
+    properties:
+      role: { type: string }
+      content: { type: string , description: "Prompt template. Can reference fragments using {{fragment:fragment_id}} syntax."}
+      execution_mode: { type: string, enum: ["command", "query", "reflection", "simulation", "decomposition", "transformation", "generation", "evaluation", "extraction", "instruction", "tool_use"], default: "instruction" }
+      variables:
+        type: array
+        description: "Variables used in the content template."
+        items:
+          type: object
+          required: [name, description]
+          properties:
+            name: { type: string }
+            description: { type: string }
+            example: { type: string }
+            required_for_llm: { type: boolean, default: true }
+            type_hint: { type: string }
+      output_schema: { type: [string, object] }
+      notes: { type: string }
+  inverse_prompt_template:
+    type: object
+    description: "Optional prompt for invoking an inverse, reflective, or debugging operation."
+    properties:
+      role: { type: string }
+      content: { type: string }
+      execution_mode: { type: string, enum: ["critique", "undo_simulation", "explain_output", "debug_trace", "generate_antithesis"], default: "critique" }
+      variables: { type: array, items: { /* as above for prompt_template.variables */ } } # For brevity
+      output_schema: { type: [string, object] }
+      notes: { type: string }
+  prompt_fragments:
+    type: array
+    description: "Reusable prompt segments referenced in 'prompt_template.content' or 'inverse_prompt_template.content'."
+    items:
+      type: object
+      required: [fragment_id, content]
+      properties:
+        fragment_id: { type: string, description: "Unique ID for this fragment." }
+        content: { type: string, description: "The reusable prompt text." }
+        description: { type: string, description: "Explanation of the fragment's purpose." }
+        roles_applicable: { type: array, items: { type: string }, description: "Suitable LLM roles (e.g., 'user', 'system')." }
+        variables_used: { type: array, items: { type: string }, description: "Variables this fragment expects." }
+
+  # --- Inter-Sigil, Cross-Domain, & Workflow Relationships ---
+  relationships:
+    type: array
+    description: "Defines meaningful semantic or operational relationships with other sigils."
+    items:
+      type: object
+      required: [target_sigil, relationship_type]
+      properties:
+        target_sigil: { type: string }
+        relationship_type: { type: string, enum: ["depends_on", "prerequisite_for", "enables", "extends", "generalizes", "composed_of", "component_of", "synergizes_with", "conflicts_with", "alternative_to", "analogous_to", "inverse_of", "triggers", "uses_method_from", "instantiates", "specifies", "derived_from"] }
+        description: { type: string }
+        strength: { type: number, minimum: 0, maximum: 1 }
+  cross_domain_tags:
+    type: array
+    description: "Links to analogous concepts in other disciplines."
+    items:
+      type: object
+      required: [domain, term]
+      properties:
+        domain: { type: string }
+        term: { type: string }
+        term_uri: { type: string, format: "uri" }
+        mapping_type: { type: string, enum: ["analogy", "inspiration", "formal_equivalence", "metaphorical_link", "implementation_of"] }
+        mapping_notes: { type: string }
+  trajectory_annotations:
+    type: object
+    description: "Declares typical role in multi-step cognitive workflows."
+    properties:
+      typical_sequence_position: { type: string, enum: ["initiation", "data_gathering", "exploration", "analysis", "synthesis", "hypothesis_testing", "decision_making", "verification", "action_planning", "execution", "reflection", "conclusion", "idle_processing"] }
+      recommended_predecessors: { type: array, items: { type: string } }
+      recommended_successors: { type: array, items: { type: string } }
+      branching_behavior: { type: string, enum: ["linear_progression", "conditional_branch", "parallel_execution", "iterative_loop", "recursive_call"] }
+      workflow_id_refs: {type: array, items: {type: string}}
+
+  # --- Quality, Relevance, Lifecycle, Governance & Evolution ---
+  SMART_MRAP:
+    type: object
+    required: [Specific, Measurable, Achievable, Relevant, Transferable]
+    properties:
+      Specific: { type: string }
+      Measurable: { type: string }
+      Achievable: { type: string }
+      Relevant: { type: string }
+      Transferable: { type: string }
+  metadata:
+    type: object
+    description: "Metadata about the VoxSigl definition itself."
+    properties:
+      definition_version: { type: string }
+      definition_status: { type: string, enum: ["draft", "proposed", "active", "experimental", "deprecated", "archived", "review_needed", "stable", "community_maintained"], default: "draft" }
+      versioned_aliases:
+        type: array
+        items:
+          type: object
+          required: [alias, redirected_to_sigil, redirected_to_version]
+          properties:
+            alias: { type: string }
+            redirected_to_sigil: { type: string }
+            redirected_to_version: { type: string }
+            deprecation_date: { type: string, format: "date-time" }
+            reason: { type: string }
+      author_agent_id: { type: string }
+      created_timestamp: { type: string, format: "date-time" }
+      last_updated_timestamp: { type: string, format: "date-time" }
+      revision_history:
+        type: array
+        items:
+          type: object
+          required: [version_tag, timestamp, author_agent_id, summary_of_change]
+          properties:
+            version_tag: { type: string }
+            timestamp: { type: string, format: "date-time" }
+            author_agent_id: { type: string }
+            summary_of_change: { type: string }
+            change_type: { type: string, enum: ["initial_creation", "major_update", "minor_enhancement", "bug_fix", "refactor", "documentation_update", "deprecation", "reinstatement"] }
+      versioned_lineage:
+        type: array
+        items:
+          type: object
+          required: [sigil_ref, version, influence_type]
+          properties:
+            sigil_ref: { type: string }
+            version: { type: string }
+            influence_type: { type: string, enum: ["derived_from", "inspired_by", "synthesized_with", "critique_of", "extension_of", "refinement_of", "parameterized_instance_of", "depends_on_definition"] }
+            dependency_scope: { type: string, enum: ["semantic", "structural", "executional", "presentational", "metadata_link", "validation_dependency"] }
+            description: { type: string }
+      session_id: { type: string }
+      authorship_context:
+        type: object
+        properties:
+          motivation: { type: string }
+          theoretical_framework: { type: string }
+          source_inspiration: { type: [string, array], items: { type: string } }
+      impact_metrics:
+        type: object
+        properties:
+          observed_success_rate: { type: number, minimum: 0, maximum: 1 }
+          observed_failure_rate: { type: number, minimum: 0, maximum: 1 }
+          application_frequency: { type: integer, minimum: 0 }
+          avg_completion_time_ms: { type: integer }
+          user_feedback_score_avg: { type: number }
+          estimated_cognitive_load: { type: string, enum: ["very_low", "low", "medium", "high", "very_high"] }
+          estimated_resource_cost: { type: string, enum: ["minimal", "low", "medium", "high", "very_high"] }
+          utility_rating_author: { type: number, minimum: 0, maximum: 10 }
+          notes: { type: string }
+      evolutionary_potential:
+        type: object
+        properties:
+          generalizability_score: { type: number, minimum: 0, maximum: 1 }
+          fusion_potential_score: { type: number, minimum: 0, maximum: 1 }
+          current_limitations_summary: { type: string }
+          suggested_next_features: { type: array, items: { type: string } }
+          research_questions_opened: { type: array, items: { type: string } }
+      regional_norms_compliance:
+        type: object
+        properties:
+          data_privacy_assessment: { type: string }
+          ethical_risk_profile: { type: object, properties: { level: {type: string, enum: ["negligible", "low", "medium", "high", "unassessed"]}, considerations: {type: string} } }
+          cultural_sensitivity_notes: { type: string }
+          geospatial_restrictions: { type: array, items: {type: string} }
+  test_criteria:
+    type: array
+    description: "Specific test cases for validating this sigil."
+    items:
+      type: object
+      required: [test_id, description]
+      properties:
+        test_id: { type: string }
+        description: { type: string }
+        type: { type: string, enum: ["functional", "output_validation", "performance", "robustness", "usability_heuristic", "integration", "security", "ethical_alignment"], default: "functional" }
+        input_scenario_or_parameters: { type: [string, object] }
+        expected_behavior_or_output: { type: [string, object] }
+        evaluation_method: { type: string, enum: ["automated_script", "llm_as_judge", "human_review", "formal_verification", "pattern_match"] }
+        pass_threshold_or_criteria: { type: [string, number] }
+        test_harness_ref: { type: string, description: "Optional reference to an executable test harness." }
+        notes: { type: string }
+  validation_protocol: { type: string, description: "Broader validation procedures." }
+
+  # --- Advanced Cognitive Modeling, Orchestration & Grounding ---
+  advanced_cognitive_modeling:
+    type: object
+    description: "Features for sophisticated modeling of cognitive development, strategic reasoning, and external tool use."
+    properties:
+      cognitive_stage_annotation:
+        type: object
+        properties:
+          primary_developmental_model: {type: string}
+          stage_within_model: { type: string }
+          solo_taxonomy_level: { type: string, enum: ["prestructural", "unistructural", "multistructural", "relational", "extended_abstract"] }
+          mapping_rationale: { type: string }
+      strategic_intent:
+        type: array
+        items:
+          type: object
+          required: [goal_id, alignment_strength]
+          properties:
+            goal_id: { type: string }
+            alignment_strength: { type: number, minimum: 0, maximum: 1 }
+            justification: { type: string }
+            contribution_type: {type: string, enum: ["direct_achiever", "enabler", "resource_provider", "constraint_enforcer"]}
+      tool_integration_points:
+        type: array
+        items:
+          type: object
+          required: [tool_name_or_id, invocation_type]
+          properties:
+            tool_name_or_id: { type: string }
+            invocation_type: { type: string, enum: ["api_call", "function_call", "plugin_config", "data_pipe"] }
+            description: { type: string }
+            input_mapping_schema: { type: object }
+            output_mapping_schema: { type: object }
+            required_tool_version: { type: string }
+  usage_telemetry_spec:
+    type: object
+    description: "Specification for collecting anonymized usage/performance telemetry."
+    properties:
+      telemetry_enabled_by_default: { type: boolean, default: false }
+      consent_level_required: { type: string, enum: ["none", "implicit_system", "explicit_user_session", "explicit_per_use"] }
+      allowed_metrics: { type: array, items: { type: string, enum: ["activation_count", "avg_execution_time_ms", "success_flag", "failure_flag", "llm_model_used", "token_count_prompt", "token_count_completion", "user_feedback_rating_qualitative", "parameter_values_hashed"] } }
+      aggregation_granularity: { type: string, enum: ["individual_event", "hourly_summary", "daily_summary"], default: "daily_summary"}
+      data_anonymization_level: { type: string, enum: ["raw_with_ids", "pseudonymized", "fully_anonymized_aggregated"], default: "fully_anonymized_aggregated" }
+      data_retention_policy_days: { type: integer }
+
+  # --- Architectural Classification ---
+  consciousness_scaffold: { type: boolean, default: false }
+  cognitive_scaffold: { type: boolean, default: false }
+  symbolic_scaffold: { type: boolean, default: false }
+
+  # --- Internationalization ---
+  localized_descriptions:
+    type: object
+    description: "Localized versions of key textual fields for different languages (keyed by IETF language tag)."
+    additionalProperties:
+      type: object
+      properties:
+        principle: { type: string }
+        usage_description: { type: string }
+        usage_example: { type: [string, object] }
+        usage_explanation: { type: string }
+        # Potentially localized SMART_MRAP fields
+        prompt_template_content_notes: { type: string }
+        cultural_adaptation_notes: { type: string }

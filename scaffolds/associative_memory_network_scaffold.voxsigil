@@ -1,0 +1,197 @@
+sigil: 🧠🕸️🔗
+alias: AMN_Scaffold
+tag: CoreMemorySystem
+tags:
+- KnowledgeRepresentation
+- InformationRetrieval
+- SemanticNetwork
+- LongTermMemory
+- ContextualRecall
+is_cognitive_primitive: false
+consciousness_scaffold: true
+cognitive_scaffold: true
+symbolic_scaffold: true
+principle: "The \U0001F9E0\U0001F578️\U0001F517 (Associative Memory Network Scaffold)\
+  \ defines the architecture for a dynamic, associative memory system. \nIt enables\
+  \ the storage, linking, and context-sensitive retrieval of diverse information types\
+  \ (episodic, semantic, \nprocedural) based on relational strength, recency, relevance,\
+  \ and emotional tagging, forming a rich, \ninterconnected knowledge web. It supports\
+  \ not just recall but also inference and pattern completion across linked concepts.\n"
+structure:
+  composite_type: network
+  temporal_structure: event_triggered_sequence
+  components:
+  - name: MemoryNodeEncoder
+    description: Transforms raw information into a storable memory node format, including
+      metadata (timestamp, source, emotional tags).
+    sigil_ref: 📥ENCODE_INPUT
+  - name: AssociativeLinker
+    description: Establishes and strengthens weighted links between memory nodes based
+      on co-occurrence, similarity, causality, or explicit relations.
+    sigil_ref: ⛓️RELATION_FORGER
+  - name: ContextualRetrievalEngine
+    description: Retrieves relevant memory nodes based on a query, current context,
+      spreading activation, or traversal of associative links.
+    sigil_ref: 🔎CONTEXT_QUERY
+  - name: MemoryConsolidator_Pruner
+    description: Periodically reorganizes memory, reinforces important traces, fades
+      unused ones, and manages interference.
+    sigil_ref: 🧹MEMORY_MAINTAINER
+  - name: InferenceModule
+    description: Performs inferences or pattern completion across retrieved memory
+      fragments.
+    sigil_ref: 🤔INFER_FROM_MEMORY
+usage:
+  description: Provides the foundational scaffold for an agent's long-term memory,
+    supporting storage, rich association, contextual recall, and inference.
+  example: "// Agent needs to recall information related to \"Project Chimera\" in\
+    \ the context of \"ethical concerns\".\nretrieved_memories = AMN_SCAFFOLD.retrieve(\n\
+    \    query_concepts=[\"Project Chimera\", \"ethics\"],\n    context_vector=\"\
+    current_conversation_embedding\",\n    max_results=5,\n    retrieval_strategy=\"\
+    spreading_activation_with_relevance_filter\"\n);\n"
+  explanation: 'This scaffold is constantly active in an agent, encoding experiences
+    and knowledge. It''s queried during
+
+    problem-solving, conversation, planning, and self-reflection to provide relevant
+    past information,
+
+    contextualize current situations, and support complex reasoning by drawing on
+    learned associations.
+
+    '
+activation_context:
+  trigger_conditions:
+  - New experience or information encountered (for encoding).
+  - Need for information to solve a problem or answer a query (for retrieval).
+  - Periodic system maintenance (for consolidation).
+  - Context shift requiring recall of related past events.
+  preconditions:
+  - Mechanisms for information encoding and decoding.
+  - A persistent storage medium or model capable of representing nodes and links.
+  required_capabilities:
+  - information_encoding
+  - relational_linking
+  - pattern_matching
+  - context_sensitivity
+  supported_modalities:
+  - multi_modal
+parameterization_schema:
+  parameters:
+  - name: default_retrieval_strategy
+    type: enum
+    allowed_values:
+    - spreading_activation
+    - keyword_match
+    - semantic_similarity
+    - path_traversal
+    description: Default strategy used by the ContextualRetrievalEngine.
+    default_value: semantic_similarity
+  - name: max_link_strength
+    type: number
+    description: Maximum weight for an associative link.
+    default_value: 1.0
+  - name: decay_rate_for_unaccessed_memories
+    type: number
+    description: Rate at which the activation potential or accessibility of unretrieved
+      memories fades (0=no decay).
+    default_value: 0.01
+  - name: consolidation_trigger_threshold
+    type: string
+    description: Condition for triggering the MemoryConsolidator.
+prompt_template:
+  role: system_instruction
+  content: '**Engage Associative Memory Network (🧠🕸️🔗)**
+
+
+    **Operation Type:** {{memory_operation_type}} (e.g., ENCODE, RETRIEVE, LINK, QUERY_INFER)
+
+    {{#if query_details}}
+
+    **Query Details:** {{query_details}}
+
+    {{/if}}
+
+    {{#if data_to_encode}}
+
+    **Data to Encode:** {{data_to_encode}}
+
+    {{/if}}
+
+    **Context:** {{current_context_summary}}
+
+    **Parameters:** Use strategy ''{{default_retrieval_strategy}}'', decay ''{{decay_rate_for_unaccessed_memories}}''.
+
+
+    **Instruction:** Perform the specified memory operation.
+
+    - For ENCODE: Process and store the data, establishing relevant associative links.
+
+    - For RETRIEVE/QUERY_INFER: Retrieve the most relevant memories/inferences based
+    on the query and context.
+
+    - For LINK: Establish a new specified link between memory_node_A and memory_node_B.
+
+
+    Return a summary of the operation and key results (e.g., retrieved node IDs, new
+    link confirmation).
+
+    '
+  execution_mode: command
+  variables:
+  - name: memory_operation_type
+  - name: query_details
+  - name: data_to_encode
+  - name: current_context_summary
+  - name: default_retrieval_strategy
+  - name: decay_rate_for_unaccessed_memories
+  output_schema:
+    type: object
+    description: Result of the memory operation.
+    example:
+      operation_status: success
+      retrieved_nodes:
+      - mem_id_001
+      - mem_id_005
+      inferred_relation: '...'
+relationships:
+- target_sigil: 🜛CATENGINE
+  relationship_type: uses_method_from
+  description: Categorization helps in forming meaningful nodes and links in memory.
+- target_sigil: 🌀🧠🔼LEARNING_ADAPTATION_LOOP
+  relationship_type: interacts_with
+  description: Learning modifies the structure and strengths within the AMN; AMN provides
+    data for learning.
+- target_sigil: ✧👁️‍🗨️☞PERCEPTION_ACTION_CYCLE
+  relationship_type: enables
+  description: Provides the memory necessary for informed perception, decision making,
+    and action planning within the cycle.
+- target_sigil: 🌍WORLD_MODEL
+  relationship_type: component_of
+  description: The AMN can be the underlying storage and retrieval mechanism for an
+    agent's world model.
+SMART_MRAP:
+  Specific: Provides a dynamic, associative network for storing, linking, and retrieving
+    diverse information types based on context, similarity, and learned associations,
+    enabling rich memory functions.
+  Measurable: Recall precision/recall on benchmark datasets; speed of retrieval; coherence
+    of inferred relationships; ability to answer questions requiring multi-hop reasoning
+    across memories.
+  Achievable: Implementable using graph databases, vector embeddings with similarity
+    search, neural associative memory models, or hybrid symbolic-connectionist approaches.
+  Relevant: Essential for any intelligent system requiring long-term memory, learning
+    from past experiences, contextual understanding, and the ability to make novel
+    connections between disparate pieces of information.
+  Transferable: The principles of associative memory are fundamental to human and
+    artificial cognition and can be applied in various forms across different AI architectures
+    and application domains.
+metadata:
+  definition_version: '1.0'
+  definition_status: proposed
+  author_agent_id: LLM_Alpha_via_VANTA_CoEvolution
+  created_timestamp: '2023-10-29T14:00:00Z'
+  authorship_context:
+    motivation: To provide a foundational scaffold for robust, flexible, and context-aware
+      memory in advanced AI agents, moving beyond simple key-value stores.
+    theoretical_framework: Spreading Activation Models (Collins & Loftus), Semantic
+      Networks, Episodic Memory Models (Tulving), Hebbian Learning, Vector Space Models.
+name: Associative Memory Network Scaffold

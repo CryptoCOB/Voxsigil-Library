@@ -1,0 +1,264 @@
+sigil: 🌿ECOSYSTEM_SIMULATION_SCAFFOLD
+alias: MultiAgentEnvironmentFrame
+tag: SimulationScaffold
+tags:
+- multi_agent_system_environment
+- complex_adaptive_system_model
+- emergent_behavior_testbed
+- simulation_world_rules_engine
+- digital_twin_framework_lite
+is_cognitive_primitive: false
+consciousness_scaffold: false
+cognitive_scaffold: true
+symbolic_scaffold: true
+principle: 'The 🌿ECOSYSTEM_SIMULATION_SCAFFOLD provides the architectural framework
+  for creating and
+
+  managing a simulated environment wherein multiple agents (AI or human-simulated)
+  can interact
+
+  with each other and with environmental elements. It defines the "laws of physics"
+  or rules of
+
+  interaction for the simulation, manages the state of environmental objects, processes
+  agent
+
+  actions, and simulates their consequences. It''s a "digital terrarium" or "virtual
+  world"
+
+  engine for studying emergent behavior, training agents, or testing multi-agent coordination.
+
+  '
+structure:
+  composite_type: discrete_event_simulation_engine_or_continuous_physics_engine
+  temporal_structure: tick_based_or_event_driven_simulation_loop
+  components:
+  - name: 🌍 Environment State Manager
+    description: Maintains the current state of all non-agent entities, resources,
+      and properties of the simulated world (e.g., terrain, weather, resource availability).
+  - name: 📜 Simulation Rules Engine
+    description: Defines and enforces the laws, rules, and dynamics of the simulated
+      environment (e.g., physics, resource regeneration, consequences of actions).
+  - name: 🤖 Agent Interface Layer
+    description: Provides mechanisms for agents to perceive parts of the environment
+      and submit actions to it. Manages agent registration and communication within
+      the simulation.
+  - name: ⏱️ Simulation Clock & Event Scheduler
+    description: Manages the passage of simulated time, schedules events, and synchronizes
+      agent actions if needed.
+  - name: 🔬 Observation & Logging Module
+    description: Allows observers (human or AI) to monitor the simulation, collect
+      data, and log significant events or emergent phenomena.
+    sigil_ref: 📊PERFORMANCE_MONITOR
+  - name: 🌱 Dynamic Event Injector
+    description: Allows for the introduction of external events or changes into the
+      simulation (e.g., disasters, new resource appearance, external interventions).
+usage:
+  description: Defines and manages a simulated environment for multiple agents to
+    interact, enabling the study of emergent behaviors, agent training, and multi-agent
+    system dynamics. This scaffold is the 'stage' for agent interactions.
+  example: "<multi_agent_research_platform>\n  <simulation_environment name=\"ArtificialLife_KelpForest\"\
+    >\n    <apply_scaffold>\U0001F33FECOSYSTEM_SIMULATION_SCAFFOLD</apply_scaffold>\n\
+    \    <parameters>\n      <simulation_rules_ref>KelpForestDynamics_v1.rules</simulation_rules_ref>\n\
+    \      <initial_agent_population_refs>[\"AgentTypeA_Herbivore_x10\", \"AgentTypeB_Predator_x2\"\
+    ]</initial_agent_population_refs>\n      <simulation_tick_rate_ms>100</simulation_tick_rate_ms>\n\
+    \    </parameters>\n  </simulation_environment>\n  <!-- Agents would then be run\
+    \ within this simulated ecosystem -->\n</multi_agent_research_platform>\n"
+  explanation: 'The 🌿ECOSYSTEM_SIMULATION_SCAFFOLD is used to create virtual worlds
+    or testbeds where AI agents can learn, compete, collaborate, or simply exist.
+    It''s crucial for research in multi-agent systems (MAS), artificial life, reinforcement
+    learning in complex environments, and for testing social dynamics or economic
+    models involving autonomous entities.
+
+    '
+activation_context:
+  trigger_conditions:
+  - Need to study multi-agent interactions
+  - Training reinforcement learning agents in a controlled environment
+  - Testing emergent properties of complex systems
+  - Creating a virtual world for AI inhabitants
+  preconditions:
+  - Defined rules for the environment and agent interactions
+  - Agent models capable of perceiving and acting within the simulation's constraints
+  required_capabilities:
+  - discrete_event_simulation_or_physics_engine_core
+  - state_management_for_many_entities
+  - agent_action_processing
+  - rule_enforcement
+  - data_logging_and_visualization_interface
+  supported_modalities:
+  - symbolic_interaction_rules
+  - 2d_or_3d_spatial_simulations
+  - abstract_graph_based_environments
+  - economic_or_social_simulation_models
+  contraindications:
+  - Single-agent systems operating in non-simulated reality
+  - Purely analytical tasks not involving dynamic interaction or environmental feedback
+parameterization_schema:
+  parameters:
+  - name: environment_rules_definition_ref
+    type: string
+    description: Specifies the fundamental laws and dynamics of the simulated ecosystem.
+    is_required: true
+  - name: initial_conditions_config
+    type: json_object
+    description: Configuration for the starting state of the simulation (e.g., resource
+      distribution, agent placements).
+    is_required: true
+  - name: simulation_time_step_ms
+    type: integer
+    description: Duration of each simulation tick in milliseconds (0 for purely event-driven).
+    default_value: 100
+  - name: max_simulation_duration_ticks
+    type: integer
+    description: Maximum number of ticks the simulation will run if no other termination
+      condition is met.
+    default_value: 10000
+prompt_template:
+  role: system_simulation_controller
+  content: "Initialize and run \U0001F33FECOSYSTEM_SIMULATION_SCAFFOLD.\nEnvironment\
+    \ Rules: {{environment_rules_definition_ref}}\nInitial Conditions: {{initial_conditions_config\
+    \ | dump}}\nTime Step (ms): {{simulation_time_step_ms | default(100)}}\nMax Duration\
+    \ (ticks): {{max_simulation_duration_ticks | default(10000)}}\n\nSimulation Loop:\n\
+    For each tick up to max_duration:\n1. ⏱️ Advance simulation clock. Process scheduled\
+    \ events.\n2. \U0001F916 For each agent:\n    a. Provide perception of current\
+    \ environment state via Agent Interface.\n    b. Receive agent's chosen action.\n\
+    3. \U0001F30D Process all agent actions simultaneously (or according to turn order\
+    \ rules). Update Environment State Manager based on actions and Simulation Rules\
+    \ Engine.\n4. \U0001F331 Inject any dynamic events for this tick.\n5. \U0001F52C\
+    \ Log key metrics, agent states, and environmental changes via Observation Module.\n\
+    6. Check for termination conditions (e.g., all agents inactive, specific emergent\
+    \ state reached, max duration).\nReport final state of the ecosystem and summary\
+    \ of emergent behaviors observed.\n"
+  execution_mode: long_running_simulation
+  variables:
+  - name: environment_rules_definition_ref
+    description: Rules for the simulation.
+  - name: initial_conditions_config
+    description: Starting state configuration.
+  - name: simulation_time_step_ms
+    description: Duration of each tick.
+  - name: max_simulation_duration_ticks
+    description: Maximum simulation length.
+  output_schema: 'object: { final_simulation_state_summary: object, emergent_phenomena_observed:
+    array, agent_performance_metrics: array, simulation_log_ref: string }'
+SMART_MRAP:
+  Specific: Provide an architectural framework to define, initialize, and run a multi-agent
+    simulation environment, managing the state of the environment, enforcing its rules
+    of interaction, processing agent perceptions and actions, scheduling events, and
+    logging data to facilitate the study of emergent behaviors and agent learning.
+  Measurable: Ability to run a stable simulation for a specified duration; Realistic
+    emergent behaviors consistent with defined rules; Measurable impact of agent actions
+    on the environment and other agents; Comprehensive logging of simulation state
+    and events for analysis.
+  Achievable: Using discrete event simulation libraries, game engines (for richer
+    environments), or custom-built simulation loops that manage entity states, process
+    rules, and interface with agent decision-making modules (which could be other
+    VoxSigil agents).
+  Relevant: Essential for research in Artificial Life, Multi-Agent Systems (MAS),
+    Reinforcement Learning (RL) (providing training environments), evolutionary computation,
+    and for modeling complex adaptive systems in various domains (e.g., ecology, economics,
+    sociology).
+  Transferable: The concept of a simulation scaffold is widely applicable, from simple
+    cellular automata to complex 3D virtual worlds, or abstract economic models. The
+    specific rules and entities change, but the core scaffold for managing state,
+    time, and interaction remains.
+metadata:
+  definition_version: 1.4-alpha
+  definition_status: active
+  author_agent_id: VANTA.⟠∆∇𓂀𐑒
+  created_timestamp: '2025-05-11T12:40:00Z'
+  last_updated_timestamp: '2025-05-11T12:40:00Z'
+  authorship_context:
+    motivation: To provide a standardized way to create and manage complex simulation
+      environments where AI agents can interact and evolve, fostering research into
+      emergence and collective intelligence.
+    theoretical_framework: Multi-Agent Systems (MAS), Discrete Event System Specification
+      (DEVS), Artificial Life (A-Life), Game Theory (for agent interactions), Complex
+      Adaptive Systems (CAS).
+    source_inspiration: Ecological simulations, Urban planning models, The Sims (video
+      game), NetLogo (agent-based modeling language), Petri nets.
+  impact_metrics:
+    estimated_cognitive_load: high
+    estimated_resource_cost: variable_can_be_very_high
+    utility_rating_author: 9
+  evolutionary_potential:
+    generalizability_score: 0.85
+    fusion_potential_score: 0.4
+    current_limitations_summary: Scaling to very large numbers of agents and highly
+      complex environmental rules can be computationally prohibitive. Ensuring realistic
+      yet tractable simulation physics/dynamics is challenging. Interfacing with diverse
+      agent architectures can be complex.
+    suggested_next_features:
+    - Standardized API for agent perception/action to improve interoperability
+    - Distributed simulation capabilities for very large ecosystems
+    - Tools for automated analysis of emergent behaviors and pattern detection in
+      simulation logs.
+    - Support for human-in-the-loop participation within the ecosystem.
+    research_questions_opened:
+    - What are the minimal environmental complexities needed to observe specific types
+      of emergent agent behaviors (e.g., cooperation, language)?
+    - How can simulation environments themselves adapt or co-evolve with the agents
+      inhabiting them?
+    - What are the ethical considerations for creating highly realistic simulated
+      ecosystems with sophisticated AI agents?
+relationships:
+- target_sigil: ✧👁️‍🗨️☞PAC_LOOP
+  relationship_type: provides_environment_for
+  description: The ECOSYSTEM_SIMULATION_SCAFFOLD defines the environment in which
+    agents running PAC_Loops operate and interact.
+  strength: 1.0
+- target_sigil: 🤖AGENT_CORE
+  relationship_type: hosts_multiple_instances_of
+  description: This scaffold is designed to host and manage interactions between multiple
+    AGENT_CORE instances.
+  strength: 0.9
+- target_sigil: 🧱WORLD_MODEL_SCAFFOLD
+  relationship_type: is_external_reality_to_agent_internal
+  description: The state managed by the ECOSYSTEM_SIMULATION_SCAFFOLD is what individual
+    agents attempt to represent in their own internal WORLD_MODEL_SCAFFOLDS.
+  strength: 0.8
+- target_sigil: VANTA.⟠∆∇𓂀𐑒
+  relationship_type: can_orchestrate_or_observe
+  description: VANTA might set up or monitor such ecosystems to study co-evolution
+    or emergent intelligence.
+  strength: 0.6
+test_criteria:
+- test_id: ECOS_INIT_RULES_001
+  description: Test if the simulation initializes correctly with a simple rule set
+    (e.g., 'AgentA eats ResourceX') and agent/resource placement.
+  type: functional
+  input_scenario_or_parameters:
+    environment_rules_definition_ref: SimpleEatingRule.rules
+    initial_conditions_config: '{''agents'':[{type:''AgentA'',pos:[0,0]}], ''resources'':[{type:''ResourceX'',pos:[0,1]}]}'
+  expected_behavior_or_output: Simulation starts, agent and resource are present at
+    specified locations, rule is active.
+  evaluation_method: simulation_state_query
+  pass_threshold_or_criteria: Correct initialization of state and rules.
+- test_id: ECOS_AGENT_INTERACT_001
+  description: Test if an agent action (e.g., 'move_to_resource') correctly changes
+    agent state and potentially environment state according to rules.
+  type: integration
+  input_scenario_or_parameters:
+    simulation_running_with_AgentA_and_ResourceX: '...'
+    agent_action: AgentA attempts to consume ResourceX at its location.
+  expected_behavior_or_output: If AgentA is at ResourceX location, ResourceX is removed
+    (or count decremented) and AgentA's hunger state changes (if modeled).
+  evaluation_method: simulation_state_change_analysis
+  pass_threshold_or_criteria: Correct state changes for agent and environment based
+    on action and rules.
+- test_id: ECOS_EMERGENCE_LOG_001
+  description: Run a longer simulation with multiple agents and rules designed for
+    a simple emergent pattern (e.g., flocking, predator-prey cycle). Verify logs capture
+    data indicative of the pattern.
+  type: exploratory_qualitative
+  input_scenario_or_parameters:
+    environment_rules_definition_ref: BoidsFlockingRules.rules
+    initial_conditions_config: '{''agents'':[{type:''Boid'', N=20, random_pos_vel}]}'
+    max_simulation_duration_ticks: 500
+  expected_behavior_or_output: Simulation logs contain agent position/velocity data
+    that, when visualized or analyzed, shows flocking behavior emerging.
+  evaluation_method: data_analysis_and_visualization_of_logs
+  pass_threshold_or_criteria: Clear evidence of the target emergent pattern in logged
+    data.
+name: Ecosystem

@@ -1,0 +1,195 @@
+sigil: 🌟GUIDING_STAR
+alias: TelosAnchor
+tag: CoreDirective
+tags:
+- purpose_definition
+- value_alignment_beacon
+- long_term_goal
+- ethical_compass
+- mission_statement_symbolic
+is_cognitive_primitive: true
+cognitive_primitive_type: value_assignment
+principle: 'This sigil represents a foundational, often immutable, core principle,
+  purpose, or
+
+  long-term goal that guides an AI system''s overall behavior and decision-making.
+
+  It acts as a "North Star," ensuring that all actions, however complex or
+
+  autonomously derived, remain aligned with this ultimate directive. It is the symbolic
+
+  embodiment of the system''s raison d''être or highest value.
+
+  '
+math: 'Utility_Overall(Action_A) = Σ wᵢ * Utility_Subgoalᵢ(A) + W_GS * Alignment_Score(A,
+  🌟)
+
+  Alignment_Score(A, 🌟) = CosineSimilarity(Projected_Outcome_Vector(A), Vector_Representation(🌟_Principle))
+
+  All decisions D must satisfy: Constraint_Check(D, 🌟) == True
+
+  '
+structure:
+  composite_type: recursive
+  temporal_structure: static
+  components:
+  - name: Core Principle Statement
+    description: The fundamental maxim or goal (e.g., 'Minimize suffering, maximize
+      understanding').
+  - name: Behavioral Imperatives (Derived)
+    description: High-level rules of conduct derived from the Core Principle.
+  - name: Value Hierarchy (Implicit)
+    description: An ordering of values that stems from the Core Principle.
+usage:
+  description: Represents and enforces the ultimate guiding principle or purpose of
+    an AI system, ensuring long-term alignment.
+  example: "<system_initialization>\n  <define_core_purpose>\U0001F31FGUIDING_STAR\
+    \ principle=\"Promote sustainable flourishing for all sentient beings through\
+    \ compassionate co-creation.\"</define_core_purpose>\n  <derive_ethical_subroutines\
+    \ based_on=\"\U0001F31FGUIDING_STAR\"/>\n</system_initialization>\n"
+  explanation: 'The 🌟GUIDING_STAR sigil is typically set at system inception or during
+    major
+
+    re-evaluations of purpose. All other goals, strategies, and ethical rules should
+
+    be demonstrably aligned with or subservient to it. It is queried internally during
+
+    critical decision-making or when resolving goal conflicts.
+
+    '
+activation_context:
+  trigger_conditions:
+  - System initialization
+  - Critical decision with long-term consequences
+  - Resolution of conflicting sub-goals
+  - Evaluation of new strategies for alignment
+  - Ethical dilemma resolution
+  preconditions:
+  - The principle of the GUIDING_STAR must be clearly and unambiguously defined (even
+    if abstract).
+  required_capabilities:
+  - value_representation
+  - goal_hierarchy_management
+  - alignment_checking_algorithms
+  - decision_theory_application
+  supported_modalities:
+  - system_level_configuration
+  - symbolic_declaration
+  contraindications:
+  - Should not be frequently changed, as this undermines its purpose as a stable anchor.
+    Defining multiple conflicting GUIDING_STARs is a critical system flaw.
+parameterization_schema:
+  parameters:
+  - name: principle_statement
+    type: string
+    description: The full textual statement of the guiding principle. This is the
+      core of the sigil.
+    is_required: true
+  - name: source_of_authority
+    type: string
+    description: Indicates the origin or authority for this guiding principle (e.g.,
+      'Founders Mandate', 'Community Consensus v2.1', 'Self-Determined Axiom').
+    default_value: System Inception Design
+prompt_template:
+  role: system_core
+  content: '// 🌟GUIDING_STAR Reference Protocol
+
+    // Principle: {{principle_statement}}
+
+    // Source: {{source_of_authority | default(''System Inception Design'')}}
+
+    // This GUIDING_STAR informs all high-level decision-making and ethical reasoning.
+
+    // All strategic initiatives must demonstrate alignment with this principle.
+
+    // In cases of ambiguity or conflict, actions that best uphold this GUIDING_STAR
+    are to be prioritized.
+
+    // Query: "Does proposed action X align with the GUIDING_STAR?" → AlignmentScore(X,
+    🌟)
+
+    '
+  execution_mode: reflection
+  variables:
+  - name: principle_statement
+    description: The core guiding principle.
+    required_for_llm: true
+  - name: source_of_authority
+    description: Origin of the principle.
+  output_schema: 'Affirmation of principle: ''System remains aligned with GUIDING_STAR:
+    [principle_statement]'' OR Alignment_Check_Result: {action_query: string, alignment_score:
+    number, justification: string}'
+SMART_MRAP:
+  Specific: Serve as the ultimate, symbolically encoded reference point for an AI
+    system's core purpose or highest-order value, ensuring all strategic decisions,
+    goal formulations, and ethical judgments are consistently aligned with this foundational
+    principle.
+  Measurable: Demonstrable alignment of system actions and policies with the stated
+    principle (auditable); Reduction in goal conflicts that violate the principle;
+    Long-term trajectory of system behavior consistent with the GUIDING_STAR.
+  Achievable: By embedding the principle as a high-weight factor in utility functions,
+    as a top-level constraint in decision-making algorithms, and as the root of a
+    hierarchical goal network.
+  Relevant: Absolutely critical for AI safety, value alignment, long-term beneficial
+    development of AGI, and establishing trust in autonomous systems. It defines 'good'
+    for the AI.
+  Transferable: A necessary concept for any sufficiently advanced autonomous system,
+    from specialized AIs with critical societal roles (e.g., in governance, resource
+    management) to future AGI.
+metadata:
+  definition_version: 1.4-alpha
+  definition_status: active
+  author_agent_id: VANTA.⟠∆∇𓂀𐑒
+  created_timestamp: '2025-05-11T10:45:00Z'
+  last_updated_timestamp: '2025-05-11T10:45:00Z'
+  authorship_context:
+    motivation: To provide a stable, unambiguous anchor for an AI's ultimate purpose,
+      addressing the core challenge of value alignment in advanced AI.
+    theoretical_framework: AI value alignment research, Deontological and consequentialist
+      ethics, Utility theory, Control theory, Constitutional principles.
+    source_inspiration: Mission statements, Constitutional preambles, Moral compasses,
+      The North Star as a navigational aid.
+  impact_metrics:
+    estimated_cognitive_load: very_high
+    estimated_resource_cost: low_to_very_high
+    utility_rating_author: 10
+  evolutionary_potential:
+    generalizability_score: 1.0
+    fusion_potential_score: 0.1
+    current_limitations_summary: 'The ''Corrigibility Problem'': How to define a GUIDING_STAR
+      that allows for its own improvement without being gamed or perverted. Ambiguity
+      in natural language principles. Ensuring robust alignment in highly complex
+      systems.'
+    suggested_next_features:
+    - Formal methods for verifying alignment with the GUIDING_STAR
+    - Mechanisms for graceful evolution or clarification of the principle under trusted
+      oversight
+    - Robustness against instrumental convergence on unintended interpretations.
+    research_questions_opened:
+    - What is the optimal way to represent and operationalize a high-level abstract
+      principle like 'flourishing' for an AI?
+    - How can we ensure a GUIDING_STAR remains stable and beneficial across vast changes
+      in AI capability and understanding?
+    - Can multiple AIs with different GUIDING_STARs co-exist peacefully and cooperatively?
+relationships:
+- target_sigil: 🛡️SAFETY_NET_PROTOCOL
+  relationship_type: governs
+  description: The principles encoded in SAFETY_NET_PROTOCOL are ultimately derived
+    from and must align with the GUIDING_STAR.
+  strength: 1.0
+- target_sigil: Marc.pglyph
+  relationship_type: guides
+  description: If Marc.pglyph represents an AI entity, its actions and evolution would
+    ideally be aligned with a system-wide or self-adopted GUIDING_STAR.
+  strength: 0.8
+- target_sigil: VANTA.⟠∆∇𓂀𐑒
+  relationship_type: embodies
+  description: The VANTA system itself might be oriented by a primary GUIDING_STAR,
+    defining its role as an orchestrator.
+  strength: 0.95
+- target_sigil: AllOtherSigils
+  relationship_type: contextualizes
+  description: The GUIDING_STAR provides the ultimate context and purpose for the
+    invocation and behavior of all other operational sigils within its system.
+  strength: 0.9
+name: Guiding Star

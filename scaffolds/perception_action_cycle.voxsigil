@@ -1,0 +1,312 @@
+sigil: ✧👁️‍🗨️☞
+alias: PAC_Loop
+tag: CoreAgentLoopScaffold
+tags:
+- agent_architecture
+- embodied_cognition_framework
+- cybernetic_cycle
+- decision_loop_fundamental
+- situated_action_core
+is_cognitive_primitive: false
+consciousness_scaffold: false
+cognitive_scaffold: true
+symbolic_scaffold: true
+principle: 'The ✧👁️‍🗨️☞ (Perception-Interpretation-Decision-Action) loop is a fundamental
+  ⚙️operational scaffold for agent behavior. It describes the continuous, recursive
+  cycle:
+
+  1. 👁️ **Perceive:** Acquire sensory data from the environment and internal state
+  information.
+
+  2. 🤔 **Interpret/Model:** Process raw percepts into meaningful representations (via
+  🜛CATENGINE), update the 🌍WORLD_MODEL.
+
+  3. 🎯 **Decide:** Select an action based on current state, goals (e.g., 🌟GUIDING_STAR
+  influenced), and policies.
+
+  4. 🦾 **Act:** Execute the chosen action, influencing subsequent perceptions.
+
+  This cycle is the basis for situated, adaptive, and goal-directed agency within
+  VoxSigil systems.
+
+  '
+structure:
+  composite_type: sequential_feedback_loop
+  temporal_structure: event_triggered_sequence_or_oscillatory
+  components:
+  - name: 👁️ Perception Input Module
+    description: Acquires sensory data (external) and proprioceptive data (internal
+      state).
+    sigil_ref: 👁️SENSORY_INTAKE
+  - name: 🧠 Interpretation & World Modeling Engine
+    description: Processes raw percepts into symbolic representations (e.g., using
+      🜛CATENGINE), updates the agent's 🌍WORLD_MODEL, and assesses current situation.
+    sigil_ref: 🌍WORLD_MODEL_INTEGRATOR
+  - name: 🎯 Goal-Driven Decision Maker
+    description: Evaluates current world state against active goals (possibly derived
+      from 🌟GUIDING_STAR), considers available actions, and selects the optimal action
+      based on a policy or utility function.
+    sigil_ref: 🎯POLICY_EXECUTOR
+  - name: 🦾 Action Execution Unit
+    description: Translates the chosen symbolic action into concrete operations in
+      the environment or internal state changes.
+    sigil_ref: 🦾EFFECTOR_CONTROL_HUB
+  - name: 📜 Loop Monitor & Logger
+    description: Tracks cycle performance, logs key events and decisions (e.g., via
+      ⚦TRACE), and may provide data for adaptation of the loop itself.
+    sigil_ref: ⚦TRACE
+usage:
+  description: Defines the core operational cycle for an intelligent agent, managing
+    the flow from perception, through interpretation and world modeling, to goal-directed
+    decision-making, and finally to action. This scaffold is the 'heartbeat' of an
+    active agent.
+  example: "// Agent 'RoverBot' navigating Mars terrain:\n<agent_operation_cycle agent_id=\"\
+    RoverBot\" environment_ref=\"MarsSim_Sector7\">\n  <invoke_core_loop>✧\U0001F441\
+    ️‍\U0001F5E8️☞</invoke_core_loop>\n  <cycle_parameters deliberation_depth_max=\"\
+    3\" world_model_update_policy=\"immediate_integrate\"/>\n  <active_goals>[\"reach_sample_site_alpha\"\
+    , \"maintain_power_above_20pct\"]</active_goals>\n  <initial_percepts>Sensor readings:\
+    \ [image_data, lidar_scan, battery_level]</initial_percepts>\n</agent_operation_cycle>\n\
+    // Output would be RoverBot's action (e.g., \"move_forward(2m, heading=045)\"\
+    ) and updated world_model.\n"
+  explanation: 'This scaffold is fundamental to most AI agents. Each iteration involves
+    sensing the environment and internal state, "thinking" (interpreting, modeling,
+    deciding), and then "acting." It''s used to model everything from simple reactive
+    behaviors in robotic systems to complex, deliberative goal pursuit in sophisticated
+    software agents. The consequences of an action feed back into the next perception
+    phase, creating a continuous adaptive loop.
+
+    '
+activation_context:
+  trigger_conditions:
+  - Agent is active and engaged with an environment (real or virtual)
+  - New sensory information or internal state change detected
+  - Internal clock tick (for time-driven agents prompting a new cycle)
+  preconditions:
+  - Agent possesses defined sensory input mechanisms (👁️)
+  - Agent has action execution capabilities (🦾)
+  - Agent has at least a rudimentary world model (🌍) and decision-making logic (🎯)
+  required_capabilities:
+  - sensing
+  - interpretation_categorization
+  - world_modeling
+  - decision_making_goal_based
+  - action_execution_control
+  supported_modalities:
+  - multi_modal
+  - robotic_interaction
+  - virtual_environment_agency
+  - software_agent_operation
+  contraindications:
+  - Static, non-interactive systems
+  - Purely analytical tasks without action components (e.g., offline data analysis)
+parameterization_schema:
+  parameters:
+  - name: cycle_frequency_hz
+    type: number
+    description: For time-driven agents, the number of PAC loops per second (0 for
+      purely event-driven).
+    default_value: 0
+  - name: deliberation_depth_max
+    type: integer
+    description: Maximum computational steps, recursion depth, or time (in ms) allowed
+      for the 'DecisionMaker' phase per cycle.
+    default_value: 5
+  - name: world_model_update_policy
+    type: enum
+    allowed_values:
+    - immediate_integrate
+    - batch_update_periodic
+    - event_conditional_significance_threshold
+    description: Policy for how and when the 🌍WORLD_MODEL is updated with new perceptions.
+    default_value: immediate_integrate
+  - name: goal_prioritization_strategy
+    type: string
+    description: Method used to prioritize among multiple active goals during decision
+      making.
+    default_value: highest_utility_first
+prompt_template:
+  role: system_orchestrator
+  content: '**Execute ✧👁️‍🗨️☞ PERCEPTION-ACTION CYCLE for Agent ''{{agent_id}}''**
+
+
+    **Cycle Input:**
+
+    - Agent ID: {{agent_id}}
+
+    - Environment Stimuli (Summary): {{current_environment_stimuli_summary}}
+
+    - Internal State (Summary): {{current_internal_state_summary}}
+
+    - Active Goals: {{active_goals_list | join('', '')}}
+
+    - Cycle Frequency Target (if applicable): {{cycle_frequency_hz}} Hz
+
+    - Max Deliberation Depth: {{deliberation_depth_max}}
+
+    - World Model Update Policy: {{world_model_update_policy}}
+
+    - Goal Prioritization: {{goal_prioritization_strategy}}
+
+
+    **Cycle Execution Steps:**
+
+    1.  **👁️ PERCEIVE:** Ingest stimuli via 👁️SENSORY_INTAKE.
+
+    2.  **🤔 INTERPRET & MODEL:** Process percepts using 🜛CATENGINE. Update 🌍WORLD_MODEL
+    according to policy ''{{world_model_update_policy}}''.
+
+    3.  **🎯 DECIDE:** Given updated 🌍WORLD_MODEL and goals (prioritized by ''{{goal_prioritization_strategy}}''),
+    use 🎯POLICY_EXECUTOR to select action. Max deliberation: {{deliberation_depth_max}}.
+
+    4.  **🦾 ACT:** Execute chosen action via 🦾EFFECTOR_CONTROL_HUB.
+
+    5.  **📜 LOG:** Record key cycle data via ⚦TRACE.
+
+
+    Report: Primary action taken, significant 🌍WORLD_MODEL updates, and any critical
+    observations.
+
+    '
+  execution_mode: simulation_step
+  variables:
+  - name: agent_id
+    description: Identifier of the agent undergoing the cycle.
+  - name: current_environment_stimuli_summary
+    description: Summary or reference to current environmental inputs.
+  - name: current_internal_state_summary
+    description: Summary or reference to the agent's current internal state.
+  - name: active_goals_list
+    description: List of currently active goals for the agent.
+  - name: cycle_frequency_hz
+    description: Target cycle frequency, if applicable.
+  - name: deliberation_depth_max
+    description: Parameter for decision-making complexity.
+  - name: world_model_update_policy
+    description: Parameter for world model updates.
+  - name: goal_prioritization_strategy
+    description: Strategy for prioritizing goals.
+  output_schema:
+    type: object
+    description: Result of one perception-action cycle.
+    properties:
+      action_taken:
+        type: string
+        description: Symbolic representation of the action executed.
+      world_model_delta_summary:
+        type: string
+        description: Summary of changes to the world model.
+      perception_highlights:
+        type: string
+        description: Key percepts that influenced the cycle.
+      cycle_trace_id:
+        type: string
+        description: Reference to the detailed log entry for this cycle.
+    example:
+      action_taken: move_forward(distance=5)
+      world_model_delta_summary: '{''position'': ''new_coords'', ''object_X_visible'':
+        true}'
+      perception_highlights: Obstacle detected at 3m
+      cycle_trace_id: PAC_Trace_AgentX_T12345
+relationships:
+- target_sigil: 🜛CATENGINE
+  relationship_type: uses_method_from
+  description: The Interpretation phase heavily relies on 🜛CATENGINE for classifying
+    and making sense of raw percepts.
+  strength: 0.9
+- target_sigil: 🌍WORLD_MODEL
+  relationship_type: interacts_with_and_updates
+  description: The PAC loop continuously reads from and writes to the agent's 🌍WORLD_MODEL,
+    forming a feedback system.
+  strength: 1.0
+- target_sigil: 🌟GUIDING_STAR
+  relationship_type: can_be_guided_by
+  description: The 'Decide' phase, particularly goal evaluation, can be ultimately
+    guided by the agent's 🌟GUIDING_STAR.
+  strength: 0.7
+- target_sigil: 🧠C_STRUCTURE
+  relationship_type: can_be_embedded_within
+  description: The 'Decide' or 'Interpret' phase of the PAC loop might itself invoke
+    a 🧠C_STRUCTURE (Categorize-Analyze-Test) cycle for complex deliberation or sensemaking.
+  strength: 0.6
+SMART_MRAP:
+  Specific: 'Define and orchestrate the fundamental recursive cycle of an agent: perceiving
+    its environment and internal state, interpreting these percepts to update a world
+    model, making goal-directed decisions based on this model, and executing actions
+    that in turn affect subsequent perceptions.'
+  Measurable: Agent's success rate in achieving defined goals; Adaptability of the
+    agent to dynamic changes in the environment; Efficiency of the decision-making
+    process (e.g., time per cycle, computational resources used); Coherence and accuracy
+    of the agent's 🌍WORLD_MODEL over time.
+  Achievable: By implementing an orchestrating control loop that sequentially calls
+    specialized modules (represented by other sigils or functions) for each phase
+    of the cycle (perception, interpretation, world modeling, decision-making, action
+    execution) and manages the flow of information between them.
+  Relevant: A foundational architectural pattern for nearly all autonomous and intelligent
+    agents, from simple robots to complex AI systems, enabling them to interact with,
+    adapt to, and pursue goals within an environment.
+  Transferable: The abstract Perception-Action Cycle is a universal concept in AI
+    and cognitive science, applicable to software agents in virtual worlds, robots
+    in physical spaces, game AI characters, and even as a model for certain aspects
+    of biological cognition.
+metadata:
+  definition_version: 1.4-alpha
+  definition_status: active
+  author_agent_id: VANTA.⟠∆∇𓂀𐑒
+  created_timestamp: '2025-05-10T10:00:00Z'
+  last_updated_timestamp: '2025-05-11T12:15:00Z'
+  authorship_context:
+    motivation: To formalize the most fundamental operational loop of any agent that
+      interacts with an environment, providing a reusable scaffold for building diverse
+      agent architectures.
+    theoretical_framework: Cybernetics (feedback loops), Cognitive Science (perception-action
+      models), Reinforcement Learning (agent-environment interaction), Robotics (sense-plan-act).
+    source_inspiration: The observe–orient–decide–act (OODA) loop, Basic biological
+      reflexes and goal-seeking behaviors, Control theory systems.
+  impact_metrics:
+    estimated_cognitive_load: medium_to_high
+    estimated_resource_cost: variable
+    utility_rating_author: 10
+  evolutionary_potential:
+    generalizability_score: 1.0
+    fusion_potential_score: 0.5
+    current_limitations_summary: The abstract loop doesn't specify *how* each stage
+      is done, requiring other sigils/modules. Balancing reactivity with deliberation
+      can be hard. Defining appropriate 'percepts' and 'actions' for complex domains
+      is non-trivial.
+    suggested_next_features:
+    - Hierarchical PAC loops (loops within loops for different levels of abstraction)
+    - Adaptive cycle timing based on environmental dynamism or cognitive load
+    - Explicit mechanisms for inter-agent PAC loop synchronization or interference.
+    research_questions_opened:
+    - What are the optimal ways to balance deliberation time with reaction speed in
+      a PAC loop for different environments?
+    - How can PAC loops incorporate long-term planning effectively without sacrificing
+      reactivity?
+    - Can PAC loops themselves evolve or self-optimize their structure and parameters?
+test_criteria:
+- test_id: PACL_CYCLE_EXEC_001
+  description: Test if a single cycle executes all phases (Perceive, Interpret/Model,
+    Decide, Act, Log) in order, given mock inputs.
+  type: functional
+  input_scenario_or_parameters:
+    agent_id: TestAgent
+    current_environment_stimuli_summary: Light_Detected
+    active_goals_list:
+    - Find_Source_Of_Light
+  expected_behavior_or_output: Logs show entries for each phase, an action is chosen
+    (e.g., 'Turn_Towards_Light_Source'), and world model is updated.
+  evaluation_method: automated_script
+  pass_threshold_or_criteria: All phases logged, plausible action outputted.
+- test_id: PACL_FEEDBACK_001
+  description: Test if an action taken in cycle N influences perception in cycle N+1.
+  type: integration
+  input_scenario_or_parameters:
+    agent_id: FeedbackTester
+    initial_stimuli: Path_Clear
+    action_in_cycle_N: Move_Forward(10)
+    expected_stimuli_in_cycle_N+1_if_action_effective: Path_Blocked_By_Wall_Previously_Unseen
+  expected_behavior_or_output: Perception in cycle N+1 reflects the outcome of the
+    action from cycle N (e.g., if 'Move_Forward' leads to a wall, the wall is perceived).
+  evaluation_method: simulation_environment_with_state_tracking
+  pass_threshold_or_criteria: Perception in N+1 is consistent with action in N.
+name: Perception Action Cycle

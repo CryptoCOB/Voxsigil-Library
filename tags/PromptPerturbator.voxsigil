@@ -1,0 +1,191 @@
+sigil: 🧬🔀💡
+alias: PromptPerturbator
+tag: CreativityEnhancement
+tags:
+- prompt_engineering
+- divergent_thinking
+- creative_ideation
+- semantic_mutation
+- exploration_stimulus
+- error_diagnosis_aid
+is_cognitive_primitive: false
+principle: Injects controlled creative perturbation or divergence into prompts or
+  cognitive states by subtly shifting semantic vectors, introducing noise, synonyms,
+  or conceptual inversions, aiming to stimulate novel outputs, explore alternative
+  solution paths, or diagnose error sensitivities.
+math: 'Let P be a prompt represented as a vector p in a semantic space. Mutate(p,
+  σ²) → p'' where p'' = p + ε, and ε is a perturbation vector sampled from a distribution
+  with variance σ² (strength). Alternatively, transformation T: P → P'' where T can
+  be synonym_replacement(P, rate), concept_inversion(P, target), add_random_related_token(P).'
+structure:
+  composite_type: sequential
+  components:
+  - name: InputAnalyzer
+    description: Identifies key semantic components or modifiable elements in the
+      input prompt/state.
+  - name: MutationStrategySelector
+    description: Chooses a method for perturbation (e.g., noise injection, synonym
+      replacement, conceptual shift, negation).
+  - name: PerturbationApplier
+    description: Applies the selected mutation strategy with a given strength/intensity.
+  - name: OutputFormatter
+    description: Presents the mutated prompt/state.
+usage:
+  description: Intentionally introduces small, controlled changes or 'mutations' to
+    a given prompt or internal representation to encourage creative divergence, break
+    out of repetitive loops, or test system robustness.
+  example:
+    original_prompt: Write a story about a brave knight.
+    invocation_tag: '<deviate:mutation strength=0.3 mutation_type=''adjective_synonym_shift''>Original:
+      ''Write a story about a brave knight.'' </deviate:mutation>'
+    potential_mutated_prompt: 'Mutated Prompt: ''Write a story about a courageous
+      paladin.'' or ''Write a story about a valiant hero.'' or ''Write a story about
+      an audacious warrior.'''
+  explanation: This sigil is used to spark creativity or explore the solution space
+    more broadly. By slightly altering the input ('shifting the semantic vector'),
+    it can lead the AI to generate different, potentially more innovative responses
+    than it would with the canonical prompt. It's also useful for 'what-if' scenarios
+    or diagnosing why a particular prompt might be failing by testing variations.
+    The 'noise + synonym + inversion' are examples of mutation techniques.
+activation_context:
+  trigger_conditions:
+  - Creative brainstorming sessions.
+  - Need to overcome repetitive or stereotypical AI outputs.
+  - Exploring alternative phrasings or conceptual approaches.
+  - Diagnosing sensitivity of AI responses to prompt variations.
+  - Generating diverse datasets from a seed prompt.
+  preconditions:
+  - A base prompt or cognitive state to mutate.
+  - Defined mutation operators (e.g., synonym lists, noise functions, conceptual ontologies
+    for shifts).
+  required_capabilities:
+  - semantic_representation_access
+  - lexical_knowledge (for synonyms, antonyms)
+  - ability_to_apply_controlled_transformations
+  supported_modalities:
+  - textual_prompt
+  - symbolic_representation_mutation
+  contraindications:
+  - When precise, unvarying adherence to the original instruction is critical.
+  - High-stakes situations where unpredictable deviations are unacceptable without
+    explicit safety checks.
+parameterization_schema:
+  parameters:
+  - name: mutation_strength
+    type: number
+    description: The degree of perturbation to apply (e.g., 0.1 for subtle, 0.5 for
+      moderate). Represents σ² in a noise model or probability of token change.
+    default_value: 0.2
+    value_range:
+      min: 0.01
+      max: 1.0
+  - name: mutation_type
+    type: string
+    enum:
+    - semantic_noise
+    - synonym_replacement
+    - antonym_flip
+    - conceptual_shift
+    - add_related_concept
+    - negation_toggle
+    - rephrase_mild
+    - rephrase_strong
+    description: The type of mutation strategy to employ.
+    default_value: synonym_replacement
+  - name: target_element_for_mutation
+    type: string
+    description: 'Optional: specify a part of the prompt to focus the mutation on
+      (e.g., ''adjectives'', ''main_verb'').'
+    is_required: false
+  - name: num_mutations_to_generate
+    type: integer
+    description: How many mutated versions of the prompt to generate.
+    default_value: 1
+prompt_template:
+  role: system
+  content: 'Original Prompt: "{{original_prompt_text}}"
+
+    Apply ''{{mutation_type}}'' mutation with strength {{mutation_strength}}. {{#if
+    target_element_for_mutation}}Focus on ''{{target_element_for_mutation}}''.{{/if}}
+
+    Generate {{num_mutations_to_generate}} mutated version(s).'
+  execution_mode: transformation
+  variables:
+  - name: original_prompt_text
+    description: The prompt to mutate.
+    required_for_llm: true
+  - name: mutation_type
+    description: Type of mutation.
+    required_for_llm: true
+  - name: mutation_strength
+    description: Strength of mutation.
+    required_for_llm: true
+  - name: target_element_for_mutation
+    description: Element to target.
+    required_for_llm: false
+  - name: num_mutations_to_generate
+    description: Number of versions.
+    required_for_llm: true
+  output_schema: 'One or more mutated prompts. Example: {''mutated_prompts'': [''variant1'',
+    ''variant2'']}'
+relationships:
+- target_sigil: CREATIVE_IDEATION_SPARKER
+  relationship_type: enables
+  description: Provides a mechanism for generating diverse inputs to a creative ideation
+    process.
+- target_sigil: ROBUSTNESS_TESTING_HARNESS
+  relationship_type: component_of
+  description: Can be used to generate varied test cases for evaluating AI robustness.
+- target_sigil: EXPLORATION_STRATEGY_RANDOM_WALK
+  relationship_type: analogous_to
+  description: Similar to introducing random steps in an exploration algorithm.
+SMART_MRAP:
+  Specific: Shift the semantic vector or structure of a given prompt by a controlled
+    amount (strength σ²) to inject creative perturbation, using techniques like noise
+    addition, synonym replacement, or conceptual inversion.
+  Measurable: Semantic distance (e.g., cosine distance in embedding space) between
+    original and mutated prompt correlates with strength σ². Observable divergence
+    from canonical AI response by X%. Increase in novelty/diversity scores of generated
+    outputs.
+  Achievable: By programmatically applying transformations to the prompt string (e.g.,
+    replacing words with synonyms from a thesaurus, adding random noise to embeddings
+    and finding nearest token, inverting sentiment markers) or by prompting an LLM
+    to rephrase with specific constraints.
+  Relevant: Useful for creative ideation, overcoming AI's tendency for stereotypical
+    responses, exploring the boundaries of an AI's understanding, error diagnosis
+    by observing sensitivity to small changes, and generating diverse training data.
+  Transferable: Applicable to any model that accepts textual or symbolic prompts.
+    Token rerouting or manipulation of internal representations can achieve this in
+    more integrated systems. The concept is broadly adaptable.
+metadata:
+  definition_version: 1.4.0
+  definition_status: active
+  author_agent_id: VOXSIGIL_CONVERTER_BOT_ASSISTED_BY_USER_INPUT
+  created_timestamp: '2024-03-10T18:10:00Z'
+  last_updated_timestamp: '2024-03-10T18:10:00Z'
+  authorship_context:
+    motivation: To provide a tool for systematically exploring variations around a
+      prompt or idea, fostering creativity and aiding in system understanding.
+    theoretical_framework: Genetic algorithms (mutation operator), prompt engineering,
+      creative cognition, robustness testing.
+test_criteria:
+- test_id: DEVMUT_SYNONYM_SWAP_001
+  description: Verify synonym replacement mutation.
+  type: functional
+  input_scenario_or_parameters:
+    original_prompt_text: The cat is happy.
+    mutation_type: synonym_replacement
+    mutation_strength: 0.5
+    num_mutations_to_generate: 1
+  expected_behavior_or_output: Mutated prompt contains a synonym for 'happy' (e.g.,
+    'The cat is glad/joyful/content.').
+  evaluation_method: pattern_match
+advanced_cognitive_modeling:
+  strategic_intent:
+  - goal_id: STIMULATE_DIVERGENT_THINKING
+    alignment_strength: 0.8
+    contribution_type: enabler
+consciousness_scaffold: false
+cognitive_scaffold: true
+symbolic_scaffold: true
+name: Promptperturbator

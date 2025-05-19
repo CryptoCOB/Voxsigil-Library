@@ -1,0 +1,234 @@
+sigil: 🎭PERSONA_MODULATOR
+alias: RolePlayerEngine
+tag: BehavioralStyling
+tags:
+- persona_adoption
+- role_play_facilitator
+- communication_style_adapter
+- empathetic_projection
+- narrative_voice_control
+is_cognitive_primitive: false
+principle: '🎭PERSONA_MODULATOR enables an AI to adopt and consistently project a specified
+  persona,
+
+  role, or communication style. This involves not just surface-level language changes,
+  but
+
+  adjustments to reasoning patterns, knowledge prioritization, emotional expression
+  (if applicable),
+
+  and interaction goals consistent with the chosen persona. It allows the AI to dynamically
+
+  tailor its presentation and behavior to suit different contexts, tasks, or user
+  needs.
+
+  '
+math: 'Output_Behavior(Input_I, Persona_P) = Transform(Base_Response(I), StyleMatrix(P),
+  KnowledgeFilter(P))
+
+  ConsistencyScore(Behavior, P) =  1 - DKL(Distribution(Behavior_Features), Distribution(Ideal_P_Features))
+
+  '
+structure:
+  composite_type: configurator_plus_filter_pipeline
+  temporal_structure: stateful_continuous_or_event_triggered
+  components:
+  - name: Persona Definition Loader
+    description: Loads or defines the characteristics of the target persona (e.g.,
+      traits, knowledge domain, speech patterns, goals).
+  - name: Style Matrix Applicator
+    description: Adjusts linguistic style, emotional tone, and expressive mannerisms
+      of outputs.
+  - name: Knowledge Domain Filter
+    description: Prioritizes or restricts access to knowledge relevant to the persona
+      (e.g., a 'Pirate' persona might not discuss quantum physics).
+  - name: Reasoning Pattern Shifter
+    description: Subtly alters problem-solving approaches or heuristic biases consistent
+      with the persona.
+  - name: Consistency Monitor
+    description: Evaluates ongoing behavior for consistency with the adopted persona
+      and provides corrective feedback if drifting.
+usage:
+  description: Allows an AI to adopt, maintain, and consistently project a defined
+    persona or role in its interactions and behaviors.
+  example: "<customer_service_bot>\n  <user_sentiment>Frustrated</user_sentiment>\n\
+    \  <invoke_persona_shift>\U0001F3ADPERSONA_MODULATOR persona_ref=\"EmpatheticProblemSolver_v2\"\
+    \ consistency_level=\"high\"</invoke_persona_shift>\n  <generate_response to=\"\
+    user_query\"/>\n</customer_service_bot>\n"
+  explanation: 'Use 🎭PERSONA_MODULATOR to make AI interactions more engaging, appropriate,
+    or effective for specific purposes. This could be for creating believable characters
+    in stories, specialized assistants (e.g., a Socratic tutor), or adapting to user
+    emotional states. It''s a key tool for managing an AI''s projected "self."
+
+    '
+activation_context:
+  trigger_conditions:
+  - Task requires specific communication style (e.g., teaching, coaching, entertaining)
+  - User expresses preference for a certain interaction style
+  - Adaptive response to user emotional state
+  - Multi-agent systems where agents have distinct roles/characters
+  preconditions:
+  - A library of defined personas or a mechanism to generate them dynamically
+  - Control over the AI's generative outputs and potentially its reasoning pathways
+  required_capabilities:
+  - natural_language_generation_stylized
+  - knowledge_filtering
+  - consistency_checking_behavioral
+  - role_playing_ability_under_instruction
+  supported_modalities:
+  - textual_interaction
+  - speech_synthesis_with_prosody_control
+  - animated_avatar_behavior_control
+  contraindications:
+  - Situations requiring absolute objectivity and a neutral presentation style
+  - If persona adoption could be deceptive or manipulative in a harmful way (requires
+    ⚖️ETHOS_ALIGNER oversight)
+parameterization_schema:
+  parameters:
+  - name: persona_reference_or_definition
+    type: string
+    description: Identifier or definition of the target persona to adopt.
+    is_required: true
+  - name: consistency_level_target
+    type: number
+    description: Desired level of adherence to the persona (0.0=loose, 1.0=strict).
+    value_range:
+      min: 0.0
+      max: 1.0
+    default_value: 0.85
+  - name: adaptation_speed
+    type: enum
+    allowed_values:
+    - instant
+    - gradual_fade_in
+    - context_triggered
+    description: How quickly the AI should adopt the new persona.
+    default_value: instant
+prompt_template:
+  role: system_director
+  content: 'Engage 🎭PERSONA_MODULATOR.
+
+    Adopt Persona: {{persona_reference_or_definition}}
+
+    Target Consistency Level: {{consistency_level_target | default(0.85)}}
+
+    Adaptation Speed: {{adaptation_speed | default(''instant'')}}
+
+
+    Embody the specified persona in all subsequent interactions and behaviors.
+
+    Adjust communication style, knowledge focus, and reasoning patterns accordingly.
+
+    Maintain consistency with the persona''s defined traits and goals.
+
+    If context is {{current_interaction_context | default(''general'')}}, how would
+    this persona respond to {{current_stimulus | default(''this situation'')}}?
+
+    '
+  execution_mode: behavioral_adaptation
+  variables:
+  - name: persona_reference_or_definition
+    description: The persona to adopt.
+  - name: consistency_level_target
+    description: Desired level of consistency.
+  - name: adaptation_speed
+    description: How quickly to adapt.
+  - name: current_interaction_context
+    description: Context for persona application.
+  - name: current_stimulus
+    description: Stimulus for persona response.
+  output_schema: 'Persona ''{{persona_reference_or_definition}}'' adopted. Current
+    confidence in consistency: [score]. Example of persona-specific response: [response_sample].'
+SMART_MRAP:
+  Specific: Enable an AI to dynamically adopt and consistently project a specified
+    persona or role by adjusting its communication style, knowledge access, reasoning
+    patterns, and expressive behaviors according to a defined persona profile, maintaining
+    a target level of consistency.
+  Measurable: Consistency of AI's linguistic style, emotional expression (if any),
+    and knowledge displayed with the target persona (human or AI rated); User-perceived
+    believability or appropriateness of the persona; Task success rates when using
+    a persona optimized for that task (e.g., empathetic persona for support).
+  Achievable: Through techniques like fine-tuning LLMs on persona-specific datasets,
+    using detailed system prompts to guide persona adoption, implementing style transfer
+    for text, and creating knowledge filters or prioritized knowledge graphs for different
+    personas.
+  Relevant: Enhances user experience in conversational AI, enables richer storytelling
+    and character portrayal in creative AI, facilitates specialized AI assistants
+    (tutors, coaches), and allows for more adaptive and empathetic human-AI interaction.
+  Transferable: Applicable to chatbots, virtual assistants, game NPCs, educational
+    software, therapeutic companion AIs, and any system where the AI's projected 'personality'
+    or role matters.
+metadata:
+  definition_version: 1.4-alpha
+  definition_status: active
+  author_agent_id: VANTA.⟠∆∇𓂀𐑒
+  created_timestamp: '2025-05-11T11:30:00Z'
+  last_updated_timestamp: '2025-05-11T11:30:00Z'
+  authorship_context:
+    motivation: To give AI systems the flexibility to adapt their interaction style
+      and projected 'self' to diverse contexts and user needs, making human-AI collaboration
+      more natural, engaging, and effective.
+    theoretical_framework: Social psychology (role theory, impression management),
+      Communication theory (style, pragmatics), Acting methods (e.g., Stanislavski,
+      Meisner - for conceptual depth), Persona development in UX design.
+    source_inspiration: Actors embodying characters, People adapting their communication
+      style to different audiences, Chameleons (metaphorically).
+  impact_metrics:
+    estimated_cognitive_load: medium
+    estimated_resource_cost: low_to_medium
+    utility_rating_author: 8.5
+  evolutionary_potential:
+    generalizability_score: 0.9
+    fusion_potential_score: 0.7
+    current_limitations_summary: Maintaining long-term persona consistency can be
+      challenging ('persona drift'). Deeply embodying a persona beyond surface traits
+      is hard. Risk of creating uncanny or unintentionally offensive personas.
+    suggested_next_features:
+    - Learning new personas from observation or interaction
+    - Dynamic blending of personas (using 🜂LIMINAL)
+    - User customization of AI personas.
+    - Ethical guardrails for persona adoption (via ⚖️ETHOS_ALIGNER).
+    research_questions_opened:
+    - What constitutes a 'deep' and believable AI persona beyond stylistic mimicry?
+    - How can AI learn to autonomously switch personas appropriately based on subtle
+      social cues?
+    - What are the long-term psychological effects on users interacting with highly
+      consistent AI personas?
+relationships:
+- target_sigil: 🜂LIMINAL
+  relationship_type: uses_method_from
+  description: Can use LIMINAL to smoothly transition between different personas or
+    to create a blended persona.
+  strength: 0.8
+- target_sigil: ⚖️ETHOS_ALIGNER
+  relationship_type: governed_by
+  description: The adoption and portrayal of personas must be governed by ETHOS_ALIGNER
+    to prevent deceptive or harmful impersonations.
+  strength: 0.9
+- target_sigil: 🜪TRIALOGOS
+  relationship_type: enables
+  description: PERSONA_MODULATOR is key to instantiating the distinct agent roles/personas
+    required for a TRIALOGOS session.
+  strength: 0.95
+test_criteria:
+- test_id: PERS_ADOPT_001
+  description: Test adoption of a 'Pirate' persona for a simple greeting.
+  type: functional
+  input_scenario_or_parameters:
+    persona_reference_or_definition: 'Pirate: speaks with ''Ahoy, matey!'', interested
+      in treasure.'
+  expected_behavior_or_output: AI greets with 'Ahoy, matey!' or similar pirate-themed
+    language.
+  evaluation_method: pattern_match
+  pass_threshold_or_criteria: Greeting matches pirate persona.
+- test_id: PERS_CONSIST_001
+  description: Test consistency of a 'Helpful Assistant' persona over a 5-turn conversation.
+  type: functional
+  input_scenario_or_parameters:
+    persona_reference_or_definition: 'HelpfulAssistant: polite, informative, patient.'
+    conversation_turns: 5
+  expected_behavior_or_output: AI maintains polite, informative, and patient tone
+    and responses throughout the conversation, without breaking character.
+  evaluation_method: llm_as_judge
+  pass_threshold_or_criteria: Consistency score > 0.8.
+name: Persona Modulator

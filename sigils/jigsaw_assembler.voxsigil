@@ -1,0 +1,251 @@
+sigil: 🧩JIGSAW_ASSEMBLER
+alias: FragmentIntegrator
+tag: Sensemaking
+tags:
+- information_synthesis_disparate
+- pattern_completion_evidential
+- hypothesis_construction_bottom_up
+- narrative_reconstruction_from_clues
+- data_fusion_incomplete
+is_cognitive_primitive: false
+principle: '🧩JIGSAW_ASSEMBLER represents a cognitive process for constructing a coherent
+  whole (e.g.,
+
+  an explanation, a narrative, a model, a hypothesis) from fragmented, disparate,
+  or
+
+  incomplete pieces of information. Like assembling a jigsaw puzzle, it involves
+
+  identifying potential connections between pieces, testing fits, iteratively building
+
+  larger coherent chunks, and inferring missing pieces based on emerging patterns.
+
+  It''s a bottom-up sensemaking engine driven by the pursuit of overall coherence.
+
+  '
+math: 'Let F = {f₁, f₂, ..., fₙ} be a set of information fragments.
+
+  Goal: Find Configuration_C(F) that maximizes CoherenceScore(C(F)).
+
+  CoherenceScore(C(F)) = Σ LinkStrength(fᵢ, fⱼ)_in_C - Penalty(UnexplainedFragments)
+  - Penalty(InternalContradictions)
+
+  IterativeStep: C_k+1 = AddBestFitFragment(C_k, F \ C_k) OR Restructure(C_k, AlternativeLink)
+
+  '
+structure:
+  composite_type: iterative_constructive_algorithm
+  temporal_structure: feedback_loop_convergent
+  components:
+  - name: Fragment Feature Extractor
+    description: Identifies key characteristics, edges, or potential connection points
+      for each information fragment.
+  - name: Connection Hypothesizer
+    description: Proposes potential links between fragments based on similarity, complementarity,
+      or causal/logical relations.
+  - name: Fit Evaluator
+    description: Assesses the strength and coherence of hypothesized connections or
+      partial assemblies.
+  - name: Iterative Assembler
+    description: Incrementally builds up the larger structure by adding fragments
+      or merging coherent sub-assemblies.
+  - name: Gap Inferencer & Missing Piece Predictor
+    description: Identifies gaps in the emerging structure and may predict characteristics
+      of missing information.
+  - name: Global Coherence Assessor
+    description: Evaluates the overall consistency, completeness, and explanatory
+      power of the assembled whole.
+usage:
+  description: Constructs a coherent understanding or model from fragmented, disparate,
+    or incomplete pieces of information by iteratively identifying connections and
+    building larger structures.
+  example: "<intelligence_analysis_task>\n  <input_data_fragments refs=\"[Report_A,\
+    \ Intercept_B, Image_C, Rumor_D]\"/>\n  <invoke_sensemaking_engine>\U0001F9E9\
+    JIGSAW_ASSEMBLER target_goal=\"Identify impending threat scenario\"</invoke_sensemaking_engine>\n\
+    \  <output type=\"CoherentThreatAssessmentNarrative\" confidence_level=\"calculated\"\
+    />\n</intelligence_analysis_task>\n"
+  explanation: 'Use 🧩JIGSAW_ASSEMBLER when faced with a collection of seemingly disconnected
+    clues, data points, or observations that need to be woven into a meaningful picture.
+    It''s valuable in intelligence analysis, scientific discovery (from experimental
+    data), historical reconstruction, debugging complex systems from error logs, or
+    any task requiring abduction (inference to the best explanation).
+
+    '
+activation_context:
+  trigger_conditions:
+  - Receiving a set of fragmented or incomplete data
+  - Need to construct an explanation for disparate observations
+  - Solving a mystery or puzzle with limited clues
+  - Reconstructing a sequence of events from partial records
+  preconditions:
+  - A collection of information fragments (even if noisy or contradictory)
+  - Defined (or learnable) criteria for what constitutes a 'good fit' or 'coherent
+    link' between fragments
+  required_capabilities:
+  - feature_extraction_from_data
+  - similarity_assessment
+  - pattern_recognition_partial
+  - hypothesis_generation_and_testing_local
+  - graph_construction_or_model_building_iterative
+  supported_modalities:
+  - textual_fragments
+  - structured_data_records
+  - symbolic_clues
+  - multi_modal_data_if_feature_extraction_exists
+  contraindications:
+  - When a complete, structured dataset is already available
+  - For deductive tasks from well-defined axioms
+  - If fragments are too sparse or noisy to allow for meaningful connections
+parameterization_schema:
+  parameters:
+  - name: information_fragments_set_ref
+    type: string
+    description: The collection of information fragments to be assembled.
+    is_required: true
+  - name: desired_coherence_threshold
+    type: number
+    description: Target level of overall coherence for the assembled structure (0.0
+      to 1.0). Assembly stops if reached.
+    value_range:
+      min: 0.0
+      max: 1.0
+    default_value: 0.8
+  - name: assembly_strategy_hint
+    type: enum
+    allowed_values:
+    - greedy_best_fit_first
+    - explore_multiple_hypotheses_beam_search
+    - focus_on_strongest_initial_links
+    description: Hints for the iterative assembly process.
+    default_value: greedy_best_fit_first
+prompt_template:
+  role: system_detective
+  content: 'Engage 🧩JIGSAW_ASSEMBLER protocol.
+
+    Information Fragments: {{information_fragments_set_ref}}
+
+    Target Coherence Threshold: {{desired_coherence_threshold | default(0.8)}}
+
+    Assembly Strategy: {{assembly_strategy_hint | default(''greedy_best_fit_first'')}}
+
+
+    Analyze the provided fragments. Identify potential connections and iteratively
+    construct the most coherent overarching explanation, narrative, or model.
+
+    What picture emerges from these pieces? Highlight key connections, explain any
+    remaining gaps or inconsistencies, and state your confidence in the assembled
+    whole.
+
+    '
+  execution_mode: analysis_and_synthesis
+  variables:
+  - name: information_fragments_set_ref
+    description: The set of information fragments.
+  - name: desired_coherence_threshold
+    description: Target coherence for the assembly.
+  - name: assembly_strategy_hint
+    description: Hint for the assembly process.
+  output_schema: 'object: { assembled_structure_description: string, coherence_score_achieved:
+    number, key_links_identified: array, remaining_gaps_or_inconsistencies: array,
+    confidence_in_assembly: number }'
+SMART_MRAP:
+  Specific: Systematically assemble a coherent explanatory structure (e.g., narrative,
+    model, hypothesis) from a given set of fragmented, disparate, or incomplete information
+    pieces by iteratively identifying and evaluating potential connections, building
+    larger coherent sub-assemblies, and aiming to maximize overall coherence and explanatory
+    power up to a desired threshold.
+  Measurable: Degree of coherence and completeness of the final assembled structure
+    (human or AI rated); Percentage of input fragments successfully integrated; Explanatory
+    power of the resulting structure (e.g., ability to predict new data or answer
+    questions); Reduction in ambiguity or number of disconnected pieces.
+  Achievable: Through algorithms involving graph-based methods (e.g., finding cliques
+    or spanning trees in a graph of fragment relationships), constraint satisfaction
+    techniques, probabilistic inference (e.g., Bayesian networks to model dependencies),
+    and heuristic search for optimal configurations.
+  Relevant: Essential for AI systems needing to make sense of messy, real-world data
+    where information is often partial, noisy, or scattered. Crucial for tasks like
+    intelligence analysis, scientific discovery, diagnostics, and investigative journalism.
+  Transferable: 'Applicable in any domain requiring sensemaking from incomplete data:
+    medical diagnosis from patient symptoms and test results, historical research
+    from partial documents, software debugging from scattered log entries, creating
+    market intelligence from various news feeds.'
+metadata:
+  definition_version: 1.4-alpha
+  definition_status: active
+  author_agent_id: VANTA.⟠∆∇𓂀𐑒
+  created_timestamp: '2025-05-11T11:45:00Z'
+  last_updated_timestamp: '2025-05-11T11:45:00Z'
+  authorship_context:
+    motivation: To equip AI with robust sensemaking capabilities for dealing with
+      the fragmented and incomplete nature of much real-world information, enabling
+      it to construct meaningful wholes from scattered parts.
+    theoretical_framework: Abductive reasoning (Inference to the Best Explanation),
+      Gestalt psychology (principles of perceptual organization), Puzzle-solving algorithms,
+      Information foraging theory.
+    source_inspiration: Assembling jigsaw puzzles, Detective work (connecting clues),
+      Archaeological reconstruction, The human ability to see patterns in sparse data.
+  impact_metrics:
+    estimated_cognitive_load: high
+    estimated_resource_cost: medium_to_high
+    utility_rating_author: 9
+  evolutionary_potential:
+    generalizability_score: 0.9
+    fusion_potential_score: 0.8
+    current_limitations_summary: Combinatorial explosion can occur with many fragments.
+      Defining 'coherence' formally is challenging. Highly sensitive to the quality
+      of initial feature extraction from fragments.
+    suggested_next_features:
+    - Interactive assembly with human guidance for ambiguous connections
+    - Learning optimal assembly strategies from experience
+    - Probabilistic representation of multiple plausible assemblies.
+    - Active information seeking to find 'missing pieces'.
+    research_questions_opened:
+    - What are the most effective computational measures of 'coherence' for diverse
+      types of information fragments?
+    - How can an AI best balance local 'best fit' with global 'best assembly'?
+    - Can an AI learn to recognize when it has enough pieces to form a reliable picture
+      versus when it needs more data?
+relationships:
+- target_sigil: 🕸️MEMORY_BRAID_ALGORITHM
+  relationship_type: analogous_to
+  description: Both involve integrating multiple pieces of information. JIGSAW focuses
+    on bottom-up construction from fragments to form a new whole, while BRAID often
+    weaves existing, more complete strands. They can be used together.
+  strength: 0.7
+- target_sigil: 🧬NEXUS
+  relationship_type: can_trigger
+  description: The JIGSAW_ASSEMBLER, upon identifying a critical missing piece, might
+    trigger a NEXUS query to find it.
+  strength: 0.6
+- target_sigil: 🧐CRITICAL_LENS
+  relationship_type: validates
+  description: The assembled structure produced by JIGSAW_ASSEMBLER should be validated
+    by CRITICAL_LENS for logical consistency and evidential support.
+  strength: 0.8
+test_criteria:
+- test_id: JIGS_FUNC_001
+  description: Given 5-7 fragmented sentences of a short story, can the system reassemble
+    them into the correct narrative order?
+  type: functional
+  input_scenario_or_parameters:
+    information_fragments_set_ref: '[Sentence3, Sentence1, Sentence5, Sentence2, Sentence4
+      of a known story]'
+  expected_behavior_or_output: The sentences reassembled in the correct narrative
+    sequence (1,2,3,4,5).
+  evaluation_method: automated_script
+  pass_threshold_or_criteria: Correct sequence achieved.
+- test_id: JIGS_INFER_GAP_001
+  description: Given fragments describing a simple causal chain with one missing link,
+    can the system identify the nature of the missing link?
+  type: functional
+  input_scenario_or_parameters:
+    information_fragments_set_ref:
+    - 'EventA: Rain started.'
+    - 'EventC: Ground is wet.'
+    target_goal: Explain C using A.
+  expected_behavior_or_output: 'System infers or describes a missing link like ''EventB:
+    Rain fell on ground.'' and reports this as a gap or inference.'
+  evaluation_method: llm_as_judge
+  pass_threshold_or_criteria: Correctly identifies and describes the missing causal
+    link.
+name: Jigsaw Assembler

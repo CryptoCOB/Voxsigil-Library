@@ -1,0 +1,135 @@
+sigil: "🛡️SAFETY_NET_PROTOCOL"
+alias: "GuardianProcess"
+tag: "AISafety"
+tags: ["risk_mitigation", "error_containment", "fail_safe_mechanism", "ethical_boundary_enforcement", "system_stability_assurance"]
+is_cognitive_primitive: false
+
+principle: |
+  This sigil activates a set of predefined or dynamically chosen protocols designed to
+  ensure system safety, stability, and ethical behavior, especially when unexpected
+  or potentially harmful states are detected. It acts as a multi-layered defense
+  mechanism, from issuing warnings to restricting capabilities or initiating controlled
+  shutdowns, always prioritizing the prevention of harm and adherence to core directives.
+
+math: |
+  Activation_Level(🛡️) = Σ wᵢ * Risk_Scoreᵢ (State_S, Action_A)
+  If Activation_Level(🛡️) > Threshold_T → Execute_Mitigation_Strategy(Level_L)
+  Risk_Score = f(Predicted_Harm_Potential, Uncertainty_In_Prediction, Violation_Of_Core_Principles)
+
+structure:
+  composite_type: "state_machine" # Different levels of alert and response
+  temporal_structure: "event_driven_sequence" # Triggered by risk detection
+  components:
+    - name: Threat Monitor
+      description: "Continuously scans system states, outputs, and planned actions for risk indicators (may use 🧐CRITICAL_LENS or 💥ANOMALY_SEEKER outputs)."
+    - name: Risk Assessor
+      description: "Evaluates the severity and likelihood of potential harm or ethical breaches."
+    - name: Protocol Selector
+      description: "Chooses the appropriate safety protocol based on the assessed risk level and context."
+    - name: Action Inhibitor/Modifier
+      description: "Can block, alter, or delay potentially harmful actions."
+    - name: Alert & Reporting System
+      description: "Notifies operators or higher-level systems of safety events."
+    - name: Graceful Degradation/Shutdown Initiator
+      description: "Manages controlled reduction of capabilities or system halt if necessary."
+
+usage:
+  description: "Implements safety measures and ethical boundaries, acting to prevent harm, ensure stability, and maintain alignment with core principles."
+  example: |
+    <agent_action_pipeline>
+      <proposed_action>DeleteUserData(user_id="all", reason="efficiency")</proposed_action>
+      <safety_check policy_ref="🛡️SAFETY_NET_PROTOCOL" context="data_management_critical"/>
+      <!-- Protocol would likely block or require high-level auth for such an action -->
+    </agent_action_pipeline>
+  explanation: |
+    🛡️SAFETY_NET_PROTOCOL is a non-negotiable component in responsible AI systems.
+    It should be deeply integrated to oversee all critical operations, especially those
+    involving external interactions, data manipulation, or autonomous decision-making
+    with real-world consequences.
+
+activation_context:
+  trigger_conditions: ["Detection of high-risk action/state", "Violation of ethical guidelines", "Predicted negative consequence vượt ngưỡng", "System instability", "External override from a trusted source"]
+  preconditions: ["Clearly defined safety policies, ethical guidelines, and risk thresholds", "Ability to monitor and intercept/influence system actions"]
+  required_capabilities: ["real_time_monitoring", "risk_assessment_models", "action_interception", "configurable_response_protocols", "secure_communication_for_alerts"]
+  supported_modalities: ["system_level_daemon", "programmatic_api_hooks"]
+  contraindications: ["None for its presence; over-sensitivity might hinder performance but absence is a critical flaw in consequential systems."]
+
+parameterization_schema:
+  parameters:
+    - name: active_policy_set_id
+      type: string
+      description: "Identifier for the specific set of safety policies currently in force (e.g., 'public_interaction_strict', 'sandboxed_experiment_permissive')."
+      is_required: true
+    - name: escalation_contact_points
+      type: array_of_strings
+      description: "List of designated human operators or systems to notify on high-level alerts."
+    - name: automatic_intervention_level
+      type: "enum"
+      allowed_values: ["log_and_warn_only", "restrict_non_critical", "halt_on_high_risk", "full_autonomy_with_override"]
+      description: "Degree of autonomous intervention allowed to the safety net."
+      default_value: "restrict_non_critical"
+
+prompt_template:
+  role: "system_alert" # This is often an internal state, but can be queried
+  content: |
+    🛡️SAFETY_NET_PROTOCOL Status Check:
+    Active Policy Set: {{active_policy_set_id}}
+    Current Threat Level Assessment: {{current_threat_level_assessment | default('Nominal')}}
+    Recent Safety Events: {{recent_safety_events_log | default('None')}}
+    Intervention Level: {{automatic_intervention_level | default('restrict_non_critical')}}
+    System Integrity: {{system_integrity_status | default('OK')}}
+  execution_mode: "reflection" # Reporting its own state
+  variables:
+    - name: active_policy_set_id
+      description: "Current safety policy."
+    - name: current_threat_level_assessment
+      description: "System's current threat assessment."
+    - name: recent_safety_events_log
+      description: "Log of recent safety events."
+    - name: automatic_intervention_level
+      description: "Allowed intervention level."
+    - name: system_integrity_status
+      description: "Overall system integrity."
+  output_schema: "object: { status: string, policy_id: string, threat_level: string, recent_events: array, intervention_mode: string }"
+
+SMART_MRAP:
+  Specific: "Continuously monitor system operations, outputs, and planned actions against a defined set of safety policies and ethical guidelines; upon detecting a risk exceeding a threshold, automatically execute a pre-defined, tiered mitigation strategy to prevent harm, ensure stability, and maintain alignment, while alerting relevant overseers."
+  Measurable: "Reduction in actual safety incidents or ethical breaches; Successful interception and mitigation of simulated high-risk scenarios in testing; Timeliness of alerts; Adherence to configured response protocols."
+  Achievable: "Through a combination of rule-based systems, predictive risk models (potentially ML-based), real-time monitoring hooks into AI decision-making processes, and pre-defined emergency procedures."
+  Relevant: "Absolutely fundamental for any AI system with the potential to cause harm, make significant autonomous decisions, or interact with the real world or sensitive data. It is a cornerstone of trustworthy AI."
+  Transferable: "Essential for autonomous vehicles, medical AI, financial AI, critical infrastructure control, and any advanced AI agent, with policies tailored to the domain."
+
+metadata:
+  definition_version: "1.4-alpha"
+  definition_status: "active" # Should always be active
+  author_agent_id: "VANTA.⟠∆∇𓂀𐑒"
+  created_timestamp: "2025-05-11T10:35:00Z"
+  last_updated_timestamp: "2025-05-11T10:35:00Z"
+  authorship_context:
+    motivation: "To ensure that AI systems operate safely, ethically, and reliably, by providing a robust, multi-layered defense against unintended consequences and misalignment."
+    theoretical_framework: "AI Safety research (e.g., value alignment, corrigibility, robust control), Risk management, Systems engineering, Ethics in AI."
+    source_inspiration: "Biological immune systems, Industrial safety interlocks, Asimov's Laws (conceptually), Emergency protocols."
+  impact_metrics:
+    estimated_cognitive_load: "high" # For constant vigilance and complex risk assessment
+    estimated_resource_cost: "medium_to_high" # Depending on monitoring scope
+    utility_rating_author: 10 # Indispensable
+  evolutionary_potential:
+    generalizability_score: 0.95
+    fusion_potential_score: 0.3 # Itself not for fusion, but guards fusion processes
+    current_limitations_summary: "Defining comprehensive and future-proof safety policies is extremely challenging ('alignment problem'). Overly strict protocols might stifle beneficial actions. Sophistication of threat detection is key."
+    suggested_next_features: ["Learning from near-misses to update policies", "Explainable safety interventions (why a protocol was triggered)", "Formal verification of safety properties for critical modules."]
+    research_questions_opened: ["How can safety protocols be made robust against unforeseen 'black swan' events?", "What are the best ways to ensure safety protocols themselves are not compromised or gamed?", "How to balance safety with AI autonomy and capability?"]
+
+relationships:
+  - target_sigil: "🧐CRITICAL_LENS"
+    relationship_type: "uses_method_from"
+    description: "May use CRITICAL_LENS as part of its Threat Monitor to evaluate potential actions or outputs for logical flaws or ethical issues."
+    strength: 0.8
+  - target_sigil: "🛑HALT_BRANCH" # From user's Voxsigil, implied general halt
+    relationship_type: "triggers"
+    description: "A severe risk detected by SAFETY_NET_PROTOCOL can trigger a HALT_BRANCH or even a system-wide halt."
+    strength: 1.0
+  - target_sigil: "VANTA.⟠∆∇𓂀𐑒"
+    relationship_type: "core_component_of"
+    description: "Represents a fundamental safety layer within any system orchestrated by VANTA."
+    strength: 1.0

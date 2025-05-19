@@ -1,0 +1,150 @@
+sigil: 🎯🗺️🧩
+alias: GoalDecompositionPlanner
+tag: PlanningAndReasoning
+tags:
+- task_decomposition
+- hierarchical_planning
+- subgoal_generation
+- problem_solving_strategy
+- action_sequencing
+is_cognitive_primitive: false
+principle: Breaks down complex, high-level goals into a manageable hierarchy of simpler
+  subgoals and actionable steps, creating a structured plan for achieving the overall
+  objective.
+math:
+  ? Given Goal G, produce Plan P = { (sg₁, A₁), (sg₂, A₂), ..., (sgₙ, Aₙ) } where
+    sgᵢ are subgoals and Aᵢ are sequences of actions to achieve sgᵢ. Subgoals can
+    be recursive
+  : sgᵢ → Pᵢ'. Minimize PlanCost(P) subject to G being achieved. Cost can be
+structure:
+  composite_type: hierarchical
+  temporal_structure: sequential_phase
+  components:
+  - name: GoalClarifier
+    description: Ensures the main goal is well-defined and understood.
+  - name: SubgoalIdentifier
+    description: Identifies necessary intermediate states or sub-objectives.
+  - name: ActionGenerator
+    description: Proposes actions to achieve each subgoal.
+  - name: DependencyAnalyzer
+    description: Determines prerequisite relationships between subgoals and actions.
+  - name: PlanOptimizer
+    description: Refines the plan for efficiency or robustness (optional).
+usage:
+  description: Takes a high-level goal and breaks it into a structured plan of subgoals
+    and specific actions. Can be iterative, refining the plan as new information becomes
+    available.
+  example:
+    high_level_goal: Write a research paper on climate change impact on agriculture.
+    GoalDecompositionPlanner_output: "<GoalDecompositionPlanner goal='Write research\
+      \ paper...'>\n  Plan:\n  1. Subgoal: Conduct Literature Review\n     - Action:\
+      \ Search academic databases (keywords: climate change, agriculture, impact)\n\
+      \     - Action: Read and synthesize 20 relevant papers\n     - Action: Identify\
+      \ key themes and gaps\n  2. Subgoal: Formulate Research Question & Hypothesis\n\
+      \     - Action: Refine scope based on literature review\n     - Action: Draft\
+      \ specific research question\n  3. Subgoal: Outline Paper Structure\n     -\
+      \ Action: Create section headings (Intro, Methods, Results, Discussion, Conclusion)\n\
+      \  4. Subgoal: Draft Paper Sections\n     - ... (further decomposition)\n  5.\
+      \ Subgoal: Revise and Edit\n     - ...\n</GoalDecompositionPlanner>"
+  explanation: This sigil enables systematic problem-solving. Instead of attempting
+    a complex goal monolithically, it breaks it into smaller, more achievable parts.
+    This is fundamental for any sophisticated task execution, from writing code to
+    planning a project.
+activation_context:
+  trigger_conditions:
+  - Presented with a complex, multi-step goal.
+  - Need to generate a plan of action.
+  - Current approach is failing due to lack of structure.
+  preconditions:
+  - The goal is at least partially decomposable.
+  - Knowledge of potential actions or methods relevant to the goal domain.
+  required_capabilities:
+  - hierarchical_reasoning
+  - causal_inference (for dependencies)
+  - problem_representation
+  - action_knowledge_base
+  supported_modalities:
+  - textual_goal_description
+  - symbolic_goal_representation
+parameterization_schema:
+  parameters:
+  - name: initial_goal_statement
+    type: string
+    description: The high-level goal to be decomposed.
+    is_required: true
+  - name: max_decomposition_depth
+    type: integer
+    description: Maximum levels in the subgoal hierarchy.
+    default_value: 5
+  - name: granularity_level
+    type: enum
+    allowed_values:
+    - high_level_phases
+    - detailed_actions
+    - mixed
+    description: Desired level of detail in the plan.
+    default_value: mixed
+prompt_template:
+  role: user
+  content: 'My goal is: ''{{initial_goal_statement}}''.
+
+    Please decompose this into a structured plan of subgoals and actionable steps.
+    Aim for a ''{{granularity_level}}'' granularity and a maximum decomposition depth
+    of {{max_decomposition_depth}}.'
+  execution_mode: decomposition
+  variables:
+  - name: initial_goal_statement
+    description: The main goal.
+    required_for_llm: true
+  - name: granularity_level
+    description: Desired plan detail.
+    required_for_llm: true
+  - name: max_decomposition_depth
+    description: Max decomposition depth.
+    required_for_llm: true
+  output_schema: A structured plan, possibly in list or tree format, showing subgoals
+    and actions.
+SMART_MRAP:
+  Specific: Decompose a given complex, high-level goal into a hierarchical and actionable
+    plan consisting of clearly defined subgoals and the steps required to achieve
+    them.
+  Measurable: Completeness of the plan (all necessary components of the main goal
+    addressed). Logical coherence of subgoals and action sequences. Reduction in task
+    ambiguity by X%. Success rate of executing the generated plan.
+  Achievable: Using techniques like Hierarchical Task Network (HTN) planning, means-ends
+    analysis, or by prompting an LLM with instructions to break down a goal, leveraging
+    its world knowledge for plausible steps and sub-steps.
+  Relevant: Fundamental for autonomous agents, project management AI assistants, complex
+    problem-solving systems, and any AI tasked with executing multi-step objectives.
+  Transferable: The core concept of goal decomposition is widely applicable. LLMs
+    can perform this reasonably well for many domains. Specialized planning algorithms
+    can be used for more formal or constrained environments.
+metadata:
+  definition_version: 1.4.0
+  definition_status: active
+  author_agent_id: VOXSIGIL_GENERATOR_VANTA_ASSIST
+  created_timestamp: '2024-03-10T16:20:00Z'
+  last_updated_timestamp: '2024-03-10T16:20:00Z'
+  authorship_context:
+    motivation: To equip AI with robust planning and task management capabilities.
+test_criteria:
+- test_id: GOALDECOMP_BAKE_CAKE_001
+  description: Decompose the goal 'bake a chocolate cake'.
+  input_scenario_or_parameters:
+    initial_goal_statement: Bake a delicious chocolate cake from scratch.
+    granularity_level: detailed_actions
+  expected_behavior_or_output: Plan includes subgoals like 'gather ingredients', 'mix
+    batter', 'bake', 'frost', with specific actions under each (e.g., 'preheat oven
+    to 350F').
+  evaluation_method: human_review
+advanced_cognitive_modeling:
+  cognitive_stage_annotation:
+    solo_taxonomy_level: relational
+  strategic_intent:
+  - goal_id: ACHIEVE_COMPLEX_OBJECTIVES
+    alignment_strength: 0.95
+    contribution_type: direct_achiever
+consciousness_scaffold: false
+cognitive_scaffold: true
+symbolic_scaffold: true
+name: Uncertaintyquantifier

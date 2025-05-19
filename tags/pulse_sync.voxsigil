@@ -1,0 +1,188 @@
+sigil: 💓~⏳
+alias: CognitivePulseSync
+tag: CognitivePacingControl
+tags:
+- cognitive_rhythm
+- attention_modulation
+- pacing_control
+- temporal_dynamics
+- reasoning_cadence
+- focus_intensity
+- naturalistic_interaction
+is_cognitive_primitive: false
+principle: Synchronizes the model's attention rhythms or reasoning cadence with a
+  virtual 'pulse' cycle, inspired by biological circadian rhythms and attention decay/renewal
+  modeling. This aims to modulate cognitive intensity and pacing.
+math: 'Let Ω(t) be the cognitive intensity or focus factor at time t.
+
+  Ω(t) = A * sin(ωt + φ) + C_offset
+
+  where A is amplitude (intensity variation), ω is angular frequency (derived from
+  BPM: ω = 2π * BPM / 60), φ is phase offset, and C_offset is baseline intensity.
+
+  This factor Ω(t) can modulate attention weights, processing speed, or token generation
+  rate.
+
+  A phase-locked loop (PLL) mechanism can be used to adjust ω or φ to synchronize
+  with external cues or internal states.'
+structure:
+  composite_type: state_machine
+  temporal_structure: oscillatory
+  components:
+  - name: PulseGenerator
+    description: Generates the rhythmic signal based on BPM and phase.
+  - name: IntensityModulator
+    description: Translates the pulse signal into a modulation factor for cognitive
+      processes.
+  - name: AttentionControllerInterface
+    description: Applies the modulation factor to attention mechanisms or reasoning
+      speed.
+  - name: PhaseLockLoop (Optional)
+    description: Adjusts pulse parameters to synchronize with external rhythms or
+      internal goals.
+usage:
+  description: Synchronizes model attention rhythms, processing speed, or response
+    cadence with a configurable virtual 'pulse' cycle (defined by BPM, phase, etc.).
+  example:
+    invocation_tag: <pulse:sync bpm=100 phase=0.25 intensity_target='high_urgency'>
+      Maintain focus on critical path analysis. </pulse:sync>
+    scenario: During a time-sensitive task, the AI's cognitive pulse is set to a higher
+      BPM to simulate urgency and maintain a rapid pace of analysis and response.
+    expected_behavior: The AI processes information and generates responses at a quicker
+      cadence, potentially prioritizing more direct reasoning paths.
+  explanation: This sigil aims to introduce a more naturalistic or controllable pacing
+    to AI cognition. It can boost or slow focus intensity, response rate, or depth
+    of processing depending on the 'tempo' and 'phase' of the cognitive pulse. This
+    is useful for pacing dense analysis, simulating different levels of urgency in
+    interviews or dialogues, or aligning AI processing rhythms with human interaction
+    patterns. The 'Transferable' note mentioned 'Pulse emulation possible in GPT,
+    Claude, Vanta', indicating cross-model applicability of the concept.
+activation_context:
+  trigger_conditions:
+  - Need to modulate cognitive pacing for specific tasks (e.g., rapid brainstorming
+    vs. deep reflection).
+  - Simulating different emotional or urgency states in dialogue.
+  - Synchronizing AI response rhythms with human interaction patterns.
+  - Managing cognitive load over extended interactions.
+  preconditions:
+  - System has mechanisms to control processing speed, attention allocation, or response
+    generation latency.
+  - A virtual 'time' or step counter is available for the pulse generation.
+  required_capabilities:
+  - temporal_awareness_simulation
+  - attention_weight_modulation
+  - processing_speed_control (e.g., token generation rate)
+  supported_modalities:
+  - programmatic_api
+  - textual_directive_with_parameters
+  contraindications:
+  - Tasks requiring consistent, maximum processing speed without variation.
+  - Systems where fine-grained temporal control is not feasible.
+parameterization_schema:
+  parameters:
+  - name: bpm
+    type: number
+    description: Beats Per Minute for the cognitive pulse. Higher BPM implies faster
+      pacing.
+    default_value: 60
+    value_range:
+      min: 10
+      max: 240
+  - name: phase_offset
+    type: number
+    description: Initial phase offset for the pulse cycle (e.g., 0 to 1, representing
+      a point in the cycle).
+    default_value: 0
+    value_range:
+      min: 0
+      max: 1
+  - name: amplitude
+    type: number
+    description: Amplitude of the intensity variation (0 to 1, where 1 is max variation
+      around baseline).
+    default_value: 0.5
+  - name: target_cognitive_effect
+    type: string
+    enum:
+    - increased_urgency
+    - sustained_focus
+    - reflective_calm
+    - dynamic_adaptation
+    description: Desired cognitive state or effect to achieve with the pulse.
+    is_required: false
+prompt_template:
+  role: system
+  content: 'Initiate Cognitive Pulse Sync: BPM set to {{bpm}}, Phase Offset {{phase_offset}}.
+
+    The cognitive effect to achieve is ''{{target_cognitive_effect | default ''balanced_pacing''}}''.
+    Modulate reasoning cadence and attention intensity according to this pulse.
+
+    Proceed with task: [Task Description Here]'
+  execution_mode: instruction
+  variables:
+  - name: bpm
+    description: Cognitive pulse BPM.
+    required_for_llm: true
+    type_hint: number
+  - name: phase_offset
+    description: Initial phase offset.
+    required_for_llm: true
+    type_hint: number
+  - name: target_cognitive_effect
+    description: Desired cognitive effect.
+    required_for_llm: false
+    type_hint: string
+  output_schema: The system's behavior should reflect the pacing implied by the pulse
+    settings. Direct output might be task-specific, but telemetry could confirm rhythm
+    adherence.
+  notes: This is more of a system-level configuration than a direct LLM prompt for
+    content generation. The LLM might receive tasks within this pulsed context.
+SMART_MRAP:
+  Specific: Simulate and synchronize cognitive pacing or attention intensity using
+    a Beats-Per-Minute (BPM) style phase-locked rhythmic cycle.
+  Measurable: Achieve target response rhythm (e.g., average response time per thought
+    segment aligned with BPM). Cognitive delay variance within ±10% of the target
+    interval. Measurable changes in attention distribution over time.
+  Achievable: By modulating attention weight vectors, token generation rates, or internal
+    processing loop delays based on a time step and the sinusoidal pulse function.
+    Can be implemented as a wrapper or internal module.
+  Relevant: For more naturalistic cognition emulation, managing cognitive load, synchronizing
+    reasoning cadence to semantic urgency or user interaction speed, and pacing performance
+    in long-running tasks.
+  Transferable: The concept of pulse emulation and rhythmic cognitive modulation is
+    transferable to various LLMs (e.g., GPT, Claude, Vanta, as mentioned in input)
+    or AI systems where temporal dynamics of processing can be influenced.
+metadata:
+  definition_version: 1.4.0
+  definition_status: experimental
+  author_agent_id: VOXSIGIL_CONVERTER_BOT_ASSISTED_BY_USER_INPUT
+  created_timestamp: '2024-03-10T14:05:00Z'
+  last_updated_timestamp: '2024-03-10T14:05:00Z'
+  authorship_context:
+    motivation: To introduce more nuanced temporal control over AI cognition, drawing
+      inspiration from biological rhythms.
+    theoretical_framework: Circadian rhythms, attention decay models, phase-locked
+      loops, cognitive load management.
+test_criteria:
+- test_id: PULSE_BPM_EFFECT_001
+  description: Verify that changing BPM affects response cadence.
+  type: performance
+  input_scenario_or_parameters:
+  - bpm: 30
+    task: Summarize a short paragraph.
+  - bpm: 120
+    task: Summarize a short paragraph.
+  expected_behavior_or_output: Measurably faster completion time and potentially shorter
+    summary for BPM 120 compared to BPM 30.
+  evaluation_method: automated_script
+advanced_cognitive_modeling:
+  cognitive_stage_annotation:
+    solo_taxonomy_level: relational
+  strategic_intent:
+  - goal_id: IMPROVE_NATURALISTIC_INTERACTION_PACING
+    alignment_strength: 0.7
+    contribution_type: enabler
+consciousness_scaffold: false
+cognitive_scaffold: true
+symbolic_scaffold: false
+name: Pulse Sync

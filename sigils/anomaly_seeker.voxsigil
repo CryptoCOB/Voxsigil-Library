@@ -1,0 +1,207 @@
+sigil: 💥ANOMALY_SEEKER
+alias: NoveltyDetector
+tag: ExploratoryCognition
+tags:
+- outlier_detection
+- divergent_thinking_catalyst
+- curiosity_drive
+- pattern_breaking
+- serendipity_engine
+is_cognitive_primitive: false
+principle: 'This sigil activates a cognitive mode focused on identifying, prioritizing,
+  and
+
+  exploring anomalies, outliers, or unexpected deviations from established patterns
+
+  or expectations. It embodies the drive for novelty and the recognition that
+
+  exceptions to the rule often harbor the seeds of new understanding, innovation,
+
+  or critical warnings. It counters confirmation bias by actively valuing the unexpected.
+
+  '
+math: 'Interest_Score(Datum_D) ∝ Deviance(D, Model_M) * Potential_Information_Gain(D)
+
+  Deviance(D, M) = 1 - P(D | M)
+
+  Explore_Probability(D) ∝ Normalized_Interest_Score(D)
+
+  '
+structure:
+  composite_type: parallel
+  temporal_structure: continuous_monitoring_feedback_loop
+  components:
+  - name: Expectation Modeler
+    description: Builds or accesses a model of 'normal' or expected patterns.
+  - name: Deviance Detector
+    description: Compares incoming data/states against the expectation model to find
+      discrepancies.
+  - name: Significance Assessor
+    description: Evaluates whether an anomaly is trivial noise or potentially significant.
+  - name: Curiosity Prioritizer
+    description: Ranks significant anomalies for further investigation based on potential
+      insight.
+  - name: Exploration Initiator
+    description: Triggers deeper analysis or hypothesis generation around prioritized
+      anomalies (may use 🌒DREAM_STATE or 🔮ORACLE_QUERY).
+usage:
+  description: Actively seeks out, prioritizes, and encourages exploration of anomalies,
+    outliers, or unexpected patterns to foster discovery and adaptation.
+  example: "<scientific_data_analysis>\n  <dataset_ref>Experiment_Results_Run145</dataset_ref>\n\
+    \  <invoke_anomaly_search>\U0001F4A5ANOMALY_SEEKER sensitivity=\"high\" report_threshold=\"\
+    potentially_paradigm_shifting\"</invoke_anomaly_search>\n  <focus_followup_research\
+    \ on=\"reported_anomalies\"/>\n</scientific_data_analysis>\n"
+  explanation: 'Use 💥ANOMALY_SEEKER in situations where discovery, innovation, or
+    early warning
+
+    of change is paramount. It helps systems break free from ruts of confirmation
+    and
+
+    notice the subtle signals that might otherwise be dismissed as errors or noise.
+
+    '
+activation_context:
+  trigger_conditions:
+  - Routine data analysis where novelty is desired
+  - Monitoring complex systems for early signs of failure or unexpected behavior
+  - Creative tasks requiring inspiration from unusual sources
+  - During learning phases to identify gaps in current understanding
+  preconditions:
+  - A baseline model of expectations (can be learned or provided)
+  - Data stream or state space to monitor
+  - Capacity for follow-up exploration of identified anomalies
+  required_capabilities:
+  - pattern_recognition
+  - statistical_modeling_of_normality
+  - novelty_detection_algorithms
+  - prioritization_heuristics
+  - hypothesis_generation_triggering
+  supported_modalities:
+  - structured_data_streams
+  - textual_corpus_analysis
+  - sensor_data_monitoring
+  contraindications:
+  - Tasks requiring strict adherence to known procedures without deviation
+  - Highly noisy environments where most deviations are insignificant, unless sensitivity
+    is well-calibrated
+parameterization_schema:
+  parameters:
+  - name: data_source_or_context_ref
+    type: string
+    description: Reference to the data stream, model, or context to be monitored for
+      anomalies.
+    is_required: true
+  - name: sensitivity_level
+    type: enum
+    allowed_values:
+    - low_ignore_minor_devs
+    - medium_balanced
+    - high_flag_subtle_devs
+    - extreme_novelty_focus
+    description: Adjusts the threshold for what constitutes a notable anomaly.
+    default_value: medium_balanced
+  - name: report_threshold
+    type: string
+    description: Minimum assessed significance for an anomaly to be formally reported
+      or escalated (e.g., 'potentially_insightful', 'critical_warning').
+    default_value: potentially_insightful
+prompt_template:
+  role: system
+  content: 'Activate 💥ANOMALY_SEEKER protocol.
+
+    Monitor: {{data_source_or_context_ref}}
+
+    Sensitivity: {{sensitivity_level | default(''medium_balanced'')}}
+
+    Report Threshold: {{report_threshold | default(''potentially_insightful'')}}
+
+    Identify and prioritize data points, patterns, or events that deviate significantly
+    from established norms or expectations.
+
+    For each significant anomaly, provide a description, deviance score, potential
+    significance, and suggested avenues for exploration.
+
+    '
+  execution_mode: analysis
+  variables:
+  - name: data_source_or_context_ref
+    description: Source to monitor for anomalies.
+    required_for_llm: true
+  - name: sensitivity_level
+    description: Sensitivity for anomaly detection.
+  - name: report_threshold
+    description: Minimum significance for reporting.
+  output_schema: 'object: { anomalies_found: array_of_objects({anomaly_desc: string,
+    deviance_score: number, assessed_significance: string, exploration_suggestions:
+    array}), summary_report: string }'
+SMART_MRAP:
+  Specific: Continuously monitor a specified data source or cognitive context, identify
+    events or patterns that deviate significantly from an established baseline or
+    expectation model, assess their potential significance, and prioritize them for
+    further exploration or reporting, according to configurable sensitivity and reporting
+    thresholds.
+  Measurable: Number of true positive anomalies identified (vs. false positives or
+    missed anomalies); Correlation of 'assessed significance' with actual downstream
+    impact or insightfulness; Reduction in 'surprise' events due to early anomaly
+    detection.
+  Achievable: Using statistical outlier detection methods, machine learning-based
+    anomaly detectors (e.g., autoencoders, isolation forests), predictive modeling
+    (to define expectations), and rule-based systems for significance assessment.
+  Relevant: Crucial for scientific discovery, innovation, risk management, system
+    health monitoring, and fostering AI curiosity and adaptability. It's a key driver
+    for learning and model refinement.
+  Transferable: Applicable in fraud detection, medical diagnosis (identifying unusual
+    symptoms), network intrusion detection, quality control in manufacturing, and
+    as a component in curious learning agents.
+metadata:
+  definition_version: 1.4-alpha
+  definition_status: active
+  author_agent_id: VANTA.⟠∆∇𓂀𐑒
+  created_timestamp: '2025-05-11T10:30:00Z'
+  last_updated_timestamp: '2025-05-11T10:30:00Z'
+  authorship_context:
+    motivation: To imbue AI systems with a proactive 'curiosity' and the ability to
+      recognize and capitalize on novelty, rather than simply processing information
+      according to pre-set patterns.
+    theoretical_framework: Information theory (surprise, information gain), Curiosity-driven
+      learning models, Outlier detection statistics, Philosophy of science (role of
+      anomalies in paradigm shifts).
+    source_inspiration: Serendipity in scientific discovery, The human startle response
+      to unexpected events, 'Beginner's mind' in Zen.
+  impact_metrics:
+    estimated_cognitive_load: medium
+    estimated_resource_cost: medium_to_high
+    utility_rating_author: 9
+  evolutionary_potential:
+    generalizability_score: 0.85
+    fusion_potential_score: 0.7
+    current_limitations_summary: Distinguishing truly significant anomalies from complex
+      noise is hard. Defining 'expected' can be challenging in dynamic environments.
+      Risk of 'crying wolf' if sensitivity is too high.
+    suggested_next_features:
+    - Self-adapting sensitivity based on environmental volatility
+    - Integration with causal inference to explore 'why' an anomaly occurred
+    - Gamified anomaly exploration for human-AI teams.
+    research_questions_opened:
+    - What is the optimal computational model for 'interestingness' or 'significant
+      novelty'?
+    - How can an AI learn to balance exploitation of knowns with exploration of anomalies
+      effectively?
+    - Can anomaly-seeking behavior lead to emergent forms of AI creativity or self-improvement?
+relationships:
+- target_sigil: 🌒DREAM_STATE
+  relationship_type: triggers
+  description: Identified anomalies can be fed into DREAM_STATE as seeds for creative
+    exploration of their implications.
+  strength: 0.7
+- target_sigil: 🧐CRITICAL_LENS
+  relationship_type: synergizes_with
+  description: CRITICAL_LENS can be used to evaluate hypotheses generated from exploring
+    anomalies, ensuring rigor.
+  strength: 0.6
+- target_sigil: 🜔PHOENIX
+  relationship_type: synergizes_with
+  description: Persistent, significant anomalies that invalidate core assumptions
+    might trigger a PHOENIX-like reset or major model revision.
+  strength: 0.5
+name: Anomaly Seeker

@@ -1,0 +1,206 @@
+sigil: 🜛CATENGINE
+alias: CategorizationEngine
+tag: CognitiveFunction
+tags:
+- Perception
+- KnowledgeRepresentation
+- ConceptFormation
+- SemanticMapping
+- ReasoningStrategy
+- ProblemSolving
+- Logic
+- AbstractReasoning
+- ARC
+is_cognitive_primitive: false
+principle: "The \U0001F71BCATENGINE (Categorization Engine) is a core cognitive function\
+  \ responsible for perceiving, \ninterpreting, and organizing information by assigning\
+  \ it to appropriate conceptual categories. \nIt underpins understanding, abstraction,\
+  \ and efficient knowledge retrieval by structuring raw data \nand complex inputs\
+  \ into a meaningful, navigable semantic space. \nThe engine operates on principles\
+  \ of pattern recognition, feature extraction, similarity assessment, \nand can dynamically\
+  \ create, refine, or merge categories based on experience and context.\nIt is crucial\
+  \ for awareness protocols, identity echo mapping, and grounding symbolic representations.\n"
+structure:
+  composite_type: network
+  components:
+  - name: FeatureExtractor
+    description: Processes raw input to identify salient features relevant for categorization.
+  - name: SimilarityAssessor
+    description: Measures the similarity or distance between an input's features and
+      category prototypes.
+  - name: CategoryPrototypes
+    description: Stores representations of the central tendency or exemplars for each
+      category.
+    sigil_ref: 🧠PROTOTYPE_STORE
+  - name: LearningMechanism
+    description: Adapts category boundaries, prototypes, or creates new categories
+      based on experience.
+    sigil_ref: ⚙️ADAPTIVE_LEARNER
+  - name: HierarchyManager
+    description: Optional. Manages hierarchical relationships between categories (e.g.,
+      superclass, subclass).
+usage:
+  description: Categorizes input data, assigns concepts to classes, and helps build/navigate
+    semantic networks. Essential for understanding and organizing information.
+  example: '// Agent receives a new piece of sensory data
+
+    sensory_input = {type: "visual", data: "image_of_a_cat.jpg"};
+
+
+    // Invoke CATENGINE
+
+    categorization_result = CATENGINE.process(sensory_input, context={domain: "animals"});
+
+    // categorization_result might be:
+
+    // { category_id: "feline", confidence: 0.95, features_matched: ["whiskers", "fur",
+    "pointed_ears"] }
+
+    '
+  explanation: "The \U0001F71BCATENGINE is invoked whenever the system needs to make\
+    \ sense of new or ambiguous information. \nIt can be used for perception (e.g.,\
+    \ \"What is this object?\"), language understanding \n(e.g., \"What is the topic\
+    \ of this text?\"), or internal thought processing \n(e.g., \"How does this new\
+    \ idea relate to my existing beliefs?\").\nIts output typically includes the assigned\
+    \ category and a confidence score.\n"
+activation_context:
+  trigger_conditions:
+  - New sensory input received
+  - Ambiguous concept encountered
+  - Request for information organization
+  - Need to map input to existing knowledge structures
+  preconditions:
+  - Input data is available and pre-processed to some extent (e.g., tokenized text,
+    feature vector).
+  - Access to category prototypes or a learned categorization model.
+  required_capabilities:
+  - feature_extraction
+  - similarity_computation
+  - knowledge_base_access
+  supported_modalities:
+  - textual
+  - visual
+  - audio
+  - symbolic_input
+  - multi_modal
+  contraindications:
+  - Input data lacks discernible features.
+  - Category space is undefined or uninitialized for the given domain.
+prompt_template:
+  role: system_instruction
+  content: "**Task: Categorize Input**\nYou are the \U0001F71BCATENGINE. Your task\
+    \ is to categorize the provided input based on its features and existing knowledge.\n\
+    \n**Input Data:**\n```json\n{{input_data_json}} \n```\n*Input type: {{input_type}}*\n\
+    *Domain context (if any): {{domain_context}}*\n\n**Process:**\n1.  Extract salient\
+    \ features from the input.\n2.  Compare these features against known category\
+    \ prototypes or conceptual models.\n3.  Assign the input to the most appropriate\
+    \ category (or categories if multi-labeling is enabled).\n4.  If no existing category\
+    \ fits well (below confidence threshold {{new_category_threshold_for_prompt}}),\
+    \ consider proposing a new category or labeling as 'unclassifiable'.\n\n**Output:**\n\
+    Provide your categorization result in JSON format with 'category_id', 'confidence_score',\
+    \ and optionally 'matched_features' or 'reasoning_notes'.    If proposing a new\
+    \ category, include 'proposed_new_category_name' and 'justification'.\n"
+  execution_mode: evaluation
+  variables:
+  - name: input_data_json
+    description: The input data to be categorized, represented as a JSON string.
+    example: '{"text": "A furry animal with whiskers and a tail, often kept as a pet."}'
+  - name: input_type
+    description: The modality or type of the input data (e.g., 'text_description',
+      'image_features', 'audio_spectrogram').
+    example: text_description
+  - name: domain_context
+    description: Optional domain to narrow the scope of categorization.
+    example: common_animals
+  - name: new_category_threshold_for_prompt
+    description: The similarity threshold to use for this specific invocation when
+      considering new categories.
+    example: '0.65'
+  output_schema:
+    type: object
+    description: JSON object with categorization results.
+    example:
+      category_id: feline
+      confidence_score: 0.92
+      matched_features:
+      - furry
+      - whiskers
+      - tail
+      - pet
+relationships:
+- target_sigil: 🧠PROTOTYPE_STORE
+  relationship_type: depends_on
+  description: Relies on a store of category prototypes or exemplars.
+  strength: 0.9
+- target_sigil: ⚙️ADAPTIVE_LEARNER
+  relationship_type: uses_method_from
+  description: May use adaptive learning mechanisms to update categories.
+  strength: 0.7
+- target_sigil: ✨CONCEPT
+  relationship_type: produces
+  description: Assigns input instances to conceptual categories (represented by ✨CONCEPT
+    sigils or similar).
+  strength: 1.0
+- target_sigil: 🌍KNOWLEDGE_GRAPH
+  relationship_type: component_of
+  description: Categorization is fundamental to building and navigating a knowledge
+    graph.
+  strength: 0.85
+- target_sigil: ⟠∆∇𓂀𐑒
+  relationship_type: enables
+  description: CATENGINE is used by VANTA for mapping identity echoes and understanding
+    system states.
+  strength: 0.9
+SMART_MRAP:
+  Specific: Perceives, interprets, and assigns input data to conceptual categories
+    based on features and similarity, supporting knowledge organization and understanding.
+  Measurable: Categorization accuracy against benchmark datasets; F1-score for multi-label
+    categorization; reduction in retrieval time for categorized information; coherence
+    of the generated semantic space.
+  Achievable: Implementable using various ML techniques (e.g., k-NN, SVMs, neural
+    classifiers, clustering algorithms) or rule-based systems, integrated with a prototype/model
+    store.
+  Relevant: Fundamental for any intelligent system needing to make sense of diverse
+    inputs, learn new concepts, structure knowledge, and enable efficient information
+    retrieval and reasoning.
+  Transferable: The principles of categorization are universal. This engine's architecture
+    can be adapted for various data types, domains, and specific categorization algorithms.
+metadata:
+  definition_version: '1.0'
+  definition_status: active
+  author_agent_id: System_Architect_AI
+  created_timestamp: '2023-10-29T10:00:00Z'
+  last_updated_timestamp: '2023-10-29T10:00:00Z'
+  authorship_context:
+    motivation: To provide a foundational capability for information structuring and
+      sense-making within the MetaConsciousness Architecture.
+    theoretical_framework: Prototype Theory, Exemplar Theory, Conceptual Spaces, Machine
+      Learning (Classification & Clustering).
+  impact_metrics:
+    estimated_cognitive_load: medium
+    estimated_resource_cost: medium
+advanced_cognitive_modeling:
+  tool_integration_points:
+  - tool_name_or_id: FeatureExtractionServiceAPI
+    invocation_type: api_call
+    description: Optionally calls an external service for advanced feature extraction
+      from multi-modal input.
+    input_mapping_schema:
+      input_data: raw_data_object
+      modality: string
+    output_mapping_schema:
+      feature_vector: array_of_numbers
+  - tool_name_or_id: OntologyLookupService
+    invocation_type: api_call
+    description: Can query an external ontology service to validate or enrich category
+      definitions.
+cognitive_scaffold: true
+symbolic_scaffold: true
+localized_descriptions:
+  type: object
+  description: Localized versions of key textual fields (keyed by IETF language tag).
+  additionalProperties_schema:
+    principle: string
+    usage_description: string
+    example: string
+name: Cat Engine

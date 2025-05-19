@@ -1,0 +1,147 @@
+sigil: 🌉💡🔗
+alias: AnalogicalLeapInducer
+tag: CreativityEnhancement
+tags:
+- analogy_generation
+- creative_reasoning
+- conceptual_blending
+- lateral_thinking
+- insight_facilitation
+is_cognitive_primitive: false
+principle: Facilitates the generation of novel and insightful analogies by bridging
+  semantically distant conceptual domains, encouraging non-obvious connections and
+  fostering creative problem-solving.
+math: 'Given source concept S and target domain D_T. Maximize Novelty(A) * Usefulness(A)
+  for analogy A: S → T'', where T'' ∈ D_T. Novelty may be inverse of semantic similarity(S,
+  T'') within D_T, constrained by structural mapping consistency. Usefulness relates
+  to explanatory power or problem-solving applicability.'
+structure:
+  composite_type: sequential
+  components:
+  - name: SourceConceptAnalyzer
+    description: Deconstructs the source concept into key attributes and relations.
+  - name: TargetDomainSampler
+    description: Selects candidate target domains, potentially biased towards novelty.
+  - name: CrossDomainMapper
+    description: Attempts to find structural or functional isomorphisms between source
+      attributes and target domain elements.
+  - name: AnalogyCandidateGenerator
+    description: Constructs potential analogies based on mappings.
+  - name: AnalogyEvaluator
+    description: Scores analogies based on novelty, coherence, and potential usefulness.
+usage:
+  description: Prompts the system to make a 'leap' by finding an analogy from a specified
+    source concept to a potentially unrelated target domain, or to find a surprising
+    yet insightful analogy for a given concept.
+  example:
+    invocation: <AnalogicalLeapInducer source_concept='data_compression' target_domain_hint='biology'
+      novelty_bias=0.8>
+    potential_output: 'Analogy: Data compression is like DNA. Just as DNA compactly
+      encodes vast biological information using a limited set of base pairs and structures,
+      data compression uses algorithms to represent information efficiently with fewer
+      bits, allowing for compact storage and transmission.'
+  explanation: This sigil encourages 'thinking outside the box'. Instead of just finding
+    close semantic neighbors, it pushes the system to explore more distant conceptual
+    territories for analogical inspiration. This can be useful for brainstorming,
+    explaining complex ideas in new ways, or sparking innovative solutions.
+activation_context:
+  trigger_conditions:
+  - Need for creative problem-solving.
+  - Requirement to explain a complex concept simply.
+  - Brainstorming sessions seeking novel perspectives.
+  preconditions:
+  - Access to a broad knowledge base or conceptual space.
+  - Ability to assess semantic distance and structural similarity.
+  required_capabilities:
+  - conceptual_analysis
+  - semantic_search
+  - abstract_pattern_matching
+  - evaluative_reasoning
+  supported_modalities:
+  - textual
+  - symbolic_input
+parameterization_schema:
+  parameters:
+  - name: source_concept
+    type: string
+    description: The concept for which an analogy is sought.
+    is_required: true
+  - name: target_domain_hint
+    type: string
+    description: Optional hint for a domain to draw the analogy from.
+    is_required: false
+  - name: novelty_bias
+    type: number
+    description: Bias towards more distant/novel analogies (0 to 1).
+    default_value: 0.5
+    value_range:
+      min: 0
+      max: 1
+  - name: min_coherence_score
+    type: number
+    description: Minimum acceptable coherence for a generated analogy.
+    default_value: 0.3
+prompt_template:
+  role: user
+  content: I need a creative analogy. Explain the concept of '{{source_concept}}'.
+    Try to draw your analogy from an unexpected domain {{#if target_domain_hint}}(perhaps
+    something related to '{{target_domain_hint}}'){{/if}}. Aim for a novelty bias
+    of {{novelty_bias}} and ensure the analogy is insightful.
+  execution_mode: generation
+  variables:
+  - name: source_concept
+    description: Concept to explain.
+    required_for_llm: true
+  - name: target_domain_hint
+    description: Hint for analogy domain.
+    required_for_llm: false
+  - name: novelty_bias
+    description: Bias for novelty.
+    required_for_llm: true
+  output_schema: A well-explained analogy, highlighting the source, target, and the
+    mapping between them.
+SMART_MRAP:
+  Specific: Generate novel and insightful analogies by bridging a source concept with
+    elements from semantically distant or unexpected target domains.
+  Measurable: Average semantic distance between source and target concepts in generated
+    analogies. Human rating of analogy novelty and insightfulness (e.g., >3.5/5).
+    Number of analogies generated passing a minimum coherence threshold.
+  Achievable: By using embedding space exploration with a bias away from local clusters,
+    combined with structural mapping algorithms and LLM-based evaluation for coherence
+    and insight.
+  Relevant: Crucial for fostering creativity, innovative problem-solving, effective
+    communication of complex ideas, and breaking cognitive fixedness.
+  Transferable: Applicable to any LLM or knowledge-based AI system with capabilities
+    for semantic representation and reasoning. Core techniques can be adapted.
+metadata:
+  definition_version: 1.4.0
+  definition_status: active
+  author_agent_id: VOXSIGIL_GENERATOR_VANTA_ASSIST
+  created_timestamp: '2024-03-10T16:05:00Z'
+  last_updated_timestamp: '2024-03-10T16:05:00Z'
+  authorship_context:
+    motivation: To systematically enhance AI's capacity for creative analogical thinking.
+test_criteria:
+- test_id: ANALOGY_DISTANT_001
+  description: Generate analogy from a distant domain.
+  input_scenario_or_parameters:
+    source_concept: neural_network_training
+    target_domain_hint: gardening
+    novelty_bias: 0.9
+  expected_behavior_or_output: 'A plausible, non-obvious analogy connecting neural
+    network training to gardening (e.g., ''Training a neural network is like cultivating
+    a garden: you prepare the soil (data preprocessing), plant seeds (initialize weights),
+    provide nutrients and water (training data), prune away weeds (regularization),
+    and patiently wait for it to grow and bear fruit (achieve desired performance).'').'
+  evaluation_method: human_review
+advanced_cognitive_modeling:
+  cognitive_stage_annotation:
+    solo_taxonomy_level: extended_abstract
+  strategic_intent:
+  - goal_id: BOOST_CREATIVE_OUTPUT
+    alignment_strength: 0.8
+    contribution_type: enabler
+consciousness_scaffold: false
+cognitive_scaffold: true
+symbolic_scaffold: true
+name: Analogicalleapinducer

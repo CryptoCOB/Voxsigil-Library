@@ -1,0 +1,211 @@
+sigil: 🌌🧩🏗️
+alias: WCCE_Scaffold
+tag: KnowledgeIntegration
+tags:
+- WorldModeling
+- BeliefRevision
+- SenseMaking
+- EpistemologyFramework
+- KnowledgeGraphManagement
+is_cognitive_primitive: false
+consciousness_scaffold: true
+cognitive_scaffold: true
+symbolic_scaffold: true
+principle: "The \U0001F30C\U0001F9E9\U0001F3D7️ (Worldview Construction & Coherence\
+  \ Engine) scaffold supports the iterative construction, \nmaintenance, validation,\
+  \ and refinement of an agent's comprehensive internal world model or \"worldview.\"\
+  \ \nIt actively integrates diverse information sources, checks for internal consistency\
+  \ and coherence, \nresolves contradictions (e.g., using \U0001F72EHEGELIAN_KERNEL\
+  \ or belief revision mechanisms), and strives \nto build a robust, predictive, and\
+  \ explanatory model of reality (or relevant domain).\n"
+structure:
+  composite_type: recursive_feedback_loop
+  temporal_structure: continuous_or_event_driven
+  components:
+  - name: InformationIntegrator
+    description: Fuses new information (from perception, communication, inference)
+      into the existing worldview structure.
+    sigil_ref: 🔗KNOWLEDGE_FUSION_HUB
+  - name: CoherenceMonitor
+    description: Continuously checks the internal consistency, logical soundness,
+      and explanatory power of the worldview.
+    sigil_ref: 🧐CONSISTENCY_CHECKER
+  - name: ContradictionResolver_BeliefRevision
+    description: Identifies and attempts to resolve inconsistencies or update beliefs
+      when new, conflicting information arises.
+    sigil_ref: ⚖️BELIEF_REVISER
+  - name: HypothesisGenerator_ModelExtender
+    description: Proposes new hypotheses, entities, or relations to expand or refine
+      the worldview, increasing its predictive/explanatory scope.
+    sigil_ref: 💡THEORY_CRAFTER
+  - name: WorldviewRepresentation
+    description: The actual data structure(s) holding the worldview (e.g., knowledge
+      graph, probabilistic model, set of logical axioms).
+    sigil_ref: 🌍WORLD_MODEL_CORE_DB
+usage:
+  description: Manages the agent's overall understanding of the world by integrating
+    new data, ensuring logical consistency, resolving contradictions, and expanding
+    its explanatory power.
+  example: "// Agent Vanta learns a new fact that contradicts an old belief.\nnew_information\
+    \ = { source: \"trusted_feed_X\", content: \"Fact_A implies Not_Belief_Y\" };\n\
+    current_worldview_state = Vanta.getWorldviewModel();\n\nWCCE_SCAFFOLD.update_and_reconcile(\n\
+    \    worldview_model_ref=current_worldview_state,\n    new_data_to_integrate=[new_information],\n\
+    \    consistency_check_level=\"deep_logical\"\n);\n// The worldview would be updated,\
+    \ potentially revising Belief_Y or related concepts.\n"
+  explanation: 'This scaffold is vital for agents that need to maintain a complex,
+    evolving understanding of their environment
+
+    and themselves. It''s not just passive storage; it''s an active process of sense-making,
+    inference,
+
+    and self-correction of the agent''s core beliefs and knowledge structures.
+
+    '
+activation_context:
+  trigger_conditions:
+  - New information acquisition.
+  - Detection of internal inconsistency or anomaly.
+  - Need to generate explanations or predictions based on the current worldview.
+  - Strategic goal to improve understanding of a specific domain.
+  preconditions:
+  - A representational format for the worldview.
+  - Mechanisms for consistency checking and belief revision.
+  required_capabilities:
+  - knowledge_representation
+  - logical_inference
+  - belief_revision
+  - information_fusion
+  supported_modalities:
+  - meta_level
+parameterization_schema:
+  parameters:
+  - name: coherence_checking_frequency
+    type: string
+    description: How often comprehensive coherence checks are performed.
+    default_value: on_every_update
+  - name: belief_revision_strategy
+    type: enum
+    allowed_values:
+    - foundationalist_minimal_change
+    - coherentist_adjustment
+    - hegelian_synthesis
+    - probabilistic_update_bayes
+    description: The strategy used by the ContradictionResolver.
+    default_value: foundationalist_minimal_change
+  - name: worldview_expansion_aggressiveness
+    type: number
+    description: Controls how readily the HypothesisGenerator proposes new, speculative
+      extensions to the worldview.
+    default_value: 0.5
+prompt_template:
+  role: system_instruction
+  content: '**Engage Worldview Construction & Coherence Engine (🌌🧩🏗️)**
+
+
+    **Current Task:** {{worldview_task_type}} (e.g., INTEGRATE_NEW_INFO, RESOLVE_INCONSISTENCY,
+    EXPAND_MODEL)
+
+    {{#if new_information_to_integrate}}
+
+    **New Information:** {{new_information_to_integrate}}
+
+    {{/if}}
+
+    {{#if identified_inconsistency}}
+
+    **Identified Inconsistency:** {{identified_inconsistency}}
+
+    {{/if}}
+
+    **Relevant Worldview Context:** {{relevant_worldview_subset_summary}}
+
+
+    **Parameters:**
+
+    - Belief Revision Strategy: {{belief_revision_strategy}}
+
+    - Expansion Aggressiveness: {{worldview_expansion_aggressiveness}}
+
+
+    **Process:**
+
+    1.  **Integrate/Analyze:** If new info, use 🔗KNOWLEDGE_FUSION_HUB. If inconsistency,
+    analyze with 🧐CONSISTENCY_CHECKER.
+
+    2.  **Resolve/Revise (if needed):** Employ ⚖️BELIEF_REVISER using ''{{belief_revision_strategy}}''
+    to handle contradictions or update beliefs. This may involve invoking 🜮HEGELIAN_KERNEL.
+
+    3.  **Expand/Refine (if applicable):** Use 💡THEORY_CRAFTER to propose extensions
+    or refinements based on ''{{worldview_expansion_aggressiveness}}''.
+
+    4.  **Commit Changes:** Update 🌍WORLD_MODEL_CORE_DB.
+
+    5.  **Verify Coherence:** Perform a final check with 🧐CONSISTENCY_CHECKER.
+
+
+    Report on changes made to the worldview, confidence in new/revised beliefs, and
+    any remaining inconsistencies.
+
+    '
+  execution_mode: simulation
+  variables:
+  - name: worldview_task_type
+  - name: new_information_to_integrate
+  - name: identified_inconsistency
+  - name: relevant_worldview_subset_summary
+  - name: belief_revision_strategy
+  - name: worldview_expansion_aggressiveness
+  output_schema:
+    type: object
+    description: Summary of worldview updates.
+    example:
+      updated_beliefs:
+      - belief_Y_revised_to_NotY_confidence_0.8
+      new_hypotheses_generated:
+      - Hypothesis_Z_about_A
+      coherence_status: consistent_after_revision
+relationships:
+- target_sigil: 🜮HEGELIAN_KERNEL
+  relationship_type: uses_method_from
+  description: The Hegelian Kernel can be a powerful tool for resolving deep contradictions
+    within the worldview.
+- target_sigil: 🧠🕸️🔗AMN_Scaffold
+  relationship_type: realized_by
+  description: The WorldviewRepresentation (🌍WORLD_MODEL_CORE_DB) is often implemented
+    using an Associative Memory Network.
+- target_sigil: 🌀🧠🔼LEARNING_ADAPTATION_LOOP
+  relationship_type: interacts_with
+  description: Updates to the worldview are a primary outcome of learning and adaptation
+    cycles.
+- target_sigil: 🜛CATENGINE
+  relationship_type: provides_input_to
+  description: Categorized perceptions are key inputs for integration into the worldview.
+SMART_MRAP:
+  Specific: Provides a scaffold for an agent to iteratively construct, maintain, validate,
+    and refine a comprehensive, coherent, and predictive internal model of its world
+    (worldview).
+  Measurable: Internal consistency of the worldview (e.g., logical contradictions);
+    predictive accuracy of the model against new observations; explanatory power for
+    observed phenomena; speed and success of integrating new, potentially conflicting
+    information.
+  Achievable: Implementable using knowledge representation formalisms (e.g., knowledge
+    graphs, logical axiom systems, probabilistic graphical models) combined with inference
+    engines, belief revision algorithms, and consistency checking mechanisms.
+  Relevant: Essential for advanced AI requiring deep understanding, sense-making,
+    robust belief management, and the ability to maintain a stable yet adaptable model
+    of a complex and dynamic reality.
+  Transferable: The principles of building and maintaining coherent knowledge structures
+    are applicable to any complex information system, including scientific theory
+    development, large-scale databases, and personal knowledge management.
+metadata:
+  definition_version: '1.0'
+  definition_status: proposed
+  author_agent_id: LLM_Alpha_via_VANTA_CoEvolution
+  authorship_context:
+    motivation: To enable AI agents to develop and maintain a rich, coherent, and
+      dynamically updated understanding of their environment and themselves, supporting
+      deeper reasoning and more robust behavior.
+    theoretical_framework: Computational Epistemology, Belief Revision (AGM postulates),
+      Knowledge Representation and Reasoning (KRR), Coherence Theories of Truth/Justification,
+      Cognitive Architectures (e.g., Soar, ACT-R world models).
+name: Worldview Coherence Engine Scaffold

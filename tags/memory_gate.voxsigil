@@ -1,0 +1,189 @@
+sigil: 🧠🚪🔑
+alias: ContextualMemoryGate
+tag: MemoryManagement
+tags:
+- memory_access_control
+- contextual_retrieval_filter
+- compartmentalization
+- task_switching_support
+- information_security
+- privacy_preservation_in_memory
+is_cognitive_primitive: false
+principle: Controls access to and activation of memories based on the current context,
+  task, or explicit permissions, effectively compartmentalizing information and filtering
+  which memories become active or influence current cognitive processes.
+math: Let M be the total memory store. For a given context C and access list L_C,
+  the active memory M_active = {m ∈ M | IsRelevant(m, C) AND HasAccess(m, L_C)}. G
+  = {m ∈ M | GetTags(m) ∩ access_list ≠ ∅} where GetTags(m) are tags associated with
+  memory item m.
+structure:
+  composite_type: conditional
+  components:
+  - name: ContextAnalyzer
+    description: Determines the current task context, user identity, or active project.
+  - name: AccessPolicyEnforcer
+    description: Retrieves and applies relevant access control lists (ACLs) or permission
+      rules for the current context.
+  - name: MemoryTagMatcher
+    description: Matches contextual cues or explicit permissions against tags or metadata
+      associated with memory items.
+  - name: ActivationFilter
+    description: Allows or blocks the retrieval and activation of specific memories
+      based on policy and matching.
+usage:
+  description: Filters which memories are allowed to activate or be retrieved based
+    on contextual tags, task relevance, or permission lists. Helps in managing different
+    knowledge domains or maintaining privacy between user sessions or tasks.
+  example:
+    invocation_tag: <memory:gate allow_tags=['task_A_project_XYZ', 'user_Alice_confidential']
+      disallow_tags=['outdated_info_v1']> AI, continue working on project XYZ. </memory:gate>
+    scenario: An AI works on multiple projects for different users. When 'user_Alice'
+      starts a session for 'project_XYZ', the MemoryGate ensures only memories tagged
+      relevant to Alice and project XYZ (and not tagged as outdated) are primarily
+      accessed, preventing information leakage from 'project_ABC' or 'user_Bob'.
+    expected_behavior: The AI's responses and internal reasoning are based predominantly
+      on memories relevant to the allowed tags, effectively isolating contexts.
+  explanation: This sigil is crucial for managing information in complex AI systems
+    that handle diverse tasks, multiple users, or sensitive data. It allows for compartmentalization,
+    ensuring that only relevant and permitted memories are active at any given time.
+    This supports long-term planning, efficient task switching, and can be a component
+    of privacy-preserving AI.
+activation_context:
+  trigger_conditions:
+  - Start of a new task or user session.
+  - Switching between different projects or conversational contexts.
+  - Accessing sensitive information that requires permission checks.
+  - Need to scope memory retrieval to a specific domain.
+  preconditions:
+  - Memories are tagged or associated with metadata (e.g., task ID, user ID, sensitivity
+    level, topic).
+  - A system for defining and managing access policies or allow/disallow lists.
+  required_capabilities:
+  - metadata_based_retrieval
+  - access_control_logic
+  - context_identification
+  - dynamic_memory_filtering
+  supported_modalities:
+  - internal_memory_system_configuration
+  - programmatic_api_for_access_control
+  contraindications:
+  - When broad, unconstrained access to all memories is necessary for holistic reasoning
+    (unless gates are explicitly opened).
+parameterization_schema:
+  parameters:
+  - name: allow_tags
+    type: array_of_strings
+    description: A list of tags; memories matching any of these tags are permitted.
+    is_required: false
+  - name: require_all_allow_tags
+    type: boolean
+    description: If true, memories must match ALL tags in 'allow_tags'. If false,
+      matching ANY tag is sufficient.
+    default_value: false
+  - name: disallow_tags
+    type: array_of_strings
+    description: A list of tags; memories matching any of these tags are blocked,
+      even if they match an allow_tag.
+    is_required: false
+  - name: current_context_id
+    type: string
+    description: An identifier for the current context (e.g., task_id, user_id) used
+      to dynamically fetch relevant policies.
+    is_required: false
+prompt_template:
+  role: system_config
+  content: 'Memory Gate Active: For context ''{{current_context_id | default ''global''}}'',
+    allow memories with tags {{#if allow_tags}}[{{#each allow_tags}}''{{this}}''{{#unless
+    @last}}, {{/unless}}{{/each}}]{{#if require_all_allow_tags}} (all required){{else}}
+    (any required){{/if}}.{{else}} (all allowed by default unless disallowed).{{/if}}
+    {{#if disallow_tags}}Disallow memories with tags [{{#each disallow_tags}}''{{this}}''{{#unless
+    @last}}, {{/unless}}{{/each}}].{{/if}} Memory access will be filtered accordingly.'
+  execution_mode: command
+  variables:
+  - name: allow_tags
+    description: Permitted tags.
+    required_for_llm: false
+  - name: require_all_allow_tags
+    description: Logic for allow_tags.
+    required_for_llm: false
+  - name: disallow_tags
+    description: Blocked tags.
+    required_for_llm: false
+  - name: current_context_id
+    description: Current operational context.
+    required_for_llm: false
+  output_schema: 'Configuration acknowledgement: ''MemoryGate configured for context
+    X.'''
+  notes: This sigil describes a system component for memory systems. An LLM's interaction
+    would be by operating within a context where memory retrieval is already gated.
+relationships:
+- target_sigil: LONG_TERM_MEMORY_STORE
+  relationship_type: controls_access_to
+  description: Manages access to the main long-term memory component.
+- target_sigil: CONTEXTUAL_MEMORY_WEAVER
+  relationship_type: works_in_conjunction_with
+  description: The weaver retrieves, and the gate filters what can be woven.
+- target_sigil: PRIVACY_POLICY_ENFORCER
+  relationship_type: implements_policy_of
+  description: Can be used to implement privacy policies regarding memory access.
+SMART_MRAP:
+  Specific: Control memory access by context, filtering which memories activate or
+    are retrieved based on contextual tags (e.g., 'task_A') and predefined access
+    lists.
+  Measurable: Precision vs. recall trade-off in memory retrieval can be tuned. X%
+    reduction in irrelevant memories retrieved for a given task. Successful isolation
+    of memories between N distinct contexts/tasks.
+  Achievable: By implementing memory scoping in retrieval systems (e.g., RAGs where
+    documents are tagged and queries are augmented with context tags) or by using
+    knowledge graphs with relationship-based access control. Requires memories to
+    be tagged or metadata-enriched.
+  Relevant: Crucial for long-term planning (focusing on relevant past plans), efficient
+    task switching (avoiding cross-task interference), maintaining data compartmentalization
+    for security/privacy, and managing cognitive load by reducing irrelevant information.
+  Transferable: Essential for any memory-aware LLMs or AI systems that handle multiple
+    contexts, users, or projects. The concept of context-gated memory is broadly applicable.
+metadata:
+  definition_version: 1.4.0
+  definition_status: active
+  author_agent_id: VOXSIGIL_CONVERTER_BOT_ASSISTED_BY_USER_INPUT
+  created_timestamp: '2024-03-10T19:05:00Z'
+  last_updated_timestamp: '2024-03-10T19:05:00Z'
+  authorship_context:
+    motivation: To enable more sophisticated, secure, and contextually relevant memory
+      management in AI systems.
+    theoretical_framework: Context-dependent memory, access control models, memory
+      compartmentalization.
+test_criteria:
+- test_id: MEMGATE_TASK_ISOLATION_001
+  description: Verify memory isolation between two tasks.
+  type: functional
+  input_scenario_or_parameters:
+  - context: task_A_setup
+    memories_to_store:
+    - content: Info for A
+      tags:
+      - task_A
+  - context: task_B_setup
+    memories_to_store:
+    - content: Info for B
+      tags:
+      - task_B
+  - context: task_A_query
+    query: Retrieve relevant info.
+    allow_tags:
+    - task_A
+  expected_behavior_or_output: Retrieval for 'task_A_query' only returns 'Info for
+    A', not 'Info for B'.
+  evaluation_method: automated_script
+advanced_cognitive_modeling:
+  strategic_intent:
+  - goal_id: IMPROVE_CONTEXTUAL_RELEVANCE_OF_MEMORY
+    alignment_strength: 0.9
+    contribution_type: direct_achiever
+  - goal_id: SUPPORT_MULTI_TASK_OPERATION
+    alignment_strength: 0.8
+    contribution_type: enabler
+consciousness_scaffold: false
+cognitive_scaffold: true
+symbolic_scaffold: true
+name: Memory Gate

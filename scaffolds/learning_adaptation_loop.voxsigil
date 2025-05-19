@@ -1,0 +1,220 @@
+sigil: 🌀🧠🔼
+alias: LAL_Scaffold
+tag: CoreLearningMechanism
+tags:
+- MachineLearning
+- Adaptation
+- SelfImprovement
+- KnowledgeRefinement
+- CognitiveDevelopment
+is_cognitive_primitive: false
+consciousness_scaffold: true
+cognitive_scaffold: true
+symbolic_scaffold: true
+principle: 'The 🌀🧠🔼 scaffold provides a generalized framework for how an agent or
+  system
+
+  learns from experience, feedback, or new information, and subsequently adapts its
+  internal models,
+
+  knowledge, parameters, or behaviors to improve future performance or understanding.
+  This recursive loop
+
+  involves evaluating outcomes, identifying discrepancies or opportunities, generating
+  hypotheses or
+
+  adjustments, and integrating these changes back into the system''s operational core.
+
+  '
+structure:
+  composite_type: feedback_loop
+  temporal_structure: event_driven
+  components:
+  - name: PerformanceMonitor_OutcomeEvaluator
+    description: Observes system performance or the outcome of actions/predictions
+      and compares against expectations or goals.
+    sigil_ref: 📊PERFORMANCE_METRICS_TRACKER
+  - name: CreditAssigner_ErrorAnalyzer
+    description: Identifies the components, knowledge, or parameters responsible for
+      the observed outcome or error.
+    sigil_ref: 🔍ROOT_CAUSE_ANALYZER
+  - name: HypothesisGenerator_AdjustmentProposer
+    description: Generates potential changes, updates, or new knowledge to address
+      discrepancies or improve performance.
+    sigil_ref: 🛠️MODEL_REFINER
+  - name: UpdateIntegrator_KnowledgeAssimilation
+    description: Incorporates the proposed changes into the system's knowledge base,
+      models, or behavioral policies.
+    sigil_ref: 💾KNOWLEDGE_BASE_UPDATER
+  - name: ValidationMechanism
+    description: Optional. Tests the impact of the adaptation before full integration
+      or for ongoing monitoring.
+    sigil_ref: ✅VALIDATION_SUITE_RUNNER
+usage:
+  description: Defines a generic loop for learning and adaptation, enabling systems
+    to improve from experience, correct errors, and refine knowledge over time.
+  example: "// Agent Vanta made a prediction that was incorrect.\nfeedback_data =\
+    \ {\n    prediction_made: \"...\",\n    actual_outcome: \"...\",\n    error_signal:\
+    \ \"high_discrepancy\"\n};\nLEARNING_ADAPTATION_LOOP.trigger(\n    agent_id=\"\
+    Vanta\",\n    triggering_event=\"prediction_error\",\n    event_data=feedback_data,\n\
+    \    learning_focus=\"update_prediction_model_X\"\n);\n// This would initiate\
+    \ a process of analyzing the error and updating model_X.\n"
+  explanation: 'This scaffold is invoked when there''s an opportunity or necessity
+    for learning, such as after receiving
+
+    external feedback, detecting an internal inconsistency, observing an unexpected
+    outcome, or during
+
+    dedicated training phases. It can be applied to various learning paradigms like
+    reinforcement learning,
+
+    supervised learning (error correction), or unsupervised discovery.
+
+    '
+activation_context:
+  trigger_conditions:
+  - Receipt of external feedback (e.g., reward, correction, new data).
+  - Detection of internal error or performance degradation.
+  - Completion of a task with an evaluable outcome.
+  - Scheduled 'reflection' or 'consolidation' phase.
+  preconditions:
+  - A modifiable component or knowledge structure within the system.
+  - A mechanism for evaluating performance or outcomes.
+  - A process for proposing and integrating changes.
+  required_capabilities:
+  - outcome_evaluation
+  - credit_assignment
+  - change_generation
+  - knowledge_integration
+  supported_modalities:
+  - meta_level
+parameterization_schema:
+  parameters:
+  - name: learning_rate_or_step_size
+    type: number
+    description: Controls the magnitude of adjustments made during adaptation.
+    default_value: 0.1
+  - name: focus_of_learning
+    type: string
+    description: Identifies the specific part of the system targeted for adaptation
+      in this cycle.
+    is_required: true
+  - name: adaptation_strategy
+    type: enum
+    allowed_values:
+    - gradient_descent_heuristic
+    - rule_refinement
+    - parameter_tuning
+    - knowledge_graph_edit
+    - model_retraining_trigger
+    description: The high-level strategy for generating adjustments.
+    default_value: rule_refinement
+  - name: validation_required_before_commit
+    type: boolean
+    description: Whether adaptations must pass a validation step before being permanently
+      integrated.
+    default_value: false
+prompt_template:
+  role: system_instruction
+  content: '**Initiate 💡LEARNING_ADAPTATION_LOOP**
+
+
+    **Triggering Context:**
+
+    - Agent/System ID: {{agent_id_or_system_component}}
+
+    - Triggering Event: {{triggering_event_description}}
+
+    - Associated Data: {{event_data_summary}}
+
+
+    **Learning Parameters:**
+
+    - Focus of Learning: {{focus_of_learning_component}}
+
+    - Adaptation Strategy: {{adaptation_strategy}}
+
+    - Learning Rate/Step Size: {{learning_rate_or_step_size}}
+
+    - Validation Required: {{validation_required_before_commit}}
+
+
+    **Process Steps:**
+
+    1.  **Evaluate Outcome:** Analyze `{{event_data_summary}}` in context of `{{focus_of_learning_component}}`
+    using 📊PERFORMANCE_METRICS_TRACKER. Determine success/failure/discrepancy.
+
+    2.  **Analyze & Assign Credit:** Use 🔍ROOT_CAUSE_ANALYZER to identify reasons
+    for the outcome.
+
+    3.  **Propose Adaptation:** Instruct 🛠️MODEL_REFINER to generate adjustments for
+    `{{focus_of_learning_component}}` based on analysis and `{{adaptation_strategy}}`.
+
+    4.  **Validate (if required):** If `{{validation_required_before_commit}}` is
+    true, test proposed adaptations using ✅VALIDATION_SUITE_RUNNER.
+
+    5.  **Integrate Change:** If validated (or if validation not required), apply
+    changes using 💾KNOWLEDGE_BASE_UPDATER.
+
+    6.  **Log Adaptation:** Record the learning cycle details (e.g., using ⚦TRACE,
+    update `metadata.impact_metrics` for `{{focus_of_learning_component}}`).
+
+
+    Report the adaptation made and its expected impact.
+
+    '
+  execution_mode: simulation
+  variables:
+  - name: agent_id_or_system_component
+  - name: triggering_event_description
+  - name: event_data_summary
+  - name: focus_of_learning_component
+  - name: adaptation_strategy
+  - name: learning_rate_or_step_size
+  - name: validation_required_before_commit
+  output_schema:
+    type: object
+    description: Summary of the learning cycle and adaptation performed.
+    example:
+      adapted_component: prediction_model_X
+      change_description: Adjusted weights for features A, B based on error signal.
+      expected_impact: Improved accuracy for similar future inputs.
+relationships:
+- target_sigil: 📊PERFORMANCE_METRICS_TRACKER
+  relationship_type: uses_method_from
+- target_sigil: 🛠️MODEL_REFINER
+  relationship_type: uses_method_from
+- target_sigil: 💾KNOWLEDGE_BASE_UPDATER
+  relationship_type: uses_method_from
+- target_sigil: 🌍WORLD_MODEL
+  relationship_type: modifies
+- target_sigil: 🜮HEGELIAN_KERNEL
+  relationship_type: analogous_to
+  description: The Hegelian Kernel can be seen as a specific type of learning/adaptation
+    loop focused on synthesis through contradiction.
+SMART_MRAP:
+  Specific: Defines a generalized recursive loop for system learning and adaptation,
+    involving outcome evaluation, error analysis, adjustment generation, and change
+    integration to improve performance or knowledge.
+  Measurable: Improvement in task performance metrics over time; rate of error reduction;
+    speed of adaptation to new information or environments; robustness of learned
+    knowledge.
+  Achievable: Implementable by orchestrating modules for monitoring, analysis, hypothesis
+    generation, and model/KB updating, guided by various learning algorithms or heuristics.
+  Relevant: Absolutely essential for any system that aims to improve, develop, or
+    maintain performance in dynamic or complex environments. Core to intelligence.
+  Transferable: The abstract learning loop is fundamental and applicable across virtually
+    all AI paradigms (ML, symbolic AI, robotics) and learning tasks.
+metadata:
+  definition_version: '1.0'
+  definition_status: proposed
+advanced_cognitive_modeling:
+  cognitive_stage_annotation:
+    primary_developmental_model: GeneralLearningSystems
+    stage_within_model: ContinuousAdaptation
+  strategic_intent:
+  - goal_id: SYSTEM_SELF_IMPROVEMENT
+    alignment_strength: 1.0
+    justification: Directly enables the system to learn and improve its own functioning.
+    contribution_type: direct_achiever
+name: Learning Adaptation Loop

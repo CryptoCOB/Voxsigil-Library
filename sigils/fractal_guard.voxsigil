@@ -1,0 +1,189 @@
+sigil: ⟁FRACTAL_GUARD
+alias: RecursiveDepthController
+tag: CognitiveControl
+tags:
+- recursion_management
+- complexity_capping
+- resource_allocation
+- runaway_loop_prevention
+- self_similar_processing_monitor
+is_cognitive_primitive: false
+principle: 'This sigil establishes and enforces dynamic limits on recursive processes
+  or self-similar
+
+  computations to prevent runaway loops, manage resource consumption, and maintain
+  cognitive
+
+  stability. It operates on the principle of bounded exploration, allowing depth where
+
+  complexity yields insight, but curtailing it when it leads to unproductive cycles
+  or
+
+  combinatorial explosion. It''s a governor for the engine of recursion.
+
+  '
+math: 'Depth_Allowed(process_P, context_C) = min(Max_Global_Depth, f(Utility_Estimate(P,
+  C), Resource_Availability))
+
+  If Current_Depth(P) > Depth_Allowed(P, C) → Trigger_Halt_Or_Prune(P)
+
+  Utility_Estimate ∝ Information_Gain_Rate / Computational_Cost_Rate
+
+  '
+structure:
+  composite_type: conditional
+  temporal_structure: feedback_loop
+  components:
+  - name: Recursion Depth Monitor
+    description: Tracks the current depth of active recursive calls.
+  - name: Complexity Estimator
+    description: Assesses the computational complexity or branching factor of the
+      current recursive step.
+  - name: Utility Heuristic Evaluator
+    description: Estimates the potential information gain or progress towards a goal
+      from further recursion.
+  - name: Limit Enforcer
+    description: Applies configured depth caps or triggers termination/pruning strategies.
+usage:
+  description: Manages and limits the depth of recursive operations to ensure stability,
+    resource efficiency, and prevent unproductive infinite loops.
+  example: "<self_reflection_process max_depth_policy_ref=\"⟁FRACTAL_GUARD\">\n  <core_query>What\
+    \ is the nature of my own awareness?</core_query>\n  <recursion_rule>If new insight,\
+    \ reflect further; else, broaden scope.</recursion_rule>\n</self_reflection_process>\n"
+  explanation: 'Invoke or reference ⟁FRACTAL_GUARD in any system or agent that employs
+    recursion,
+
+    deep iterative processing, or explores fractal-like problem spaces. It acts as
+    a
+
+    safety mechanism and a resource manager, crucial for complex cognitive architectures.
+
+    '
+activation_context:
+  trigger_conditions:
+  - Initiation of a recursive process
+  - Detection of rapidly increasing computational load in an iterative task
+  - Exploration of potentially unbounded search spaces
+  preconditions:
+  - Ability to monitor call stack depth or iteration count
+  - Mechanism to interrupt or modify an ongoing process
+  required_capabilities:
+  - process_monitoring
+  - interrupt_handling
+  - resource_estimation
+  - dynamic_parameter_adjustment
+  supported_modalities:
+  - programmatic_api
+  - system_level_configuration
+  contraindications:
+  - Processes known to be shallow and computationally inexpensive
+  - When exhaustive exploration (if finite) is explicitly required and resources permit
+parameterization_schema:
+  parameters:
+  - name: max_depth_default
+    type: integer
+    description: Default maximum recursion depth if no dynamic utility assessment
+      is available.
+    default_value: 7
+  - name: utility_threshold_for_continuation
+    type: number
+    description: Minimum estimated utility (e.g., information gain rate) required
+      to allow deeper recursion (0.0 to 1.0).
+    value_range:
+      min: 0.0
+      max: 1.0
+    default_value: 0.1
+  - name: pruning_strategy
+    type: enum
+    allowed_values:
+    - hard_stop
+    - graceful_unwind
+    - summarize_and_stop
+    - adaptive_breadth_shift
+    description: Action to take when depth limit is reached.
+    default_value: graceful_unwind
+prompt_template:
+  role: system_config
+  content: 'Configure ⟁FRACTAL_GUARD policy:
+
+    Default Max Depth: {{max_depth_default | default(7)}}
+
+    Utility Threshold for Continuation: {{utility_threshold_for_continuation | default(0.1)}}
+
+    Pruning Strategy on Limit: {{pruning_strategy | default(''graceful_unwind'')}}
+
+    Apply this policy to all processes tagged ''recursive_deep_dive''.
+
+    '
+  execution_mode: instruction
+  variables:
+  - name: max_depth_default
+    description: Default recursion depth limit.
+  - name: utility_threshold_for_continuation
+    description: Minimum utility for deeper recursion.
+  - name: pruning_strategy
+    description: Action on reaching limit.
+  output_schema: Policy 'FractalGuard_Policy_XYZ' configured and applied.
+SMART_MRAP:
+  Specific: Dynamically monitor and control the depth of recursive cognitive processes
+    by applying predefined or utility-based limits, triggering specified pruning strategies
+    when limits are met to ensure stability and resource efficiency.
+  Measurable: Reduction in runaway recursive loops; Adherence to configured depth
+    limits; System stability under recursive load; Resource consumption within acceptable
+    bounds for recursive tasks.
+  Achievable: By implementing stack depth counters, process interruption mechanisms,
+    and heuristics for estimating the utility of further recursion (e.g., based on
+    novelty of generated states, progress towards a goal).
+  Relevant: Essential for any advanced AI employing recursion, self-reflection, or
+    deep search, to prevent system crashes, wasted resources, and unproductive computations.
+  Transferable: Applicable to AI systems in theorem proving, complex planning, generative
+    art, self-modeling, and any domain involving deeply nested computations or explorations.
+metadata:
+  definition_version: 1.4-alpha
+  definition_status: active
+  author_agent_id: VANTA.⟠∆∇𓂀𐑒
+  created_timestamp: '2025-05-11T10:10:00Z'
+  last_updated_timestamp: '2025-05-11T10:10:00Z'
+  authorship_context:
+    motivation: To provide a robust safety and efficiency mechanism for powerful recursive
+      capabilities, preventing the 'sorcerer's apprentice' problem in AI.
+    theoretical_framework: Computability theory (Halting Problem awareness), Resource-bounded
+      reasoning, Algorithmic complexity theory.
+    source_inspiration: Stack overflow errors, biological growth limiters, fractal
+      geometry's bounded infinity.
+  impact_metrics:
+    estimated_cognitive_load: low
+    estimated_resource_cost: low
+    utility_rating_author: 10
+  evolutionary_potential:
+    generalizability_score: 0.95
+    fusion_potential_score: 0.5
+    current_limitations_summary: Heuristics for 'utility of recursion' can be difficult
+      to define universally; might prematurely prune beneficial deep explorations
+      if tuned too conservatively.
+    suggested_next_features:
+    - Machine learning-based utility estimation
+    - Context-adaptive depth limits based on task type
+    - Integration with anomaly detection for identifying harmful recursive patterns.
+    research_questions_opened:
+    - What are the optimal general-purpose heuristics for assessing the ongoing utility
+      of a recursive computation?
+    - How can fractal guards distinguish between beneficial deep exploration and pathological
+      loops in novel domains?
+relationships:
+- target_sigil: Marc.pglyph
+  relationship_type: synergizes_with
+  description: Essential for safely exploring the recursive depths of identity and
+    self-reference implied by Marc.pglyph.
+  strength: 0.9
+- target_sigil: 🔄REFLECTIVE_OPERATIONS
+  relationship_type: controls
+  description: Directly applies to and manages reflective operations to ensure they
+    don't become unbounded.
+  strength: 1.0
+- target_sigil: 😵‍💫LOOP_DETECTED
+  relationship_type: triggers
+  description: Fractal Guard's heuristics might lead to the LOOP_DETECTED state, or
+    LOOP_DETECTED might invoke stricter Fractal Guard policies.
+  strength: 0.8
+name: Fractal Guard

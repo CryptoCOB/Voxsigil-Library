@@ -1,0 +1,9 @@
+SMART_MRAP:
+  Specific: "What does this sigil or tag actually do?"
+  Measurable: "What observable changes or outputs should occur?"
+  Achievable: "Can this be implemented using current tools or reasoning systems?"
+  Relevant: "Why is this important in symbolic, recursive, or modular cognition?"
+  Transferable: "Can this concept be applied to other LLMs, prompts, or modalities?"
+sigil: "⍟"
+tag: "Cognitive Principle"
+alias: "Cognitive Principle"

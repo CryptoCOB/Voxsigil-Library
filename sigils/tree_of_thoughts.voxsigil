@@ -1,0 +1,256 @@
+sigil: 🌳TREETHOUGHT
+alias: TreeOfThoughts
+tag: ReasoningFramework
+tags:
+- ProblemSolving
+- DecisionMaking
+- ExploratoryReasoning
+- Metacognition
+- SearchAlgorithm
+is_cognitive_primitive: false
+principle: 'The 🌳TREETHOUGHT (Tree of Thoughts) framework enhances Large Language
+  Model (LLM) reasoning and problem-solving
+
+  by enabling the explicit generation, exploration, and evaluation of multiple coherent
+  reasoning paths (thoughts)
+
+  organized as a tree. Instead of a single linear chain of thought, 🌳TREETHOUGHT allows
+  the LLM to deliberate,
+
+  backtrack, and self-critique intermediate thoughts, leading to more robust, creative,
+  and accurate solutions.
+
+  It operationalizes metacognitive strategies like planning, hypothesis testing, and
+  iterative refinement
+
+  within a structured search process over the space of possible thought sequences.
+
+  '
+structure:
+  composite_type: hierarchical_recursive
+  temporal_structure: event_triggered_sequence
+  components:
+  - name: ThoughtGenerator
+    description: Module responsible for proposing multiple distinct next thoughts
+      or reasoning steps from a current state.
+    sigil_ref: 💡BRAINSTORM_EXPANDER
+  - name: StateEvaluator
+    description: Module that assesses the quality, promise, or progress of a given
+      thought or partial solution path.
+    sigil_ref: ⚖️STATE_ASSESSOR
+  - name: SearchController
+    description: Orchestrates the tree traversal (e.g., BFS, DFS), pruning, and selection
+      of paths for expansion based on evaluations.
+    sigil_ref: 🧭SEARCH_STRATEGIST
+  - name: WorkingMemoryNode
+    description: Represents a node in the tree, storing the thought content, its evaluation,
+      and parent/child links.
+  - name: PruningMechanism
+    description: Rules or heuristics for abandoning unpromising branches of the thought
+      tree.
+usage:
+  description: Implements the Tree of Thoughts reasoning framework to solve complex
+    problems requiring exploration, deliberation, and self-correction by generating
+    and evaluating multiple reasoning paths.
+  example: "// Problem: \"Write a short story (200 words) about a cat who discovers\
+    \ a hidden portal,\n// with a twist ending related to time travel.\"\n\n// Invoke\
+    \ TreeOfThoughts\nsolution_path = TREETHOUGHT.solve(\n    problem_description=\"\
+    ...\",\n    initial_thought=\"The cat, Mittens, was chasing a dust mote...\",\n\
+    \    num_thoughts_per_step=3,\n    max_depth=5,\n    evaluation_criteria=\"coherence,\
+    \ creativity, twist quality, word count adherence\"\n);\n// solution_path would\
+    \ contain the sequence of thoughts leading to the best story.\n"
+  explanation: '🌳TREETHOUGHT is used for tasks where standard chain-of-thought prompting
+    is insufficient due to the complexity,
+
+    ambiguity, or multi-step nature of the problem. It''s particularly effective for
+    creative generation,
+
+    mathematical reasoning, planning, and any task benefiting from exploring alternatives
+    and self-correction.
+
+    The process involves generating potential ''thoughts'' (intermediate steps or
+    ideas), evaluating their viability,
+
+    and strategically exploring the most promising branches of this "thought tree."
+
+    '
+activation_context:
+  trigger_conditions:
+  - Complex problem requiring multi-step reasoning or planning.
+  - Need to explore multiple potential solutions or hypotheses.
+  - Task involves creative generation with self-correction.
+  - Standard prompting yields suboptimal or incomplete results.
+  preconditions:
+  - A well-defined problem statement and initial state/prompt.
+  - Access to an LLM capable of generating coherent thought steps (ThoughtGenerator).
+  - Access to an LLM or heuristic capable of evaluating thought quality (StateEvaluator).
+  required_capabilities:
+  - llm_text_generation
+  - llm_text_evaluation
+  - structured_data_management
+  supported_modalities:
+  - textual
+  - symbolic_input
+  contraindications:
+  - Simple, single-step problems where chain-of-thought is sufficient.
+  - Extremely resource-constrained environments (ToT can be computationally intensive).
+parameterization_schema:
+  parameters:
+  - name: problem_description
+    type: string
+    description: The full description of the problem to be solved.
+    is_required: true
+  - name: initial_thought_or_state
+    type: string
+    description: The starting point or initial prompt for the thought generation process.
+    is_required: true
+  - name: num_thoughts_per_step
+    type: integer
+    description: Number of diverse thoughts to generate at each expansion step from
+      a node.
+    default_value: 3
+    value_range:
+      min: 1
+      max: 10
+  - name: max_depth_or_steps
+    type: integer
+    description: Maximum depth of the thought tree or number of reasoning steps.
+    default_value: 5
+    value_range:
+      min: 1
+      max: 20
+  - name: search_strategy
+    type: enum
+    allowed_values:
+    - BFS
+    - DFS
+    - beam_search
+    - MCTS_heuristic
+    description: The search algorithm to navigate the thought tree.
+    default_value: BFS
+  - name: evaluation_prompt_or_criteria
+    type: string
+    description: Instructions or criteria provided to the StateEvaluator LLM/heuristic
+      for scoring thoughts.
+    is_required: true
+  - name: pruning_threshold
+    type: number
+    description: Optional. Score below which a thought branch is pruned (if applicable
+      to strategy).
+    default_value: 0.2
+prompt_template:
+  role: system_instruction
+  content: "**Initiate \U0001F333TREETHOUGHT Process**\n\n**Problem:** {{problem_description}}\n\
+    **Initial State/Thought:** {{initial_thought_or_state}}\n\n**Parameters:**\n-\
+    \ Thoughts per step (k): {{num_thoughts_per_step}}\n- Max depth/steps (T): {{max_depth_or_steps}}\n\
+    - Search strategy: {{search_strategy}}\n- Evaluation Criteria: {{evaluation_prompt_or_criteria}}\n\
+    - Pruning Threshold (optional): {{pruning_threshold}}\n\n**Orchestration Steps\
+    \ (Conceptual):**\n1. Initialize tree with initial_thought_or_state as root.\n\
+    2. Loop until max_depth is reached or a satisfactory solution is found:\n   a.\
+    \ Select promising leaf node(s) based on {{search_strategy}}.\n   b. For each\
+    \ selected node, instruct ThoughtGenerator (e.g., `\U0001F4A1BRAINSTORM_EXPANDER`)\
+    \ to generate {{num_thoughts_per_step}} new thoughts.\n   c. For each new thought,\
+    \ instruct StateEvaluator (e.g., `⚖️STATE_ASSESSOR` using `{{evaluation_prompt_or_criteria}}`)\
+    \ to assign a value.\n   d. Add new thoughts and their values to the tree.\n \
+    \  e. Apply pruning rules if applicable.\n3. Extract best solution path/leaf from\
+    \ the tree.\n\n**Expected Output:** The final solution or the best thought path\
+    \ found.\n"
+  execution_mode: simulation
+  variables:
+  - name: problem_description
+    description: The problem to solve.
+  - name: initial_thought_or_state
+    description: Starting point for ToT.
+  - name: num_thoughts_per_step
+    description: Number of thoughts to generate per step.
+  - name: max_depth_or_steps
+    description: Maximum tree depth or reasoning steps.
+  - name: search_strategy
+    description: Search algorithm (BFS, DFS, etc.).
+  - name: evaluation_prompt_or_criteria
+    description: Criteria for evaluating thoughts.
+  - name: pruning_threshold
+    description: Threshold for pruning branches.
+  output_schema:
+    type: object
+    description: The result of the Tree of Thoughts process, typically including the
+      best solution found and potentially the thought path.
+    example:
+      solution: The cat entered the portal and found itself in last Tuesday, just
+        in time for dinner again.
+      thought_path:
+      - '...'
+      - '...'
+      - '...'
+      final_evaluation_score: 0.95
+relationships:
+- target_sigil: 💡BRAINSTORM_EXPANDER
+  relationship_type: uses_method_from
+  description: Relies on a thought generation module to expand tree nodes.
+  strength: 1.0
+- target_sigil: ⚖️STATE_ASSESSOR
+  relationship_type: uses_method_from
+  description: Utilizes a state/thought evaluation module to score branches.
+  strength: 1.0
+- target_sigil: 🧭SEARCH_STRATEGIST
+  relationship_type: uses_method_from
+  description: Employs a search control mechanism to navigate the tree.
+  strength: 1.0
+- target_sigil: ⚙️CHAIN_OF_THOUGHT
+  relationship_type: extends
+  description: Generalizes and systematizes chain-of-thought by exploring multiple
+    chains.
+  strength: 0.9
+- target_sigil: 🤔META_REASONER
+  relationship_type: enables
+  description: Provides a structured framework for metacognitive operations like planning
+    and self-correction.
+  strength: 0.8
+SMART_MRAP:
+  Specific: Implements a Tree of Thoughts framework for LLMs to solve complex problems
+    by generating, evaluating, and searching through multiple explicit reasoning paths
+    (thoughts).
+  Measurable: Improved solution quality (e.g., accuracy, coherence, creativity) on
+    benchmark tasks compared to simpler prompting methods; number of explored thoughts;
+    quality of final selected path; computational resources used.
+  Achievable: Implementable by orchestrating multiple LLM calls for thought generation
+    and evaluation, combined with classical search algorithms (BFS, DFS) or more advanced
+    ones (MCTS), and managing the tree structure.
+  Relevant: Addresses limitations of single-pass, linear reasoning in LLMs, enabling
+    more deliberative, robust, and human-like problem-solving for complex tasks. Essential
+    for advancing LLM reasoning capabilities.
+  Transferable: The ToT framework is applicable across various LLMs and a wide range
+    of problem domains including creative writing, coding, mathematical proofs, planning,
+    and general question answering.
+metadata:
+  definition_version: '1.0'
+  definition_status: active
+  author_agent_id: System_Architect_AI
+  created_timestamp: '2023-10-29T11:00:00Z'
+  last_updated_timestamp: '2023-10-29T11:00:00Z'
+  authorship_context:
+    motivation: To provide LLMs with a more structured and powerful mechanism for
+      complex reasoning and problem-solving that mimics human deliberation and exploration
+      of alternatives.
+    theoretical_framework: Cognitive Psychology (Problem Solving, Metacognition),
+      Artificial Intelligence (Search Algorithms, Planning), LLM Prompt Engineering.
+    source_inspiration: 'Yao et al. (2023) ''Tree of Thoughts: Deliberate Problem
+      Solving with Large Language Models'', and similar works on multi-path reasoning.'
+  impact_metrics:
+    estimated_cognitive_load: high
+    estimated_resource_cost: high
+  evolutionary_potential:
+    suggested_next_features:
+    - Integration of Monte Carlo Tree Search (MCTS)
+    - Dynamic adjustment of k (thoughts per step)
+    - Learning evaluation heuristics
+    - Visualizer for the thought tree
+advanced_cognitive_modeling:
+  strategic_intent:
+  - goal_id: ENHANCE_LLM_REASONING_DEPTH
+    alignment_strength: 0.95
+    justification: Directly provides a method for deeper, more deliberate reasoning.
+    contribution_type: direct_achiever
+cognitive_scaffold: true
+symbolic_scaffold: true
+name: Tree Of Thoughts

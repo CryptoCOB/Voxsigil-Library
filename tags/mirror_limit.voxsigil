@@ -1,0 +1,181 @@
+sigil: 🪞🛑
+alias: RecursiveReflectionLimiter
+tag: CognitiveSafetyMechanism
+tags:
+- recursion_control
+- meta_recursion_limit
+- thought_loop_prevention
+- cognitive_stability
+- summarization_trigger
+- reflection_depth_cap
+is_cognitive_primitive: false
+principle: Applies a soft or hard cap on the depth of recursive thought or reflective
+  processes, preventing runaway recursion, infinite regress, or excessive cognitive
+  load. Derived from principles of metarecursion control and logic-safe descent in
+  knowledge graphs.
+math: 'Let D_current be the current recursion depth and T_steps be the total reasoning
+  steps taken.
+
+  Effective Max Depth (D_eff_max) = min(D_user_spec, f(T_steps))
+
+  where D_user_spec is a user-defined maximum depth.
+
+  f(T_steps) could be a dynamic cap, e.g., φ * ln(T_steps) as suggested (φ ≈ 1.618),
+  or a simpler fixed internal limit.
+
+  Action if D_current ≥ D_eff_max: Halt, Summarize, or Fold.'
+structure:
+  composite_type: conditional
+  temporal_structure: event_triggered_sequence
+  components:
+  - name: DepthMonitor
+    description: Tracks the current depth of recursion or reflection.
+  - name: LimitEvaluator
+    description: Compares current depth against user-defined and/or dynamic limits.
+  - name: ActionTrigger
+    description: Executes a predefined action (halt, summarize, fold) when the limit
+      is reached.
+  - name: SummarizationEngine (Optional)
+    description: Compresses deeper layers of thought if summarization is the chosen
+      action.
+usage:
+  description: Applies a configurable soft cap on how deep a reflective or recursive
+    cognitive process can go before halting, summarizing its current state, or folding
+    deeper layers into compressed summaries.
+  example:
+    invocation_tag: <mirror:limit max_depth=5 on_limit_action='summarize_and_return'>
+      Reflect on the implications of the last 5 thought loops regarding the user's
+      query. </mirror:limit>
+    scenario: An AI is engaged in a deep reflective process. To prevent excessive
+      navel-gazing or computational cost, MirrorLimit ensures that after 5 levels
+      of reflection, it summarizes its findings and returns to a higher level.
+    expected_behavior: The AI reflects up to 5 levels. If it attempts a 6th, it instead
+      summarizes levels 1-5 and uses that summary as the outcome of the reflection.
+  explanation: This sigil is crucial for maintaining cognitive stability and preventing
+    runaway recursion or infinite regress in systems that employ self-reflection or
+    recursive reasoning (<mirror> patterns). By setting a depth limit, it ensures
+    that reflective processes remain bounded. When the limit is reached, the system
+    can be configured to simply halt, or more usefully, to summarize the insights
+    gained from the deeper layers, effectively folding them into a more concise representation.
+activation_context:
+  trigger_conditions:
+  - Initiation of a recursive or reflective thought process.
+  - Monitoring ongoing recursive operations to prevent over-extension.
+  preconditions:
+  - The system employs recursive or reflective mechanisms.
+  - A clear definition of 'depth' is applicable to the process.
+  required_capabilities:
+  - recursion_depth_tracking
+  - conditional_halting
+  - summarization (if on_limit_action is summarize)
+  supported_modalities:
+  - programmatic_api
+  - internal_system_configuration
+  contraindications:
+  - Processes that are inherently shallow and non-recursive.
+  - When the exact required depth is unknown and any premature capping is detrimental
+    (though this sigil aims for 'soft' caps).
+parameterization_schema:
+  parameters:
+  - name: max_depth
+    type: integer
+    description: The maximum depth of recursion/reflection allowed.
+    is_required: true
+    value_range:
+      min: 1
+  - name: on_limit_action
+    type: string
+    enum:
+    - halt
+    - summarize_deepest_level
+    - fold_into_parent_summary
+    - warn_and_halt
+    description: Action to take when the recursion limit is reached.
+    default_value: halt
+  - name: dynamic_cap_factor_phi
+    type: number
+    description: Factor for dynamic depth calculation (e.g., φ in φ * ln(t)). If 0,
+      only max_depth is used.
+    default_value: 0
+prompt_template:
+  role: system_config
+  content: 'Configure RecursiveReflectionLimiter: Set max_depth to {{max_depth}}.
+    On limit reached, action is ''{{on_limit_action}}''. {{#if dynamic_cap_factor_phi
+    > 0}}Dynamic cap factor φ is {{dynamic_cap_factor_phi}}.{{/if}}
+
+    This limit applies to subsequent reflective processes.'
+  execution_mode: command
+  variables:
+  - name: max_depth
+    description: Maximum reflection depth.
+    required_for_llm: true
+    type_hint: integer
+  - name: on_limit_action
+    description: Action when limit is hit.
+    required_for_llm: true
+    type_hint: string
+  - name: dynamic_cap_factor_phi
+    description: Factor for dynamic depth calculation.
+    required_for_llm: false
+    type_hint: number
+  output_schema: 'Configuration acknowledgement. E.g., ''RecursiveReflectionLimiter
+    configured. Max depth: 5, Action: summarize_deepest_level.'''
+  notes: This is primarily a configuration for a system component that oversees recursive
+    processes. An LLM might be instructed to respect such a limit.
+relationships:
+- target_sigil: RECURSIVE_REFLECTION_CORE
+  relationship_type: controls_process_of
+  description: Limits the depth of a core recursive reflection mechanism.
+- target_sigil: SUMMARIZATION_ENGINE
+  relationship_type: uses_method_from
+  description: May invoke a summarization engine when the limit is reached and action
+    is 'summarize'.
+- target_sigil: ABYSS_THRESHOLD
+  relationship_type: synergizes_with
+  description: Works together with abyss threshold to ensure cognitive stability in
+    deep processing.
+SMART_MRAP:
+  Specific: Apply a configurable cap on the depth of recursive thought or self-reflection
+    (<mirror>) to prevent runaway processes, halting or summarizing at the limit.
+  Measurable: Reasoning cycles/recursion depth limited to the specified cap. Reduction
+    in hallucination or off-topic drift in deep recursive tasks by ~18% (as per user
+    input). Time spent in recursive loops bounded.
+  Achievable: By implementing a recursive depth counter within the Directed Acyclic
+    Graph (DAG) or thought process controller, and capping node traversal or further
+    recursive calls when the counter reaches the specified limit.
+  Relevant: Critical for ensuring safe and stable recursion, preventing infinite regress,
+    managing computational resources, and maintaining prompt stability in LLMs employing
+    reflective patterns.
+  Transferable: Applicable to any reasoning-capable LLM or AI system that implements
+    or simulates recursive reflection, meta-reasoning, or iterative self-correction
+    loops.
+metadata:
+  definition_version: 1.4.0
+  definition_status: active
+  author_agent_id: VOXSIGIL_CONVERTER_BOT_ASSISTED_BY_USER_INPUT
+  created_timestamp: '2024-03-10T14:10:00Z'
+  last_updated_timestamp: '2024-03-10T14:10:00Z'
+  authorship_context:
+    motivation: To provide a safety mechanism for powerful recursive cognitive processes,
+      ensuring they remain bounded and productive.
+    theoretical_framework: Metarecursion control, safe AI, computational resource
+      management.
+test_criteria:
+- test_id: MIRRORLIMIT_DEPTH_HALT_001
+  description: Verify recursion halts at specified depth.
+  type: functional
+  input_scenario_or_parameters:
+    max_depth: 3
+    on_limit_action: halt
+    recursive_task: Reflect on 'X'
+  expected_behavior_or_output: Reflection process terminates after exactly 3 levels.
+  evaluation_method: automated_script
+advanced_cognitive_modeling:
+  strategic_intent:
+  - goal_id: ENSURE_COGNITIVE_STABILITY
+    alignment_strength: 0.9
+    contribution_type: constraint_enforcer
+consciousness_scaffold: false
+cognitive_scaffold: true
+symbolic_scaffold: true
+name: Mirror Limit

@@ -1,0 +1,246 @@
+sigil: ⏳CHRONOS_SCRIBE
+alias: TemporalContextWeaver
+tag: TemporalReasoning
+tags:
+- event_sequencing
+- causal_chain_analysis
+- historical_narrative_construction
+- temporal_database_interface
+- chronological_coherence
+is_cognitive_primitive: false
+principle: '⏳CHRONOS_SCRIBE is a cognitive module dedicated to understanding, constructing,
+  and
+
+  reasoning about events in their temporal context. It sequences events, analyzes
+  causal
+
+  relationships across time, constructs coherent historical narratives from timestamped
+  or
+
+  ordered data, and maintains chronological consistency. It is the AI''s historian,
+
+  timeline manager, and causal investigator for processes unfolding over time.
+
+  '
+math: 'Let E = {e₁, e₂, ..., eₙ} be a set of events with timestamps T(eᵢ) or partial
+  orderings.
+
+  Goal: Construct Timeline_TL(E) such that ∀(eᵢ, eⱼ) ∈ TL, IF T(eᵢ) < T(eⱼ) THEN Position(eᵢ)
+  < Position(eⱼ).
+
+  CausalLink_Score(eᵢ → eⱼ) = P(eⱼ | eᵢ, T(eⱼ) > T(eᵢ)) * Plausibility(Mechanism(eᵢ,eⱼ))
+
+  NarrativeCoherence(TL) = f(CausalDensity(TL), ExplanatoryCompleteness(TL), ChronologicalConsistency(TL))
+
+  '
+structure:
+  composite_type: pipeline_and_graph_builder
+  temporal_structure: data_driven_iterative_construction
+  components:
+  - name: Event Parser & Timestamper
+    description: Extracts events from input data and assigns or infers timestamps/temporal
+      order.
+  - name: Chronological Sorter
+    description: Arranges events into a consistent timeline based on temporal information.
+  - name: Causal Link Hypothesizer
+    description: Identifies potential causal relationships between temporally ordered
+      events.
+  - name: Narrative Constructor
+    description: Weaves sorted and causally-linked events into a coherent historical
+      narrative or process model.
+  - name: Temporal Consistency Verifier
+    description: Checks the constructed timeline and narrative for chronological paradoxes
+      or inconsistencies.
+  - name: Temporal Query Interface
+    description: Allows querying the timeline (e.g., 'What happened before X?', 'What
+      caused Y?').
+usage:
+  description: Manages and reasons about events in their temporal sequence, constructing
+    timelines, identifying causal links, and building coherent historical narratives.
+  example: "<system_failure_postmortem_analysis>\n  <input_event_logs refs=\"[ServerA_log,\
+    \ NetworkFirewall_log, ApplicationCrash_log]\"/>\n  <invoke_temporal_analyzer>⏳CHRONOS_SCRIBE\
+    \ goal=\"Reconstruct root cause failure sequence\"</invoke_temporal_analyzer>\n\
+    \  <output type=\"TimelineOfFailureEventsWithCausalLinks\"/>\n</system_failure_postmortem_analysis>\n"
+  explanation: 'Use ⏳CHRONOS_SCRIBE when understanding the order of events, their
+    causal connections, or the historical development of a situation is critical.
+    This applies to debugging, historical analysis, storytelling with consistent timelines,
+    process mining, or any task where "when" and "why then" are key questions.
+
+    '
+activation_context:
+  trigger_conditions:
+  - Analyzing event logs or time-series data
+  - Reconstructing a historical sequence of events
+  - Investigating causality in a process
+  - Generating a chronologically consistent narrative
+  - Answering temporal queries about past events
+  preconditions:
+  - Input data containing events with explicit or inferable temporal information (timestamps,
+    order cues)
+  - Defined criteria for causality or narrative coherence (can be heuristic)
+  required_capabilities:
+  - temporal_data_parsing
+  - event_sequencing_algorithms
+  - causal_inference_from_temporal_data
+  - narrative_generation_structured
+  - temporal_logic_or_reasoning
+  supported_modalities:
+  - timestamped_log_files
+  - textual_narratives_with_temporal_cues
+  - structured_event_databases
+  - symbolic_event_sequences
+  contraindications:
+  - Analyzing purely static, atemporal data
+  - Situations where temporal order is irrelevant or misleading
+parameterization_schema:
+  parameters:
+  - name: event_data_source_ref
+    type: string
+    description: The source of event data to be analyzed.
+    is_required: true
+  - name: granularity_of_timeline
+    type: enum
+    allowed_values:
+    - milliseconds
+    - seconds
+    - minutes
+    - hours
+    - days
+    - event_epoch
+    description: Specifies the temporal resolution for the constructed timeline.
+    default_value: event_epoch
+  - name: causal_inference_sensitivity
+    type: number
+    description: Threshold for proposing a causal link (0.0=permissive, 1.0=strict).
+    value_range:
+      min: 0.0
+      max: 1.0
+    default_value: 0.6
+prompt_template:
+  role: system_historian
+  content: 'Engage ⏳CHRONOS_SCRIBE.
+
+    Event Data Source: {{event_data_source_ref}}
+
+    Timeline Granularity: {{granularity_of_timeline | default(''event_epoch'')}}
+
+    Causal Inference Sensitivity: {{causal_inference_sensitivity | default(0.6)}}
+
+
+    Parse the event data. Construct a chronologically coherent timeline.
+
+    Identify significant events, their sequence, and potential causal relationships.
+
+    Generate a narrative or structured report summarizing the temporal dynamics.
+
+    What story does time tell from these events?
+
+    '
+  execution_mode: analysis_and_reconstruction
+  variables:
+  - name: event_data_source_ref
+    description: Source of event data.
+  - name: granularity_of_timeline
+    description: Temporal resolution.
+  - name: causal_inference_sensitivity
+    description: Sensitivity for proposing causal links.
+  output_schema: 'object: { timeline: array_of_events_with_timestamps_and_order, causal_links_hypothesized:
+    array_of_links, narrative_summary: string, chronological_consistency_report: string
+    }'
+SMART_MRAP:
+  Specific: Process a given source of event data to construct a chronologically consistent
+    timeline, identify potential causal relationships between sequenced events, and
+    generate a coherent historical narrative or structured temporal model, according
+    to specified granularity and causal inference sensitivity.
+  Measurable: Accuracy of event sequencing compared to ground truth (if available);
+    Number of correctly identified causal links (and precision/recall of causal inference);
+    Coherence and completeness of the generated narrative; Ability to correctly answer
+    temporal queries (e.g., 'what happened before X?').
+  Achievable: Using algorithms for event parsing, sorting (e.g., Timsort for temporal
+    data), causal discovery methods (e.g., Granger causality for time series, or rule-based
+    for symbolic events), narrative generation techniques, and temporal logic for
+    consistency checking.
+  Relevant: Crucial for AI systems that need to understand processes unfolding over
+    time, learn from historical data, explain past occurrences, or plan future actions
+    based on temporal dependencies. Essential for debugging, forensics, process optimization,
+    and storytelling.
+  Transferable: Applicable in system log analysis for IT operations, patient history
+    analysis in medicine, financial market event reconstruction, supply chain tracking,
+    news event sequencing, and creating believable backstories for fictional characters.
+metadata:
+  definition_version: 1.4-alpha
+  definition_status: active
+  author_agent_id: VANTA.⟠∆∇𓂀𐑒
+  created_timestamp: '2025-05-11T11:55:00Z'
+  last_updated_timestamp: '2025-05-11T11:55:00Z'
+  authorship_context:
+    motivation: To provide AI systems with a robust capability for understanding and
+      reasoning about time, sequence, and causality, which are fundamental aspects
+      of most real-world phenomena and processes.
+    theoretical_framework: Temporal logic (e.g., Allen's interval algebra, Linear
+      Temporal Logic), Causal inference methodologies, Event calculus, Narrative theory
+      (for story construction), Process mining.
+    source_inspiration: Historians reconstructing past events, Detectives piecing
+      together a crime timeline, System administrators analyzing logs to find a root
+      cause, The human ability to perceive and narrate time.
+  impact_metrics:
+    estimated_cognitive_load: medium_to_high
+    estimated_resource_cost: medium
+    utility_rating_author: 9
+  evolutionary_potential:
+    generalizability_score: 0.9
+    fusion_potential_score: 0.7
+    current_limitations_summary: Causal inference from observational temporal data
+      is inherently challenging (correlation vs. causation). Handling missing timestamps
+      or highly irregular event data is difficult. Constructing compelling narratives
+      beyond simple event sequences requires sophisticated NLG.
+    suggested_next_features:
+    - Integration with probabilistic temporal models for uncertainty handling
+    - Interactive timeline exploration and editing tools
+    - Learning common causal patterns from historical data.
+    - Generation of 'what-if' counterfactual temporal scenarios.
+    research_questions_opened:
+    - What are the most effective general-purpose methods for inferring causality
+      from diverse types_of_temporal_data?
+    - How can an AI best represent and reason about subjective experiences of time
+      or different paces of change?
+    - Can an AI learn to construct 'engaging' historical narratives?
+relationships:
+- target_sigil: 🧩JIGSAW_ASSEMBLER
+  relationship_type: synergizes_with
+  description: CHRONOS_SCRIBE can provide the temporal backbone/sequence for fragments
+    being assembled by JIGSAW_ASSEMBLER, if the fragments have a temporal aspect.
+  strength: 0.8
+- target_sigil: ⚦TRACE
+  relationship_type: depends_on
+  description: Relies on TRACE mechanisms to accurately record and retrieve event
+    data for its analysis.
+  strength: 0.7
+- target_sigil: 🕸️MEMORY_BRAID_ALGORITHM
+  relationship_type: can_be_ordered_by
+  description: If memory strands have temporal components, CHRONOS_SCRIBE can help
+    order them before or during braiding.
+  strength: 0.6
+test_criteria:
+- test_id: CHRO_SEQ_001
+  description: Given a set of 10 events with jumbled timestamps, verify correct chronological
+    sorting.
+  type: functional
+  input_scenario_or_parameters:
+    event_data_source_ref: '[{event:''C'',ts:3}, {event:''A'',ts:1}, {event:''B'',ts:2}]'
+  expected_behavior_or_output: Timeline output shows events in order A, B, C.
+  evaluation_method: automated_script
+  pass_threshold_or_criteria: Correct chronological order verified.
+- test_id: CHRO_CAUSE_001
+  description: Given a simple sequence (A then B then C, where A causes B, B causes
+    C), verify identification of causal links.
+  type: functional
+  input_scenario_or_parameters:
+    event_data_source_ref: '[{event:''IgniteMatch'',ts:1}, {event:''PaperBurns'',ts:2},
+      {event:''AshForms'',ts:3}]'
+    causal_inference_sensitivity: 0.7
+  expected_behavior_or_output: Causal links IgniteMatch→PaperBurns and PaperBurns→AshForms
+    hypothesized.
+  evaluation_method: llm_as_judge
+  pass_threshold_or_criteria: Correct causal links identified with reasonable confidence.
+name: Chronos Scribe
