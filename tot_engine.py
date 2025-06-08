@@ -642,8 +642,21 @@ class ToTEngine:
             health["overall_score"] = 0.2
             health["error_rate"] = 0.8
 
-        # Placeholder for context quality: if no providers, context quality is low
-        if not self.active_context_providers:
+        # Estimate context quality based on active providers
+        if self.active_context_providers:
+            qualities = []
+            for p in self.active_context_providers:
+                getter = getattr(p, "get_quality", None)
+                if callable(getter):
+                    try:
+                        qualities.append(float(getter()))
+                    except Exception:
+                        pass
+            if qualities:
+                health["context_quality"] = sum(qualities) / len(qualities)
+            else:
+                health["context_quality"] = 0.5
+        else:
             health["context_quality"] = 0.2
         # Recalculate overall score based on components
         health["overall_score"] = (
