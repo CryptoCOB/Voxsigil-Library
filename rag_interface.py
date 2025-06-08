@@ -63,33 +63,33 @@ class BaseRagInterface(ABC):
         filter_conditions: Optional[Dict[str, Any]] = None,
     ) -> List[Dict[str, Any]]:
         """Retrieves relevant VoxSigil sigils based on a query."""
-        pass
+        raise NotImplementedError
 
     @abstractmethod
     def retrieve_context(
         self, query: str, params: Optional[Dict[str, Any]] = None
     ) -> str:
         """Retrieves and formats context for a query as a formatted string."""
-        pass
+        raise NotImplementedError
 
     @abstractmethod
     def retrieve_scaffolds(
         self, query: str, filter_tags: Optional[List[str]] = None
     ) -> List[Dict[str, Any]]:
         """Retrieves reasoning scaffolds relevant to the query."""
-        pass
+        raise NotImplementedError
 
     @abstractmethod
     def get_scaffold_definition(
         self, scaffold_name_or_id: str
     ) -> Optional[Dict[str, Any]]:
         """Retrieves the full definition of a specific reasoning scaffold."""
-        pass
+        raise NotImplementedError
 
     @abstractmethod
     def get_sigil_by_id(self, sigil_id_glyph: str) -> Optional[Dict[str, Any]]:
         """Retrieves a specific sigil by its unique ID or glyph."""
-        pass
+        raise NotImplementedError
 
 
 class SupervisorRagInterface(BaseRagInterface):

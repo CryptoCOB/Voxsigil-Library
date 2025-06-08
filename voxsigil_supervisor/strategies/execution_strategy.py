@@ -32,7 +32,7 @@ class BaseExecutionStrategy(ABC):
         Returns:
             Tuple containing the final response and execution metadata
         """
-        pass
+        raise NotImplementedError
     
     @abstractmethod
     def process_intermediate_step(self,
@@ -48,7 +48,7 @@ class BaseExecutionStrategy(ABC):
         Returns:
             Updated execution state
         """
-        pass
+        raise NotImplementedError
     
     @abstractmethod
     def should_continue_execution(self,
@@ -62,4 +62,4 @@ class BaseExecutionStrategy(ABC):
         Returns:
             Boolean indicating whether to continue execution
         """
-        pass
+        raise NotImplementedError
