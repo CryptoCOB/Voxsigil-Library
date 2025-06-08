@@ -76,7 +76,8 @@ try:
             VoxSigilPerformanceInterface,
         )
         from GUI.components.testing_tab_interface import VoxSigilTestingInterface
-        from GUI.components.training_interface import VoxSigilTrainingInterface
+        from GUI.components.training_interface_new import VoxSigilTrainingInterface
+        from GUI.components.speech_integration_handler import initialize_speech_system
         from GUI.components.visualization_tab_interface import (
             VoxSigilVisualizationInterface,
         )
@@ -94,7 +95,8 @@ try:
         import neural_interface
         import performance_tab_interface
         import testing_tab_interface
-        import training_interface
+        import training_interface_new as training_interface
+        from speech_integration_handler import initialize_speech_system
         import visualization_tab_interface
         import visualization_utils
         import voxsigil_integration
@@ -219,6 +221,17 @@ class DynamicGridFormerGUI:
             print(f"⚠️ VoxSigil integration failed: {e}")
             self.voxsigil_integration = None
 
+        # Initialize speech system if possible
+        try:
+            core_for_speech = None
+            if self.vanta_integration and hasattr(self.vanta_integration, "vanta_core"):
+                core_for_speech = self.vanta_integration.vanta_core
+            self.speech_handler = initialize_speech_system(core_for_speech)
+            print("🗣️ Speech system initialized")
+        except Exception as e:
+            print(f"⚠️ Speech system initialization failed: {e}")
+            self.speech_handler = None
+
         # Subscribe to supervisor status for bidirectional sync
         if self.voxsigil_integration:
             self.voxsigil_integration.add_status_callback(self._on_supervisor_status)
@@ -303,8 +316,11 @@ class DynamicGridFormerGUI:
         """Set up the Training tab."""
         # Create a training interface with VoxSigil integration
         self.training_interface = VoxSigilTrainingInterface(
-            self, self.notebook
-        )  # Connect VoxSigil integration if available
+            parent,
+            self.data_loader,
+            self._start_async_training_job,
+            self._save_model,
+        )
         if hasattr(self, "voxsigil_integration") and self.voxsigil_integration:
             self.training_interface.voxsigil_integration = self.voxsigil_integration
 
@@ -480,6 +496,30 @@ class DynamicGridFormerGUI:
         except Exception as e:
             self.show_error(f"Training error: {str(e)}")
             self.update_status("Training failed")
+
+    def _start_async_training_job(self, training_data, config):
+        """Submit and start an async training job using Vanta integration."""
+        if not self.vanta_integration or not self.current_model_path:
+            print("⚠️ Vanta integration unavailable for training")
+            return None
+
+        updates = {
+            "max_epochs": getattr(config, "max_epochs", 1),
+            "batch_size": getattr(config, "batch_size", 1),
+            "learning_rate": getattr(config, "learning_rate", 1e-4),
+            "device": getattr(config, "device", "auto"),
+        }
+
+        job_id = self.vanta_integration.create_training_job(
+            self.current_model_path,
+            "in_memory_dataset",
+            updates,
+        )
+
+        if job_id:
+            self.vanta_integration.start_training()
+            return self.vanta_integration.current_training_job
+        return None
 
     def _save_model(self, file_path=None):
         """Save the current model to file."""
