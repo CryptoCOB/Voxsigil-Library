@@ -18,6 +18,7 @@ from dataclasses import dataclass
 from typing import Any, Dict, List, Optional
 
 from Vanta.core.UnifiedAsyncBus import (
+    AsyncMessage,
     MessageType,  # Import MessageType for async bus integration
 )
 
@@ -511,10 +512,27 @@ class AsyncTTSEngine:
         Returns:
             dict: Synthesis result
         """
-        # Example: message.content should contain text to synthesize
-        # Implement actual synthesis logic here
-        # ...
-        return {"error": "Not implemented", "success": False}
+        try:
+            text = ""
+            if hasattr(message, "content"):
+                text = str(message.content)
+            if not text:
+                return {"success": False, "error": "No text provided"}
+
+            result = await self.synthesize_text_async(text)
+
+            await self.vanta_core.async_bus.publish(
+                AsyncMessage(
+                    MessageType.TEXT_TO_SPEECH,
+                    self.COMPONENT_NAME,
+                    result.__dict__,
+                    target_ids=[message.sender_id],
+                )
+            )
+            return {"success": result.success, "audio_path": result.audio_path}
+        except Exception as e:
+            logger.error(f"handle_speech_request failed: {e}")
+            return {"success": False, "error": str(e)}
 
     # Public API methods
 

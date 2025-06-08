@@ -11,6 +11,7 @@ import time
 import traceback  # TRFE008
 from pathlib import Path
 from typing import Annotated, Any, Dict, List, Optional, Union
+import uuid
 
 # ML Dependencies
 import torch
@@ -20,6 +21,7 @@ from pydantic.types import confloat, conint
 from torch.cuda.amp import GradScaler, autocast  # TRFE004
 from torch.utils.data import DataLoader
 from torch.utils.tensorboard import SummaryWriter  # TRFE009
+from Vanta.core.UnifiedAsyncBus import AsyncMessage, MessageType
 
 logger = logging.getLogger("Vanta.AsyncTraining")
 
@@ -281,6 +283,17 @@ class AsyncTrainingEngine:
                 "VantaCore does not have register_component method. Skipping registration."
             )
 
+        if hasattr(self.vanta_core, "async_bus"):
+            self.vanta_core.async_bus.register_component("training_engine")
+            self.vanta_core.async_bus.subscribe(
+                "training_engine",
+                MessageType.PROCESSING_REQUEST,
+                self.handle_training_request,
+            )
+            logger.info(
+                "training_engine registered and subscribed to async bus (PROCESSING_REQUEST)"
+            )
+
     def _determine_device(self, requested_device: str) -> str:
         logger.info(
             f"Device detection: requested_device={requested_device}, HAVE_TORCH={HAVE_TORCH}, torch={torch}"
@@ -430,6 +443,30 @@ class AsyncTrainingEngine:
             f"Created training job: {job_id} with config: {final_config.model_dump_json(indent=2)}"
         )
         return job
+
+    async def handle_training_request(self, message):
+        """Async bus handler to start a training job."""
+        try:
+            cfg = message.content.get("config") if hasattr(message, "content") else None
+            model = message.content.get("model") if hasattr(message, "content") else None
+            dataset = message.content.get("dataset") if hasattr(message, "content") else None
+            job = await self.create_training_job(
+                job_id=str(uuid.uuid4())[:8],
+                model_name_or_path=model or "model",
+                dataset_name_or_path=dataset or "dataset",
+                job_specific_config_dict=cfg,
+            )
+            await self.start_training_job(job.job_id)
+            await self.vanta_core.async_bus.publish(
+                AsyncMessage(
+                    MessageType.PROCESSING_RESPONSE,
+                    self.COMPONENT_NAME,
+                    {"job_id": job.job_id},
+                    target_ids=[message.sender_id],
+                )
+            )
+        except Exception as e:
+            logger.error(f"handle_training_request error: {e}")
 
     async def start_training_job(self, job_id: str) -> bool:
         if not self.is_initialized:
