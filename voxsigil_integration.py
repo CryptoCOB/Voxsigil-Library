@@ -20,7 +20,7 @@ import sys
 import threading
 import time
 from pathlib import Path
-from typing import Dict, Optional
+from typing import Any, Dict, Optional
 
 # Try to import torch for GPU monitoring
 try:
@@ -533,12 +533,91 @@ class VoxSigilIntegrationManager:
             "unified_core_available": self.unified_core is not None,
             "legacy_fallback_available": LEGACY_INTERFACES_AVAILABLE,
         }
-        
+
         # Calculate overall health
         total_components = len(status["components"])
         active_components = sum(1 for active in status["components"].values() if active)
         status["health_percentage"] = (active_components / total_components) * 100 if total_components > 0 else 0
-        
+
+        return status
+
+    # ------------------------------------------------------------------
+    # Compatibility helper methods expected by older test scripts
+    # ------------------------------------------------------------------
+    def get_status(self):
+        """Alias for ``get_system_status`` used by legacy tests."""
+        return self.get_system_status()
+
+    def test_all_interfaces(self) -> Dict[str, bool]:
+        """Simple check that each major interface is available."""
+        return {
+            "memory": self.get_memory_interface() is not None,
+            "rag": self.get_rag_interface() is not None,
+            "learning": self.get_learning_interface() is not None,
+            "model": self.get_model_interface() is not None,
+            "checkin": self.get_checkin_interface() is not None,
+        }
+
+    def store_interaction(self, interaction_data: Dict[str, Any]) -> bool:
+        """Store an interaction using the available memory interface."""
+        memory = self.get_memory_interface()
+        if not memory:
+            raise RuntimeError("Memory interface not available")
+
+        if hasattr(memory, "store_interaction"):
+            return bool(memory.store_interaction(interaction_data))
+        if hasattr(memory, "store"):
+            memory.store(
+                interaction_data.get("query", ""),
+                interaction_data.get("response", ""),
+                interaction_data.get("metadata"),
+            )
+            return True
+        raise AttributeError("Memory interface does not support storing interactions")
+
+    def create_context(self, query: str) -> str:
+        """Retrieve context for a query using the RAG interface."""
+        rag = self.get_rag_interface()
+        if not rag:
+            raise RuntimeError("RAG interface not available")
+
+        if hasattr(rag, "retrieve_context"):
+            return rag.retrieve_context(query)
+        if hasattr(rag, "create_context"):
+            return rag.create_context(query)
+        raise AttributeError("RAG interface does not support context retrieval")
+
+    def get_available_models(self):
+        """Return a list of available models if the model interface supports it."""
+        model = self.get_model_interface()
+        if not model:
+            return []
+
+        if hasattr(model, "get_available_models_summary_list"):
+            return model.get_available_models_summary_list()
+        if hasattr(model, "get_available_models"):
+            return model.get_available_models()
+        return []
+
+    def get_integration_status(self) -> Dict[str, Any]:
+        """Return a summarized status dictionary for GUI consumption."""
+        system_status = self.get_system_status()
+        status = {
+            "interfaces_available": all(system_status["components"].values()),
+            "component_status": system_status["components"],
+            "use_unified_core": self.use_unified_core,
+            "overall_health": system_status.get("health_percentage", 0),
+        }
+
+        if self.use_unified_core and self.unified_core and hasattr(
+            self.unified_core, "agent_registry"
+        ):
+            try:
+                agents = self.unified_core.agent_registry.get_all_agents()
+                status["unified_core_status"] = {"agent_count": len(agents)}
+            except Exception:
+                status["unified_core_status"] = {"agent_count": 0}
+
         return status
 
     def shutdown(self):
