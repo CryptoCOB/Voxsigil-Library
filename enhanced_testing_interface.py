@@ -328,9 +328,11 @@ class EnhancedVoxSigilTestingInterface:
         )
         if file_path:
             try:
-                # TODO: Load actual test data
-                self._append_results("Test data loaded successfully from: " + file_path)
-                self.test_data = {"file_path": file_path}
+                with open(file_path, "r", encoding="utf-8") as f:
+                    self.test_data = json.load(f)
+                self._append_results(
+                    f"Test data loaded successfully from: {file_path}"
+                )
             except Exception as e:
                 self._append_results(f"Error loading test data: {e}")
 

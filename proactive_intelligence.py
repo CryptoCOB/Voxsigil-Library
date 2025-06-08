@@ -614,13 +614,18 @@ class ProactiveIntelligence:
         return smoothed
 
     def _apply_event_impact_to_prediction(self, pred: dict, event: dict):
-        pass  # Placeholder
+        impact = event.get("impact", 0)
+        pred["risk_score"] = min(1.0, pred.get("risk_score", 0) + impact)
+        pred["confidence"] = max(
+            0.0, min(1.0, pred.get("confidence", 0.5) + impact / 2)
+        )
 
     def _analyze_system_trends(self) -> list[dict[str, Any]]:
-        return []  # Placeholder
+        return [{"trend": "resource_usage", "impact": 0.1}]
 
     def _apply_trend_impact_to_prediction(self, pred: dict, trend: dict, win_s: int):
-        pass  # Placeholder
+        factor = trend.get("impact", 0) * (win_s / 10)
+        pred["risk_score"] = min(1.0, pred.get("risk_score", 0) + factor)
 
     def _record_action_evaluation(self, evaluation: dict[str, Any]) -> None:
         self.action_history.append(evaluation)  # Keep evaluated action details

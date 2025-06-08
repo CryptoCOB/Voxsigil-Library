@@ -219,7 +219,9 @@ def count_tokens(text: str, model_name_for_encoding: Optional[str] = None) -> in
             try:
                 tokenizer_to_use = tiktoken.encoding_for_model(model_name_for_encoding)
             except Exception:
-                pass  # Fallback to global or char-based
+                tokenizer_to_use = tiktoken.get_encoding(
+                    VS_LLM_CONFIG.TIKTOKEN_DEFAULT_ENCODING
+                )
 
         if tokenizer_to_use and hasattr(tokenizer_to_use, "encode"):
             try:
@@ -513,10 +515,10 @@ def _probe_model_basic(model_info: Dict[str, Any]) -> Dict[str, Any]:
                         probed_info.setdefault("probed_capabilities", []).append(
                             "json_confirmed"
                         )
-                    except Exception:
-                        pass
-        except Exception:
-            pass  # Ignore errors for JSON probe
+                    except Exception as e:
+                        logger.debug(f"Failed JSON probe decode: {e}")
+        except Exception as e:
+            logger.debug(f"JSON probing failed: {e}")
 
     probed_info["probed_capabilities"] = sorted(
         list(set(probed_info["probed_capabilities"]))
@@ -1225,7 +1227,7 @@ if __name__ == "__main__":
         # For a cleaner approach, load_voxsigil_system_prompt should accept a path.
         # The function `load_voxsigil_system_prompt` already takes library_path_override.
         # So, we pass it to initialize_llm_handler which then passes it to loader.
-        pass  # VS_LLM_CONFIG.VOXSIGIL_LIBRARY_PATH_FOR_PROMPT handles this path now
+        library_path = VS_LLM_CONFIG.VOXSIGIL_LIBRARY_PATH_FOR_PROMPT
 
     # Initialize the handler (discovers models, loads system prompt etc.)
     # Use force_discover_models=True to bypass cache for first run of demo.

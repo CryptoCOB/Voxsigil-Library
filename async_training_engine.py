@@ -160,7 +160,7 @@ class TrainingConfig(BaseModel):
         for path_field in ["output_dir", "checkpoint_dir"]:
             path_val = getattr(self, path_field)
             if path_val:
-                pass  # Could add writability checks here
+                path_val.mkdir(parents=True, exist_ok=True)
         if self.tensorboard_log_dir is None and self.output_dir:
             self.tensorboard_log_dir = self.output_dir / "runs"
         return self
@@ -1644,7 +1644,7 @@ class AsyncTrainingEngine:
                     except asyncio.CancelledError:
                         pass
                 except asyncio.CancelledError:
-                    pass  # Already cancelled by stop_training_job
+                    logger.info("Training task already cancelled")
 
         self.is_initialized = False
         self.vanta_core.publish_event(

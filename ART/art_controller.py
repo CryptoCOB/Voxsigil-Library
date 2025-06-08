@@ -20,7 +20,7 @@ from .art_logger import get_art_logger  # Use the new logger
 
 # Use TYPE_CHECKING to avoid circular imports
 if TYPE_CHECKING:
-    pass  # TYPE_CHECKING import
+    from .art_trainer import ArtTrainer
 
 
 # --- Locally Defined Math Utilities (formerly from MetaConsciousness SDK) ---
@@ -830,7 +830,11 @@ class ARTController:
             # Dimension not set yet, accept this input's dim IF no categories exist yet
             with self._lock:  # F8 Check weights safely
                 if self.weights.shape[0] == 0:
-                    pass  # Dimension will be set in process()
+                    self.input_dim = input_vector.shape[0]
+                    self.weights = np.zeros((0, self.input_dim))
+                    self.logger.info(
+                        f"ART Controller input dimension set to {self.input_dim}"
+                    )
                 else:  # Dim already set, input must match
                     if input_vector.shape[0] != self.input_dim:
                         self.logger.error(

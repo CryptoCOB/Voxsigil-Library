@@ -34,10 +34,7 @@ from pathlib import Path
 from collections import deque # For FEATURE 10
 
 # Import VoxSigil RAG functionality
-# TODO: Update path after reorganization is complete
-from VoxSigilRag.voxsigil_rag import VoxSigilRAG # Current import
-# Future import after reorganization:
-# from VoxSigilRAG.voxsigil_rag import VoxSigilRAG
+from VoxSigilRag.voxsigil_rag import VoxSigilRAG
 
 # For FEATURE 8 (Enhanced Grounding)
 try:

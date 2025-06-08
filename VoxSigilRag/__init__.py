@@ -24,7 +24,8 @@ from .hybrid_blt import HybridMiddleware as VoxSigilMiddleware
 try:
     from .sigil_patch_encoder import SigilPatchEncoder
 except ImportError:
-    pass  # Silently skip if not available
+    logging.warning("SigilPatchEncoder not available")
+    SigilPatchEncoder = None
 
 __version__ = "0.1.0"
 

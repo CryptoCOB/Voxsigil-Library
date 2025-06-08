@@ -221,7 +221,11 @@ class DefaultVantaMetaLearner(MetaLearnerInterface):
         return self._h
 
     def update_heuristic(self, hid: str, u: dict[str, Any]):
-        pass  # Stub
+        for h in self._h:
+            if h.get("id") == hid:
+                h.update(u)
+                return True
+        return False
 
     def add_heuristic(self, hd: dict[str, Any]):
         self._h.append(hd)
@@ -1006,7 +1010,7 @@ class CATEngine:
                 )  # penalize very few beliefs
         except Exception as e:
             logger.warning(f"Error calculating belief health: {e}")
-            pass  # Keep default if error
+            belief_health *= 0.5
 
         return {
             "overall": (ph * 0.6 + belief_health * 0.4),

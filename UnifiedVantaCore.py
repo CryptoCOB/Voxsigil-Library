@@ -1296,7 +1296,7 @@ def trace_vanta_event(message: str, category: str = "info", **kwargs):
             "trace_event", {"message": message, "category": category, **kwargs}
         )
     except Exception:
-        pass  # Ignore if VantaCore not yet initialized
+        logger.debug("VantaCore not initialized, trace event dropped")
 
 
 # --- BACKWARD COMPATIBILITY ---
