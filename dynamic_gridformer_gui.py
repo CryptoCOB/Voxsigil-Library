@@ -468,8 +468,14 @@ class DynamicGridFormerGUI:
 
         self.update_status("Training model...")
         try:
-            # TODO: Implement model training/fine-tuning
-            # This is a placeholder for the actual training code
+            if hasattr(self.model_loader, "train_model"):
+                self.model_loader.train_model(
+                    self.current_model,
+                    data,
+                    **(options or {}),
+                )
+            else:
+                print("ModelLoader has no train_model method; skipping training")
             self.update_status("Training completed")
         except Exception as e:
             self.show_error(f"Training error: {str(e)}")

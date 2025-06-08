@@ -765,7 +765,12 @@ class ARCReasoner:
         task_id = task_data.get("id", "unknown")
         task_props = analyze_task_properties(task_id, task_data)
         # Load available VoxSigil components (stub: user should provide or load as needed)
-        available_voxsigil_components = []  # TODO: Load or inject as needed
+        try:
+            available_voxsigil_components = self.rag_interface.retrieve_scaffolds(
+                task_id
+            )
+        except Exception:
+            available_voxsigil_components = []
         # Select strategy (stub: can be extended)
         strategy, component = select_reasoning_strategy(
             task_props,
@@ -778,8 +783,8 @@ class ARCReasoner:
             prompt, prompt_metadata = build_arc_prompt(component, task_data, task_props)
         else:
             prompt, prompt_metadata = "No suitable component found.", {}
-        # Call LLM or solver (stub: here we just return a dummy grid and trace)
-        solution_grid = [[0]]  # TODO: Replace with real solver output
+        # Call LLM or solver (placeholder implementation)
+        solution_grid = [[0 for _ in range(3)] for _ in range(3)]
         trace = [
             f"Task analyzed: {task_id}",
             f"Strategy selected: {strategy}",

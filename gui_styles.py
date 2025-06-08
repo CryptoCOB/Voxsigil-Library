@@ -9,6 +9,7 @@ Purpose: Provide consistent VoxSigil aesthetic across all GUI components
 
 import tkinter as tk
 from tkinter import ttk
+from pathlib import Path
 
 
 class VoxSigilStyles:
@@ -328,12 +329,12 @@ class VoxSigilStyles:
     def apply_icon(cls, window):
         """Apply VoxSigil icon to window (placeholder implementation)"""
         try:
-            # Try to set a default icon if available
-            # This is a placeholder - in a real implementation you'd load an actual icon file
-            pass
+            icon_path = Path(__file__).parent / "voxsigil.ico"
+            if icon_path.exists():
+                window.iconbitmap(default=str(icon_path))
         except Exception:
             # If icon loading fails, just continue without icon
-            pass
+            return
 
     @classmethod
     def apply_theme(cls, window):

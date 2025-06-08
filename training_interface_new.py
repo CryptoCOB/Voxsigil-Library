@@ -516,7 +516,13 @@ class VoxSigilTrainingInterface:
 
                 if self.stop_requested and self.current_job:
                     self._add_to_log("Cancelling training job...")
-                    # TODO: Add job cancellation logic
+                    try:
+                        if hasattr(self.train_callback, "stop_training_job"):
+                            self.train_callback.stop_training_job(
+                                self.current_job.job_id
+                            )
+                    except Exception as e:
+                        self._add_to_log(f"Error cancelling job: {e}")
 
                 self._add_to_log(
                     f"Training job finished with status: {self.current_job.status}"
