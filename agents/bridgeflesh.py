@@ -12,14 +12,14 @@ class BridgeFlesh(BaseAgent):
     invocations = ["Link Bridge", "Fuse layers"]
 
     def __init__(self, vanta_core=None):
-        self.vanta_core = vanta_core
+        super().__init__(vanta_core)
         self.vmb_handler = None
 
     def initialize_subsystem(self, vanta_core):
+        super().initialize_subsystem(vanta_core)
         self.vanta_core = vanta_core
         self.vmb_handler = vanta_core.get_component("vmb_integration_handler")
         if vanta_core and hasattr(vanta_core, "async_bus"):
-            vanta_core.async_bus.register_component("BridgeFlesh")
             vanta_core.async_bus.subscribe(
                 "BridgeFlesh",
                 MessageType.SYSTEM_COMMAND,

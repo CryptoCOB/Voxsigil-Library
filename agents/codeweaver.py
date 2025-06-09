@@ -14,14 +14,14 @@ class CodeWeaver(BaseAgent):
 
 
     def __init__(self, vanta_core=None):
-        self.vanta_core = vanta_core
+        super().__init__(vanta_core)
         self.meta_learner = None
 
     def initialize_subsystem(self, vanta_core):
+        super().initialize_subsystem(vanta_core)
         self.vanta_core = vanta_core
         self.meta_learner = vanta_core.get_component("meta_learner")
         if vanta_core and hasattr(vanta_core, "async_bus"):
-            vanta_core.async_bus.register_component("CodeWeaver")
             vanta_core.async_bus.subscribe(
                 "CodeWeaver",
                 MessageType.REASONING_REQUEST,

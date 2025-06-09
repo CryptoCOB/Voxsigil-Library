@@ -12,11 +12,12 @@ class EntropyBard(BaseAgent):
     invocations = ["Sing Bard", "Unleash entropy"]
 
     def __init__(self, vanta_core=None):
-        self.vanta_core = vanta_core
+        super().__init__(vanta_core)
         self.rag_handler = None
         self.rag_interface = None
 
     def initialize_subsystem(self, vanta_core):
+        super().initialize_subsystem(vanta_core)
         self.vanta_core = vanta_core
         try:
             from rag_integration_handler import RagIntegrationHandler
@@ -27,7 +28,6 @@ class EntropyBard(BaseAgent):
             logger.warning(f"RAG subsystem unavailable: {e}")
 
         if vanta_core and hasattr(vanta_core, "async_bus"):
-            vanta_core.async_bus.register_component("EntropyBard")
             vanta_core.async_bus.subscribe(
                 "EntropyBard",
                 MessageType.PROCESSING_REQUEST,

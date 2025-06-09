@@ -266,6 +266,22 @@ class DynamicGridFormerGUI:
         # Discover models
         self._discover_models()
 
+    def add_button(self, label: str, command) -> None:
+        """Add a simple button to the bottom of the GUI."""
+        if not hasattr(self, "_agent_button_frame"):
+            self._agent_button_frame = tk.Frame(self.root, bg="#2a2a4e")
+            self._agent_button_frame.pack(side=tk.BOTTOM, fill=tk.X, pady=5)
+        tk.Button(
+            self._agent_button_frame,
+            text=label,
+            command=command,
+            bg="#4ecdc4",
+            fg="white",
+            font=("Consolas", 9, "bold"),
+            relief=tk.RAISED,
+            bd=1,
+        ).pack(side=tk.LEFT, padx=2)
+
     def _setup_gui(self):
         """Set up the main GUI components."""
         # Main frame that contains everything
@@ -841,10 +857,17 @@ class DynamicGridFormerGUI:
         )
 
 
-def main():
+def main(agent_registry=None):
     """Main entry point for the application."""
     root = tk.Tk()
-    DynamicGridFormerGUI(root)
+    gui = DynamicGridFormerGUI(root)
+    try:
+        if agent_registry:
+            from gui_utils import bind_agent_buttons
+
+            bind_agent_buttons(gui.root, agent_registry)
+    except Exception:
+        pass
     root.mainloop()
 
 
