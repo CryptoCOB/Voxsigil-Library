@@ -351,7 +351,7 @@ class AsyncProcessingEngine:
             else:
                 # Run synchronous callback in the event loop's default executor
                 # to avoid blocking the worker's async handling.
-                await asyncio.get_event_loop().run_in_executor(
+                await asyncio.get_running_loop().run_in_executor(
                     None, callback, result, error
                 )
         except Exception as e:
@@ -447,7 +447,7 @@ class AsyncProcessingEngine:
             f"Loading model: {model_name} (Type: {model_type}, Pipeline Task: {pipeline_task})"
         )
         load_start_time = time.monotonic()
-        loop = asyncio.get_event_loop()
+        loop = asyncio.get_running_loop()
         model = None
 
         try:
@@ -603,7 +603,7 @@ class AsyncProcessingEngine:
                 "model"
             ]  # If it's our {'model': ..., 'tokenizer': ...} structure
 
-        loop = asyncio.get_event_loop()
+        loop = asyncio.get_running_loop()
         return await loop.run_in_executor(
             self.executor, lambda: self._run_inference(actual_model, inputs, task_data)
         )
@@ -711,7 +711,7 @@ class AsyncProcessingEngine:
                 f"Model {model_name} is not a valid text-generation pipeline."
             )
 
-        loop = asyncio.get_event_loop()
+        loop = asyncio.get_running_loop()
         # Pipelines are callable
         # Note: some pipelines return List[Dict[str, str]], e.g. [{'generated_text': '...'} ]
         # Others might return str directly. Standardize or document.
@@ -772,7 +772,7 @@ class AsyncProcessingEngine:
         model = model_artifacts["model"]
         tokenizer = model_artifacts["tokenizer"]
 
-        loop = asyncio.get_event_loop()
+        loop = asyncio.get_running_loop()
 
         try:
             # This whole block is CPU/GPU bound, so run in executor
@@ -859,7 +859,7 @@ class AsyncProcessingEngine:
         args = task_data.get("args", [])
         kwargs = task_data.get("kwargs", {})
 
-        loop = asyncio.get_event_loop()
+        loop = asyncio.get_running_loop()
 
         if asyncio.iscoroutinefunction(custom_function):
             # Directly await if the custom function is already async
