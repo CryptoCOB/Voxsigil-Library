@@ -3,6 +3,8 @@ DEPRECATED: All async TTS (text-to-speech) requests should be routed through Uni
 Do not instantiate or use this engine directly. Use UnifiedVantaCore and its async bus for all orchestration.
 """
 
+# pylint: disable=import-error
+
 # Async Text-to-Speech (TTS) Engine for Vanta
 # Handles text-to-speech synthesis asynchronously with multiple engine support
 
