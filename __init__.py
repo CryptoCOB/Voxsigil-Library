@@ -4,7 +4,7 @@ VoxSigil GUI Components - UI components for the GridFormer and Vanta systems
 
 # Import all interface components for easy access
 # Note: Real DynamicGridFormerGUI is now fixed and can be imported
-from .gui.dynamic_gridformer_gui import DynamicGridFormerGUI
+from .gui.components.pyqt_main import VoxSigilMainWindow, launch
 
 # from .model_discovery_interface import ModelDiscoveryInterface
 # from .gui.model_tab_interface import VoxSigilModelInterface
