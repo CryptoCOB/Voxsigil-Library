@@ -58,13 +58,13 @@ except ImportError as e:
 
 # Import GUI components - make this optional since it might not exist
 try:
-    from GUI.components.dynamic_gridformer_gui import DynamicGridFormerGUI
+    from gui.components.pyqt_main import launch as launch_pyqt
 
     GUI_AVAILABLE = True
 except ImportError as e:
     logger.error(f"GUI not available: {e}")
     GUI_AVAILABLE = False
-    DynamicGridFormerGUI = None
+    launch_pyqt = None
 
 # Import VantaCore integration - make optional
 try:

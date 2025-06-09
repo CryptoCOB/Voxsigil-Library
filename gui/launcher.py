@@ -176,78 +176,19 @@ def setup_vmb_integration(core_instance):
 
 
 def launch_gui_with_fallback():
-    """Launch the GUI with comprehensive fallback mechanisms"""
+    """Launch the GUI using the PyQt5 interface."""
     try:
-        # Try importing dynamic_gridformer_gui
-        import dynamic_gridformer_gui
-
-        logger.info("✅ Imported dynamic_gridformer_gui successfully")
-
-        # Launch the main GUI
-        logger.info("🎨 Starting GUI main loop...")
-        registry = core.agent_registry if core else None
-        dynamic_gridformer_gui.main(registry)
-
-    except ImportError as e:
-        logger.error(f"❌ Failed to import dynamic_gridformer_gui: {e}")
-        logger.info("🔄 Attempting fallback GUI launch...")
-
-        # Try alternative GUI launch
-        try:
-            # Import and create basic tkinter GUI as fallback
-            import tkinter as tk
-            from tkinter import messagebox
-
-            root = tk.Tk()
-            root.title("VoxSigil GUI - Fallback Mode")
-            root.geometry("400x300")
-
-            # Create basic interface
-            tk.Label(
-                root, text="VoxSigil GUI - Fallback Mode", font=("Arial", 16)
-            ).pack(pady=20)
-            tk.Label(root, text="Main GUI failed to load", font=("Arial", 12)).pack(
-                pady=10
-            )
-            tk.Label(root, text="System Status:", font=("Arial", 12, "bold")).pack(
-                pady=(20, 5)
-            )
-
-            status_text = f"VantaCore: {'✅ Available' if vanta_available else '❌ Not Available'}\n"
-            status_text += (
-                f"Core Instance: {'✅ Initialized' if core else '❌ Failed'}\n"
-            )
-            status_text += (
-                f"VMB Handler: {'✅ Active' if vmb_handler else '❌ Not Available'}"
-            )
-
-            tk.Label(root, text=status_text, font=("Courier", 10), justify="left").pack(
-                pady=10
-            )
-
-            try:
-                from gui_utils import bind_agent_buttons
-
-                registry = core.agent_registry if core else None
-                bind_agent_buttons(root, registry)
-            except Exception:
-                pass
-
-            def show_error():
-                messagebox.showerror("Error Details", f"Import Error: {e}")
-
-            tk.Button(root, text="Show Error Details", command=show_error).pack(pady=10)
-            tk.Button(root, text="Exit", command=root.quit).pack(pady=5)
-
-            logger.info("✅ Fallback GUI created successfully")
-            root.mainloop()
-
-        except Exception as fallback_err:
-            logger.error(f"❌ Even fallback GUI failed: {fallback_err}")
-            raise
-
+        from gui.components import pyqt_main
     except Exception as e:
-        logger.error(f"❌ Critical error launching GUI: {e}")
+        logger.error(f"❌ Failed to import PyQt GUI: {e}")
+        raise
+
+    try:
+        logger.info("🎨 Starting PyQt GUI main loop...")
+        registry = core.agent_registry if core else None
+        pyqt_main.launch(registry)
+    except Exception as e:
+        logger.error(f"❌ Critical error launching PyQt GUI: {e}")
         traceback.print_exc()
         raise
 
