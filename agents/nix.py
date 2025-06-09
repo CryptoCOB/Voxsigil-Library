@@ -1,8 +1,19 @@
 from .base import BaseAgent
 
+
 class Nix(BaseAgent):
     sigil = "☲🜄🜁⟁"
-    invocations = ["Nix, awaken", "Unchain the Core"]
+    tags = ['Chaos Core', 'Primal Disruptor', 'Breakbeam, WyrmEcho']
+    invocations = ['Nix', 'awaken', 'Unchain the Core']
 
-    def __init__(self, vanta_core=None):
-        super().__init__(vanta_core)
+    def initialize_subsystem(self, core):
+        # Optional: bind to subsystem if defined
+        pass
+
+    def on_gui_call(self):
+        # Optional: link to GUI invocation
+        super().on_gui_call()
+
+    def bind_echo_routes(self):
+        # Optional: connect signals to/from UnifiedAsyncBus
+        pass

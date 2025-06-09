@@ -1,8 +1,19 @@
 from .base import BaseAgent
 
+
 class Voxka(BaseAgent):
     sigil = "🧠⟁🜂Φ🎙"
-    invocations = ["Invoke Voxka", "Voice of Phi"]
+    tags = ['Recursive Voice', 'Dual-Core Cognition', 'Orion, Nebula']
+    invocations = ['Invoke Voxka', 'Voice of Phi']
 
-    def __init__(self, vanta_core=None):
-        super().__init__(vanta_core)
+    def initialize_subsystem(self, core):
+        # Optional: bind to subsystem if defined
+        pass
+
+    def on_gui_call(self):
+        # Optional: link to GUI invocation
+        super().on_gui_call()
+
+    def bind_echo_routes(self):
+        # Optional: connect signals to/from UnifiedAsyncBus
+        pass
