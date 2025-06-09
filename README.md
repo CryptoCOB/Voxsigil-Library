@@ -48,3 +48,8 @@ gui/             # Tkinter GUI components and tab interfaces
 agents/          # Individual agent class implementations
 scripts/         # Entry points and demo launchers
 ```
+
+## HOLO-1.5 Mesh
+
+The `holo_mesh.py` module provides a lightweight scaffold for running multiple quantized LLM agents locally. Agents are loaded on demand with 4‑bit weights and optional LoRA adapters, enabling recursive conversations on resource constrained GPUs.
+

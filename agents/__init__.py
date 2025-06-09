@@ -32,6 +32,7 @@ from .voxagent import VoxAgent
 from .sdkcontext import SDKContext
 
 from .sleep_time_compute_agent import SleepTimeComputeAgent
+from .sleep_time_compute_agent import SleepTimeCompute
 
 __all__ = [
     "BaseAgent",
@@ -64,4 +65,5 @@ __all__ = [
     "VoxAgent",
     "SDKContext",
     "SleepTimeComputeAgent",
+    "SleepTimeCompute",
 ]
