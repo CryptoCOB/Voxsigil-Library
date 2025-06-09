@@ -11,6 +11,9 @@ from pathlib import Path
 import yaml
 from vmb_activation import CopilotSwarm
 from vmb_production_executor import ProductionTaskExecutor
+from UnifiedVantaCore import UnifiedVantaCore
+import tkinter as tk
+from gui_utils import bind_agent_buttons
 
 # Add project paths
 PROJECT_ROOT = Path(__file__).resolve().parent
@@ -33,6 +36,8 @@ async def demonstrate_vmb_system():
     print(f"🤖 Agent Class: {config.get('agent_class', 'CopilotSwarm')}")
     print(f"⚔️ Swarm Variant: {config.get('swarm_variant', 'RPG_Sentinel')}")
     print(f"🎯 Roles: {config.get('role_scope', [])}")
+
+    core = UnifiedVantaCore()
 
     # Initialize VMB CopilotSwarm
     print("\n🚀 Initializing VMB CopilotSwarm...")
@@ -81,6 +86,13 @@ async def demonstrate_vmb_system():
     print("✅ BootSigil Directive: COMPLETED")
     print("\n🚀 Ready for production use!")
     print("🔮 Bound by sigil: ⟠∆∇𓂀")
+
+    # Simple GUI to trigger agents
+    root = tk.Tk()
+    root.title("Agent Controls")
+    bind_agent_buttons(root, core.agent_registry)
+    tk.Button(root, text="Close", command=root.quit).pack(pady=5)
+    root.mainloop()
 
 
 if __name__ == "__main__":
