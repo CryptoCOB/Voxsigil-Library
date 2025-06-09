@@ -20,7 +20,7 @@ validation tools generate status reports.
 2. **Launch the GUI**
 
    ```bash
-   python launch_gui.py
+   python scripts/launch_gui.py
    ```
 
    Each registered agent will appear as a button at the bottom of the interface
@@ -34,3 +34,17 @@ validation tools generate status reports.
 * `docs/PROGRESS_PLAN.md` – high level integration roadmap
 * `docs/SYSTEM_OVERVIEW.md` – summary of components and data flow
 * `agent_validation.py` – simple integrity checker
+* `Vanta/` – Vanta core packages and integration modules
+* `handlers/` – integration handler implementations
+* `gui/` – GUI components and tab interfaces
+* `scripts/` – helper scripts and launchers
+
+### Folder Structure
+
+```
+Vanta/           # Core orchestration modules and integration utilities
+handlers/        # Pluggable integration handlers
+gui/             # Tkinter GUI components and tab interfaces
+agents/          # Individual agent class implementations
+scripts/         # Entry points and demo launchers
+```

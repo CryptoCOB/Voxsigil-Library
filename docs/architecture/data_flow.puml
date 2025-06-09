@@ -1,0 +1,164 @@
+@startuml VantaCore_Data_Flow
+!theme plain
+title VantaCore Data Flow Architecture - Communication Patterns
+
+!define REQUEST_COLOR E3F2FD
+!define PROCESS_COLOR F1F8E9
+!define EVENT_COLOR FFF8E1
+!define RESPONSE_COLOR FCE4EC
+
+participant "GUI Tab" as GUI
+participant "VoxSigil Integration Manager" as Integration
+participant "UnifiedVantaCore" as VantaCore
+participant "Component Registry" as Registry
+participant "Event Bus" as EventBus
+participant "Integration Handler" as Handler
+participant "Service Component" as Service
+participant "Other Components" as Others
+
+== System Initialization Flow ==
+activate VantaCore #PROCESS_COLOR
+VantaCore -> Registry : Initialize ComponentRegistry
+VantaCore -> EventBus : Initialize EventBus
+VantaCore -> VantaCore : Load Core Components
+
+Group Integration_Handler_Registration
+    VantaCore -> Handler : Initialize VMB Handler
+    activate Handler #PROCESS_COLOR
+    Handler -> Service : Initialize VMB Components
+    activate Service #PROCESS_COLOR
+    Handler -> Registry : Register VMB Components
+    Handler -> EventBus : Subscribe to VMB Events
+    Handler --> VantaCore : Registration Complete
+    deactivate Handler
+    
+    VantaCore -> Handler : Initialize Speech Handler
+    activate Handler #PROCESS_COLOR
+    Handler -> Service : Initialize TTS/STT
+    Handler -> Registry : Register Speech Components
+    Handler -> EventBus : Subscribe to Speech Events
+    Handler --> VantaCore : Registration Complete
+    deactivate Handler
+    
+    VantaCore -> Handler : Initialize Memory Connector
+    activate Handler #PROCESS_COLOR
+    Handler -> Service : Initialize Memory Interface
+    Handler -> Registry : Register Memory Service
+    Handler -> EventBus : Subscribe to Memory Events
+    Handler --> VantaCore : Registration Complete
+    deactivate Handler
+end
+deactivate VantaCore
+
+== GUI Integration Flow ==
+GUI -> Integration : Request VantaCore Access
+activate Integration #REQUEST_COLOR
+Integration -> VantaCore : Get VantaCore Instance
+VantaCore --> Integration : Return VantaCore Reference
+Integration --> GUI : Provide VantaCore Access
+deactivate Integration
+
+== Request Processing Flow ==
+Group Component_Access_Pattern
+    GUI -> VantaCore : Request Component (e.g., "vmb_swarm")
+    activate VantaCore #PROCESS_COLOR
+    VantaCore -> Registry : Get Component by Name
+    Registry --> VantaCore : Return Component Reference
+    VantaCore --> GUI : Component Reference
+    deactivate VantaCore
+    
+    GUI -> Service : Direct Component Call
+    activate Service #PROCESS_COLOR
+    Service -> Service : Process Request
+    Service --> GUI : Return Result
+    deactivate Service
+end
+
+Group Event_Based_Communication_Pattern
+    GUI -> VantaCore : Emit Event ("vmb.task.execute")
+    activate VantaCore #EVENT_COLOR
+    VantaCore -> EventBus : Publish Event
+    EventBus -> Handler : Notify Subscribed Handler
+    activate Handler #PROCESS_COLOR
+    Handler -> Service : Execute Task
+    activate Service #PROCESS_COLOR
+    Service -> Service : Process Task
+    Service -> EventBus : Emit Result Event
+    EventBus -> Others : Notify Interested Components
+    Service --> Handler : Task Complete
+    deactivate Service
+    Handler --> EventBus : Acknowledge
+    deactivate Handler
+    EventBus --> VantaCore : Event Processed
+    VantaCore --> GUI : Event Acknowledgment
+    deactivate VantaCore
+end
+
+== Inter-Component Communication ==
+Group Component_to_Component_via_Registry
+    Service -> VantaCore : Get Component ("memory_service")
+    activate VantaCore #PROCESS_COLOR
+    VantaCore -> Registry : Lookup Component
+    Registry --> VantaCore : Component Reference
+    VantaCore --> Service : Memory Service Reference
+    deactivate VantaCore
+    
+    Service -> Service : Call Memory Operation
+    activate Service #PROCESS_COLOR
+    Service --> Service : Memory Result
+    deactivate Service
+end
+
+Group Async_Event_Broadcasting
+    Service -> EventBus : Emit Status Update
+    activate EventBus #EVENT_COLOR
+    EventBus -> GUI : Notify GUI Components
+    EventBus -> Others : Notify System Components
+    EventBus -> VantaCore : Update System State
+    deactivate EventBus
+end
+
+== Health Monitoring Flow ==
+Loop Continuous_Monitoring
+    VantaCore -> Registry : Check Component Health
+    activate Registry #PROCESS_COLOR
+    Registry -> Service : Health Check Call
+    activate Service #PROCESS_COLOR
+    Service --> Registry : Health Status
+    deactivate Service
+    Registry -> Registry : Update Health Metadata
+    Registry --> VantaCore : Health Report
+    deactivate Registry
+    
+    VantaCore -> EventBus : Emit Health Event
+    activate EventBus #EVENT_COLOR
+    EventBus -> GUI : Update Health Display
+    EventBus -> Others : Notify Health Status
+    deactivate EventBus
+end
+
+== Error Handling and Fallback ==
+Group Component_Failure_Scenario
+    GUI -> VantaCore : Request Unavailable Component
+    activate VantaCore #PROCESS_COLOR
+    VantaCore -> Registry : Lookup Component
+    Registry --> VantaCore : Component Not Found
+    VantaCore -> VantaCore : Check Fallback Options
+    VantaCore --> GUI : Graceful Degradation Response
+    deactivate VantaCore
+    
+    VantaCore -> EventBus : Emit Error Event
+    activate EventBus #EVENT_COLOR
+    EventBus -> GUI : Error Notification
+    EventBus -> Others : System Alert
+    deactivate EventBus
+end
+
+note over VantaCore : Central Orchestration Hub\n- All communication flows through VantaCore\n- Component Registry for service discovery\n- Event Bus for async communication\n- Health monitoring for system stability
+
+note over Integration : GUI Integration Layer\n- Provides unified access to VantaCore\n- Manages 13 specialized GUI tabs\n- Handles GUI-specific requirements
+
+note over Handler : Integration Handlers\n- VMB, Speech, Memory, RAG handlers\n- Standardized integration patterns\n- Event subscription management
+
+note over Service : Service Components\n- Actual functionality implementation\n- Register with VantaCore for discovery\n- Emit events for system coordination
+@enduml

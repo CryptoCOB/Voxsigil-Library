@@ -77,6 +77,13 @@ Create similar directories for `interfaces/`, `core/`, and `services/` if needed
 
 *Status:* **Completed (2025‑06‑09)** – Modules relocated under `agents/` with imports updated. Core initialization registers all agents on startup.
 
+### 2025‑06‑10 Repository Cleanup
+
+Additional folders have been introduced to reduce clutter:
+`Vanta/` for core modules, `handlers/` for integration handlers,
+`gui/` for user interface components and `scripts/` for launch utilities.
+Imports and documentation have been updated accordingly.
+
 ## Phase 7 – Integrity & Validation Tools
 
 Implement scripts to generate:

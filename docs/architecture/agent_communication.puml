@@ -1,0 +1,17 @@
+@startuml
+!theme plain
+title Agent Communication Overview
+
+actor User
+participant "GUI" as GUI
+participant "UnifiedVantaCore" as Core
+participant "Agent" as Agent
+participant "EventBus" as Bus
+
+User -> GUI : action
+GUI -> Core : invoke agent
+Core -> Agent : dispatch
+Agent -> Bus : emit event
+Bus -> Core : deliver
+Core -> GUI : update
+@enduml
