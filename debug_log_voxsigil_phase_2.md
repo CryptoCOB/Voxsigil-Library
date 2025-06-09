@@ -32,3 +32,33 @@ New issues discovered during deep logic sweep. ✅ indicates fix applied.
 28. path_helper.create_sigil_supervisor_instance uses nested imports; error handling improved. (not fixed)
 29. VMBIntegrationHandler emits events before verifying subscribers. Covered by new EventBus logging. ✅
 30. Several async functions in speech_integration_handler call get_event_loop; still unpatched. (not fixed)
+31. services/memory_service_connector.py lines 69-75 – `namespace` and `metadata` parameters lacked Optional typing. Added Optional hints. ✅
+32. services/memory_service_connector.py line 91 – Metadata passed as None caused errors in backends. Now defaults to empty dict. ✅
+33. services/memory_service_connector.py line 97 – `retrieve` used `str` type for namespace; changed to `Optional[str]`. ✅
+34. services/memory_service_connector.py line 114 – `retrieve_similar` namespace parameter updated to Optional. ✅
+35. path_helper.py top – No module-level logger. Added logger and imported logging. ✅
+36. path_helper.py line 198 – Exception logging now uses module logger instead of inline import. ✅
+37. real_supervisor_connector.py lines 50-57 – Hardcoded Windows paths replaced with cross-platform detection using `Path.home()`. ✅
+38. real_supervisor_connector.py line 64 – Default fallback path now uses user home directory. ✅
+39. UnifiedVantaCore.shutdown line 1330 – Used `asyncio.run` even if loop running; now checks loop state and schedules stop accordingly. ✅
+40. memory_service_connector.store returns empty string when not initialized – still not ideal. (not fixed)
+41. vmb_integration_handler.initialize_vmb_system creates new event loop without restoring original; potential side effect. (not fixed)
+42. arc_utils.cache_response removes only one entry when cache full; may still exceed max size. (not fixed)
+43. real_supervisor_connector.store_sigil_content lacks atomic write, may corrupt files on crash. (not fixed)
+44. unified_async_bus.register_component does not check for reserved ids. (not fixed)
+45. scripts contain `sys.exit(asyncio.run(...))`; fails if called from running loop. (not fixed)
+46. real_supervisor_connector._find_voxsigil_library does not validate env path exists. (not fixed)
+47. memory_service_connector methods not thread-safe. (not fixed)
+48. debug summary not updated when agents missing – informational. (not fixed)
+49. event_bus history not pruned beyond max size. (not fixed)
+50. Many test files contain placeholders with `pass`. (not fixed)
+51. asynchronous STT initialization uses get_event_loop which may fail. (not fixed)
+52. STT handler loops may not cancel on shutdown. (not fixed)
+53. production_config.py.bak leftover may confuse deployment. (not fixed)
+54. multiple modules repeat logging.basicConfig causing duplicate handlers. (not fixed)
+55. VMBIntegrationHandler._register_event_handlers may subscribe duplicates on repeated calls. (not fixed)
+56. RealSupervisorConnector._save_sigil_to_filesystem does not sanitize all invalid characters. (not fixed)
+57. path_helper.verify_module_paths does not catch ImportError messages. (not fixed)
+58. Some event bus emitters pass dicts but handlers expect AsyncMessage objects. (not fixed)
+59. create_sigil_supervisor_instance uses fallback rag/llm but not typed. (not fixed)
+60. AsyncProcessingEngine creates tasks without storing handles, causing leaks. (not fixed)

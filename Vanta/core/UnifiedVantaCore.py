@@ -1330,6 +1330,12 @@ class UnifiedVantaCore:
         # Stop async bus if running
         if hasattr(self, "async_bus") and self.async_bus.running:
             try:
+                loop = asyncio.get_event_loop()
+                if loop.is_running():
+                    loop.create_task(self.async_bus.stop())
+                else:
+                    loop.run_until_complete(self.async_bus.stop())
+            except RuntimeError:
                 asyncio.run(self.async_bus.stop())
             except Exception as e:
                 logger.error(f"Failed to stop async bus during shutdown: {e}")

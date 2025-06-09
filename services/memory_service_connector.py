@@ -70,8 +70,8 @@ class MemoryServiceConnector:
         self,
         key: str,
         value: Any,
-        namespace: str = None,
-        metadata: Dict[str, Any] = None,
+        namespace: Optional[str] = None,
+        metadata: Optional[Dict[str, Any]] = None,
         ttl_seconds: Optional[int] = None,
     ) -> str:
         """
@@ -88,13 +88,14 @@ class MemoryServiceConnector:
             Unique identifier for the stored data
         """
         if self.memory_interface:
+            meta = metadata or {}
             return self.memory_interface.store(
-                key, value, namespace, metadata, ttl_seconds
+                key, value, namespace, meta, ttl_seconds
             )
         logger.error("Memory interface not initialized")
         return ""
 
-    def retrieve(self, key: str, namespace: str = None) -> Optional[Any]:
+    def retrieve(self, key: str, namespace: Optional[str] = None) -> Optional[Any]:
         """
         Retrieve data from the memory system.
 
@@ -111,7 +112,7 @@ class MemoryServiceConnector:
         return None
 
     def retrieve_similar(
-        self, query: str, limit: int = 3, namespace: str = None
+        self, query: str, limit: int = 3, namespace: Optional[str] = None
     ) -> List[Dict[str, Any]]:
         """
         Retrieve data with similar keys from the memory system.
