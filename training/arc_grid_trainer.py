@@ -20,7 +20,7 @@ import torch.nn as nn
 import torch.optim as optim
 from torch.utils.data import DataLoader
 
-from Voxsigil_Library.voxsigil_supervisor.vanta.Vanta_Core import VantaCore
+from Vanta.core.UnifiedVantaCore import UnifiedVantaCore as VantaCore
 
 # Import GRID-Former components
 try:

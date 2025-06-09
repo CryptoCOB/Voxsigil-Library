@@ -336,6 +336,7 @@ class DynamicGridFormerGUI:
     def _setup_training_tab(self, parent):
         """Set up the Training tab."""
         # Create a training interface with VoxSigil integration
+
         def training_callback(data, config):
             mode = getattr(config, "mode", getattr(config, "training_mode", "Sync"))
             if (
@@ -353,6 +354,7 @@ class DynamicGridFormerGUI:
             parent,
             self.data_loader,
             training_callback,
+
             self._save_model,
         )
         if hasattr(self, "voxsigil_integration") and self.voxsigil_integration:

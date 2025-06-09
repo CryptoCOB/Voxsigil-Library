@@ -332,7 +332,12 @@ class ComponentUsageTracker:
         return ComponentUsageTracker()
 
     def track(self, *args, **kwargs):
-        pass
+        if not hasattr(self, "_logs"):
+            self._logs = []
+        self._logs.append({"args": args, "kwargs": kwargs, "ts": time.time()})
+        logging.getLogger("VantaSupervisor").debug(
+            f"Component usage tracked: {args} {kwargs}"
+        )
 
 
 # Define VANTA system prompt

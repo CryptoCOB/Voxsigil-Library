@@ -1,18 +1,42 @@
-# enhanced_training_script.py
-"""
-Async Training Engine for Vanta (Enhanced & Fixed)
-Handles model training, fine-tuning, and learning tasks asynchronously
-"""
+
 
 import asyncio
 import logging
 import threading
 import time
+
+
+# ML Dependencies
+try:
+    import torch
+    import torch.optim as optim
+    from torch.cuda.amp import GradScaler, autocast  # TRFE004
+    from torch.utils.data import DataLoader
+    from torch.utils.tensorboard import SummaryWriter  # TRFE009
+    HAVE_TORCH = True
+except ImportError:  # pragma: no cover - optional dependency
+    HAVE_TORCH = False
+    torch = None  # type: ignore
+    optim = None  # type: ignore
+    GradScaler = None  # type: ignore
+    autocast = None  # type: ignore
+    DataLoader = None  # type: ignore
+    SummaryWriter = None  # type: ignore
+
+from pydantic import BaseModel, Field, field_validator, model_validator
+from pydantic.types import confloat, conint
+from Vanta.core.UnifiedAsyncBus import AsyncMessage, MessageType
+
 import traceback  # TRFE008
 from pathlib import Path
 from typing import Annotated, Any, Dict, List, Optional, Union
+import uuid
 
 # ML Dependencies
+
+
+from pydantic import BaseModel, Field, field_validator, model_validator
+from pydantic.types import confloat, conint
 import torch
 import torch.optim as optim
 from pydantic import BaseModel, Field, field_validator, model_validator
@@ -20,6 +44,7 @@ from pydantic.types import confloat, conint
 from torch.cuda.amp import GradScaler, autocast  # TRFE004
 from torch.utils.data import DataLoader
 from torch.utils.tensorboard import SummaryWriter  # TRFE009
+
 
 logger = logging.getLogger("Vanta.AsyncTraining")
 
@@ -245,7 +270,12 @@ class TrainingJob(BaseModel):  # TRFE003
         self._loaded_checkpoint_path: Optional[Path] = None
 
     def model_dump(self, *args, **kwargs):
-        raise NotImplementedError
+        data = super().model_dump(*args, **kwargs)
+        if isinstance(self.config, TrainingConfig):
+            data["config"] = self.config.model_dump()
+        if self._loaded_checkpoint_path is not None:
+            data["_loaded_checkpoint_path"] = str(self._loaded_checkpoint_path)
+        return data
 
 
 class AsyncTrainingEngine:
@@ -279,6 +309,28 @@ class AsyncTrainingEngine:
         else:
             logger.warning(
                 "VantaCore does not have register_component method. Skipping registration."
+            )
+
+        if hasattr(self.vanta_core, "async_bus"):
+            self.vanta_core.async_bus.register_component("training_engine")
+            self.vanta_core.async_bus.subscribe(
+                "training_engine",
+                MessageType.PROCESSING_REQUEST,
+                self.handle_training_request,
+            )
+            logger.info(
+                "training_engine registered and subscribed to async bus (PROCESSING_REQUEST)"
+            )
+
+        if hasattr(self.vanta_core, "async_bus"):
+            self.vanta_core.async_bus.register_component("training_engine")
+            self.vanta_core.async_bus.subscribe(
+                "training_engine",
+                MessageType.PROCESSING_REQUEST,
+                self.handle_training_request,
+            )
+            logger.info(
+                "training_engine registered and subscribed to async bus (PROCESSING_REQUEST)"
             )
 
     def _determine_device(self, requested_device: str) -> str:
@@ -430,6 +482,54 @@ class AsyncTrainingEngine:
             f"Created training job: {job_id} with config: {final_config.model_dump_json(indent=2)}"
         )
         return job
+
+    async def handle_training_request(self, message):
+        """Async bus handler to start a training job."""
+        try:
+            cfg = message.content.get("config") if hasattr(message, "content") else None
+            model = message.content.get("model") if hasattr(message, "content") else None
+            dataset = message.content.get("dataset") if hasattr(message, "content") else None
+            job = await self.create_training_job(
+                job_id=str(uuid.uuid4())[:8],
+                model_name_or_path=model or "model",
+                dataset_name_or_path=dataset or "dataset",
+                job_specific_config_dict=cfg,
+            )
+            await self.start_training_job(job.job_id)
+            await self.vanta_core.async_bus.publish(
+                AsyncMessage(
+                    MessageType.PROCESSING_RESPONSE,
+                    self.COMPONENT_NAME,
+                    {"job_id": job.job_id},
+                    target_ids=[message.sender_id],
+                )
+            )
+        except Exception as e:
+            logger.error(f"handle_training_request error: {e}")
+
+    async def handle_training_request(self, message):
+        """Async bus handler to start a training job."""
+        try:
+            cfg = message.content.get("config") if hasattr(message, "content") else None
+            model = message.content.get("model") if hasattr(message, "content") else None
+            dataset = message.content.get("dataset") if hasattr(message, "content") else None
+            job = await self.create_training_job(
+                job_id=str(uuid.uuid4())[:8],
+                model_name_or_path=model or "model",
+                dataset_name_or_path=dataset or "dataset",
+                job_specific_config_dict=cfg,
+            )
+            await self.start_training_job(job.job_id)
+            await self.vanta_core.async_bus.publish(
+                AsyncMessage(
+                    MessageType.PROCESSING_RESPONSE,
+                    self.COMPONENT_NAME,
+                    {"job_id": job.job_id},
+                    target_ids=[message.sender_id],
+                )
+            )
+        except Exception as e:
+            logger.error(f"handle_training_request error: {e}")
 
     async def start_training_job(self, job_id: str) -> bool:
         if not self.is_initialized:
