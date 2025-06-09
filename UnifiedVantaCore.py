@@ -637,6 +637,8 @@ class UnifiedVantaCore:
             "CodeWeaver": "meta_learner",
             "Dreamer": "art_controller",
             "BridgeFlesh": "vmb_integration_handler",
+            "Carla": "speech_integration_handler",
+            "Wendy": "speech_integration_handler",
         }
 
         for agent_name, component_key in mapping.items():

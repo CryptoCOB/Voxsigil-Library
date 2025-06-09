@@ -14,6 +14,8 @@ class UnifiedAgentRegistry:
         self, name: str, agent: object, metadata: Optional[Dict[str, Any]] = None
     ):
         """Register an agent by name with optional metadata."""
+        if name in self.agents:
+            self.logger.warning(f"Agent '{name}' already registered – replacing entry")
         self.agents[name] = {"agent": agent, "metadata": metadata or {}}
         self.logger.info(f"Agent '{name}' registered")
 

@@ -2,7 +2,9 @@
 
 This repository hosts the VoxSigil experimental agent framework. It bundles the
 ``UnifiedVantaCore`` orchestration engine, a collection of 30+ agents and a
-Tkinter based GUI for visual model interaction.
+Tkinter based GUI for visual model interaction. Phase 6 and Phase 7 of the
+integration plan are now complete: agents live under the ``agents`` package and
+validation tools generate status reports.
 
 ## Usage
 
@@ -22,10 +24,13 @@ Tkinter based GUI for visual model interaction.
    ```
 
    Each registered agent will appear as a button at the bottom of the interface
-   allowing quick invocation.
+   allowing quick invocation. Speech controls (TTS/STT) are available through
+   the ``Carla`` and ``Wendy`` agents when the speech integration handler is
+   loaded.
 
 ## Contents
 
 * `AGENTS.md` – manifest describing every VoxSigil agent
 * `docs/PROGRESS_PLAN.md` – high level integration roadmap
+* `docs/SYSTEM_OVERVIEW.md` – summary of components and data flow
 * `agent_validation.py` – simple integrity checker
