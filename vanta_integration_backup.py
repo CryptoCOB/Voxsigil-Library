@@ -337,7 +337,9 @@ class VantaGUIIntegration:
             self.current_training_job.current_step = data.get("step", 0)
             self.current_training_job.loss = data.get("loss", None)
 
-            self._notify_status_callbacks("progress", data)    def on_training_completed(self, event):
+            self._notify_status_callbacks("progress", data)
+
+    def on_training_completed(self, event):
         """Handle training completed event"""
         self.logger.info(f"Training completed: {event['data']}")
         if self.current_training_job:
