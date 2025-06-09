@@ -66,6 +66,8 @@ from agents import (
     HOLOAgentConfig,
     NullAgent,
 )
+from voxsigil_mesh import VoxSigilMesh
+from vanta_mesh_graph import VantaMeshGraph
 
 # Configure logger
 logger = logging.getLogger("unified_vanta_core")
@@ -293,6 +295,8 @@ class UnifiedVantaCore:
         )  # --- ORCHESTRATION LAYER (Always Available) ---
         self.registry = ComponentRegistry()
         self.event_bus = EventBus()
+        self.mesh = VoxSigilMesh(gui_hook=lambda msg: self.event_bus.emit("mesh_echo", msg))
+        self.mesh_graph = VantaMeshGraph(self)
         self.async_bus = UnifiedAsyncBus(logger, blt_encoder)
         try:
             asyncio.create_task(self.async_bus.start())
@@ -749,6 +753,16 @@ class UnifiedVantaCore:
     ) -> None:
         """Subscribe to an event type."""
         self.event_bus.subscribe(event_type, callback, priority)
+
+    def register_mesh_node(self, name: str, node: Any) -> None:
+        """Register a node with the VoxSigilMesh."""
+        if hasattr(self, "mesh"):
+            self.mesh.register(name, node)
+
+    def send_to_mesh(self, sender: str, message: str) -> None:
+        """Transmit a message through the VoxSigilMesh."""
+        if hasattr(self, "mesh"):
+            self.mesh.transmit(sender, message)
 
     def get_system_status(self) -> Dict[str, Any]:
         """Get comprehensive system status."""

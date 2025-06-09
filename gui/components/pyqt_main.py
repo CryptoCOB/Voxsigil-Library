@@ -12,16 +12,25 @@ from PyQt5.QtWidgets import (
     QScrollArea,
 )
 
+from .echo_log_panel import EchoLogPanel
+from .mesh_map_panel import MeshMapPanel
+
 
 class VoxSigilMainWindow(QMainWindow):
     """Simplified PyQt main window with placeholder tabs."""
 
-    def __init__(self, registry=None):
+    def __init__(self, registry=None, event_bus=None):
         super().__init__()
         self.registry = registry
+        self.event_bus = event_bus
+        self.echo_panel = None
+        self.mesh_map_panel = None
         self.setWindowTitle("VoxSigil PyQt GUI")
         self.resize(1000, 800)
         self._init_ui()
+        if self.event_bus:
+            self.event_bus.subscribe("mesh_echo", self._on_mesh_echo)
+            self.event_bus.subscribe("mesh_graph_update", self._on_mesh_graph)
 
     def _init_ui(self):
         tabs = QTabWidget()
@@ -30,6 +39,10 @@ class VoxSigilMainWindow(QMainWindow):
         tabs.addTab(self._create_placeholder_tab("Training"), "Training")
         tabs.addTab(self._create_placeholder_tab("Visualization"), "Visualization")
         tabs.addTab(self._create_placeholder_tab("Performance"), "Performance")
+        self.echo_panel = EchoLogPanel()
+        self.mesh_map_panel = MeshMapPanel()
+        tabs.addTab(self.echo_panel, "Echo Log")
+        tabs.addTab(self.mesh_map_panel, "Mesh Map")
         container = QWidget()
         layout = QVBoxLayout(container)
         layout.addWidget(tabs)
@@ -59,10 +72,24 @@ class VoxSigilMainWindow(QMainWindow):
         scroll.setWidgetResizable(True)
         return scroll
 
+    def _on_mesh_echo(self, event):
+        if self.echo_panel:
+            msg = event.get("data")
+            if isinstance(msg, dict):
+                msg = msg.get("data")
+            if msg is not None:
+                self.echo_panel.add_message(str(msg))
 
-def launch(registry=None):
+    def _on_mesh_graph(self, event):
+        if self.mesh_map_panel:
+            graph = event.get("data")
+            if graph is not None:
+                self.mesh_map_panel.refresh(graph)
+
+
+def launch(registry=None, event_bus=None):
     app = QApplication(sys.argv)
-    win = VoxSigilMainWindow(registry)
+    win = VoxSigilMainWindow(registry, event_bus)
     win.show()
     return app.exec_()
 
