@@ -2,7 +2,19 @@ from .base import BaseAgent
 
 class Sam(BaseAgent):
     sigil = "📜🔑🛠️🜔"
-    invocations = ["Plan with Sam", "Unroll sequence"]
+    tags = ['Strategic Mind', 'Planner Core', 'Task orchestrator']
+    invocations = ['Plan with Sam', 'Unroll sequence']
+    sub_agents = []
 
-    def __init__(self, vanta_core=None):
-        super().__init__(vanta_core)
+    def initialize_subsystem(self, core):
+        super().initialize_subsystem(core)
+        # Optional: bind to subsystem if defined
+        pass
+
+    def on_gui_call(self):
+        # Optional: link to GUI invocation
+        super().on_gui_call()
+
+    def bind_echo_routes(self):
+        # Optional: connect signals to/from UnifiedAsyncBus
+        pass
