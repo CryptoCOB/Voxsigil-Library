@@ -20,53 +20,30 @@ from typing import Any, Dict, List, Optional, Tuple, Protocol, runtime_checkable
 import numpy as np
 
 # --- BEGIN PYTHONPATH MODIFICATION ---
+# Configure a project root based on this file location rather than a hardcoded
+# Windows path.  This keeps the module portable across environments.
 logger = logging.getLogger("VoxSigil.VantaCore")
-# Corrected sys.path modification
-_PROJECT_ROOT = r"C:\\Users\\16479\\Desktop\\Voxsigil"  # Define the absolute path to the project root
-if _PROJECT_ROOT not in sys.path:
-    sys.path.insert(0, _PROJECT_ROOT)
-
-# Clean up temporary variables from global namespace to avoid polluting it
-if "_PROJECT_ROOT" in locals() or "_PROJECT_ROOT" in globals():
-    del _PROJECT_ROOT
+PROJECT_ROOT = Path(__file__).resolve().parents[2]
+if str(PROJECT_ROOT) not in sys.path:
+    sys.path.insert(0, str(PROJECT_ROOT))
 # --- END PYTHONPATH MODIFICATION ---
 
-try:
-    # Ensure calculate_file_hash is defined, even if it's a placeholder
-    from tools.utilities.utils import (
-        calculate_file_hash as imported_calculate_file_hash,  # Changed import source
-    )
 
-    # Create a wrapper to match the expected signature
-    def calculate_file_hash(file_path: str) -> str:
-        """Wrapper for imported calculate_file_hash to match expected signature."""
-        try:
-            from pathlib import Path
+def calculate_file_hash(file_path: str) -> str:
+    """Compute a SHA-256 hash for ``file_path``.
 
-            # Convert string to Path if needed and call the imported function
-            result = imported_calculate_file_hash(Path(file_path))
-            return result if result is not None else "fallback_hash_error"
-        except Exception as ex:
-            logger.error(f"Error in calculate_file_hash wrapper for {file_path}: {ex}")
-            return "fallback_hash_error"
-
-    logger.info("Successfully imported calculate_file_hash from Voxsigil_Library.utils")
-except ImportError as e:
-    logger.warning(
-        f"Could not import calculate_file_hash from Voxsigil_Library.utils. Error: {e}. Using local fallback."
-    )
-
-    def calculate_file_hash(file_path: str) -> str:
-        """Fallback hash function if utils.calculate_file_hash is not available."""
-        logger.debug(f"Using fallback calculate_file_hash for {file_path}")
-        try:
-            hasher = hashlib.sha256()
-            with open(file_path, "rb") as f:
-                hasher.update(f.read())  # Added this line
-            return hasher.hexdigest()
-        except Exception as ex:
-            logger.error(f"Fallback calculate_file_hash failed for {file_path}: {ex}")
-            return "fallback_hash_error"
+    This local implementation replaces the previous import from
+    ``tools.utilities.utils`` which does not exist in this repository.
+    """
+    logger.debug(f"Calculating hash for {file_path}")
+    try:
+        hasher = hashlib.sha256()
+        with open(file_path, "rb") as f:
+            hasher.update(f.read())
+        return hasher.hexdigest()
+    except Exception as ex:
+        logger.error(f"Hash calculation failed for {file_path}: {ex}")
+        return "fallback_hash_error"
 
 
 # Import type hints for interfaces

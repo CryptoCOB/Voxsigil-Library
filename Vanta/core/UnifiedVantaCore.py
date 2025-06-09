@@ -1326,7 +1326,7 @@ class UnifiedVantaCore:
     def _initialize_speech_integration(self) -> None:
         """Initialize speech (TTS/STT) integration for VantaCore."""
         try:
-            from Vanta.integration.speech_integration_handler import (
+            from handlers.speech_integration_handler import (
                 initialize_speech_system,
             )
 
@@ -1359,7 +1359,7 @@ class UnifiedVantaCore:
     def _initialize_vmb_integration(self) -> None:
         """Initialize VMB (VANTA Model Builder) integration for VantaCore."""
         try:
-            from Vanta.integration.vmb_integration_handler import initialize_vmb_system
+            from handlers.vmb_integration_handler import initialize_vmb_system
 
             # Initialize VMB system with default settings
             vmb_handler = initialize_vmb_system(

@@ -3,7 +3,7 @@ from .base import BaseAgent
 
 class PulseSmith(BaseAgent):
     sigil = "🜖📡🜖📶"
-    tags = ['Signal Tuner', 'Transduction Core', 'None']
+    tags = ['Signal Tuner', 'Transduction Core']
     invocations = ['Tune Pulse', 'Resonate Signal']
 
     def initialize_subsystem(self, core):

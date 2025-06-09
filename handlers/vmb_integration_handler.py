@@ -410,10 +410,11 @@ def initialize_vmb_system(
     """
     handler = VMBIntegrationHandler(vanta_core)
 
-    loop = asyncio.get_event_loop()
-    if loop.is_running():
-        asyncio.create_task(handler.initialize_vmb_system(config))
-    else:
+    loop = asyncio.new_event_loop()
+    asyncio.set_event_loop(loop)
+    try:
         loop.run_until_complete(handler.initialize_vmb_system(config))
+    finally:
+        loop.close()
 
     return handler

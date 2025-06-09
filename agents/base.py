@@ -1,5 +1,6 @@
 
 import logging
+import asyncio
 
 from ..UnifiedAsyncBus import AsyncMessage, MessageType
 
@@ -11,12 +12,21 @@ class BaseAgent:
     """Base class for all agents with async bus integration."""
 
     sigil: str = ""
-    invocations: list[str] = []
-    sub_agents: list[str] = []
+    invocations: Optional[list[str]] = None
+    sub_agents: Optional[list[str]] = None
 
     def __init__(self, vanta_core=None):
 
         self.vanta_core = None
+        # Use instance-specific lists to avoid shared mutable defaults
+        if self.invocations is None:
+            self.invocations = []
+        else:
+            self.invocations = list(self.invocations)
+        if self.sub_agents is None:
+            self.sub_agents = []
+        else:
+            self.sub_agents = list(self.sub_agents)
         if vanta_core is not None:
             self.initialize_subsystem(vanta_core)
 
@@ -88,7 +98,7 @@ class BaseAgent:
                 self.__class__.__name__,
                 payload,
             )
-            self.vanta_core.async_bus.publish(msg)
+            asyncio.create_task(self.vanta_core.async_bus.publish(msg))
 
         if self.vanta_core and hasattr(self.vanta_core, "event_bus"):
             try:
