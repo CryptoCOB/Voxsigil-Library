@@ -18,8 +18,8 @@ from datetime import datetime
 from pathlib import Path
 from typing import Any, Callable, Dict, List, Optional, Tuple
 
-from Vanta.core.echo_memory import EchoMemory
-from Vanta.core.memory_braid import MemoryBraid
+from echo_memory import EchoMemory
+from memory_braid import MemoryBraid
 from Vanta.core.UnifiedAsyncBus import AsyncMessage, MessageType
 
 # Import memory components
@@ -79,7 +79,7 @@ class UnifiedMemoryInterface:
         if self.vanta_core:
             try:
                 self.vanta_core.register_component(
-                    "unified_memory", self, meta={"type": "memory_service"}
+                    "unified_memory", self, metadata={"type": "memory_service"}
                 )
                 if hasattr(self.vanta_core, "async_bus"):
                     self.vanta_core.async_bus.register_component("unified_memory")
@@ -162,13 +162,14 @@ class UnifiedMemoryInterface:
                     namespace=content.get("namespace", self.default_namespace),
                 )
                 # Send result back if reply_to is specified
-                if message.reply_to:
-                    self.vanta_core.async_bus.send_message(
+                reply_to = getattr(message, "reply_to", None)
+                if reply_to:
+                    self.vanta_core.async_bus.publish(
                         AsyncMessage(
-                            sender="unified_memory",
-                            message_type=MessageType.MEMORY_RESULT,
-                            content={"key": content.get("key"), "result": result},
-                            receiver=message.reply_to,
+                            MessageType.MEMORY_RESULT,
+                            "unified_memory",
+                            {"key": content.get("key"), "result": result},
+                            target_ids=[reply_to],
                         )
                     )
             elif operation == "retrieve_similar":
@@ -178,13 +179,14 @@ class UnifiedMemoryInterface:
                     namespace=content.get("namespace", self.default_namespace),
                 )
                 # Send result back if reply_to is specified
-                if message.reply_to:
-                    self.vanta_core.async_bus.send_message(
+                reply_to = getattr(message, "reply_to", None)
+                if reply_to:
+                    self.vanta_core.async_bus.publish(
                         AsyncMessage(
-                            sender="unified_memory",
-                            message_type=MessageType.MEMORY_RESULT,
-                            content={"query": content.get("query"), "results": result},
-                            receiver=message.reply_to,
+                            MessageType.MEMORY_RESULT,
+                            "unified_memory",
+                            {"query": content.get("query"), "results": result},
+                            target_ids=[reply_to],
                         )
                     )
             elif operation == "log_event":
@@ -271,11 +273,11 @@ class UnifiedMemoryInterface:
 
         # Broadcast event via async bus if available
         if self.vanta_core and hasattr(self.vanta_core, "async_bus"):
-            self.vanta_core.async_bus.send_message(
+            self.vanta_core.async_bus.publish(
                 AsyncMessage(
-                    sender="unified_memory",
-                    message_type=MessageType.MEMORY_OPERATION,
-                    content={
+                    MessageType.MEMORY_OPERATION,
+                    "unified_memory",
+                    {
                         "operation": "store",
                         "key": key,
                         "namespace": namespace,
