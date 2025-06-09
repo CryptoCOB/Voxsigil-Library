@@ -223,6 +223,14 @@ class VMBGUIIntegration:
             # Add VMB integration panel
             self._add_vmb_panel()
 
+            try:
+                from gui_utils import bind_agent_buttons
+
+                if self.vanta_core and self.vanta_core.agent_registry:
+                    bind_agent_buttons(self.root, self.vanta_core.agent_registry)
+            except Exception:
+                pass
+
             logger.info("✅ GUI initialized with VMB integration")
             return True
 

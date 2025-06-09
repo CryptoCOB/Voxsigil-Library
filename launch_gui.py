@@ -185,7 +185,8 @@ def launch_gui_with_fallback():
 
         # Launch the main GUI
         logger.info("🎨 Starting GUI main loop...")
-        dynamic_gridformer_gui.main()
+        registry = core.agent_registry if core else None
+        dynamic_gridformer_gui.main(registry)
 
     except ImportError as e:
         logger.error(f"❌ Failed to import dynamic_gridformer_gui: {e}")
@@ -223,6 +224,14 @@ def launch_gui_with_fallback():
             tk.Label(root, text=status_text, font=("Courier", 10), justify="left").pack(
                 pady=10
             )
+
+            try:
+                from gui_utils import bind_agent_buttons
+
+                registry = core.agent_registry if core else None
+                bind_agent_buttons(root, registry)
+            except Exception:
+                pass
 
             def show_error():
                 messagebox.showerror("Error Details", f"Import Error: {e}")

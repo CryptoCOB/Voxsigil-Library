@@ -64,6 +64,8 @@ Update `launch_gui.py`, `vmb_gui_launcher.py`, and `vmb_final_demo.py`:
   ```
 - Use non-blocking calls and check for agent availability via `registry.has('AgentName')`.
 
+*Status:* Implemented via `gui_utils.bind_agent_buttons`. Launch scripts now automatically create buttons for every registered agent.
+
 ## Phase 6 – Project Reorganization
 
 Move agent modules to `agents/` and update imports accordingly:
@@ -73,12 +75,16 @@ Move agent modules to `agents/` and update imports accordingly:
 
 Create similar directories for `interfaces/`, `core/`, and `services/` if needed to reduce clutter.
 
+*Status:* Modules relocated under `agents/` with imports updated. Core initialization registers all agents on startup.
+
 ## Phase 7 – Integrity & Validation Tools
 
 Implement scripts to generate:
 - `agents.json` – JSON export of the agent manifest and registration status.
 - `agent_status.log` – log of missing imports or registration gaps.
 - `agent_graph.json` – optional connectivity graph for visualization.
+
+*Status:* `agent_validation.py` generates the above files.
 
 ## Outstanding Items
 

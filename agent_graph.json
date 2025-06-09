@@ -1,0 +1,190 @@
+[
+  {
+    "from": "Phi",
+    "to": "UnifiedVantaCore"
+  },
+  {
+    "from": "Voxka",
+    "to": "Orion"
+  },
+  {
+    "from": "Voxka",
+    "to": "Nebula"
+  },
+  {
+    "from": "Voxka",
+    "to": "UnifiedVantaCore"
+  },
+  {
+    "from": "Gizmo",
+    "to": "PatchCrawler"
+  },
+  {
+    "from": "Gizmo",
+    "to": "LoopSmith"
+  },
+  {
+    "from": "Gizmo",
+    "to": "UnifiedVantaCore"
+  },
+  {
+    "from": "Nix",
+    "to": "Breakbeam"
+  },
+  {
+    "from": "Nix",
+    "to": "WyrmEcho"
+  },
+  {
+    "from": "Nix",
+    "to": "UnifiedVantaCore"
+  },
+  {
+    "from": "Echo",
+    "to": "EchoLocation"
+  },
+  {
+    "from": "Echo",
+    "to": "ExternalEcho"
+  },
+  {
+    "from": "Echo",
+    "to": "UnifiedVantaCore"
+  },
+  {
+    "from": "Oracle",
+    "to": "DreamWeft"
+  },
+  {
+    "from": "Oracle",
+    "to": "TimeBinder"
+  },
+  {
+    "from": "Oracle",
+    "to": "UnifiedVantaCore"
+  },
+  {
+    "from": "Astra",
+    "to": "CompassRose"
+  },
+  {
+    "from": "Astra",
+    "to": "LumenDrift"
+  },
+  {
+    "from": "Astra",
+    "to": "UnifiedVantaCore"
+  },
+  {
+    "from": "Warden",
+    "to": "RefCheck"
+  },
+  {
+    "from": "Warden",
+    "to": "PolicyCore"
+  },
+  {
+    "from": "Warden",
+    "to": "UnifiedVantaCore"
+  },
+  {
+    "from": "Nebula",
+    "to": "QuantumPulse"
+  },
+  {
+    "from": "Nebula",
+    "to": "HolisticPerception"
+  },
+  {
+    "from": "Nebula",
+    "to": "UnifiedVantaCore"
+  },
+  {
+    "from": "Orion",
+    "to": "OrionsLight"
+  },
+  {
+    "from": "Orion",
+    "to": "SmartContractManager"
+  },
+  {
+    "from": "Orion",
+    "to": "UnifiedVantaCore"
+  },
+  {
+    "from": "Evo",
+    "to": "UnifiedVantaCore"
+  },
+  {
+    "from": "OrionApprentice",
+    "to": "UnifiedVantaCore"
+  },
+  {
+    "from": "SocraticEngine",
+    "to": "UnifiedVantaCore"
+  },
+  {
+    "from": "Dreamer",
+    "to": "UnifiedVantaCore"
+  },
+  {
+    "from": "EntropyBard",
+    "to": "UnifiedVantaCore"
+  },
+  {
+    "from": "CodeWeaver",
+    "to": "UnifiedVantaCore"
+  },
+  {
+    "from": "EchoLore",
+    "to": "UnifiedVantaCore"
+  },
+  {
+    "from": "MirrorWarden",
+    "to": "UnifiedVantaCore"
+  },
+  {
+    "from": "PulseSmith",
+    "to": "UnifiedVantaCore"
+  },
+  {
+    "from": "BridgeFlesh",
+    "to": "UnifiedVantaCore"
+  },
+  {
+    "from": "Sam",
+    "to": "UnifiedVantaCore"
+  },
+  {
+    "from": "Dave",
+    "to": "UnifiedVantaCore"
+  },
+  {
+    "from": "Carla",
+    "to": "UnifiedVantaCore"
+  },
+  {
+    "from": "Andy",
+    "to": "UnifiedVantaCore"
+  },
+  {
+    "from": "Wendy",
+    "to": "UnifiedVantaCore"
+  },
+  {
+    "from": "VoxAgent",
+    "to": "ContextualCheckInAgent"
+  },
+  {
+    "from": "VoxAgent",
+    "to": "UnifiedVantaCore"
+  },
+  {
+    "from": "SDKContext",
+    "to": "UnifiedVantaCore"
+  },
+  {
+    "from": "SleepTimeCompute",
+    "to": "UnifiedVantaCore"
+  }
+]

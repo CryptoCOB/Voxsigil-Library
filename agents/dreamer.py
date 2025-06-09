@@ -13,14 +13,14 @@ class Dreamer(BaseAgent):
 
 
     def __init__(self, vanta_core=None):
-        self.vanta_core = vanta_core
+        super().__init__(vanta_core)
         self.art_controller = None
 
     def initialize_subsystem(self, vanta_core):
+        super().initialize_subsystem(vanta_core)
         self.vanta_core = vanta_core
         self.art_controller = vanta_core.get_component("art_controller")
         if vanta_core and hasattr(vanta_core, "async_bus"):
-            vanta_core.async_bus.register_component("Dreamer")
             vanta_core.async_bus.subscribe(
                 "Dreamer",
                 MessageType.USER_INTERACTION,

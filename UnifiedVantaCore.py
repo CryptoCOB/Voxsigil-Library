@@ -607,6 +607,12 @@ class UnifiedVantaCore:
                 instance = NullAgent()
 
             try:
+                if hasattr(instance, "initialize_subsystem"):
+                    instance.initialize_subsystem(self)
+            except Exception as e:  # noqa: BLE001
+                logger.error(f"Failed to initialize {cls.__name__}: {e}")
+
+            try:
                 self.agent_registry.register_agent(
                     cls.__name__,
                     instance,
