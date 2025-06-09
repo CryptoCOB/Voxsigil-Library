@@ -110,8 +110,22 @@ class BaseAgent:
                     f"{self.__class__.__name__.lower()}_invoked",
                     {"origin": self.sigil, "payload": payload},
                 )
+                # stream output to GUI panels when available
+                self.vanta_core.event_bus.emit(
+                    "gui_console_output",
+                    {"text": f"{self.__class__.__name__} invoked", "payload": payload},
+                )
+                self.vanta_core.event_bus.emit(
+                    "gui_panel_output",
+                    {
+                        "panel": "AgentStatusPanel",
+                        "agent": self.__class__.__name__,
+                        "payload": payload,
+                    },
+                )
             except Exception:
                 pass
+        # 🧠 Codex BugPatch - Vanta Phase @2025-06-09
 
 
 
