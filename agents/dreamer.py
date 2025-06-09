@@ -1,14 +1,16 @@
+
 import logging
 
 from .base import BaseAgent
 from ..UnifiedAsyncBus import AsyncMessage, MessageType
 
 
-logger = logging.getLogger(__name__)
+
 
 class Dreamer(BaseAgent):
     sigil = "🧿🧠🧩♒"
     invocations = ["Enter Dreamer", "Seed dream state"]
+
 
     def __init__(self, vanta_core=None):
         self.vanta_core = vanta_core
@@ -48,3 +50,4 @@ class Dreamer(BaseAgent):
                 prompt,
             )
             self.vanta_core.async_bus.publish(msg)
+

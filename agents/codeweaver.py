@@ -1,3 +1,4 @@
+
 import logging
 
 from .base import BaseAgent
@@ -6,9 +7,11 @@ from ..UnifiedAsyncBus import AsyncMessage, MessageType
 
 logger = logging.getLogger(__name__)
 
+
 class CodeWeaver(BaseAgent):
     sigil = "⟡🜛⛭🜨"
     invocations = ["Weave Code", "Forge logic"]
+
 
     def __init__(self, vanta_core=None):
         self.vanta_core = vanta_core
@@ -48,3 +51,4 @@ class CodeWeaver(BaseAgent):
                 request,
             )
             self.vanta_core.async_bus.publish(msg)
+

@@ -1,3 +1,4 @@
+
 import logging
 
 from .base import BaseAgent
@@ -6,9 +7,11 @@ from ..UnifiedAsyncBus import AsyncMessage, MessageType
 
 logger = logging.getLogger(__name__)
 
+
 class PulseSmith(BaseAgent):
     sigil = "🜖📡🜖📶"
     invocations = ["Tune Pulse", "Resonate Signal"]
+
 
     def __init__(self, vanta_core=None):
         self.vanta_core = vanta_core
@@ -51,3 +54,4 @@ class PulseSmith(BaseAgent):
                 trace,
             )
             self.vanta_core.async_bus.publish(msg)
+

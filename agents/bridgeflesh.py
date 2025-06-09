@@ -1,10 +1,11 @@
+
 import logging
 
 from .base import BaseAgent
 from ..UnifiedAsyncBus import AsyncMessage, MessageType
 
 
-logger = logging.getLogger(__name__)
+
 
 class BridgeFlesh(BaseAgent):
     sigil = "🧩🎯🜂🜁"
@@ -48,3 +49,4 @@ class BridgeFlesh(BaseAgent):
                 "initialize",
             )
             self.vanta_core.async_bus.publish(msg)
+

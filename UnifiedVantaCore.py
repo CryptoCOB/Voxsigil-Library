@@ -25,7 +25,9 @@ from Vanta.interfaces.supervisor_connector_interface import BaseSupervisorConnec
 
 from ..integration.vanta_supervisor import VantaSupervisor
 from .UnifiedAgentRegistry import UnifiedAgentRegistry
+
 from .UnifiedAsyncBus import UnifiedAsyncBus
+
 from .agents import (
     Phi,
     Voxka,
@@ -336,8 +338,10 @@ class UnifiedVantaCore:
         # Register core agents (Step 1 of VANTA Integration Master Plan)
         self._initialize_core_agents()
 
+
         # Map subsystems to guardian agents (Step 3 of VANTA Integration Master Plan)
         self._map_subsystems_to_guardians()
+
 
         self.get_agents_by_capability = (
             self.agent_registry.get_agents_by_capability
@@ -614,6 +618,7 @@ class UnifiedVantaCore:
             except Exception as e:
                 logger.error(f"Failed to register {cls.__name__}: {e}")
 
+
     def _map_subsystems_to_guardians(self) -> None:
         """Link key subsystems to their guardian agents (Step 3 of VANTA Integration Master Plan)."""
         if not self.agent_registry:
@@ -640,6 +645,7 @@ class UnifiedVantaCore:
                     setattr(agent, "subsystem", subsystem)
             except Exception as e:
                 logger.error(f"Failed to map {agent_name} to {component_key}: {e}")
+
 
     # --- AGENT MANAGEMENT METHODS (Step 1 of VANTA Integration Master Plan) ---
 

@@ -1,3 +1,4 @@
+
 import logging
 
 from .base import BaseAgent
@@ -9,6 +10,7 @@ logger = logging.getLogger(__name__)
 class MirrorWarden(BaseAgent):
     sigil = "⚛️🜂🜍🝕"
     invocations = ["Check Mirror", "Guard reflections"]
+
 
     def __init__(self, vanta_core=None):
         self.vanta_core = vanta_core
@@ -48,3 +50,4 @@ class MirrorWarden(BaseAgent):
                 request,
             )
             self.vanta_core.async_bus.publish(msg)
+

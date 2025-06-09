@@ -4,11 +4,13 @@ This document tracks the ongoing work to integrate and validate all agents and s
 
 ## Current Status
 
+
 - **Implemented agents:** Skeleton classes created for all agents and registered via `UnifiedVantaCore`.
 - **Registered agents:** All agents now registered with `UnifiedAgentRegistry` and mapped to subsystems.
 - **Memory layer:** EchoMemory available but echo binding work is ongoing via `UnifiedAsyncBus`.
 - **GUI triggers:** GUI mappings not fully wired; placeholder `on_gui_call` methods implemented for guardian agents.
 - **Project structure:** Agents moved under `agents/` package for clearer imports.
+
 
 ## Phase 1 – Agent Class Definitions
 
@@ -48,13 +50,10 @@ Assign each major subsystem a guardian agent:
 
 Each guardian implements `initialize_subsystem()` to configure its component and exposes a `on_gui_call()` method for the GUI.
 
-Status: **implemented** via `_map_subsystems_to_guardians` and guardian agent hooks.
 
 ## Phase 4 – Echo Binding
 
 Ensure every agent can send and receive signals from the components they supervise. For example, `PulseSmith` should receive grid traces and call `GridFormer.forward()`. Use `UnifiedAsyncBus` for cross-module messaging.
-
-Status: **partial** – guardian agents now register with `UnifiedAsyncBus` for basic messaging.
 
 ## Phase 5 – GUI Invocation Binding
 

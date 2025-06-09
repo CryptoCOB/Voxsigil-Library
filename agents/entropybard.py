@@ -1,10 +1,11 @@
+
 import logging
 
 from .base import BaseAgent
 from ..UnifiedAsyncBus import AsyncMessage, MessageType
 
 
-logger = logging.getLogger(__name__)
+
 
 class EntropyBard(BaseAgent):
     sigil = "🜔🕊️⟁⧃"
@@ -56,3 +57,4 @@ class EntropyBard(BaseAgent):
                 query,
             )
             self.vanta_core.async_bus.publish(msg)
+
