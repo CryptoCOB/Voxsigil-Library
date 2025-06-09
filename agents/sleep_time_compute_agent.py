@@ -1,12 +1,19 @@
 from .base import BaseAgent
-from sleep_time_compute import SleepTimeCompute
 
-class SleepTimeComputeAgent(BaseAgent):
+
+class SleepTimeCompute(BaseAgent):
     sigil = "🌒🧵🧠🜝"
-    invocations = ["Sleep Compute", "Dream consolidate"]
+    tags = ['Reflection Engine', 'Dream-State Scheduler', 'None']
+    invocations = ['Sleep Compute', 'Dream consolidate']
 
-    def __init__(self, vanta_core=None):
-        super().__init__(vanta_core)
-        self.core = (
-            SleepTimeCompute(vanta_core=vanta_core) if SleepTimeCompute else None
-        )
+    def initialize_subsystem(self, core):
+        # Optional: bind to subsystem if defined
+        pass
+
+    def on_gui_call(self):
+        # Optional: link to GUI invocation
+        super().on_gui_call()
+
+    def bind_echo_routes(self):
+        # Optional: connect signals to/from UnifiedAsyncBus
+        pass
