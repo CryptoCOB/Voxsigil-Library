@@ -1392,6 +1392,10 @@ class UnifiedVantaCore:
             logger.warning("VMB integration handler not available")
         except Exception as e:
             logger.error(f"Failed to initialize VMB integration: {e}")
+    def bind_cross_system_link(self) -> None:
+        """Placeholder for Nebula cross-system link integration."""
+        pass
+
 
 
 # --- CONVENIENCE FUNCTIONS ---
