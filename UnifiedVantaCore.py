@@ -16,7 +16,7 @@ import time
 from collections import defaultdict
 from typing import Any, Callable, Dict, List, Optional
 
-from BLT.blt_encoder import BLTEncoder
+from BLT import BLTEncoder
 from BLT.hybrid_middleware import HybridMiddleware
 from Vanta.interfaces.blt_encoder_interface import BaseBLTEncoder
 from Vanta.interfaces.hybrid_middleware_interface import BaseHybridMiddleware
@@ -637,6 +637,8 @@ class UnifiedVantaCore:
             "CodeWeaver": "meta_learner",
             "Dreamer": "art_controller",
             "BridgeFlesh": "vmb_integration_handler",
+            "Carla": "speech_integration_handler",
+            "Wendy": "speech_integration_handler",
         }
 
         for agent_name, component_key in mapping.items():

@@ -41,9 +41,9 @@ try:
     )
 
     try:
-        from .hybrid_blt import (
-            entropy_router_util,  # noqa: F401 - Import used for availability check
-        )
+    from BLT.hybrid_blt import (
+        entropy_router_util,  # noqa: F401 - Import used for availability check
+    )
 
         ENTROPY_ROUTER_AVAILABLE = True
 

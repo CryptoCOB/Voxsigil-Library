@@ -75,7 +75,7 @@ Move agent modules to `agents/` and update imports accordingly:
 
 Create similar directories for `interfaces/`, `core/`, and `services/` if needed to reduce clutter.
 
-*Status:* Modules relocated under `agents/` with imports updated. Core initialization registers all agents on startup.
+*Status:* **Completed (2025‑06‑09)** – Modules relocated under `agents/` with imports updated. Core initialization registers all agents on startup.
 
 ## Phase 7 – Integrity & Validation Tools
 
@@ -84,7 +84,7 @@ Implement scripts to generate:
 - `agent_status.log` – log of missing imports or registration gaps.
 - `agent_graph.json` – optional connectivity graph for visualization.
 
-*Status:* `agent_validation.py` generates the above files.
+*Status:* **Completed (2025‑06‑09)** – `agent_validation.py` generates the above files and produces `agents.json`, `agent_graph.json` and `agent_status.log`.
 
 ## Outstanding Items
 

@@ -1,4 +1,4 @@
-UnifiedVantaCore import failed: No module named 'BLT'
+UnifiedVantaCore import failed: No module named 'jsonschema'
 Agent Phi not registered in VantaCore
 Agent Voxka not registered in VantaCore
 Agent Gizmo not registered in VantaCore

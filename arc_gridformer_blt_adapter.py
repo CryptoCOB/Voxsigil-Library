@@ -25,7 +25,7 @@ logger = logging.getLogger("ARCGridFormerAdapter")
 # Try to import from hybrid_blt.py, but don't fail if it's not available
 BLT_AVAILABLE = False
 try:
-    from .hybrid_blt import (
+    from BLT.hybrid_blt import (
         BLTEnhancedRAG,
         ByteLatentTransformerEncoder,
         HybridMiddleware,
