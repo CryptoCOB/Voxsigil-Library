@@ -10,8 +10,10 @@ class _ToolTip:
         self.widget = widget
         self.text = text
         self.tipwindow = None
+        self.root = widget.winfo_toplevel()
         widget.bind("<Enter>", self.show)
         widget.bind("<Leave>", self.hide)
+        self.root.bind("<Destroy>", self.hide)
 
     def show(self, _event=None) -> None:
         if self.tipwindow or not self.text:

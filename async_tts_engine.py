@@ -213,11 +213,14 @@ class AsyncTTSEngine:
     def _start_background_processing(self):
         """Start background queue processing."""
         try:
-            loop = asyncio.get_event_loop()
-            self._processing_task = loop.create_task(self._process_queue())
-            logger.info("Background TTS processing started")
+            loop = asyncio.get_running_loop()
         except RuntimeError:
-            logger.warning("No event loop available for background processing")
+            loop = asyncio.new_event_loop()
+            threading.Thread(target=loop.run_forever, daemon=True).start()
+        self._processing_task = asyncio.run_coroutine_threadsafe(
+            self._process_queue(), loop
+        )
+        logger.info("Background TTS processing started")
 
     async def _process_queue(self):
         """Background task to process TTS synthesis queue."""

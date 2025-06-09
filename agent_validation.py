@@ -77,6 +77,6 @@ for entry in data:
     graph_edges.append({"from": entry["name"], "to": "UnifiedVantaCore"})
 Path("agent_graph.json").write_text(json.dumps(graph_edges, indent=2))
 
-Path("agent_status.log").write_text("\n".join(log_lines))
+Path("agent_status.log").write_text("\n".join(log_lines) + "\n")
 
 print("Generated agents.json, agent_status.log and agent_graph.json")
