@@ -48,10 +48,11 @@ class RealSupervisorConnector(BaseSupervisorConnector):
     def _find_voxsigil_library(self) -> str:
         """Try to find the VoxSigil library path automatically."""
         # Common paths to check
+        home = Path.home()
         possible_paths = [
             os.getenv("VOXSIGIL_LIBRARY_PATH"),
-            "c:/Users/16479/Desktop/VoxML-Library",
-            "c:/Users/16479/Desktop/Voxsigil/Voxsigil_Library",
+            str(home / "VoxML-Library"),
+            str(home / "Voxsigil" / "Voxsigil_Library"),
             "./VoxML-Library",
             "./Voxsigil_Library",
         ]
@@ -62,7 +63,7 @@ class RealSupervisorConnector(BaseSupervisorConnector):
                 return str(path)
 
         # Default fallback
-        default_path = "c:/Users/16479/Desktop/VoxML-Library"
+        default_path = str(home / "VoxML-Library")
         logger.warning(
             f"Could not find VoxSigil library, using default: {default_path}"
         )

@@ -9,6 +9,9 @@ each other without circular dependencies or path issues.
 import os
 import sys
 from pathlib import Path
+import logging
+
+logger = logging.getLogger("path_helper")
 
 
 def add_project_root_to_path():
@@ -192,11 +195,7 @@ def create_sigil_supervisor_instance(
         return supervisor
 
     except Exception as e:
-        import logging
-
-        logging.getLogger("path_helper").error(
-            f"Failed to create VantaSigilSupervisor: {e}"
-        )
+        logger.error(f"Failed to create VantaSigilSupervisor: {e}")
         return None
 
 

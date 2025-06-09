@@ -1,0 +1,268 @@
+From ee85b97ef251fb6006d1b29fc9d9672d3c69b9b1 Mon Sep 17 00:00:00 2001
+From: Codex <codex@openai.com>
+Date: Mon, 9 Jun 2025 22:03:10 +0000
+Subject: [PATCH] Apply phase 2 fixes and update logs
+
+---
+ Vanta/core/UnifiedVantaCore.py       |  6 +++++
+ agent_graph.json                     |  2 +-
+ agents.json                          |  2 +-
+ debug_log_voxsigil_phase_2.md        | 30 +++++++++++++++++++++++++
+ debug_summary_phase_2.json           |  6 ++---
+ migrated_gui_status.md               | 15 ++++++++++---
+ path_helper.py                       | 19 ++++++++--------
+ real_supervisor_connector.py         | 17 +++++++-------
+ services/memory_service_connector.py | 33 ++++++++++++++--------------
+ 9 files changed, 88 insertions(+), 42 deletions(-)
+
+diff --git a/Vanta/core/UnifiedVantaCore.py b/Vanta/core/UnifiedVantaCore.py
+index bb78aa0..9f433cd 100644
+--- a/Vanta/core/UnifiedVantaCore.py
++++ b/Vanta/core/UnifiedVantaCore.py
+@@ -1330,6 +1330,12 @@ class UnifiedVantaCore:
+         # Stop async bus if running
+         if hasattr(self, "async_bus") and self.async_bus.running:
+             try:
++                loop = asyncio.get_event_loop()
++                if loop.is_running():
++                    loop.create_task(self.async_bus.stop())
++                else:
++                    loop.run_until_complete(self.async_bus.stop())
++            except RuntimeError:
+                 asyncio.run(self.async_bus.stop())
+             except Exception as e:
+                 logger.error(f"Failed to stop async bus during shutdown: {e}")
+diff --git a/agent_graph.json b/agent_graph.json
+index 9c5b47e..9eba3a7 100644
+--- a/agent_graph.json
++++ b/agent_graph.json
+@@ -187,4 +187,4 @@
+     "from": "SleepTimeCompute",
+     "to": "UnifiedVantaCore"
+   }
+-]
++]
+\ No newline at end of file
+diff --git a/agents.json b/agents.json
+index e7dcd69..7076298 100644
+--- a/agents.json
++++ b/agents.json
+@@ -334,4 +334,4 @@
+     "status": "missing",
+     "dependencies": []
+   }
+-]
++]
+\ No newline at end of file
+diff --git a/debug_log_voxsigil_phase_2.md b/debug_log_voxsigil_phase_2.md
+index 8b265f7..6e91521 100644
+--- a/debug_log_voxsigil_phase_2.md
++++ b/debug_log_voxsigil_phase_2.md
+@@ -32,3 +32,33 @@ New issues discovered during deep logic sweep. ✅ indicates fix applied.
+ 28. path_helper.create_sigil_supervisor_instance uses nested imports; error handling improved. (not fixed)
+ 29. VMBIntegrationHandler emits events before verifying subscribers. Covered by new EventBus logging. ✅
+ 30. Several async functions in speech_integration_handler call get_event_loop; still unpatched. (not fixed)
++31. services/memory_service_connector.py lines 69-75 – `namespace` and `metadata` parameters lacked Optional typing. Added Optional hints. ✅
++32. services/memory_service_connector.py line 91 – Metadata passed as None caused errors in backends. Now defaults to empty dict. ✅
++33. services/memory_service_connector.py line 97 – `retrieve` used `str` type for namespace; changed to `Optional[str]`. ✅
++34. services/memory_service_connector.py line 114 – `retrieve_similar` namespace parameter updated to Optional. ✅
++35. path_helper.py top – No module-level logger. Added logger and imported logging. ✅
++36. path_helper.py line 198 – Exception logging now uses module logger instead of inline import. ✅
++37. real_supervisor_connector.py lines 50-57 – Hardcoded Windows paths replaced with cross-platform detection using `Path.home()`. ✅
++38. real_supervisor_connector.py line 64 – Default fallback path now uses user home directory. ✅
++39. UnifiedVantaCore.shutdown line 1330 – Used `asyncio.run` even if loop running; now checks loop state and schedules stop accordingly. ✅
++40. memory_service_connector.store returns empty string when not initialized – still not ideal. (not fixed)
++41. vmb_integration_handler.initialize_vmb_system creates new event loop without restoring original; potential side effect. (not fixed)
++42. arc_utils.cache_response removes only one entry when cache full; may still exceed max size. (not fixed)
++43. real_supervisor_connector.store_sigil_content lacks atomic write, may corrupt files on crash. (not fixed)
++44. unified_async_bus.register_component does not check for reserved ids. (not fixed)
++45. scripts contain `sys.exit(asyncio.run(...))`; fails if called from running loop. (not fixed)
++46. real_supervisor_connector._find_voxsigil_library does not validate env path exists. (not fixed)
++47. memory_service_connector methods not thread-safe. (not fixed)
++48. debug summary not updated when agents missing – informational. (not fixed)
++49. event_bus history not pruned beyond max size. (not fixed)
++50. Many test files contain placeholders with `pass`. (not fixed)
++51. asynchronous STT initialization uses get_event_loop which may fail. (not fixed)
++52. STT handler loops may not cancel on shutdown. (not fixed)
++53. production_config.py.bak leftover may confuse deployment. (not fixed)
++54. multiple modules repeat logging.basicConfig causing duplicate handlers. (not fixed)
++55. VMBIntegrationHandler._register_event_handlers may subscribe duplicates on repeated calls. (not fixed)
++56. RealSupervisorConnector._save_sigil_to_filesystem does not sanitize all invalid characters. (not fixed)
++57. path_helper.verify_module_paths does not catch ImportError messages. (not fixed)
++58. Some event bus emitters pass dicts but handlers expect AsyncMessage objects. (not fixed)
++59. create_sigil_supervisor_instance uses fallback rag/llm but not typed. (not fixed)
++60. AsyncProcessingEngine creates tasks without storing handles, causing leaks. (not fixed)
+diff --git a/debug_summary_phase_2.json b/debug_summary_phase_2.json
+index 25c3d4e..f1d21cf 100644
+--- a/debug_summary_phase_2.json
++++ b/debug_summary_phase_2.json
+@@ -1,5 +1,5 @@
+ {
+-  "issues_found": 30,
+-  "issues_fixed": 15,
+-  "notes": "Legacy GUI components still rely on Tkinter. Async bus shutdown and path issues corrected."
++  "issues_found": 60,
++  "issues_fixed": 24,
++  "notes": "Additional Optional typing fixes and cross-platform path handling added. Legacy GUI work remains."
+ }
+diff --git a/migrated_gui_status.md b/migrated_gui_status.md
+index 6d6ec3c..4f3addf 100644
+--- a/migrated_gui_status.md
++++ b/migrated_gui_status.md
+@@ -1,8 +1,17 @@
+ Remaining legacy Tkinter components detected in legacy_gui/:
+-- vmb_final_demo.py
++- dynamic_gridformer_gui.py
++- enhanced_testing_interface.py
++- gui_styles.py
++- gui_utils.py
++- model_discovery_interface.py
+ - model_tab_interface.py
++- performance_tab_interface.py
++- testing_tab_interface.py
++- training_interface.py
++- training_interface_new.py
++- visualization_tab_interface.py
++- vmb_final_demo.py
+ - vmb_gui_launcher.py
+-- dynamic_gridformer_gui.py
++- vmb_gui_launcher.py.backup
+ - vmb_gui_simple.py
+-- gui_utils.py
+ These modules still import tkinter or ttk. Refactor to PyQt5.
+diff --git a/path_helper.py b/path_helper.py
+index 7539add..779cbea 100644
+--- a/path_helper.py
++++ b/path_helper.py
+@@ -6,9 +6,12 @@ It ensures that components in different directories can properly import
+ each other without circular dependencies or path issues.
+ """
+ 
+-import os
+-import sys
+-from pathlib import Path
++import os
++import sys
++from pathlib import Path
++import logging
++
++logger = logging.getLogger("path_helper")
+ 
+ 
+ def add_project_root_to_path():
+@@ -191,13 +194,9 @@ def create_sigil_supervisor_instance(
+ 
+         return supervisor
+ 
+-    except Exception as e:
+-        import logging
+-
+-        logging.getLogger("path_helper").error(
+-            f"Failed to create VantaSigilSupervisor: {e}"
+-        )
+-        return None
++    except Exception as e:
++        logger.error(f"Failed to create VantaSigilSupervisor: {e}")
++        return None
+ 
+ 
+ # If this module is run directly, it will print the path information
+diff --git a/real_supervisor_connector.py b/real_supervisor_connector.py
+index e90c017..a40d61b 100644
+--- a/real_supervisor_connector.py
++++ b/real_supervisor_connector.py
+@@ -48,13 +48,14 @@ class RealSupervisorConnector(BaseSupervisorConnector):
+     def _find_voxsigil_library(self) -> str:
+         """Try to find the VoxSigil library path automatically."""
+         # Common paths to check
+-        possible_paths = [
+-            os.getenv("VOXSIGIL_LIBRARY_PATH"),
+-            "c:/Users/16479/Desktop/VoxML-Library",
+-            "c:/Users/16479/Desktop/Voxsigil/Voxsigil_Library",
+-            "./VoxML-Library",
+-            "./Voxsigil_Library",
+-        ]
++        home = Path.home()
++        possible_paths = [
++            os.getenv("VOXSIGIL_LIBRARY_PATH"),
++            str(home / "VoxML-Library"),
++            str(home / "Voxsigil" / "Voxsigil_Library"),
++            "./VoxML-Library",
++            "./Voxsigil_Library",
++        ]
+ 
+         for path in possible_paths:
+             if path and Path(path).exists():
+@@ -62,7 +63,7 @@ class RealSupervisorConnector(BaseSupervisorConnector):
+                 return str(path)
+ 
+         # Default fallback
+-        default_path = "c:/Users/16479/Desktop/VoxML-Library"
++        default_path = str(home / "VoxML-Library")
+         logger.warning(
+             f"Could not find VoxSigil library, using default: {default_path}"
+         )
+diff --git a/services/memory_service_connector.py b/services/memory_service_connector.py
+index 5aec93e..26b672c 100644
+--- a/services/memory_service_connector.py
++++ b/services/memory_service_connector.py
+@@ -66,14 +66,14 @@ class MemoryServiceConnector:
+ 
+     # Public API methods
+ 
+-    def store(
+-        self,
+-        key: str,
+-        value: Any,
+-        namespace: str = None,
+-        metadata: Dict[str, Any] = None,
+-        ttl_seconds: Optional[int] = None,
+-    ) -> str:
++    def store(
++        self,
++        key: str,
++        value: Any,
++        namespace: Optional[str] = None,
++        metadata: Optional[Dict[str, Any]] = None,
++        ttl_seconds: Optional[int] = None,
++    ) -> str:
+         """
+         Store data in the memory system.
+ 
+@@ -87,14 +87,15 @@ class MemoryServiceConnector:
+         Returns:
+             Unique identifier for the stored data
+         """
+-        if self.memory_interface:
+-            return self.memory_interface.store(
+-                key, value, namespace, metadata, ttl_seconds
+-            )
++        if self.memory_interface:
++            meta = metadata or {}
++            return self.memory_interface.store(
++                key, value, namespace, meta, ttl_seconds
++            )
+         logger.error("Memory interface not initialized")
+         return ""
+ 
+-    def retrieve(self, key: str, namespace: str = None) -> Optional[Any]:
++    def retrieve(self, key: str, namespace: Optional[str] = None) -> Optional[Any]:
+         """
+         Retrieve data from the memory system.
+ 
+@@ -110,9 +111,9 @@ class MemoryServiceConnector:
+         logger.error("Memory interface not initialized")
+         return None
+ 
+-    def retrieve_similar(
+-        self, query: str, limit: int = 3, namespace: str = None
+-    ) -> List[Dict[str, Any]]:
++    def retrieve_similar(
++        self, query: str, limit: int = 3, namespace: Optional[str] = None
++    ) -> List[Dict[str, Any]]:
+         """
+         Retrieve data with similar keys from the memory system.
+ 
+-- 
+2.43.0
+
