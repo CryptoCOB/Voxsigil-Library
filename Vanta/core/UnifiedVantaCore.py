@@ -9,6 +9,7 @@ This composition approach allows for modular, maintainable integration of both
 engines while preserving their individual strengths.
 """
 
+import asyncio
 import datetime
 import logging
 import threading
@@ -280,6 +281,10 @@ class UnifiedVantaCore:
         self.registry = ComponentRegistry()
         self.event_bus = EventBus()
         self.async_bus = UnifiedAsyncBus(logger)
+        try:
+            asyncio.create_task(self.async_bus.start())
+        except Exception:
+            pass
         self._config: Dict[str, Any] = {}
 
         # --- AGENT MANAGEMENT LAYER (Step 1 of VANTA Integration Master Plan) ---
@@ -1398,7 +1403,6 @@ class UnifiedVantaCore:
 
 
 
-# --- CONVENIENCE FUNCTIONS ---
 
 
 def get_vanta_core(**kwargs) -> UnifiedVantaCore:

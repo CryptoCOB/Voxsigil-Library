@@ -1,5 +1,6 @@
 # VoxSigil Debug Log
 
+
 Detected critical bugs and structural flaws across the system.
 Each entry lists the file location, error type, and a suggested fix.
 

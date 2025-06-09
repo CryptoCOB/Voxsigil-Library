@@ -1,7 +1,7 @@
 from .base import BaseAgent
 
 
-class SleepTimeCompute(BaseAgent):
+class SleepTimeComputeAgent(BaseAgent):
     sigil = "🌒🧵🧠🜝"
     tags = ['Reflection Engine', 'Dream-State Scheduler', 'None']
     invocations = ['Sleep Compute', 'Dream consolidate']

@@ -30,6 +30,7 @@ class MessageType(Enum):
     AUDIO_TRANSCRIPTION = "audio_transcription"
     TEXT_TO_SPEECH = "text_to_speech"
     MEMORY_OPERATION = "memory_operation"
+    MEMORY_RESULT = "memory_result"
     PROCESSING_REQUEST = "processing_request"
     PROCESSING_RESPONSE = "processing_response"
     COMPONENT_STATUS = "component_status"
