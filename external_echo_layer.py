@@ -13,7 +13,8 @@ import time
 import uuid
 from typing import Any, Callable, Protocol, runtime_checkable
 
-from .vanta_core import VantaCore  # VantaCore integration
+# Use UnifiedVantaCore for all orchestration
+from .UnifiedVantaCore import UnifiedVantaCore as VantaCore  # VantaCore integration
 
 # --- Logging Setup ---
 logging.basicConfig(
