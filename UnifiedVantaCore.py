@@ -25,6 +25,37 @@ from Vanta.interfaces.supervisor_connector_interface import BaseSupervisorConnec
 
 from ..integration.vanta_supervisor import VantaSupervisor
 from .UnifiedAgentRegistry import UnifiedAgentRegistry
+from .agents import (
+    Phi,
+    Voxka,
+    Gizmo,
+    Nix,
+    Echo,
+    Oracle,
+    Astra,
+    Warden,
+    Nebula,
+    Orion,
+    Evo,
+    OrionApprentice,
+    SocraticEngine,
+    Dreamer,
+    EntropyBard,
+    CodeWeaver,
+    EchoLore,
+    MirrorWarden,
+    PulseSmith,
+    BridgeFlesh,
+    Sam,
+    Dave,
+    Carla,
+    Andy,
+    Wendy,
+    VoxAgent,
+    SDKContext,
+    SleepTimeComputeAgent,
+    NullAgent,
+)
 
 # Configure logger
 logger = logging.getLogger("unified_vanta_core")
@@ -301,7 +332,7 @@ class UnifiedVantaCore:
         self._initialize_vmb_integration()
 
         # Register core agents (Step 1 of VANTA Integration Master Plan)
-        self.query_deep_cognition_memory
+        self._initialize_core_agents()
 
         self.get_agents_by_capability = (
             self.agent_registry.get_agents_by_capability
@@ -523,6 +554,57 @@ class UnifiedVantaCore:
                 )
             except Exception as e:
                 logger.error(f"Failed to register VantaSupervisor as core agent: {e}")
+
+        # Register all defined agents from AGENTS.md
+        agent_classes = [
+            Phi,
+            Voxka,
+            Gizmo,
+            Nix,
+            Echo,
+            Oracle,
+            Astra,
+            Warden,
+            Nebula,
+            Orion,
+            Evo,
+            OrionApprentice,
+            SocraticEngine,
+            Dreamer,
+            EntropyBard,
+            CodeWeaver,
+            EchoLore,
+            MirrorWarden,
+            PulseSmith,
+            BridgeFlesh,
+            Sam,
+            Dave,
+            Carla,
+            Andy,
+            Wendy,
+            VoxAgent,
+            SDKContext,
+            SleepTimeComputeAgent,
+        ]
+
+        for cls in agent_classes:
+            try:
+                instance = cls()
+            except Exception as e:
+                logger.error(f"Failed to instantiate {cls.__name__}: {e}")
+                instance = NullAgent()
+
+            try:
+                self.agent_registry.register_agent(
+                    cls.__name__,
+                    instance,
+                    {
+                        "sigil": getattr(cls, "sigil", ""),
+                        "invocations": getattr(cls, "invocations", []),
+                    },
+                )
+            except Exception as e:
+                logger.error(f"Failed to register {cls.__name__}: {e}")
 
     # --- AGENT MANAGEMENT METHODS (Step 1 of VANTA Integration Master Plan) ---
 
