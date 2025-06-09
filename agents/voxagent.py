@@ -1,4 +1,5 @@
 from .base import BaseAgent
+from ..blt_compression_middleware import compress_outbound
 
 
 class VoxAgent(BaseAgent):
@@ -17,3 +18,12 @@ class VoxAgent(BaseAgent):
     def bind_echo_routes(self):
         # Optional: connect signals to/from UnifiedAsyncBus
         pass
+
+    def __init__(self, vanta_core=None):
+        super().__init__(vanta_core)
+        self.outbox: list[str] = []
+
+    @compress_outbound
+    def send(self, message: str) -> None:
+        """Send a message to the outbox with BLT compression."""
+        self.outbox.append(message)
