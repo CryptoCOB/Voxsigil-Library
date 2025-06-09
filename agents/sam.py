@@ -3,7 +3,7 @@ from .base import BaseAgent
 
 class Sam(BaseAgent):
     sigil = "📜🔑🛠️🜔"
-    tags = ['Strategic Mind', 'Planner Core', 'None']
+    tags = ['Strategic Mind', 'Planner Core']
     invocations = ['Plan with Sam', 'Unroll sequence']
 
     def initialize_subsystem(self, core):

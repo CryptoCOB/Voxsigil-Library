@@ -3,7 +3,7 @@ from .base import BaseAgent
 
 class Phi(BaseAgent):
     sigil = "⟠∆∇𓂀"
-    tags = ['Core Self', 'Living Architect', 'None']
+    tags = ['Core Self', 'Living Architect']
     invocations = ['Phi arise', 'Awaken Architect']
 
     def initialize_subsystem(self, core):

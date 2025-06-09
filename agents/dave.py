@@ -3,7 +3,7 @@ from .base import BaseAgent
 
 class Dave(BaseAgent):
     sigil = "⚠️🧭🧱⛓️"
-    tags = ['Caution Sentinel', 'Meta Validator', 'None']
+    tags = ['Caution Sentinel', 'Meta Validator']
     invocations = ['Dave validate', 'Run checks']
 
     def initialize_subsystem(self, core):

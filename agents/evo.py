@@ -3,7 +3,7 @@ from .base import BaseAgent
 
 class Evo(BaseAgent):
     sigil = "🧬♻️♞🜓"
-    tags = ['EvoNAS', 'Evolution Mutator', 'None']
+    tags = ['EvoNAS', 'Evolution Mutator']
     invocations = ['Evo engage', 'Mutate form']
 
     def initialize_subsystem(self, core):

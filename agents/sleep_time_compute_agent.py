@@ -3,7 +3,7 @@ from .base import BaseAgent
 
 class SleepTimeComputeAgent(BaseAgent):
     sigil = "🌒🧵🧠🜝"
-    tags = ['Reflection Engine', 'Dream-State Scheduler', 'None']
+    tags = ['Reflection Engine', 'Dream-State Scheduler']
     invocations = ['Sleep Compute', 'Dream consolidate']
 
     def initialize_subsystem(self, core):

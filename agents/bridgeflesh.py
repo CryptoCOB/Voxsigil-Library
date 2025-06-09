@@ -3,7 +3,7 @@ from .base import BaseAgent
 
 class BridgeFlesh(BaseAgent):
     sigil = "🧩🎯🜂🜁"
-    tags = ['Connector', 'Integration Orchestrator', 'None']
+    tags = ['Connector', 'Integration Orchestrator']
     invocations = ['Link Bridge', 'Fuse layers']
 
     def initialize_subsystem(self, core):

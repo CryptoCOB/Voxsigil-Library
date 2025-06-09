@@ -3,7 +3,7 @@ from .base import BaseAgent
 
 class CodeWeaver(BaseAgent):
     sigil = "⟡🜛⛭🜨"
-    tags = ['Synthesizer', 'Logic Constructor', 'None']
+    tags = ['Synthesizer', 'Logic Constructor']
     invocations = ['Weave Code', 'Forge logic']
 
     def initialize_subsystem(self, core):

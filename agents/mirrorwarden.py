@@ -3,7 +3,7 @@ from .base import BaseAgent
 
 class MirrorWarden(BaseAgent):
     sigil = "⚛️🜂🜍🝕"
-    tags = ['Reflected Guard', 'Safeguard Mirror', 'None']
+    tags = ['Reflected Guard', 'Safeguard Mirror']
     invocations = ['Check Mirror', 'Guard reflections']
 
     def initialize_subsystem(self, core):

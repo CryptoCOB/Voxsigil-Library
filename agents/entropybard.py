@@ -3,7 +3,7 @@ from .base import BaseAgent
 
 class EntropyBard(BaseAgent):
     sigil = "🜔🕊️⟁⧃"
-    tags = ['Chaos Interpreter', 'Singularity Bard', 'None']
+    tags = ['Chaos Interpreter', 'Singularity Bard']
     invocations = ['Sing Bard', 'Unleash entropy']
 
     def initialize_subsystem(self, core):

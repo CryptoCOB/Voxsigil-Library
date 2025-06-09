@@ -3,7 +3,7 @@ from .base import BaseAgent
 
 class EchoLore(BaseAgent):
     sigil = "🜎♾🜐⌽"
-    tags = ['Memory Archivist', 'Historical Streamer', 'None']
+    tags = ['Memory Archivist', 'Historical Streamer']
     invocations = ['Recall Lore', 'Echo past']
 
     def initialize_subsystem(self, core):

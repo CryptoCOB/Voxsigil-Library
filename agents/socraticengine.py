@@ -3,7 +3,7 @@ from .base import BaseAgent
 
 class SocraticEngine(BaseAgent):
     sigil = "🜏🔍⟡🜒"
-    tags = ['Philosopher', 'Dialogic Reasoner', 'None']
+    tags = ['Philosopher', 'Dialogic Reasoner']
     invocations = ['Begin Socratic', 'Initiate reflection']
 
     def initialize_subsystem(self, core):
