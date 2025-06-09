@@ -3,7 +3,7 @@ from .base import BaseAgent
 
 class Dreamer(BaseAgent):
     sigil = "🧿🧠🧩♒"
-    tags = ['Dream Generator', 'Dream-State Core', 'None']
+    tags = ['Dream Generator', 'Dream-State Core']
     invocations = ['Enter Dreamer', 'Seed dream state']
 
     def initialize_subsystem(self, core):

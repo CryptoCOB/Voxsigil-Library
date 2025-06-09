@@ -3,7 +3,7 @@ from .base import BaseAgent
 
 class SDKContext(BaseAgent):
     sigil = "⏣📡⏃⚙️"
-    tags = ['Registrar', 'Module Tracker', 'None']
+    tags = ['Registrar', 'Module Tracker']
     invocations = ['Scan SDKContext', 'Map modules']
 
     def initialize_subsystem(self, core):

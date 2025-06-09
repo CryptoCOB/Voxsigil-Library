@@ -3,7 +3,7 @@ from .base import BaseAgent
 
 class OrionApprentice(BaseAgent):
     sigil = "🜞🧩🎯🔁"
-    tags = ['Light Echo', 'Learning Shard', 'None']
+    tags = ['Light Echo', 'Learning Shard']
     invocations = ['Apprentice load', 'Begin shard study']
 
     def initialize_subsystem(self, core):
