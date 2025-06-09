@@ -30,6 +30,7 @@ from .wendy import Wendy
 
 from .voxagent import VoxAgent
 from .sdkcontext import SDKContext
+from .holo_mesh import HoloMesh
 
 from .sleep_time_compute_agent import SleepTimeComputeAgent
 from .sleep_time_compute_agent import SleepTimeCompute
@@ -64,6 +65,7 @@ __all__ = [
     "Wendy",
     "VoxAgent",
     "SDKContext",
+    "HoloMesh",
     "SleepTimeComputeAgent",
     "SleepTimeCompute",
 ]
