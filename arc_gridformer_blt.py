@@ -221,18 +221,12 @@ except Exception as e:
 # These represent your actual VoxSigil components.
 # Ensure they are robust, efficient, and well-tested.
 
-# Import the canonical SigilPatchEncoder implementation directly from blt_encoder
 
+# Import the canonical SigilPatchEncoder implementation from the BLT package
 try:
-    # Try relative import first (when imported as part of BLT package)
-    from .blt_encoder import SigilPatchEncoder
-except ImportError:
-    try:
-        # Try absolute import if relative fails
-        from BLT.blt_encoder import SigilPatchEncoder
-    except ImportError:
-        # Final fallback for direct script execution
-        from blt_encoder import SigilPatchEncoder
+    from BLT import SigilPatchEncoder
+except ImportError:  # Final fallback (should not happen under normal setup)
+    from BLT import SigilPatchEncoder
 
 
 # Move MockEmbeddingModel to top-level to avoid multiprocessing pickling issues
