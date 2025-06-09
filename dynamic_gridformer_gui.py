@@ -158,18 +158,39 @@ class DynamicGridFormerGUI:
                 self.model_loader, self.data_loader
             )
         else:
-            # Create a placeholder inference engine
-            class PlaceholderInference:
-                def __init__(self, *args):
-                    pass
+            # Basic fallback inference engine when GridFormerInference is absent
+            class BasicInference:
+                """Minimal inference engine that calls the model directly."""
 
-                def run_inference(self, *args):
-                    return None
+                def __init__(self):
+                    self.model = None
 
-                def set_model(self, *args):
-                    pass
+                def run_inference(self, data, model=None, options=None):
+                    model = model or self.model
+                    results = []
+                    for sample in data:
+                        if model is None:
+                            results.append(None)
+                            continue
+                        if hasattr(model, "predict"):
+                            try:
+                                results.append(model.predict(sample))
+                                continue
+                            except Exception:
+                                pass
+                        if callable(model):
+                            try:
+                                results.append(model(sample))
+                            except Exception:
+                                results.append(None)
+                        else:
+                            results.append(None)
+                    return results
 
-            self.inference_engine = PlaceholderInference()
+                def set_model(self, model):
+                    self.model = model
+
+            self.inference_engine = BasicInference()
         self.grid_visualizer = GridVisualizer()
         self.perf_visualizer = PerformanceVisualizer()
         self.submission_formatter = SubmissionFormatter()
@@ -315,10 +336,25 @@ class DynamicGridFormerGUI:
     def _setup_training_tab(self, parent):
         """Set up the Training tab."""
         # Create a training interface with VoxSigil integration
+
+        def training_callback(data, config):
+            mode = getattr(config, "mode", getattr(config, "training_mode", "Sync"))
+            if (
+                mode == "Async"
+                and self.vanta_integration is not None
+                and VANTA_INTEGRATION_AVAILABLE
+            ):
+                return self._start_async_training_job(data, config)
+            else:
+                self._train_model(data, vars(config) if hasattr(config, "__dict__") else config)
+                job = type("Job", (), {"job_id": "sync", "status": "completed"})()
+                return job
+
         self.training_interface = VoxSigilTrainingInterface(
             parent,
             self.data_loader,
-            self._start_async_training_job,
+            training_callback,
+
             self._save_model,
         )
         if hasattr(self, "voxsigil_integration") and self.voxsigil_integration:

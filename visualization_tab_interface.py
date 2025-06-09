@@ -544,11 +544,48 @@ Failed Tests: {zero_scores} ({zero_scores / len(accuracies) * 100:.1f}%)"""
         self.canvas.draw()
 
     def analyze_predictions(self):
-        """Analyze prediction patterns"""
-        messagebox.showinfo(
-            "Feature Coming Soon",
-            "Advanced prediction analysis will be available in a future update.",
-        )
+        """Compute a basic confusion matrix for loaded predictions"""
+        if (
+            not hasattr(self.parent_gui, "testing_interface")
+            or not self.parent_gui.testing_interface.predictions
+        ):
+            messagebox.showwarning(
+                "No Predictions", "Run inference first to generate predictions."
+            )
+            return
+
+        data = self.parent_gui.testing_interface.test_data
+        preds = self.parent_gui.testing_interface.predictions
+        if not data or not preds:
+            messagebox.showwarning("No Data", "Unable to analyze without data")
+            return
+
+        try:
+            import numpy as np
+            from sklearn.metrics import confusion_matrix
+
+            y_true = [d["label"] if isinstance(d, dict) else d[1] for d in data]
+            y_pred = preds
+            labels = sorted(set(y_true) | set(y_pred))
+            cm = confusion_matrix(y_true, y_pred, labels=labels)
+
+            self.figure.clear()
+            ax = self.figure.add_subplot(111)
+            im = ax.imshow(cm, cmap="Blues")
+            ax.set_xlabel("Predicted")
+            ax.set_ylabel("True")
+            ax.set_xticks(range(len(labels)))
+            ax.set_xticklabels(labels, rotation=45)
+            ax.set_yticks(range(len(labels)))
+            ax.set_yticklabels(labels)
+            for i in range(cm.shape[0]):
+                for j in range(cm.shape[1]):
+                    ax.text(j, i, int(cm[i, j]), ha="center", va="center")
+            self.figure.colorbar(im)
+            self.figure.tight_layout()
+            self.canvas.draw()
+        except Exception as e:
+            messagebox.showerror("Analysis Error", str(e))
 
     def clear_display(self):
         """Clear the visualization display"""

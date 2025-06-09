@@ -30,25 +30,50 @@ except ImportError:
     VANTA_AVAILABLE = False
     logger.warning("VantaCore AsyncTrainingEngine not available - using fallback mode")
 
-    # Create placeholder classes for documentation/type hints
-    class AsyncTrainingEngine:
-        def __init__(self, *args, **kwargs):
-            pass
-
-        def submit_job(self, *args, **kwargs):
-            return None
-
-        def get_job_status(self, *args, **kwargs):
-            return {"status": "unavailable"}
-
     class TrainingConfig:
-        def __init__(self, *args, **kwargs):
-            pass
+        """Simple configuration used by the fallback training engine."""
+
+        def __init__(self, **kwargs):
+            self.max_epochs = kwargs.get("max_epochs", 1)
+            self.batch_size = kwargs.get("batch_size", 1)
+            self.learning_rate = kwargs.get("learning_rate", 1e-4)
+            self.device = kwargs.get("device", "cpu")
+            self.mixed_precision = kwargs.get("mixed_precision", False)
+            self.gradient_accumulation_steps = kwargs.get(
+                "gradient_accumulation_steps", 1
+            )
 
     class TrainingJob:
-        def __init__(self, *args, **kwargs):
-            self.job_id = "placeholder"
-            self.status = "unavailable"
+        """Simple asynchronous job wrapper."""
+
+        def __init__(self, train_func):
+            self.job_id = f"local_{int(time.time())}"
+            self.status = "queued"
+            self._thread = threading.Thread(target=self._run, daemon=True)
+            self._train_func = train_func
+
+        def _run(self):
+            try:
+                self.status = "running"
+                self._train_func()
+                self.status = "completed"
+            except Exception as e:
+                self.status = "failed"
+                logger.error(f"Training job failed: {e}")
+
+        def start(self):
+            self._thread.start()
+
+    class AsyncTrainingEngine:
+        """Fallback async engine running training in a background thread."""
+
+        def submit_job(self, train_func, *_, **__):
+            job = TrainingJob(train_func)
+            job.start()
+            return job
+
+        def get_job_status(self, job):
+            return {"status": job.status}
 
 
 class VoxSigilTrainingInterface:
@@ -533,40 +558,22 @@ class VoxSigilTrainingInterface:
             self._add_to_log("No training callback available")
 
     def _run_sync_training(self):
-        """Run training synchronously (fallback mode)"""
-        epochs = self.training_config["epochs"]
+        """Run training synchronously using the provided callback"""
+        def train_func():
+            if self.train_callback:
+                self.train_callback(self.training_data, self.training_config)
 
-        for epoch in range(epochs):
-            if self.stop_requested:
-                break
+        if not VANTA_AVAILABLE:
+            job = TrainingJob(train_func)
+            job.start()
+            while job.status == "running" and not self.stop_requested:
+                time.sleep(0.5)
+            status = job.status
+        else:
+            train_func()
+            status = "completed"
 
-            # Update epoch display
-            self.epoch_var.set(f"{epoch + 1}/{epochs}")
-
-            # Simulate training steps
-            steps = 10
-            for step in range(steps):
-                if self.stop_requested:
-                    break
-
-                # Update progress
-                progress = (epoch * steps + step + 1) / (epochs * steps) * 100
-                self.progress_var.set(progress)
-
-                # Simulate metrics
-                loss = 1.0 - progress / 200
-                self.loss_var.set(f"{loss:.4f}")
-
-                accuracy = min(progress / 100 + 0.2, 0.99)
-                self.accuracy_var.set(f"{accuracy:.2%}")
-
-                # Log step
-                self._add_to_log(
-                    f"Epoch {epoch + 1}, Step {step + 1}: Loss={loss:.4f}, Accuracy={accuracy:.2%}"
-                )
-
-                # Simulate computation time
-                time.sleep(0.2)
+        self._add_to_log(f"Training job finished with status: {status}")
 
     def _monitor_progress(self):
         """Monitor training progress and update UI"""
