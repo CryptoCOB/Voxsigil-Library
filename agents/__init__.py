@@ -32,6 +32,10 @@ from .voxagent import VoxAgent
 from .sdkcontext import SDKContext
 from .holo_mesh import HoloMesh
 
+# 🧠 Codex BugPatch - Vanta Phase @2025-06-09
+# SleepTimeCompute is an alias to SleepTimeComputeAgent. Having both exported
+# may lead to duplicate agent entries if not handled. Kept for manifest
+# compatibility.
 from .sleep_time_compute_agent import SleepTimeComputeAgent
 from .sleep_time_compute_agent import SleepTimeCompute
 
@@ -69,3 +73,5 @@ __all__ = [
     "SleepTimeComputeAgent",
     "SleepTimeCompute",
 ]
+# 🧠 Codex BugPatch - Vanta Phase @2025-06-09
+# Ensure agent lists do not register duplicates in UnifiedVantaCore

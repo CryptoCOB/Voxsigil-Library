@@ -29,7 +29,10 @@ from .UnifiedAgentRegistry import UnifiedAgentRegistry
 
 from .UnifiedAsyncBus import UnifiedAsyncBus
 
-from .agents import (
+# 🧠 Codex BugPatch - Vanta Phase @2025-06-09
+# Import agents from the top-level package rather than a non-existent
+# Vanta.core.agents module.
+from agents import (
     Phi,
     Voxka,
     Gizmo,
