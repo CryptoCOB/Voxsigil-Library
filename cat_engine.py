@@ -6,6 +6,8 @@ This version uses VantaCore for basic orchestration and manages its own
 specialized cognitive components via dependency injection or internal defaults.
 """
 
+# pylint: disable=import-error
+
 import asyncio  # For async tasks
 import json
 import logging
@@ -154,21 +156,60 @@ class DefaultVantaMemoryCluster(MemoryClusterInterface):
         return f"evt_{len(self._mem) - 1}"
 
     def search_by_modality(self, modality: str, limit: int = 10):
-        return []  # Basic stub
+        results = [
+            item
+            for item in reversed(self._mem)
+            if (
+                (isinstance(item, dict) and item.get("et") == modality)
+                or (
+                    isinstance(item, dict)
+                    and isinstance(item.get("m"), dict)
+                    and item["m"].get("modality") == modality
+                )
+            )
+        ]
+        return results[:limit]
 
     def search(self, q: str, mf: dict[str, Any] | None = None, limit: int = 10):
-        return []  # Basic stub
+        q_lower = q.lower()
+        results = []
+        for item in reversed(self._mem):
+            text = ""
+            if "d" in item:
+                text = str(item["d"])
+            elif "evt" in item:
+                text = str(item["evt"])
+            if q_lower in text.lower():
+                if mf:
+                    meta = item.get("m", {})
+                    if all(meta.get(k) == v for k, v in mf.items()):
+                        results.append(item)
+                else:
+                    results.append(item)
+            if len(results) >= limit:
+                break
+        return results
 
     def embed_text(self, t: str):
-        return [random.random() for _ in range(128)]  # Basic stub
+        # Simple deterministic embedding based on character codes
+        vec = [0.0] * 16
+        for i, ch in enumerate(t.encode("utf-8")):
+            vec[i % 16] += ch / 255.0
+        return vec
 
     def get_beliefs(self):
-        return []  # Basic stub, beliefs likely separate
+        beliefs = [
+            item["evt"]
+            for item in self._mem
+            if item.get("et") == "belief" and "evt" in item
+        ]
+        return beliefs
 
 
 class DefaultVantaBeliefRegistry(BeliefRegistryInterface):
     def __init__(self, config: dict[str, Any] | None = None):
         self._b: dict = {}
+        self._contradictions: list[dict[str, Any]] = []
         logger.info("DefaultVantaBeliefRegistry (in-memory) active.")
 
     def get_active_beliefs(self):
@@ -179,6 +220,7 @@ class DefaultVantaBeliefRegistry(BeliefRegistryInterface):
             self._b[bid]["confidence"] = nc
 
     def add_contradiction(self, cd: dict[str, Any]):
+        self._contradictions.append(cd)
         logger.debug(f"DefaultBelief: Contradiction added {cd}")
 
     def add_belief(self, s: str, c: float, bid: str | None = None):
@@ -188,6 +230,9 @@ class DefaultVantaBeliefRegistry(BeliefRegistryInterface):
 
     def record_contradiction(self, id1: str, id2: str, type_str: str):
         self.add_contradiction({"ids": [id1, id2], "type": type_str})
+
+    def get_contradictions_for(self, belief_id: str) -> list[dict[str, Any]]:
+        return [c for c in self._contradictions if belief_id in c.get("ids", [])]
 
 
 class DefaultVantaStateProvider(StateProviderInterface):  # Was Omega3
@@ -221,7 +266,14 @@ class DefaultVantaMetaLearner(MetaLearnerInterface):
         return self._h
 
     def update_heuristic(self, hid: str, u: dict[str, Any]):
-        pass  # Stub
+        for h in self._h:
+            if isinstance(h, dict) and h.get("id") == hid:
+                h.update(u)
+                return
+        logger.warning(f"Heuristic {hid} not found; adding new one")
+        new_h = {"id": hid}
+        new_h.update(u)
+        self._h.append(new_h)
 
     def add_heuristic(self, hd: dict[str, Any]):
         self._h.append(hd)
@@ -795,7 +847,13 @@ class CATEngine:
         )
 
     def _belief_is_contradicted(self, b: dict[str, Any]) -> bool:
-        return False  # Stub: requires graph
+        if not isinstance(b, dict) or "id" not in b:
+            return False
+        b_id = b["id"]
+        contradictions = []
+        if hasattr(self.beliefs, "get_contradictions_for"):
+            contradictions = self.beliefs.get_contradictions_for(b_id)
+        return len(contradictions) > 0
 
     def _update_belief_confidence(self, bid: str, nc: float):
         self.beliefs.update_belief_confidence(bid, nc)
