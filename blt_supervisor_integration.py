@@ -671,7 +671,9 @@ class TinyLlamaIntegration:
 
         except Exception as e:
             logger.error(f"Error creating supervisor: {e}")
-            return None    def _create_tinyllama_interface(self):
+            return None
+
+    def _create_tinyllama_interface(self):
         """
         Create a TinyLlama LLM interface for the supervisor.
 

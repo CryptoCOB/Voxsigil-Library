@@ -180,6 +180,7 @@ class BasicGridFormer(nn.Module):
         logits = logits.view(batch_size, height, width, -1)
         
         return logits
+'''
 
 def load_basic_gridformer(model_path: str):
     """Load a basic GridFormer model from checkpoint"""
@@ -204,7 +205,8 @@ def generate_enhanced_gridformer_class(analysis: Dict[str, Any]) -> str:
     config = analysis.get("config", {})
     hidden_dim = config.get("hidden_dim", 256)
     num_layers = config.get("num_layers", 6)
-    return f"""
+
+    template = f"""
 class EnhancedGridFormer(nn.Module):
     def __init__(self):
         super().__init__()
@@ -214,6 +216,7 @@ class EnhancedGridFormer(nn.Module):
     def forward(self, x):
         return x
 """
+    return template
 
 
 def main():

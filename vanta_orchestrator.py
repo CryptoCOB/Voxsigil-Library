@@ -1217,7 +1217,8 @@ def run_diagnostic():
         # Check if real implementation is being used
         using_real = (
             hasattr(llm_interface, "real_llm") and llm_interface.real_llm is not None
-        )        real_type = type(llm_interface.real_llm).__name__ if using_real else "None"
+        )
+        real_type = type(llm_interface.real_llm).__name__ if using_real else "None"
         print(
             f"Initialized ({'real' if using_real else 'mock'} implementation - {real_type})"
         )
