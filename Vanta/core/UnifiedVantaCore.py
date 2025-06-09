@@ -58,6 +58,9 @@ from .agents import (
     VoxAgent,
     SDKContext,
     SleepTimeComputeAgent,
+    HoloMesh,
+    HOLOMeshConfig,
+    HOLOAgentConfig,
     NullAgent,
 )
 
@@ -353,6 +356,14 @@ class UnifiedVantaCore:
 
         # Map subsystems to guardian agents (Step 3 of VANTA Integration Master Plan)
         self._map_subsystems_to_guardians()
+
+        # Initialize HOLO mesh runtime loader
+        try:
+            holo_cfg = HOLOMeshConfig(agents={})
+            self.holo_mesh = HoloMesh(holo_cfg, agent_registry=self.registry)
+        except Exception as e:
+            logger.error(f"Failed to initialize HOLO mesh: {e}")
+            self.holo_mesh = None
 
 
         self.get_agents_by_capability = (

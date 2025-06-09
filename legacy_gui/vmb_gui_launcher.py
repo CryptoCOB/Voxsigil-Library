@@ -363,6 +363,34 @@ class VMBGUIIntegration:
                 bd=1,
             )
             vanta_agents_btn.pack(side=tk.LEFT, padx=5)
+            # Button to run HOLO Mesh
+            holo_command = (
+                self.vanta_core.holo_mesh.execute_all
+                if self.vanta_core and getattr(self.vanta_core, "holo_mesh", None)
+                else lambda: None
+            )
+            holo_btn = tk.Button(
+                btn_frame,
+                text="🕸 Run HOLO Mesh",
+                command=holo_command,
+                bg="#8e44ad",
+                fg="white",
+                font=("Consolas", 9, "bold"),
+                relief=tk.RAISED,
+                bd=1,
+            )
+            holo_btn.pack(side=tk.LEFT, padx=5)
+            mesh_map_btn = tk.Button(
+                btn_frame,
+                text="🗺 Mesh Map",
+                command=self._on_show_holo_mesh_map,
+                bg="#34495e",
+                fg="white",
+                font=("Consolas", 9, "bold"),
+                relief=tk.RAISED,
+                bd=1,
+            )
+            mesh_map_btn.pack(side=tk.LEFT, padx=5)
 
     def _on_execute_vmb_task(self):
         """Handle VMB task execution."""
@@ -509,6 +537,19 @@ VantaCore Manager: {"✅ Initialized" if self.vanta_manager else "❌ Not initia
         except Exception as e:
             logger.error(f"Error listing agents from UnifiedVantaCore: {e}")
             messagebox.showerror("Error", f"Failed to list agents: {e}")
+
+    def _on_show_holo_mesh_map(self):
+        """Display the HOLO mesh graph file if available."""
+        try:
+            path = Path("agent_graph.json")
+            if not path.exists():
+                messagebox.showinfo("Mesh Map", "agent_graph.json not found")
+                return
+            content = path.read_text()
+            messagebox.showinfo("Mesh Map", content)
+        except Exception as e:
+            logger.error(f"Failed to load mesh map: {e}")
+            messagebox.showerror("Error", f"Failed to load mesh map: {e}")
 
     async def run(self):
         """Main run method - initializes and starts the complete system."""
