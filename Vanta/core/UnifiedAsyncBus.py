@@ -115,7 +115,11 @@ class UnifiedAsyncBus:
 
         self.running = False
         if self.processing_task:
-            await self.processing_task
+            self.processing_task.cancel()
+            try:
+                await self.processing_task
+            except asyncio.CancelledError:
+                pass
             self.processing_task = None
 
         self.logger.info("AsyncBus message processing stopped")

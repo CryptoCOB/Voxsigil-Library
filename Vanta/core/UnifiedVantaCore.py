@@ -204,11 +204,18 @@ class EventBus:
             self._event_stats[event_type] += 1
 
             # Notify subscribers
-            for callback, priority in self._subscribers[event_type]:
+            subscribers = self._subscribers[event_type]
+            if not subscribers:
+                logger.debug(
+                    f"No subscribers for event '{event_type}'"
+                )
+            for callback, priority in subscribers:
                 try:
                     callback(event)
                 except Exception as e:
-                    logger.error(f"Error in event callback for '{event_type}': {e}")
+                    logger.error(
+                        f"Error in event callback for '{event_type}': {e}"
+                    )
 
     def get_event_stats(self) -> Dict[str, Any]:
         """Get event statistics."""
@@ -283,8 +290,8 @@ class UnifiedVantaCore:
         self.async_bus = UnifiedAsyncBus(logger)
         try:
             asyncio.create_task(self.async_bus.start())
-        except Exception:
-            pass
+        except Exception as e:
+            logger.error(f"Failed to start async bus: {e}")
         self._config: Dict[str, Any] = {}
 
         # --- AGENT MANAGEMENT LAYER (Step 1 of VANTA Integration Master Plan) ---
@@ -1320,7 +1327,14 @@ class UnifiedVantaCore:
             },
         )
 
-        # Cleanup would go here
+        # Stop async bus if running
+        if hasattr(self, "async_bus") and self.async_bus.running:
+            try:
+                asyncio.run(self.async_bus.stop())
+            except Exception as e:
+                logger.error(f"Failed to stop async bus during shutdown: {e}")
+
+        # Additional cleanup would go here
         logger.info("UnifiedVantaCore shutdown complete")
 
     def _initialize_speech_integration(self) -> None:

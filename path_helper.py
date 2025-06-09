@@ -80,7 +80,7 @@ def setup_voxsigil_component_paths():
         "Vanta.interfaces": project_root / "Vanta" / "interfaces",
         "ART": project_root / "ART",
         "BLT": project_root / "BLT",
-        "Voxsigil_Library": project_root / "Voxsigil_Library",
+        "Voxsigil-Library": project_root / "Voxsigil-Library",
         "tools": project_root / "tools",
         "utils": project_root / "utils",
     }

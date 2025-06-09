@@ -13,7 +13,7 @@ from pathlib import Path
 logger_llm_interface = logging.getLogger("VoxSigilSupervisor.interfaces.llm")
 
 # Attempt to import the LLM Handler
-VOXSİGİL_LLM_HANDLER_AVAILABLE = False
+VOXSIGIL_LLM_HANDLER_AVAILABLE = False
 
 # Define dummy functions for when the real ones aren't available
 def dummy_llm_chat_completion(*args, **kwargs):
@@ -32,7 +32,7 @@ try:
     from ARC.arc_llm_handler import initialize_llm_handler as initialize_llm_handler_import
     llm_chat_completion = llm_chat_completion_import
     initialize_llm_handler = initialize_llm_handler_import
-    VOXSİGİL_LLM_HANDLER_AVAILABLE = True
+    VOXSIGIL_LLM_HANDLER_AVAILABLE = True
     logger_llm_interface.info("Successfully imported LLM handler from ARC package")
 except ImportError:
     # Try direct module import
@@ -46,7 +46,7 @@ except ImportError:
                 from ARC.arc_llm_handler import initialize_llm_handler as initialize_llm_handler_import
                 llm_chat_completion = llm_chat_completion_import
                 initialize_llm_handler = initialize_llm_handler_import
-                VOXSİGİL_LLM_HANDLER_AVAILABLE = True
+                VOXSIGIL_LLM_HANDLER_AVAILABLE = True
                 logger_llm_interface.info("Successfully imported LLM handler from ARC directory")
             except ImportError as e:
                 logger_llm_interface.error(f"Failed to import from arc_llm_handler: {e}")
@@ -138,7 +138,7 @@ class SupervisorLlmInterface(BaseLlmInterface):
         self.logger = logger_llm_interface
         self.default_model_tier = default_model_tier
         self.default_temperature = 0.7
-        self.available = VOXSİGİL_LLM_HANDLER_AVAILABLE
+        self.available = VOXSIGIL_LLM_HANDLER_AVAILABLE
         
         if self.available:
             try:
