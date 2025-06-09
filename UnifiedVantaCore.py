@@ -25,6 +25,9 @@ from Vanta.interfaces.supervisor_connector_interface import BaseSupervisorConnec
 
 from ..integration.vanta_supervisor import VantaSupervisor
 from .UnifiedAgentRegistry import UnifiedAgentRegistry
+
+from .UnifiedAsyncBus import UnifiedAsyncBus
+
 from .agents import (
     Phi,
     Voxka,
@@ -276,6 +279,7 @@ class UnifiedVantaCore:
         )  # --- ORCHESTRATION LAYER (Always Available) ---
         self.registry = ComponentRegistry()
         self.event_bus = EventBus()
+        self.async_bus = UnifiedAsyncBus(logger)
         self._config: Dict[str, Any] = {}
 
         # --- AGENT MANAGEMENT LAYER (Step 1 of VANTA Integration Master Plan) ---
@@ -333,6 +337,11 @@ class UnifiedVantaCore:
 
         # Register core agents (Step 1 of VANTA Integration Master Plan)
         self._initialize_core_agents()
+
+
+        # Map subsystems to guardian agents (Step 3 of VANTA Integration Master Plan)
+        self._map_subsystems_to_guardians()
+
 
         self.get_agents_by_capability = (
             self.agent_registry.get_agents_by_capability
@@ -437,6 +446,9 @@ class UnifiedVantaCore:
         )
         self.registry.register(
             "event_bus", self.event_bus, {"description": "Core event bus"}
+        )
+        self.registry.register(
+            "async_bus", self.async_bus, {"description": "Unified async bus"}
         )
 
         if self.cognitive_enabled:
@@ -605,6 +617,35 @@ class UnifiedVantaCore:
                 )
             except Exception as e:
                 logger.error(f"Failed to register {cls.__name__}: {e}")
+
+
+    def _map_subsystems_to_guardians(self) -> None:
+        """Link key subsystems to their guardian agents (Step 3 of VANTA Integration Master Plan)."""
+        if not self.agent_registry:
+            return
+
+        mapping = {
+            "EntropyBard": "rag_interface",
+            "PulseSmith": "gridformer_connector",
+            "MirrorWarden": "meta_learner",
+            "CodeWeaver": "meta_learner",
+            "Dreamer": "art_controller",
+            "BridgeFlesh": "vmb_integration_handler",
+        }
+
+        for agent_name, component_key in mapping.items():
+            agent = self.agent_registry.get_agent(agent_name)
+            if not agent:
+                continue
+            try:
+                subsystem = self.get_component(component_key)
+                if hasattr(agent, "initialize_subsystem"):
+                    agent.initialize_subsystem(self)
+                if subsystem:
+                    setattr(agent, "subsystem", subsystem)
+            except Exception as e:
+                logger.error(f"Failed to map {agent_name} to {component_key}: {e}")
+
 
     # --- AGENT MANAGEMENT METHODS (Step 1 of VANTA Integration Master Plan) ---
 

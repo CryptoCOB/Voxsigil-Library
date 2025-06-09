@@ -11,22 +11,26 @@ from .warden import Warden
 from .nebula import Nebula
 from .orion import Orion
 from .evo import Evo
-from .orion_apprentice import OrionApprentice
-from .socratic_engine import SocraticEngine
+
+from .orionapprentice import OrionApprentice
+from .socraticengine import SocraticEngine
 from .dreamer import Dreamer
-from .entropy_bard import EntropyBard
-from .code_weaver import CodeWeaver
-from .echo_lore import EchoLore
-from .mirror_warden import MirrorWarden
-from .pulse_smith import PulseSmith
-from .bridge_flesh import BridgeFlesh
+from .entropybard import EntropyBard
+from .codeweaver import CodeWeaver
+from .echolore import EchoLore
+from .mirrorwarden import MirrorWarden
+from .pulsesmith import PulseSmith
+from .bridgeflesh import BridgeFlesh
+
 from .sam import Sam
 from .dave import Dave
 from .carla import Carla
 from .andy import Andy
 from .wendy import Wendy
-from .vox_agent import VoxAgent
-from .sdk_context import SDKContext
+
+from .voxagent import VoxAgent
+from .sdkcontext import SDKContext
+
 from .sleep_time_compute_agent import SleepTimeComputeAgent
 
 __all__ = [

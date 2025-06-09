@@ -4,11 +4,13 @@ This document tracks the ongoing work to integrate and validate all agents and s
 
 ## Current Status
 
-- **Implemented agents:** Only `SleepTimeCompute` has a full class definition.
-- **Registered agents:** `SleepTimeCompute` is conditionally registered in `production_config.py` and referenced in orchestrator modules. The remaining agents are not implemented or registered.
-- **Memory layer:** `EchoMemory` exists but is not connected to a dedicated `Echo` agent class.
-- **GUI triggers:** Some prototypes reference agents, but no consistent mapping exists across `launch_gui.py`, `vmb_gui_launcher.py`, or demos.
-- **Project structure:** Agent code resides in the root directory alongside unrelated modules, making imports fragile.
+
+- **Implemented agents:** Skeleton classes created for all agents and registered via `UnifiedVantaCore`.
+- **Registered agents:** All agents now registered with `UnifiedAgentRegistry` and mapped to subsystems.
+- **Memory layer:** EchoMemory available but echo binding work is ongoing via `UnifiedAsyncBus`.
+- **GUI triggers:** GUI mappings not fully wired; placeholder `on_gui_call` methods implemented for guardian agents.
+- **Project structure:** Agents moved under `agents/` package for clearer imports.
+
 
 ## Phase 1 – Agent Class Definitions
 
@@ -47,6 +49,7 @@ Assign each major subsystem a guardian agent:
 - **VMB** → `BridgeFlesh`
 
 Each guardian implements `initialize_subsystem()` to configure its component and exposes a `on_gui_call()` method for the GUI.
+
 
 ## Phase 4 – Echo Binding
 
