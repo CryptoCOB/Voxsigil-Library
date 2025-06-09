@@ -30,9 +30,16 @@ logger = logging.getLogger("VMB_GUI_Launcher")
 
 # Add project paths
 PROJECT_ROOT = Path(__file__).resolve().parent
-sys.path.insert(0, str(PROJECT_ROOT))
-sys.path.insert(0, str(PROJECT_ROOT / "GUI" / "components"))
-sys.path.insert(0, str(PROJECT_ROOT / "Vanta"))
+
+# 🧠 Codex BugPatch - Vanta Phase @2025-06-09
+def _add_sys_path(path: Path) -> None:
+    p = str(path)
+    if p not in sys.path:
+        sys.path.insert(0, p)
+
+_add_sys_path(PROJECT_ROOT)
+_add_sys_path(PROJECT_ROOT / "GUI" / "components")
+_add_sys_path(PROJECT_ROOT / "Vanta")
 
 # Import VMB system
 try:

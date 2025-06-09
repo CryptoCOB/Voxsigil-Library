@@ -29,7 +29,10 @@ from .UnifiedAgentRegistry import UnifiedAgentRegistry
 
 from .UnifiedAsyncBus import UnifiedAsyncBus
 
-from .agents import (
+# 🧠 Codex BugPatch - Vanta Phase @2025-06-09
+# Import agents from the top-level package rather than a non-existent
+# Vanta.core.agents module.
+from agents import (
     Phi,
     Voxka,
     Gizmo,
@@ -287,7 +290,7 @@ class UnifiedVantaCore:
         )  # --- ORCHESTRATION LAYER (Always Available) ---
         self.registry = ComponentRegistry()
         self.event_bus = EventBus()
-        self.async_bus = UnifiedAsyncBus(logger)
+        self.async_bus = UnifiedAsyncBus(logger, blt_encoder)
         try:
             asyncio.create_task(self.async_bus.start())
         except Exception as e:
