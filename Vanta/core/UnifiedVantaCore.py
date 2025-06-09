@@ -293,7 +293,7 @@ class UnifiedVantaCore:
         )  # --- ORCHESTRATION LAYER (Always Available) ---
         self.registry = ComponentRegistry()
         self.event_bus = EventBus()
-        self.async_bus = UnifiedAsyncBus(logger)
+        self.async_bus = UnifiedAsyncBus(logger, blt_encoder)
         try:
             asyncio.create_task(self.async_bus.start())
         except Exception as e:

@@ -14,6 +14,8 @@ import time
 from enum import Enum
 from typing import Any, Callable, Dict, List, Optional, Set
 
+from Vanta.interfaces.blt_encoder_interface import BaseBLTEncoder
+
 
 class MessagePriority(Enum):
     """Priority levels for messages in the async bus."""
@@ -87,9 +89,10 @@ class UnifiedAsyncBus:
     and priority-based processing.
     """
 
-    def __init__(self, logger: Optional[logging.Logger] = None):
-        """Initialize the async bus with optional logger."""
+    def __init__(self, logger: Optional[logging.Logger] = None, blt_encoder: Optional[BaseBLTEncoder] = None):
+        """Initialize the async bus with optional logger and BLT encoder."""
         self.logger = logger or logging.getLogger("UnifiedAsyncBus")
+        self.blt_encoder = blt_encoder
         self.subscriptions: Dict[MessageType, Dict[str, Callable]] = {
             message_type: {} for message_type in MessageType
         }
@@ -187,6 +190,16 @@ class UnifiedAsyncBus:
                 f"Cannot publish: Sender '{message.sender_id}' not registered"
             )
             return False
+
+        # 🧠 Codex BugPatch - Vanta Phase @2025-06-09
+        # Compress outbound messages when a BLT encoder is available
+        if self.blt_encoder and isinstance(message.content, str):
+            try:
+                compressed = self.blt_encoder.compress(message.content)
+                if compressed:
+                    message.content = compressed
+            except Exception as e:
+                self.logger.debug(f"BLT compression failed: {e}")
 
         # Add to priority queue with priority value as first item for sorting
         await self.message_queue.put((message.priority.value, message))
