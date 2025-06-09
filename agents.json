@@ -332,6 +332,8 @@
     "invocation": "\"Sleep Compute\", \"Dream consolidate\"",
     "sub_agents": [],
     "status": "missing",
-    "dependencies": []
+    "dependencies": [
+      "agents.sleep_time_compute_agent"
+    ]
   }
 ]

@@ -17,3 +17,8 @@ class SleepTimeComputeAgent(BaseAgent):
     def bind_echo_routes(self):
         # Optional: connect signals to/from UnifiedAsyncBus
         pass
+
+class SleepTimeCompute(SleepTimeComputeAgent):
+    """Alias to match AGENTS.md name."""
+    pass
+
