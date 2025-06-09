@@ -186,7 +186,8 @@ def launch_gui_with_fallback():
     try:
         logger.info("🎨 Starting PyQt GUI main loop...")
         registry = core.agent_registry if core else None
-        pyqt_main.launch(registry)
+        event_bus = core.event_bus if core else None
+        pyqt_main.launch(registry, event_bus)
     except Exception as e:
         logger.error(f"❌ Critical error launching PyQt GUI: {e}")
         traceback.print_exc()

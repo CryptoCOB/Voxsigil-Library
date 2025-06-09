@@ -1,5 +1,7 @@
+import asyncio
 from .base import BaseAgent
 from ..blt_compression_middleware import compress_outbound
+from Vanta.core.UnifiedAsyncBus import AsyncMessage, MessageType
 
 
 class VoxAgent(BaseAgent):
@@ -27,3 +29,9 @@ class VoxAgent(BaseAgent):
     def send(self, message: str) -> None:
         """Send a message to the outbox with BLT compression."""
         self.outbox.append(message)
+        if self.vanta_core:
+            if hasattr(self.vanta_core, "async_bus"):
+                msg = AsyncMessage(MessageType.USER_INTERACTION, self.__class__.__name__, message)
+                asyncio.create_task(self.vanta_core.async_bus.publish(msg))
+            if hasattr(self.vanta_core, "send_to_mesh"):
+                self.vanta_core.send_to_mesh(self.__class__.__name__, message)
