@@ -1,0 +1,5 @@
+{
+  "issues_found": 30,
+  "issues_fixed": 15,
+  "notes": "Legacy GUI components still rely on Tkinter. Async bus shutdown and path issues corrected."
+}
