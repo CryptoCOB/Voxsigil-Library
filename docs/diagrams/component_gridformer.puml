@@ -1,0 +1,7 @@
+@startuml
+package GridFormer {
+  class PulseSmith
+  class GridFormerConnector
+}
+PulseSmith --> GridFormerConnector
+@enduml

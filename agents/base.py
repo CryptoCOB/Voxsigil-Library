@@ -61,6 +61,7 @@ class BaseAgent:
 
     def on_gui_call(self, payload=None):
         """Publish a generic user interaction message on GUI trigger."""
+        logger.info(f"GUI invoked {self.__class__.__name__} with payload={payload}")
         if self.vanta_core and hasattr(self.vanta_core, "async_bus"):
             msg = AsyncMessage(
                 MessageType.USER_INTERACTION,

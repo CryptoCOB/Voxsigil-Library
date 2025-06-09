@@ -1,0 +1,9 @@
+@startuml
+package Speech {
+  class Carla
+  class Wendy
+  class SpeechHandler
+}
+Carla --> SpeechHandler
+Wendy --> SpeechHandler
+@enduml
