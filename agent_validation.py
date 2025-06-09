@@ -38,7 +38,7 @@ for line in (AGENT_DIR / "__init__.py").read_text().splitlines():
 log_lines = []
 registered = []
 try:
-    from UnifiedVantaCore import UnifiedVantaCore
+    from Vanta.core.UnifiedVantaCore import UnifiedVantaCore
     core = UnifiedVantaCore()
     if getattr(core, "agent_registry", None):
         registered = [name for name, _ in core.agent_registry.get_all_agents()]

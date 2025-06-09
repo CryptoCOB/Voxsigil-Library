@@ -1,0 +1,9 @@
+@startuml
+!theme plain
+title GUI Tabs Overview
+
+[DynamicGridFormerGUI] --> [ModelTab]
+[DynamicGridFormerGUI] --> [PerformanceTab]
+[DynamicGridFormerGUI] --> [TestingTab]
+[DynamicGridFormerGUI] --> [VisualizationTab]
+@enduml

@@ -11,7 +11,7 @@ This document provides a high level summary of the VoxSigil / Vanta ecosystem.
 - **GridFormer Connector** – links trained GridFormer models for ARC tasks. Managed by the `PulseSmith` agent.
 - **Meta Learner** – meta-learning interface mapped to the `MirrorWarden` and `CodeWeaver` agents.
 - **Speech System** – async TTS and STT engines available via the `SpeechIntegrationHandler`. Agents `Carla` and `Wendy` expose speech control through the GUI.
-- **GUI** – `dynamic_gridformer_gui.py` launches a Tkinter interface and automatically binds buttons for each agent.
+- **GUI** – `gui/dynamic_gridformer_gui.py` launches a Tkinter interface and automatically binds buttons for each agent.
 
 ## Data Flow
 
@@ -28,4 +28,6 @@ Run `python agent_validation.py` to generate:
 - `agent_graph.json` – basic connectivity graph
 
 Log files such as `vantacore_grid_former_integration.log` and component-specific logs provide additional diagnostics during runtime.
+
+See the `docs/architecture` folder for PlantUML diagrams illustrating module relationships, data flow, GUI tabs and agent communication patterns.
 
