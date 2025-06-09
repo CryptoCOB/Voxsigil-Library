@@ -13,6 +13,10 @@ import time
 import uuid
 from typing import Any, Callable, Protocol, runtime_checkable
 
+from VoxSigilRag.voxsigil_rag_compression import RAGCompressionEngine
+
+_default_compressor = RAGCompressionEngine()
+
 # Use UnifiedVantaCore for all orchestration
 from .UnifiedVantaCore import UnifiedVantaCore as VantaCore  # VantaCore integration
 
@@ -80,7 +84,14 @@ class DefaultStubEchoStream(EchoStreamInterface):
         logger.debug("DefaultStubEchoStream: add_sink.")
 
     def emit(self, ch, txt, meta):
-        logger.debug(f"DefaultStubEchoStream: emit on {ch}: Text='{txt}', Meta={meta}")
+        if txt is not None and _default_compressor is not None:
+            try:
+                txt = _default_compressor.compress(txt) or txt
+            except Exception:
+                pass
+        logger.debug(
+            f"DefaultStubEchoStream: emit on {ch}: Text='{txt}', Meta={meta}"
+        )
 
 
 class DefaultStubMetaReflexLayer(MetaReflexLayerInterface):
@@ -112,6 +123,8 @@ class ExternalEchoLayer:
         self.active: bool = False
         self.lock = threading.RLock()
         self.output_handlers: list[Callable[[dict[str, Any]], None]] = []
+
+        self.blt = RAGCompressionEngine()
 
         self.heartbeat_thread: threading.Thread | None = None
         self.heartbeat_active: bool = False
@@ -482,8 +495,9 @@ class ExternalEchoLayer:
             target_channel = (
                 f"{self.config.echo_stream_component_name}.{channel_suffix}"
             )
+            compressed = self.blt.compress(text) if text is not None else None
             self.echo_stream.emit(
-                channel=target_channel, text=text, metadata=full_metadata
+                channel=target_channel, text=compressed, metadata=full_metadata
             )
             logger.debug(
                 f"{self.COMPONENT_NAME} emitted to configured EchoStream on channel '{target_channel}'."
