@@ -35,3 +35,7 @@ class VoxAgent(BaseAgent):
                 asyncio.create_task(self.vanta_core.async_bus.publish(msg))
             if hasattr(self.vanta_core, "send_to_mesh"):
                 self.vanta_core.send_to_mesh(self.__class__.__name__, message)
+
+    def respond(self) -> str:
+        """Return the last sent message."""
+        return self.outbox[-1] if self.outbox else ""
