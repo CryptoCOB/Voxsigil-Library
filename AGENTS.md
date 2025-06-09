@@ -61,6 +61,7 @@
 * `agents.json`: JSON export of agent definitions
 * `agent_status.log`: Full system check log
 * `agent_graph.json`: Connectivity network for visualization
+*Run `python agent_validation.py` to generate the above files.*
 * All agents must include: `sigil`, `class`, `invocation`, `status`, and `dependencies`
 
 ---

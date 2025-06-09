@@ -6,4 +6,7 @@ class SleepTimeComputeAgent(BaseAgent):
     invocations = ["Sleep Compute", "Dream consolidate"]
 
     def __init__(self, vanta_core=None):
-        self.core = SleepTimeCompute(vanta_core=vanta_core) if SleepTimeCompute else None
+        super().__init__(vanta_core)
+        self.core = (
+            SleepTimeCompute(vanta_core=vanta_core) if SleepTimeCompute else None
+        )
