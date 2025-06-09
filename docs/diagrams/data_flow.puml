@@ -1,0 +1,9 @@
+@startuml
+actor User
+User -> GUI : click agent
+GUI -> UnifiedVantaCore : invoke
+UnifiedVantaCore -> Agents : dispatch
+Agents --> Components : process
+Components --> UnifiedVantaCore : result
+UnifiedVantaCore -> GUI : update
+@enduml

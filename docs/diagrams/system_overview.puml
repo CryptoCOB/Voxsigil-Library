@@ -1,0 +1,25 @@
+@startuml
+package "Vanta" {
+  package "core" {
+    class UnifiedVantaCore
+    class UnifiedAgentRegistry
+    class UnifiedAsyncBus
+    class UnifiedMemoryInterface
+  }
+}
+package "Components" {
+  class ART
+  class "BLT-RAG" as BLTRAG
+  class GridFormer
+  class MetaLearner
+  class Speech
+}
+UnifiedVantaCore --> UnifiedAgentRegistry
+UnifiedVantaCore --> UnifiedAsyncBus
+UnifiedVantaCore --> UnifiedMemoryInterface
+UnifiedVantaCore --> ART
+UnifiedVantaCore --> BLTRAG
+UnifiedVantaCore --> GridFormer
+UnifiedVantaCore --> MetaLearner
+UnifiedVantaCore --> Speech
+@enduml

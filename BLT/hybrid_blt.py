@@ -28,8 +28,8 @@ import numpy as np
 from pydantic import Field, field_validator
 from pydantic_settings import BaseSettings
 
-from .blt_encoder import ByteLatentTransformerEncoder, SigilPatchEncoder
-from .voxsigil_rag import VoxSigilRAG
+from . import ByteLatentTransformerEncoder, SigilPatchEncoder
+from ..voxsigil_rag import VoxSigilRAG
 
 # Configure logging early
 logging.basicConfig(

@@ -1,0 +1,9 @@
+@startuml
+package BLT {
+  class EntropyBard
+  class BLTEncoder
+  class HybridMiddleware
+}
+EntropyBard --> BLTEncoder
+EntropyBard --> HybridMiddleware
+@enduml

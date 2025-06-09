@@ -181,7 +181,7 @@ class SubmissionFormatter:
 
 # Try to import BLT components
 try:
-    from BLT.blt_encoder import BLTEncoder
+    from BLT import BLTEncoder
 
     BLT_AVAILABLE = True
     debug_log("BLT components imported successfully")

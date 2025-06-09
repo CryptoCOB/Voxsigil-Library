@@ -1,0 +1,9 @@
+@startuml
+package MetaLearner {
+  class MirrorWarden
+  class CodeWeaver
+  class MetaLearnerCore
+}
+MirrorWarden --> MetaLearnerCore
+CodeWeaver --> MetaLearnerCore
+@enduml

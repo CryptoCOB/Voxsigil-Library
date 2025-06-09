@@ -1,0 +1,7 @@
+@startuml
+package ART {
+  class Dreamer
+  class ARTCore
+}
+Dreamer --> ARTCore
+@enduml
