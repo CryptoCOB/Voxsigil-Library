@@ -37,7 +37,7 @@ except ImportError:
 
 # Import VANTA components
 try:
-    from Vanta.core.vanta_core import VantaCore
+    from Vanta.core.UnifiedVantaCore import UnifiedVantaCore as VantaCore
     from Vanta.interfaces.rag_interface import BaseRagInterface
     from Vanta.interfaces.memory_interface import BaseMemoryInterface
     from Vanta.interfaces.model_manager import ModelManager

@@ -29,12 +29,8 @@ try:
         trace_event,
     )
 except ImportError:
-    # Fallback for development/testing
-    import os
-    import sys
-
-    sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "..", "Vanta"))
-    from core.vanta_core import (
+    # Local fallback for development/testing
+    from .UnifiedVantaCore import (
         generate_internal_dialogue_message,
         get_component,
         publish_event,
