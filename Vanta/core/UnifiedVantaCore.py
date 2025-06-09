@@ -567,37 +567,20 @@ class UnifiedVantaCore:
             except Exception as e:
                 logger.error(f"Failed to register VantaSupervisor as core agent: {e}")
 
-        # Register all defined agents from AGENTS.md
-        agent_classes = [
-            Phi,
-            Voxka,
-            Gizmo,
-            Nix,
-            Echo,
-            Oracle,
-            Astra,
-            Warden,
-            Nebula,
-            Orion,
-            Evo,
-            OrionApprentice,
-            SocraticEngine,
-            Dreamer,
-            EntropyBard,
-            CodeWeaver,
-            EchoLore,
-            MirrorWarden,
-            PulseSmith,
-            BridgeFlesh,
-            Sam,
-            Dave,
-            Carla,
-            Andy,
-            Wendy,
-            VoxAgent,
-            SDKContext,
-            SleepTimeComputeAgent,
-        ]
+        # Register all defined agents dynamically from agents.__all__
+        agent_classes = []
+        try:
+            from agents import __all__ as agent_names  # type: ignore
+            import agents as agent_pkg
+
+            for name in agent_names:
+                if name in {"BaseAgent", "NullAgent"}:
+                    continue
+                cls = getattr(agent_pkg, name, None)
+                if cls:
+                    agent_classes.append(cls)
+        except Exception as e:  # noqa: BLE001
+            logger.error(f"Failed to gather agent classes dynamically: {e}")
 
         for cls in agent_classes:
             try:
@@ -619,6 +602,8 @@ class UnifiedVantaCore:
                     {
                         "sigil": getattr(cls, "sigil", ""),
                         "invocations": getattr(cls, "invocations", []),
+                        "tags": getattr(cls, "tags", []),
+                        "doc": getattr(cls, "__doc__", ""),
                     },
                 )
             except Exception as e:
