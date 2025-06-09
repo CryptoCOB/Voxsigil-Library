@@ -1,8 +1,10 @@
 # enhanced_training_script.py
+"""Async Training Engine for Vanta (Enhanced & Fixed).
+
+Handles model training, fine-tuning, and learning tasks asynchronously.
 """
-Async Training Engine for Vanta (Enhanced & Fixed)
-Handles model training, fine-tuning, and learning tasks asynchronously
-"""
+
+# pylint: disable=import-error
 
 import asyncio
 import logging
@@ -14,6 +16,10 @@ from typing import Annotated, Any, Dict, List, Optional, Union
 import uuid
 
 # ML Dependencies
+
+
+from pydantic import BaseModel, Field, field_validator, model_validator
+from pydantic.types import confloat, conint
 import torch
 import torch.optim as optim
 from pydantic import BaseModel, Field, field_validator, model_validator
@@ -21,7 +27,7 @@ from pydantic.types import confloat, conint
 from torch.cuda.amp import GradScaler, autocast  # TRFE004
 from torch.utils.data import DataLoader
 from torch.utils.tensorboard import SummaryWriter  # TRFE009
-from Vanta.core.UnifiedAsyncBus import AsyncMessage, MessageType
+
 
 logger = logging.getLogger("Vanta.AsyncTraining")
 

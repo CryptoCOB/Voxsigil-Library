@@ -6,6 +6,8 @@ This version uses VantaCore for basic orchestration and manages its own
 specialized cognitive components via dependency injection or internal defaults.
 """
 
+# pylint: disable=import-error
+
 import asyncio  # For async tasks
 import json
 import logging
