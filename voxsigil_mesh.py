@@ -33,3 +33,13 @@ class VoxSigilMesh:
                     node.receive(compressed)
                 except Exception:
                     pass
+
+    # --- Convenience methods -------------------------------------------------
+
+    def broadcast(self, sender: str, message: str) -> None:
+        """Alias for transmit for backwards compatibility."""
+        self.transmit(sender, message)
+
+    def test_broadcast(self, msg: str = "⚡ TEST_SIGNAL") -> None:
+        """Emit a test signal to all registered nodes."""
+        self.broadcast("Tester", msg)

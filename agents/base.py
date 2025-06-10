@@ -2,7 +2,7 @@
 import logging
 import asyncio
 
-from ..UnifiedAsyncBus import AsyncMessage, MessageType
+from Vanta.core.UnifiedAsyncBus import AsyncMessage, MessageType
 
 
 logger = logging.getLogger(__name__)
