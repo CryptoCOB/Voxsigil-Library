@@ -8,7 +8,8 @@
     "status": "missing",
     "dependencies": [
       "agents.phi"
-    ]
+    ],
+    "stub": true
   },
   {
     "name": "Voxka",
@@ -22,7 +23,8 @@
     "status": "missing",
     "dependencies": [
       "agents.voxka"
-    ]
+    ],
+    "stub": true
   },
   {
     "name": "Gizmo",
@@ -36,7 +38,8 @@
     "status": "missing",
     "dependencies": [
       "agents.gizmo"
-    ]
+    ],
+    "stub": true
   },
   {
     "name": "Nix",
@@ -50,7 +53,8 @@
     "status": "missing",
     "dependencies": [
       "agents.nix"
-    ]
+    ],
+    "stub": true
   },
   {
     "name": "Echo",
@@ -64,7 +68,8 @@
     "status": "missing",
     "dependencies": [
       "agents.echo"
-    ]
+    ],
+    "stub": true
   },
   {
     "name": "Oracle",
@@ -78,7 +83,8 @@
     "status": "missing",
     "dependencies": [
       "agents.oracle"
-    ]
+    ],
+    "stub": true
   },
   {
     "name": "Astra",
@@ -92,7 +98,8 @@
     "status": "missing",
     "dependencies": [
       "agents.astra"
-    ]
+    ],
+    "stub": true
   },
   {
     "name": "Warden",
@@ -106,7 +113,8 @@
     "status": "missing",
     "dependencies": [
       "agents.warden"
-    ]
+    ],
+    "stub": true
   },
   {
     "name": "Nebula",
@@ -120,7 +128,8 @@
     "status": "missing",
     "dependencies": [
       "agents.nebula"
-    ]
+    ],
+    "stub": true
   },
   {
     "name": "Orion",
@@ -134,7 +143,8 @@
     "status": "missing",
     "dependencies": [
       "agents.orion"
-    ]
+    ],
+    "stub": true
   },
   {
     "name": "Evo",
@@ -145,7 +155,8 @@
     "status": "missing",
     "dependencies": [
       "agents.evo"
-    ]
+    ],
+    "stub": true
   },
   {
     "name": "OrionApprentice",
@@ -156,7 +167,8 @@
     "status": "missing",
     "dependencies": [
       "agents.orionapprentice"
-    ]
+    ],
+    "stub": true
   },
   {
     "name": "SocraticEngine",
@@ -167,7 +179,8 @@
     "status": "missing",
     "dependencies": [
       "agents.socraticengine"
-    ]
+    ],
+    "stub": true
   },
   {
     "name": "Dreamer",
@@ -178,7 +191,8 @@
     "status": "missing",
     "dependencies": [
       "agents.dreamer"
-    ]
+    ],
+    "stub": true
   },
   {
     "name": "EntropyBard",
@@ -189,7 +203,8 @@
     "status": "missing",
     "dependencies": [
       "agents.entropybard"
-    ]
+    ],
+    "stub": true
   },
   {
     "name": "CodeWeaver",
@@ -200,7 +215,8 @@
     "status": "missing",
     "dependencies": [
       "agents.codeweaver"
-    ]
+    ],
+    "stub": true
   },
   {
     "name": "EchoLore",
@@ -211,7 +227,8 @@
     "status": "missing",
     "dependencies": [
       "agents.echolore"
-    ]
+    ],
+    "stub": true
   },
   {
     "name": "MirrorWarden",
@@ -222,7 +239,8 @@
     "status": "missing",
     "dependencies": [
       "agents.mirrorwarden"
-    ]
+    ],
+    "stub": true
   },
   {
     "name": "PulseSmith",
@@ -233,7 +251,8 @@
     "status": "missing",
     "dependencies": [
       "agents.pulsesmith"
-    ]
+    ],
+    "stub": true
   },
   {
     "name": "BridgeFlesh",
@@ -244,7 +263,8 @@
     "status": "missing",
     "dependencies": [
       "agents.bridgeflesh"
-    ]
+    ],
+    "stub": true
   },
   {
     "name": "Sam",
@@ -255,7 +275,8 @@
     "status": "missing",
     "dependencies": [
       "agents.sam"
-    ]
+    ],
+    "stub": true
   },
   {
     "name": "Dave",
@@ -266,7 +287,8 @@
     "status": "missing",
     "dependencies": [
       "agents.dave"
-    ]
+    ],
+    "stub": true
   },
   {
     "name": "Carla",
@@ -277,7 +299,8 @@
     "status": "missing",
     "dependencies": [
       "agents.carla"
-    ]
+    ],
+    "stub": true
   },
   {
     "name": "Andy",
@@ -288,7 +311,8 @@
     "status": "missing",
     "dependencies": [
       "agents.andy"
-    ]
+    ],
+    "stub": true
   },
   {
     "name": "Wendy",
@@ -299,7 +323,8 @@
     "status": "missing",
     "dependencies": [
       "agents.wendy"
-    ]
+    ],
+    "stub": true
   },
   {
     "name": "VoxAgent",
@@ -312,7 +337,8 @@
     "status": "missing",
     "dependencies": [
       "agents.voxagent"
-    ]
+    ],
+    "stub": true
   },
   {
     "name": "SDKContext",
@@ -323,7 +349,8 @@
     "status": "missing",
     "dependencies": [
       "agents.sdkcontext"
-    ]
+    ],
+    "stub": true
   },
   {
     "name": "SleepTimeCompute",
@@ -334,6 +361,7 @@
     "status": "missing",
     "dependencies": [
       "agents.sleep_time_compute_agent"
-    ]
+    ],
+    "stub": false
   }
 ]

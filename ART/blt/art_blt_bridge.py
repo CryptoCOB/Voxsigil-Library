@@ -14,8 +14,10 @@ from ..art_logger import get_art_logger
 
 # Try to import BLT components - only importing what we need
 try:
-    # Only import the SigilPatchEncoder which is actually used in this module
-    from BLT.sigil_patch_encoder import SigilPatchEncoder
+    # SigilPatchEncoder now lives in the BLT package __init__ to avoid
+    # circular import issues. Import directly from BLT so the bridge can
+    # locate the class whether BLT is installed as a package or in-tree.
+    from BLT import SigilPatchEncoder
 
     # Set flag that BLT is available
     HAS_BLT = True
