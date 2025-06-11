@@ -41,35 +41,36 @@ try:
     )
 
     try:
-    from BLT.hybrid_blt import (
-        entropy_router_util,  # noqa: F401 - Import used for availability check
-    )
+        from BLT.hybrid_blt import (
+            entropy_router_util,  # noqa: F401 - Import used for availability check
+        )
 
         ENTROPY_ROUTER_AVAILABLE = True
 
-        # Create a wrapper function that matches the expected interface
+            # Create a wrapper function that matches the expected interface
         def entropy_router(entropy_score, threshold=0.3):
-            """Wrapper for entropy_router_util to match expected interface"""
-            return entropy_score > threshold
+                """Wrapper for entropy_router_util to match expected interface"""
+                return entropy_score > threshold
     except ImportError:
-        ENTROPY_ROUTER_AVAILABLE = False
+            ENTROPY_ROUTER_AVAILABLE = False
 
-        # Define a simple fallback entropy router
-        def entropy_router(entropy_score, threshold=0.3):
-            return entropy_score > threshold
+            # Define a simple fallback entropy router
+            def entropy_router(entropy_score, threshold=0.3):
+                return entropy_score > threshold
 
     BLT_AVAILABLE = True
     logger.info("Successfully imported VoxSigil BLT components")
+    
 except ImportError as e:
-    BLT_AVAILABLE = False
-    ENTROPY_ROUTER_AVAILABLE = False
+        BLT_AVAILABLE = False
+        ENTROPY_ROUTER_AVAILABLE = False
 
-    # Fallback entropy router
-    def entropy_router(entropy_score, threshold=0.3):
-        return entropy_score > threshold
+        # Fallback entropy router
+        def entropy_router(entropy_score, threshold=0.3):
+            return entropy_score > threshold
 
-    logger.error(f"Failed to import VoxSigil BLT components: {e}")
-    logger.warning("BLT middleware will not be available")
+        logger.error(f"Failed to import VoxSigil BLT components: {e}")
+        logger.warning("BLT middleware will not be available")
 
 
 class VoxSigilBLTMiddleware:
