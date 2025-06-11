@@ -22,9 +22,23 @@ import time
 from collections import deque  # Removed defaultdict as it wasn't used
 from datetime import datetime, timezone
 from enum import Enum
-from typing import Any, Callable, Optional, Union  # Added Deque
+from typing import Any, Callable, Optional, Union, Deque  # Added Deque
 
-from Vanta.core.UnifiedAsyncBus import AsyncMessage, MessageType  # add import
+# Safe imports with fallbacks
+try:
+    from Vanta.core.UnifiedAsyncBus import AsyncMessage, MessageType
+except ImportError:
+    # Fallback definitions for when Vanta core is not available
+    class AsyncMessage:
+        def __init__(self, message_type: str, data: dict, component_id: str = "sleep_time_compute"):
+            self.message_type = message_type
+            self.data = data
+            self.component_id = component_id
+    
+    class MessageType:
+        INFO = "info"
+        ERROR = "error"
+        DEBUG = "debug"
 
 # --- Logger Setup ---
 # Ensures the logger is configured. In a larger application, this might be done at the application root.

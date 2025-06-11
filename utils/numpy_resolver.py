@@ -6,7 +6,7 @@ This ensures safe importing of numpy with proper error handling for circular imp
 import logging
 import sys
 
-logger = logging.getLogger("Vanta.NumpyResolver")
+logger = logging.getLogger("Voxsigil.Utils.NumpyResolver")
 
 # Initialize placeholder values
 np = None
