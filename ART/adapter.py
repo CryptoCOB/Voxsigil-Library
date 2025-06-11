@@ -1,4 +1,3 @@
-# voxsigil_supervisor/vanta/adapter.py
 """
 Adapter module to integrate VANTA Supervisor with existing VoxSigil components.
 This handles the conversion between different interface styles and provides factory
@@ -23,9 +22,7 @@ else:
 # Import VANTA Supervisor
 # Use try-except for external imports that might not be available
 try:
-    from voxsigil_supervisor.vanta.vanta_supervisor import (
-        VantaSigilSupervisor as VANTASupervisor,
-    )
+    from Vanta.integration.vanta_supervisor import VantaSigilSupervisor
 except ImportError:
     # Define a placeholder class to prevent type errors
     class VANTASupervisor:
@@ -117,9 +114,11 @@ except ImportError:
     # Failed to import, use placeholders defined above
     pass
 
-    # Check for adaptive components
-    if importlib.util.find_spec("voxsigil_supervisor.adaptive.task_analyzer"):
-        HAS_ADAPTIVE = True  # Check for ART components
+# Check for adaptive components
+if importlib.util.find_spec("voxsigil_supervisor.adaptive.task_analyzer"):
+    HAS_ADAPTIVE = True
+
+# Check for ART components
 if importlib.util.find_spec("voxsigil_supervisor.art.art_controller"):
     try:
         from .art_manager import ARTManager as ImportedARTManager
@@ -153,8 +152,8 @@ class VANTAFactory:
         voxsigil_supervisor_instance,
         resonance_threshold: float = 0.7,
         enable_echo_harmonization: bool = True,
-        art_manager_instance: Optional[Any] = None,
-    ) -> Any:
+        art_manager_instance=None,
+    ):
         """
         Create a VANTA Supervisor from an existing VoxSigil Supervisor instance.
 
@@ -214,19 +213,19 @@ class VANTAFactory:
 
     @staticmethod
     def create_new(
-        rag_interface: BaseRagInterface,
-        llm_interface: BaseLlmInterface,
-        memory_interface: Optional[BaseMemoryInterface] = None,
-        scaffold_router: Optional[ScaffoldRouter] = None,
-        evaluation_heuristics: Optional[ResponseEvaluator] = None,
-        retry_policy: Optional[RetryPolicy] = None,
-        system_prompt: Optional[str] = None,
-        resonance_threshold: float = 0.7,
-        enable_adaptive: bool = True,
-        enable_echo_harmonization: bool = True,
-        art_manager_instance: Optional[ARTManager] = None,
-        enable_sleep_time_compute: bool = True,
-    ) -> VANTASupervisor:
+        rag_interface,
+        llm_interface,
+        memory_interface=None,
+        scaffold_router=None,
+        evaluation_heuristics=None,
+        retry_policy=None,
+        system_prompt=None,
+        resonance_threshold=0.7,
+        enable_adaptive=True,
+        enable_echo_harmonization=True,
+        art_manager_instance=None,
+        enable_sleep_time_compute=True,
+    ):
         """
         Create a new VANTA Supervisor with the specified components.
 
@@ -246,7 +245,8 @@ class VANTAFactory:
 
         Returns:
             New VANTA Supervisor instance.
-        """  # Import sleep_time_compute module if needed
+        """
+        # Import sleep_time_compute module if needed
         sleep_time_compute_instance = None
         if enable_sleep_time_compute:
             sleep_time_compute_spec = importlib.util.find_spec(
@@ -307,7 +307,7 @@ class SimpleScaffoldRouter(ScaffoldRouter):
     Maps tags to scaffold types and selects appropriate scaffolds.
     """
 
-    def __init__(self, scaffolds_mapping: Optional[dict[str, str]] = None):
+    def __init__(self, scaffolds_mapping: Optional[Dict[str, str]] = None):
         """
         Initialize the router with optional custom mapping.
 
@@ -336,7 +336,7 @@ class SimpleScaffoldRouter(ScaffoldRouter):
         }
 
     def select_scaffold(
-        self, query: str, context: Optional[dict[str, Any]] = None
+        self, query: str, context: Optional[Dict[str, Any]] = None
     ) -> str:
         """
         Select an appropriate scaffold based on query and context.
@@ -439,133 +439,132 @@ class SimpleScaffoldRouter(ScaffoldRouter):
         logger.info(f"Using default scaffold '{default_scaffold}'")
         return default_scaffold
 
-    @staticmethod
-    def orchestrate_query(
-        vanta_supervisor: "VANTASupervisor",
-        query: str,
-        context: Optional[dict[str, Any]] = None,
-    ) -> dict[str, Any]:
-        """
-        Convenience function to orchestrate a query through VANTA.
 
-        Args:
-            vanta_supervisor: VANTA Supervisor instance.
-            query: User query.
-            context: Optional context information.
+# Define a standalone function (not a method of a class)
+def orchestrate_query(
+    vanta_supervisor,
+    query: str,
+    context: Optional[Dict[str, Any]] = None,
+) -> Dict[str, Any]:
+    """
+    Convenience function to orchestrate a query through VANTA.
 
-        Returns:
-            Response and metadata.
-        """
-        # Initialize context if None
-        if context is None:
-            context = {}
+    Args:
+        vanta_supervisor: VANTA Supervisor instance.
+        query: User query.
+        context: Optional context information.
 
-        # Process query through ART if available
-        if hasattr(vanta_supervisor, "art_manager") and vanta_supervisor.art_manager:
-            try:
-                # Analyze the query using ART for pattern recognition
-                art_result = vanta_supervisor.art_manager.analyze_inputs(query)
+    Returns:
+        Response and metadata.
+    """
+    # Initialize context if None
+    if context is None:
+        context = {}
 
-                # Add ART analysis to context for scaffold selection
-                context["art_analysis"] = art_result
+    # Process query through ART if available
+    if hasattr(vanta_supervisor, "art_manager") and vanta_supervisor.art_manager:
+        try:
+            # Analyze the query using ART for pattern recognition
+            art_result = vanta_supervisor.art_manager.analyze_inputs(query)
 
-                # Log the ART analysis
-                logger.info(
-                    f"ART analysis completed: category={art_result.get('category_id', '')}, "
-                    f"resonance={art_result.get('resonance', 0):.2f}, "
-                    f"is_novel={art_result.get('is_novel_category', False)}"
-                )
-            except Exception as e:
-                logger.warning(f"ART analysis failed: {e}")
+            # Add ART analysis to context for scaffold selection
+            context["art_analysis"] = art_result
 
-        # Check if we should run memory consolidation via SleepTimeCompute
-        if (
-            hasattr(vanta_supervisor, "enable_sleep_time_compute")
-            and vanta_supervisor.enable_sleep_time_compute
-        ):
-            try:
-                # Use importlib to check for module availability
-                sleep_time_compute_module = None
+            # Log the ART analysis
+            logger.info(
+                f"ART analysis completed: category={art_result.get('category_id', '')}, "
+                f"resonance={art_result.get('resonance', 0):.2f}, "
+                f"is_novel={art_result.get('is_novel_category', False)}"
+            )
+        except Exception as e:
+            logger.warning(f"ART analysis failed: {e}")
 
-                # Try different import paths with importlib for maximum compatibility
-                for module_path in [
-                    "voxsigil_supervisor.strategies.sleep_time_compute",
-                    "..strategies.sleep_time_compute",
-                    "Voxsigil_Library.voxsigil_supervisor.strategies.sleep_time_compute",
-                ]:
-                    if importlib.util.find_spec(module_path) is not None:
-                        sleep_time_compute_module = importlib.import_module(module_path)
-                        logger.debug(f"Found SleepTimeCompute module at {module_path}")
-                        break
+    # Check if we should run memory consolidation via SleepTimeCompute
+    if (
+        hasattr(vanta_supervisor, "enable_sleep_time_compute")
+        and vanta_supervisor.enable_sleep_time_compute
+    ):
+        try:
+            # Use importlib to check for module availability
+            sleep_time_compute_module = None
 
-                if sleep_time_compute_module is None:
-                    logger.warning(
-                        "SleepTimeCompute module not found in any expected location"
-                    )
-                else:
-                    SleepTimeCompute = getattr(
-                        sleep_time_compute_module, "SleepTimeCompute"
-                    )
+            # Try different import paths with importlib for maximum compatibility
+            for module_path in [
+                "voxsigil_supervisor.strategies.sleep_time_compute",
+                "..strategies.sleep_time_compute",
+                "Voxsigil_Library.voxsigil_supervisor.strategies.sleep_time_compute",
+            ]:
+                if importlib.util.find_spec(module_path) is not None:
+                    sleep_time_compute_module = importlib.import_module(module_path)
+                    logger.debug(f"Found SleepTimeCompute module at {module_path}")
+                    break
 
-                    # Check if it's time to consolidate memories
-                    if (
-                        hasattr(vanta_supervisor, "memory_interface")
-                        and vanta_supervisor.memory_interface
-                    ):
-                        sleep_compute = SleepTimeCompute(
-                            memory_interface=vanta_supervisor.memory_interface
-                        )
-
-                        # Check if consolidation should run
-                        if sleep_compute.should_consolidate():
-                            logger.info(
-                                "Running memory consolidation via SleepTimeCompute"
-                            )
-                            sleep_compute.consolidate_memories()
-                            logger.info("Memory consolidation complete")
-            except ImportError:
+            if sleep_time_compute_module is None:
                 logger.warning(
-                    "SleepTimeCompute module not available for memory consolidation"
+                    "SleepTimeCompute module not found in any expected location"
                 )
-            except AttributeError as e:
-                logger.warning(f"Error accessing SleepTimeCompute class: {e}")
-            except Exception as e:
-                logger.warning(f"Error during memory consolidation: {e}")
+            else:
+                SleepTimeCompute = getattr(
+                    sleep_time_compute_module, "SleepTimeCompute"
+                )
 
-        # Orchestrate the thought cycle
-        result = vanta_supervisor.orchestrate_thought_cycle(query, context)
+                # Check if it's time to consolidate memories
+                if (
+                    hasattr(vanta_supervisor, "memory_interface")
+                    and vanta_supervisor.memory_interface
+                ):
+                    sleep_compute = SleepTimeCompute(
+                        memory_interface=vanta_supervisor.memory_interface
+                    )
 
-        # Create a simplified response format
-        simplified_result = {
-            "response": result["response"],
-            "sigil_count": len(result["sigils_used"])
-            if isinstance(result["sigils_used"], list)
-            else 1,
-            "scaffold": result["scaffold"],
-            "execution_time": result["execution_time"],
+                    # Check if consolidation should run
+                    if sleep_compute.should_consolidate():
+                        logger.info("Running memory consolidation via SleepTimeCompute")
+                        sleep_compute.consolidate_memories()
+                        logger.info("Memory consolidation complete")
+        except ImportError:
+            logger.warning(
+                "SleepTimeCompute module not available for memory consolidation"
+            )
+        except AttributeError as e:
+            logger.warning(f"Error accessing SleepTimeCompute class: {e}")
+        except Exception as e:
+            logger.warning(f"Error during memory consolidation: {e}")
+
+    # Orchestrate the thought cycle
+    result = vanta_supervisor.orchestrate_thought_cycle(query, context)
+
+    # Create a simplified response format
+    simplified_result = {
+        "response": result["response"],
+        "sigil_count": len(result["sigils_used"])
+        if isinstance(result["sigils_used"], list)
+        else 1,
+        "scaffold": result["scaffold"],
+        "execution_time": result["execution_time"],
+    }
+
+    # Add ART analysis to result if available
+    if "art_analysis" in context:
+        simplified_result["art_analysis"] = {
+            "category": context["art_analysis"].get("category_id", "unknown"),
+            "resonance": context["art_analysis"].get("resonance", 0),
+            "is_novel": context["art_analysis"].get("is_novel_category", False),
         }
 
-        # Add ART analysis to result if available
-        if "art_analysis" in context:
-            simplified_result["art_analysis"] = {
-                "category": context["art_analysis"].get("category_id", "unknown"),
-                "resonance": context["art_analysis"].get("resonance", 0),
-                "is_novel": context["art_analysis"].get("is_novel_category", False),
-            }
+    # Train ART on this interaction if configured
+    if (
+        hasattr(vanta_supervisor, "art_manager")
+        and vanta_supervisor.art_manager
+        and hasattr(vanta_supervisor, "enable_art_training")
+        and vanta_supervisor.enable_art_training
+    ):
+        try:
+            # Create training data from query and response
+            training_data = (query, result["response"])
+            vanta_supervisor.art_manager.train_on_batch([training_data])
+            logger.debug("ART training completed for this interaction")
+        except Exception as e:
+            logger.warning(f"ART training failed: {e}")
 
-        # Train ART on this interaction if configured
-        if (
-            hasattr(vanta_supervisor, "art_manager")
-            and vanta_supervisor.art_manager
-            and hasattr(vanta_supervisor, "enable_art_training")
-            and vanta_supervisor.enable_art_training
-        ):
-            try:
-                # Create training data from query and response
-                training_data = (query, result["response"])
-                vanta_supervisor.art_manager.train_on_batch([training_data])
-                logger.debug("ART training completed for this interaction")
-            except Exception as e:
-                logger.warning(f"ART training failed: {e}")
-
-        return simplified_result
+    return simplified_result
