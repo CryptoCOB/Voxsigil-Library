@@ -15,6 +15,9 @@ import time
 from collections import deque
 from typing import Any, Protocol, runtime_checkable
 
+# Import unified interface definitions
+from Vanta.interfaces.specialized_interfaces import ModelManagerInterface
+
 from Vanta.core.UnifiedAsyncBus import AsyncMessage, MessageType
 
 # Assuming vanta_core.py is accessible
@@ -59,13 +62,7 @@ class ProactiveIntelligenceConfig:
 
 
 # --- Interface Definitions ---
-@runtime_checkable
-class ModelManagerInterface(Protocol):  # Interface for the injected model_manager
-    def get_status(self) -> dict[str, Any]: ...
-    def training_job_active(self) -> bool: ...
-
-    # Add any other methods ProactiveIntelligence calls on model_manager
-
+# ModelManagerInterface imported from unified Vanta interfaces
 
 @runtime_checkable
 class TaskSchedulerInterface(
@@ -109,17 +106,9 @@ class ProactiveIntelligence:
                 # For now, log a critical warning. VantaCore setup should ensure it.
                 logger.critical(
                     "ModelManagerInterface not provided or found in VantaCore registry. ProactiveIntelligence may not function correctly."
-                )
-
-                # You might create a very basic DefaultModelManager stub here if partial functionality is acceptable without it.
-                class DefaultStubModelManager(ModelManagerInterface):
-                    def get_status(self):
-                        return {"active_models": {}, "status": "stub_default"}
-
-                    def training_job_active(self):
-                        return False
-
-                self.model_manager = DefaultStubModelManager()
+                )                # You might create a very basic DefaultModelManager stub here if partial functionality is acceptable without it.
+                from core.learning_manager import DefaultModelManager
+                self.model_manager = DefaultModelManager()
         else:
             self.model_manager = model_manager
 

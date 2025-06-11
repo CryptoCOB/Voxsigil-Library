@@ -23,28 +23,7 @@ logger = logging.getLogger("vanta.runner")
 
 
 # ===== Mock Implementations =====
-class MockRAG:
-    """Mock implementation of the BaseRagInterface."""
-
-    def retrieve_context(self, query, context=None):
-        logger.info(f"MockRAG: retrieving context for query: {query[:50]}...")
-        return [
-            {
-                "sigil": "symbolic-resonance-01",
-                "content": "Symbolic systems represent knowledge explicitly through symbols and rules.",
-                "_similarity_score": 0.85,
-            },
-            {
-                "sigil": "neural-systems-02",
-                "content": "Neural networks learn patterns implicitly through weighted connections.",
-                "_similarity_score": 0.82,
-            },
-            {
-                "sigil": "hybrid-systems-03",
-                "content": "Hybrid neuro-symbolic systems combine explicit rules with implicit learning.",
-                "_similarity_score": 0.76,
-            },
-        ]
+# MockRAG removed - use Vanta.core.fallback_implementations.FallbackRagInterface instead
 
 
 class MockLLM:
@@ -74,30 +53,7 @@ class MockLLM:
         return response, {"model": "mock-llm-vanta"}, {}
 
 
-class MockMemory:
-    """Mock implementation of the BaseMemoryInterface."""
-
-    def __init__(self):
-        self.memory_store = {}
-
-    def store(self, query, response, metadata=None):
-        memory_id = f"memory-{int(time.time())}"
-        logger.info(f"MockMemory: storing memory with ID: {memory_id}")
-        self.memory_store[memory_id] = {
-            "query": query,
-            "response": response,
-            "metadata": metadata or {},
-            "timestamp": time.time(),
-        }
-        return memory_id
-
-    def retrieve_recent(self, limit=10):
-        sorted_memories = sorted(
-            self.memory_store.items(),
-            key=lambda x: x[1].get("timestamp", 0),
-            reverse=True,
-        )
-        return [{"id": k, **v} for k, v in sorted_memories[:limit]]
+# MockMemory removed - use Vanta.core.fallback_implementations.FallbackMemoryInterface instead
 
 
 # MockScaffoldRouter removed - using real implementations only
@@ -116,9 +72,21 @@ def initialize_vanta():
         )
 
         # Initialize components
-        rag = MockRAG()
+        # Use fallback implementations instead of removed mock classes
+        try:
+            from Vanta.core.fallback_implementations import FallbackRagInterface
+            rag = FallbackRagInterface()
+        except ImportError:
+            rag = None  # Will be handled by VantaSigilSupervisor
+            
         llm = MockLLM()
-        memory = MockMemory()
+        
+        try:
+            from Vanta.core.fallback_implementations import FallbackMemoryInterface
+            memory = FallbackMemoryInterface()
+        except ImportError:
+            memory = None  # Will be handled by VantaSigilSupervisor
+        
         scaffold_router = None  # Using real implementation when available
 
         # Create VANTA instance

@@ -13,21 +13,8 @@ from typing import Dict, Any, List, Optional, Tuple
 # Import Vanta Core for integration
 from Vanta.core.UnifiedVantaCore import UnifiedVantaCore
 
-# Import MetaLearnerInterface for compatibility
-try:
-    from Vanta.interfaces.learning_manager import MetaLearnerInterface
-except ImportError:
-    # Define a local version if import fails
-    from typing import Protocol, runtime_checkable
-
-    @runtime_checkable
-    class MetaLearnerInterface(Protocol):
-        def get_heuristics(self) -> list[Dict[str, Any]]: ...
-        def update_heuristic(self, heuristic_id: str, updates: Dict[str, Any]) -> None: ...
-        def add_heuristic(self, heuristic_data: Dict[str, Any]) -> Any: ...
-        def get_transferable_knowledge(self) -> Optional[Any]: ...
-        def integrate_knowledge(self, knowledge: Any, source: Any) -> None: ...
-        def get_performance_metrics(self, domain: Optional[str] = None) -> Dict[str, Any]: ...
+# Import MetaLearnerInterface from unified Vanta interfaces
+from Vanta.interfaces.specialized_interfaces import MetaLearnerInterface
 
 logger = logging.getLogger("metaconsciousness.meta_learner")
 

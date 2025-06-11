@@ -446,12 +446,12 @@ class BLTContextManager:
     Provides intelligent context truncation and compression.
     """
     
-    def __init__(self, middleware: 'VoxSigilBLTMiddleware', max_tokens: int = 4000):
+    def __init__(self, middleware: 'BLTEnhancedMiddleware', max_tokens: int = 4000):
         """
         Initialize BLT context manager.
         
         Args:
-            middleware: VoxSigil BLT middleware instance
+            middleware: BLT Enhanced middleware instance
             max_tokens: Maximum token limit
         """
         self.middleware = middleware
@@ -548,4 +548,4 @@ class BLTContextManager:
 
 
 # Export the main classes
-__all__ = ['VoxSigilBLTMiddleware', 'BLTContextManager']
+__all__ = ['BLTEnhancedMiddleware', 'BLTContextManager']

@@ -67,65 +67,26 @@ try:
     COMPONENTS_AVAILABLE = True
 except ImportError as e:
     logger.warning(f"Some BLT components couldn't be imported: {e}")
-    COMPONENTS_AVAILABLE = False
-
-    # Create stub classes for graceful degradation
-    class BLTEnhancedRAG:
-        """Stub HybridMiddlewareConfig class when actual implementation is not available."""
-
-        def __init__(self, *args, **kwargs):
-            self.entropy_threshold = kwargs.get("entropy_threshold", 0.25)
-            self.blt_hybrid_weight = kwargs.get("blt_hybrid_weight", 0.7)
-            self.entropy_router_fallback = kwargs.get(
-                "entropy_router_fallback", "token_based"
-            )
-            self.cache_ttl_seconds = kwargs.get("cache_ttl_seconds", 300)
-            self.log_level = kwargs.get("log_level", "INFO")
+    COMPONENTS_AVAILABLE = False    # BLTEnhancedRAG stub removed - use real BLTEnhancedRAG or proper fallback
 
 
 try:
     from BLT.hybrid_blt import EntropyRouter
 except ImportError:
-
-    class EntropyRouter:
-        """Stub EntropyRouter class when actual implementation is not available."""
-
-        def __init__(self, *args, **kwargs):
-            pass
-
-        def route(self, text):
-            return "token_based", None, [0.5]
+    # EntropyRouter stub removed - use real implementation or handle ImportError
+    EntropyRouter = None
 
 
 try:
     from BLT.hybrid_blt import ByteLatentTransformerEncoder
 except ImportError:
-
-    class ByteLatentTransformerEncoder:
-        """Stub ByteLatentTransformerEncoder class when actual implementation is not available."""
-
-        def __init__(self, *args, **kwargs):
-            pass
-
-        def create_patches(self, *args, **kwargs):
-            return []
+    # ByteLatentTransformerEncoder stub removed - use real implementation or handle ImportError
+    ByteLatentTransformerEncoder = None
 
 
-try:
-    from Vanta.interfaces.rag_interface import BaseRagInterface
-except ImportError:
-
-    class BaseRagInterface:
-        """Stub BaseRagInterface class when supervisor module is not available."""
-
-        def __init__(self, *args, **kwargs):
-            pass
-
-        def retrieve_sigils(self, query, top_k=5, filter_conditions=None):
-            return []
-
-        def create_rag_context(self, query, num_sigils=5):
-            return "", []
+# Import unified interface from Vanta
+from Vanta.interfaces.base_interfaces import BaseRagInterface
+VANTA_INTERFACES_AVAILABLE = True
 
 
 # Function stubs with error handling
@@ -679,16 +640,8 @@ class TinyLlamaIntegration:
 
         Returns:
             An implementation of BaseLlmInterface for TinyLlama.
-        """
-        try:
-            from ARC.llm.llm_interface import BaseLlmInterface
-        except ImportError:
-            # Create a stub if not available
-            class BaseLlmInterface:
-                def generate_response(
-                    self, messages, system_prompt_override=None, task_requirements=None
-                ):
-                    return "Stub response", {}, {}
+        """        # Import unified interface from Vanta
+        from Vanta.interfaces.base_interfaces import BaseLlmInterface
 
         class TinyLlamaInterface(BaseLlmInterface):
             def __init__(self, model_tuple):

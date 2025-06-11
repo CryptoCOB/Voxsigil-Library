@@ -1,13 +1,22 @@
-# voxsigil_supervisor/interfaces/rag_interface.py
+# interfaces/rag_interface.py
 """
-Defines the interface for RAG (Retrieval Augmented Generation) systems
-used by the VoxSigil Supervisor.
-Implementations will retrieve VoxSigil constructs (sigils, scaffolds).
+RAG Interface Implementations for VoxSigil Supervisor
+====================================================
+
+This module provides concrete implementations of the unified BaseRagInterface
+from Vanta. All modules should now use the unified interface definition
+from Vanta.interfaces instead of defining their own.
+
+Legacy wrapper for backward compatibility - use Vanta.interfaces directly.
 """
-from abc import ABC, abstractmethod
-from typing import List, Dict, Any, Optional
+
 import logging
+from abc import ABC, abstractmethod
 from pathlib import Path
+from typing import List, Dict, Any, Optional
+
+# Import unified interface from Vanta
+from Vanta.interfaces.base_interfaces import BaseRagInterface
 
 # Attempt to import your existing VoxSigilRAG
 try:
@@ -34,60 +43,8 @@ except ImportError:
             "The SupervisorRagInterface will not be functional."
         )
 
-
-class BaseRagInterface(ABC):
-    """
-    Abstract Base Class for a RAG interface to retrieve VoxSigil constructs.
-    """
-
-    @abstractmethod
-    def retrieve_sigils(self, query: str, top_k: int = 5, filter_conditions: Optional[Dict[str, Any]] = None) -> List[Dict[str, Any]]:
-        """
-        Retrieves relevant VoxSigil sigils or other constructs based on a query.
-        These are typically used for contextual grounding.
-
-        Args:
-            query: The query string to search for.
-            top_k: The maximum number of sigils to return.
-            filter_conditions: Optional dictionary for filtering like:
-                               {"tags": ["tag1", "tag2"], "tag_operator": "AND",
-                                "exclude_tags": ["ex_tag"], "exclude_sigil_ids": ["id1"]}
-
-        Returns:
-            A list of dictionaries, where each dictionary represents a retrieved sigil
-            and includes its metadata and relevance score.
-        """
-        pass
-
-    @abstractmethod
-    def retrieve_context(self, query: str, params: Optional[Dict[str, Any]] = None) -> str:
-        """
-        Retrieves and formats context for a query as a formatted string ready for insertion
-        into a prompt.
-
-        Args:
-            query: The query string to search for.
-            params: Optional parameters to control retrieval (can include top_k, filter conditions,
-                   detail level, formatting preferences, etc.)
-
-        Returns:
-            A string containing the formatted context.
-        """
-        pass
-
-    @abstractmethod 
-    def retrieve_scaffolds(self, query: str, filter_tags: Optional[List[str]] = None) -> List[Dict[str, Any]]:
-        """
-        Retrieves reasoning scaffolds relevant to the query.
-        
-        Args:
-            query: The query string to search for.
-            filter_tags: Optional list of tags to filter scaffolds.
-            
-        Returns:
-            A list of dictionaries, where each dictionary represents a scaffold with metadata.
-        """
-        pass
+# Note: BaseRagInterface is now imported from Vanta.interfaces
+# This eliminates the duplicate interface definition
 
 
 class SupervisorRagInterface(BaseRagInterface):
@@ -400,17 +357,8 @@ if VOXSİGİL_RAG_AVAILABLE:
             logger_rag_interface.debug(f"Getting sigil by ID/glyph: {sigil_id_glyph}")
             return self._sigil_index_by_id.get(sigil_id_glyph)
 
-else: # VOXSİGİL_RAG_AVAILABLE is False
-    class DummyRagInterface(BaseRagInterface): # Provide a dummy if import fails
-        def retrieve_sigils(self, query: str, top_k: int = 5, filter_conditions: Optional[Dict[str, Any]] = None) -> List[Dict[str, Any]]:
-            logger_rag_interface.warning("DummyRagInterface.retrieve_sigils called. VoxSigilRAG not available.")
-            return []
-        def get_scaffold_definition(self, scaffold_name_or_id: str) -> Optional[Dict[str, Any]]:
-            logger_rag_interface.warning("DummyRagInterface.get_scaffold_definition called. VoxSigilRAG not available.")
-            return None
-        def get_sigil_by_id(self, sigil_id_glyph: str) -> Optional[Dict[str, Any]]:
-            logger_rag_interface.warning("DummyRagInterface.get_sigil_by_id called. VoxSigilRAG not available.")
-            return None
-
-    # This allows the supervisor to be imported, but it won't function without a real RAG.
-    # The application's entry point should check for VOXSİGİL_RAG_AVAILABLE.
+else:
+    raise ImportError(
+        "VoxSigilRAG is not available. "
+        "Ensure the VoxSigilRag package is installed and accessible."
+    )

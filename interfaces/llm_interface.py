@@ -56,70 +56,10 @@ except ImportError:
         logger_llm_interface.error(f"Failed to import LLM handler: {e}")
 
 
-class BaseLlmInterface(ABC):
-    """
-    Abstract Base Class for an LLM interface.
-    Implementations will interact with specific LLM APIs or local models.
-    """
+# Import unified interface from Vanta - replaces local definition
+from Vanta.interfaces.base_interfaces import BaseLlmInterface
 
-    @abstractmethod
-    def generate_response(self,
-                          messages: List[Dict[str, str]],
-                          task_requirements: Optional[Dict[str, Any]] = None,
-                          temperature: Optional[float] = None,
-                          system_prompt_override: Optional[str] = None,
-                          use_global_system_prompt: bool = True
-                          ) -> Tuple[Optional[str], Optional[Dict[str, Any]], Optional[Dict[str, Any]]]:
-        """
-        Generates a response from an LLM.
-
-        Args:
-            messages: A list of message dictionaries. The last message is typically the user's prompt.
-            task_requirements: Optional requirements for the task (e.g., complexity, style).
-            temperature: Optional temperature parameter for controlling randomness.
-            system_prompt_override: Optional system prompt to use instead of the default.
-            use_global_system_prompt: Whether to use the global system prompt.
-
-        Returns:
-            A tuple containing:
-            - response_text: The generated text response
-            - model_info: Information about the model used (name, provider, etc.)
-            - response_metadata: Additional metadata about the response
-        """
-        pass
-
-    @abstractmethod
-    def build_prompt(self, 
-                    query: str, 
-                    context: str, 
-                    scaffold: Optional[str] = None, 
-                    history: Optional[List[Dict[str, Any]]] = None) -> str:
-        """
-        Builds a prompt with query, context, and optionally, a scaffold.
-
-        Args:
-            query: The user query or task.
-            context: The RAG context to include.
-            scaffold: Optional reasoning scaffold to guide the LLM.
-            history: Optional list of previous interactions.
-
-        Returns:
-            A formatted prompt string.
-        """
-        pass
-
-    @abstractmethod
-    def select_model(self, task_requirements: Dict[str, Any]) -> Dict[str, Any]:
-        """
-        Selects the most appropriate model for the task requirements.
-
-        Args:
-            task_requirements: Dictionary specifying task requirements.
-
-        Returns:
-            Dictionary with model selection info.
-        """
-        pass
+# Legacy comment: This file now imports the unified interface instead of defining its own
 
 
 class SupervisorLlmInterface(BaseLlmInterface):

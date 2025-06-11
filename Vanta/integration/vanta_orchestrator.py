@@ -46,6 +46,7 @@ logging.basicConfig(
 logger = logging.getLogger("vanta.orchestrator")
 
 # Import VANTA components
+from Vanta.interfaces.base_interfaces import BaseRagInterface, BaseLlmInterface, BaseMemoryInterface
 from Vanta.interfaces.rag_interface import (
     BaseRagInterface as RealBaseRagInterface,
 )
@@ -117,54 +118,7 @@ logger.info("✅ VANTA now requires real implementations - mock fallbacks remove
 # VANTA Components - Real Implementations Only
 # =============================================================================
 
-# Look for concrete implementation of memory interface
-# Since BaseMemoryInterface is abstract, we need to create a concrete implementation
-class ConcreteMemoryInterface(RealBaseMemoryInterface):
-    """Concrete implementation of BaseMemoryInterface."""
-
-    def __init__(self):
-        # Storage for memory interactions
-        self.interactions = []
-        logger.info("Initialized ConcreteMemoryInterface")
-
-    def store_interaction(self, interaction_data):
-        """Store a complete interaction."""
-        self.interactions.append(interaction_data)
-        return True
-
-    def retrieve_similar_interactions(self, query, limit=3):
-        """Retrieve interactions with similar queries."""
-        # Simple implementation - just return recent interactions
-        sorted_interactions = sorted(
-            self.interactions, key=lambda x: x.get("timestamp", ""), reverse=True
-        )
-        return sorted_interactions[:limit]
-
-    def retrieve_interaction_by_id(self, interaction_id):
-        """Retrieve a specific interaction by ID."""
-        for interaction in self.interactions:
-            if interaction.get("id") == interaction_id:
-                return interaction
-        return None
-
-    def retrieve_recent(self, limit=10):
-        """Retrieve recent interactions."""
-        sorted_interactions = sorted(
-            self.interactions, key=lambda x: x.get("timestamp", ""), reverse=True
-        )
-        return sorted_interactions[:limit]
-
-    def get_interaction_history(self, limit=10):
-        """Get interaction history (required by abstract base)."""
-        return self.retrieve_recent(limit)
-
-    def update_interaction(self, interaction_id, interaction_data):
-        """Update an existing interaction (required by abstract base)."""
-        for i, interaction in enumerate(self.interactions):
-            if interaction.get("id") == interaction_id:
-                self.interactions[i] = interaction_data
-                return True
-        return False
+# ConcreteMemoryInterface removed - use proper implementation from memory/ module
 
 logger.info("Successfully imported real VANTA implementations")
 
@@ -173,143 +127,8 @@ logger.info("Successfully imported real VANTA implementations")
 
 
 # ===== VANTA Components =====
+# Using unified interfaces from Vanta.interfaces.base_interfaces
 
-
-class BaseRagInterface:
-    """Base RAG interface for retrieving relevant context."""
-
-    def __init__(self, config=None):
-        self.config = config or {}
-        self.real_rag = None
-        # Note: RealBaseRagInterface is abstract, so we can't instantiate it directly
-        # We'll rely on fallback implementations for now
-        logger.info("Initialized BaseRagInterface (using fallback implementations)")
-
-    def retrieve_context(self, query, context=None):
-        # Use real implementation if available (would need concrete implementation)
-        if self.real_rag is not None:
-            try:
-                return self.real_rag.retrieve_context(query, context)
-            except Exception as e:
-                logger.warning(f"Error using real RAG interface: {e}")
-        
-        # Fall back to alternative approach
-        try:
-            # Try importing the VoxSigilRAG components
-            from BLT.voxsigil_rag import VoxSigilRAG
-            
-            # Initialize RAG system if possible
-            try:
-                rag = VoxSigilRAG()
-                # Try different method names that might exist
-                if hasattr(rag, 'semantic_search'):
-                    results = rag.semantic_search(query, k=3)
-                elif hasattr(rag, 'search'):
-                    results = rag.search(query)
-                elif hasattr(rag, 'retrieve'):
-                    results = rag.retrieve(query)
-                else:
-                    results = []
-                return results
-            except Exception as e:
-                logger.warning(f"Error using VoxSigilRAG: {e}")
-                return []
-        except ImportError:
-            logger.warning("Failed to import VoxSigilRAG")
-            return []
-
-
-class BaseLlmInterface:
-    """Base LLM interface for generating responses."""
-
-    def __init__(self, config=None):
-        self.config = config or {}
-        self.real_llm = None
-        # Note: RealBaseLlmInterface is abstract, so we can't instantiate it directly
-        # We'll rely on fallback implementations for now
-        logger.info("Initialized BaseLlmInterface (using fallback implementations)")
-
-    def generate_response(
-        self, messages, system_prompt_override=None, task_requirements=None
-    ):
-        # Use real implementation if available (would need concrete implementation)
-        if self.real_llm is not None:
-            try:
-                return self.real_llm.generate_response(
-                    messages, system_prompt_override, task_requirements
-                )
-            except Exception as e:
-                logger.warning(f"Error using real LLM interface: {e}")
-
-        # Fall back to alternative implementation options
-        try:
-            # Try importing a real LLM handler
-            try:
-                from ARC.llm.arc_llm_handler import ARCLLMHandler
-                llm_handler = ARCLLMHandler()
-                response = llm_handler.generate_response(messages[0]["content"])
-                return response, {"model": "arc-llm-handler"}, {}
-            except (ImportError, Exception):
-                pass
-
-            # Try importing TinyLlama
-            try:
-                from Voxsigil_Library.tinyllama_assistant import TinyLlamaAssistant
-                llm = TinyLlamaAssistant()
-                response = llm.generate_response(messages[0]["content"])
-                return response, {"model": "tinyllama"}, {}
-            except (ImportError, Exception):
-                pass
-
-            # Return basic response if no real implementation available
-            return "I apologize, but I cannot generate a response as the LLM interface is not available.", {"model": "none"}, {}
-        except Exception as e:
-            logger.warning(f"Error using LLM interfaces: {e}")
-            return "I apologize, but I encountered an error and cannot generate a response.", {"model": "none"}, {}
-
-
-class BaseMemoryInterface:
-    """Base Memory interface for storing and retrieving interactions."""
-
-    def __init__(self):
-        self.real_memory = None
-
-        # Initialize real Memory interface - required
-        try:
-            # Since RealBaseMemoryInterface is abstract, use the concrete implementation
-            self.real_memory = ConcreteMemoryInterface()
-            logger.info("Initialized BaseMemoryInterface with real implementation")
-        except Exception as e:
-            logger.warning(f"Failed to initialize real memory interface: {e}")
-
-        if self.real_memory is None:
-            logger.warning("Real memory interface required but not available")
-
-    def store(self, query, response, metadata=None):
-        # Use real implementation if available
-        if self.real_memory is not None:
-            try:
-                return self.real_memory.store(query, response, metadata)
-            except Exception as e:
-                logger.warning(f"Error using real memory interface: {e}")
-                return None
-
-        # No fallback - real implementation required
-        logger.error("Memory interface not available - cannot store")
-        return None
-
-    def retrieve_recent(self, limit=10):
-        # Use real implementation if available
-        if self.real_memory is not None:
-            try:
-                return self.real_memory.retrieve_recent(limit)
-            except Exception as e:
-                logger.warning(f"Error retrieving recent memories from real interface: {e}")
-                return []
-
-        # No fallback - real implementation required
-        logger.error("Memory interface not available - cannot retrieve")
-        return []
 
 
 # ===== VANTA Core =====

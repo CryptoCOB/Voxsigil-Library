@@ -1,7 +1,8 @@
 """
-Fixed VoxSigil RAG Interface
+VoxSigil Training RAG Interface
 
-Complete implementation of the RAG interface for VoxSigil system integration.
+Complete implementation of the RAG interface for VoxSigil training system integration.
+Now unified with Vanta interface system for better modularity.
 """
 
 import logging
@@ -10,6 +11,17 @@ from pathlib import Path
 from typing import Any, Dict, List, Optional
 
 logger_rag_interface = logging.getLogger("VoxSigilSupervisor.RAG")
+
+# Import unified interfaces from Vanta
+try:
+    from Vanta.interfaces import BaseRagInterface
+    VANTA_INTERFACES_AVAILABLE = True
+    logger_rag_interface.info("Using unified Vanta RAG interfaces")
+except ImportError:
+    # Import unified interface from Vanta
+    from Vanta.interfaces.base_interfaces import BaseRagInterface
+    VANTA_INTERFACES_AVAILABLE = True
+    logger_rag_interface.info("Successfully imported BaseRagInterface from Vanta")
 
 # Try to import VoxSigilRAG
 VOXSIGIL_RAG_AVAILABLE = False
@@ -52,46 +64,6 @@ if not VOXSIGIL_RAG_AVAILABLE:
     )
 
 
-class BaseRagInterface(ABC):
-    """Abstract Base Class for a RAG interface to retrieve VoxSigil constructs."""
-
-    @abstractmethod
-    def retrieve_sigils(
-        self,
-        query: str,
-        top_k: int = 5,
-        filter_conditions: Optional[Dict[str, Any]] = None,
-    ) -> List[Dict[str, Any]]:
-        """Retrieves relevant VoxSigil sigils based on a query."""
-        raise NotImplementedError
-
-    @abstractmethod
-    def retrieve_context(
-        self, query: str, params: Optional[Dict[str, Any]] = None
-    ) -> str:
-        """Retrieves and formats context for a query as a formatted string."""
-        raise NotImplementedError
-
-    @abstractmethod
-    def retrieve_scaffolds(
-        self, query: str, filter_tags: Optional[List[str]] = None
-    ) -> List[Dict[str, Any]]:
-        """Retrieves reasoning scaffolds relevant to the query."""
-        raise NotImplementedError
-
-    @abstractmethod
-    def get_scaffold_definition(
-        self, scaffold_name_or_id: str
-    ) -> Optional[Dict[str, Any]]:
-        """Retrieves the full definition of a specific reasoning scaffold."""
-        raise NotImplementedError
-
-    @abstractmethod
-    def get_sigil_by_id(self, sigil_id_glyph: str) -> Optional[Dict[str, Any]]:
-        """Retrieves a specific sigil by its unique ID or glyph."""
-        raise NotImplementedError
-
-
 class SupervisorRagInterface(BaseRagInterface):
     """Implementation of the RAG interface using VoxSigilRAG."""
 
@@ -121,6 +93,52 @@ class SupervisorRagInterface(BaseRagInterface):
             logger_rag_interface.error(f"Failed to initialize VoxSigilRAG: {e}")
             self.rag_instance = None
 
+    # Unified interface methods (implementing BaseRagInterface from Vanta)
+    async def retrieve_documents(
+        self, 
+        query: str, 
+        k: int = 5,
+        filters: Optional[Dict[str, Any]] = None
+    ) -> List[Dict[str, Any]]:
+        """Retrieve relevant documents for a query (unified interface method)."""
+        # Map to existing sigil retrieval for backward compatibility
+        return self.retrieve_sigils(query, top_k=k, filter_conditions=filters)
+    
+    async def index_document(
+        self, 
+        document: Dict[str, Any],
+        metadata: Optional[Dict[str, Any]] = None
+    ) -> str:
+        """Index a document for retrieval (unified interface method)."""
+        # For now, return a placeholder - actual implementation would index the document
+        logger_rag_interface.warning("Document indexing not implemented in SupervisorRagInterface")
+        return f"doc_{len(str(document))}"
+    
+    async def augment_query(
+        self, 
+        query: str, 
+        context: List[Dict[str, Any]]
+    ) -> str:
+        """Augment query with retrieved context (unified interface method)."""
+        if not context:
+            return query
+        
+        context_text = "\n".join([
+            doc.get('content', doc.get('text', ''))[:200] + "..." 
+            for doc in context[:3]
+        ])
+        
+        return f"Context: {context_text}\n\nQuery: {query}"
+    
+    async def get_retrieval_stats(self) -> Dict[str, Any]:
+        """Get retrieval performance statistics (unified interface method)."""
+        return {
+            'rag_instance_available': self.rag_instance is not None,
+            'interface_type': 'SupervisorRagInterface',
+            'voxsigil_rag_available': VOXSIGIL_RAG_AVAILABLE
+        }
+
+    # Legacy methods (maintaining backward compatibility)
     def retrieve_sigils(
         self,
         query: str,
@@ -303,6 +321,69 @@ class SimpleRagInterface(BaseRagInterface):
         self.rag_processor = rag_processor
         logger_rag_interface.info("SimpleRagInterface initialized with RAGProcessor")
 
+    # Unified interface methods (implementing BaseRagInterface from Vanta)
+    async def retrieve_documents(
+        self, 
+        query: str, 
+        k: int = 5,
+        filters: Optional[Dict[str, Any]] = None
+    ) -> List[Dict[str, Any]]:
+        """Retrieve relevant documents for a query (unified interface method)."""
+        # Map to existing sigil retrieval for backward compatibility
+        return self.retrieve_sigils(query, top_k=k, filter_conditions=filters)
+    
+    async def index_document(
+        self, 
+        document: Dict[str, Any],
+        metadata: Optional[Dict[str, Any]] = None
+    ) -> str:
+        """Index a document for retrieval (unified interface method)."""
+        try:
+            if hasattr(self.rag_processor, "index_document"):
+                return self.rag_processor.index_document(document, metadata)
+            elif hasattr(self.rag_processor, "add_document"):
+                return self.rag_processor.add_document(document)
+            else:
+                logger_rag_interface.warning("Document indexing not supported by RAGProcessor")
+                return f"simple_doc_{len(str(document))}"
+        except Exception as e:
+            logger_rag_interface.error(f"Error indexing document in SimpleRagInterface: {e}")
+            return f"error_doc_{len(str(document))}"
+    
+    async def augment_query(
+        self, 
+        query: str, 
+        context: List[Dict[str, Any]]
+    ) -> str:
+        """Augment query with retrieved context (unified interface method)."""
+        if not context:
+            return query
+        
+        context_text = "\n".join([
+            doc.get('content', doc.get('text', ''))[:150] + "..." 
+            for doc in context[:2]
+        ])
+        
+        return f"Relevant context:\n{context_text}\n\nQuestion: {query}"
+    
+    async def get_retrieval_stats(self) -> Dict[str, Any]:
+        """Get retrieval performance statistics (unified interface method)."""
+        stats = {
+            'interface_type': 'SimpleRagInterface',
+            'rag_processor_available': self.rag_processor is not None
+        }
+        
+        try:
+            if hasattr(self.rag_processor, "get_stats"):
+                stats['processor_stats'] = self.rag_processor.get_stats()
+            elif hasattr(self.rag_processor, "stats"):
+                stats['processor_stats'] = self.rag_processor.stats
+        except Exception as e:
+            stats['stats_error'] = str(e)
+        
+        return stats
+
+    # Legacy methods (maintaining backward compatibility)
     def retrieve_sigils(
         self,
         query: str,
@@ -481,73 +562,4 @@ class SimpleRagInterface(BaseRagInterface):
             return None
 
 
-class MockRagInterface(BaseRagInterface):
-    """Mock implementation for testing and development."""
-
-    def __init__(self):
-        """Initialize mock interface."""
-        logger_rag_interface.info("MockRagInterface initialized")
-        self.mock_sigils = [
-            {
-                "id": "test_sigil_1",
-                "sigil_glyph": "⟠∆∇𓂀",
-                "title": "Test Scaffold",
-                "content": "This is a test scaffold for development.",
-                "tags": ["scaffold", "test"],
-                "similarity_score": 0.95,
-            },
-            {
-                "id": "test_sigil_2",
-                "sigil_glyph": "⟁∇∆𓂁",
-                "title": "Another Test Sigil",
-                "content": "Another test sigil for development.",
-                "tags": ["reasoning", "test"],
-                "similarity_score": 0.85,
-            },
-        ]
-
-    def retrieve_sigils(
-        self,
-        query: str,
-        top_k: int = 5,
-        filter_conditions: Optional[Dict[str, Any]] = None,
-    ) -> List[Dict[str, Any]]:
-        """Return mock sigils."""
-        logger_rag_interface.debug(
-            f"MockRagInterface retrieving sigils for query: {query}"
-        )
-        return self.mock_sigils[:top_k]
-
-    def retrieve_context(
-        self, query: str, params: Optional[Dict[str, Any]] = None
-    ) -> str:
-        """Return mock context."""
-        return f"Mock context for query: {query}\nRelevant sigils found and processed."
-
-    def retrieve_scaffolds(
-        self, query: str, filter_tags: Optional[List[str]] = None
-    ) -> List[Dict[str, Any]]:
-        """Return mock scaffolds."""
-        return [s for s in self.mock_sigils if "scaffold" in s.get("tags", [])]
-
-    def get_scaffold_definition(
-        self, scaffold_name_or_id: str
-    ) -> Optional[Dict[str, Any]]:
-        """Return mock scaffold definition."""
-        for sigil in self.mock_sigils:
-            if (
-                sigil.get("title", "").lower() == scaffold_name_or_id.lower()
-                or sigil.get("id") == scaffold_name_or_id
-            ):
-                return sigil
-        return None
-
-    def get_sigil_by_id(self, sigil_id_glyph: str) -> Optional[Dict[str, Any]]:
-        """Return mock sigil by ID."""
-        for sigil in self.mock_sigils:
-            if (
-                sigil.get("id") == sigil_id_glyph
-                or sigil.get("sigil_glyph") == sigil_id_glyph
-            ):
-                return sigil
-        return None
+# MockRagInterface removed - use Vanta.core.fallback_implementations.FallbackRagInterface instead

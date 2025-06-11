@@ -52,39 +52,32 @@ HAS_SLEEP = False
 try:
     from ARC.llm.llm_interface import BaseLlmInterface as _ImportedBaseLlmInterface
 
-    logger.info("Successfully imported BaseLlmInterface")
+    logger.info("Successfully imported BaseLlmInterface")    
     BaseLlmInterface = _ImportedBaseLlmInterface  # type: ignore
 except ImportError as e:
     logger.warning(f"Failed to import BaseLlmInterface: {e}")
-
-    class _FallbackBaseLlmInterface:
-        """Fallback class for when the real class cannot be imported."""
-
-        def generate_response(self, *args, **kwargs):
-            return "Error: LLM interface not available", {}, {}
-
-    BaseLlmInterface = _FallbackBaseLlmInterface  # type: ignore
+    # _FallbackBaseLlmInterface removed - use Vanta.core.fallback_implementations.FallbackLlmInterface
+    try:
+        from Vanta.core.fallback_implementations import FallbackLlmInterface
+        BaseLlmInterface = FallbackLlmInterface  # type: ignore
+    except ImportError:
+        BaseLlmInterface = None  # type: ignore
 
 try:
     from Vanta.interfaces.memory_interface import (
         BaseMemoryInterface as _ImportedBaseMemoryInterface,
     )
 
-    logger.info("Successfully imported BaseMemoryInterface")
+    logger.info("Successfully imported BaseMemoryInterface")    
     BaseMemoryInterface = _ImportedBaseMemoryInterface  # type: ignore
 except ImportError as e:
     logger.warning(f"Failed to import BaseMemoryInterface: {e}")
-
-    class _FallbackBaseMemoryInterface:
-        """Fallback class for when the real class cannot be imported."""
-
-        def store(self, *args, **kwargs):
-            return "memory_unavailable"
-
-        def retrieve_recent(self, *args, **kwargs):
-            return []
-
-    BaseMemoryInterface = _FallbackBaseMemoryInterface  # type: ignore
+    # _FallbackBaseMemoryInterface removed - use Vanta.core.fallback_implementations.FallbackMemoryInterface
+    try:
+        from Vanta.core.fallback_implementations import FallbackMemoryInterface
+        BaseMemoryInterface = FallbackMemoryInterface  # type: ignore
+    except ImportError:
+        BaseMemoryInterface = None  # type: ignore
 
 try:
     from Vanta.interfaces.rag_interface import (

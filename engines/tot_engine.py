@@ -112,30 +112,11 @@ class ContextProvider(Protocol):
         return self.__class__.__name__
 
 
-# --- VantaCore Specific Default Memory Braid ---
-# This could be imported if CATEngine's default is generic enough, or defined here.
-# For this refactor, let's assume ToTEngine can have its own simple default if needed.
-@runtime_checkable
-class MemoryBraidInterface(Protocol):  # Redefining for clarity, can be common
-    def store_braid_data(
-        self, key: str, data: Any, metadata: dict[str, Any] | None = None
-    ) -> None: ...
-    def retrieve_braid_data(self, key: str) -> Any | None: ...
+# Import unified MemoryBraidInterface
+from Vanta.interfaces.protocol_interfaces import MemoryBraidInterface
 
 
-class DefaultToTMemoryBraid(MemoryBraidInterface):
-    def __init__(self):
-        self._storage: dict[str, Any] = {}
-        logger.info("DefaultToTMemoryBraid (in-memory) active.")
-
-    def store_braid_data(
-        self, key: str, data: Any, metadata: dict[str, Any] | None = None
-    ):
-        self._storage[key] = {"data": data, "metadata": metadata or {}}
-
-    def retrieve_braid_data(self, key: str) -> Any | None:
-        item = self._storage.get(key)
-        return item["data"] if item else None
+# DefaultToTMemoryBraid removed - use proper MemoryBraid implementation
 
 
 # --- Adapter for CheckinManager (or similar component from VantaCore registry) ---
@@ -255,7 +236,7 @@ class ToTEngine:
             _braid = self.vanta_core.get_component(
                 "memory_braid"
             )  # Standard name for VantaCore
-        self.memory_braid: MemoryBraidInterface = _braid or DefaultToTMemoryBraid()
+        self.memory_braid: MemoryBraidInterface = _braid or None  # Use proper MemoryBraid implementation
 
         # Auto-connect to components from VantaCore registry to act as ContextProviders
         if self.config.auto_connect_checkin_manager:

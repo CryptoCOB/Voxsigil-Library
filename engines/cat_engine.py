@@ -24,6 +24,15 @@ from Vanta.core.UnifiedAsyncBus import AsyncMessage, MessageType
 from Vanta.core.UnifiedVantaCore import (
     UnifiedVantaCore as VantaCore,  # Core orchestrator singleton
 )
+# Import unified interface definitions
+from Vanta.interfaces.specialized_interfaces import MetaLearnerInterface, ModelManagerInterface
+from Vanta.interfaces.protocol_interfaces import MemoryBraidInterface
+# Import Vanta fallback implementations  
+from Vanta.core.fallback_implementations import (
+    FallbackLlmInterface,
+    FallbackMemoryInterface,
+    FallbackRagInterface
+)
 
 # --- Basic logging setup ---
 logging.basicConfig(
@@ -95,38 +104,14 @@ class StateProviderInterface(
 
 
 @runtime_checkable
+@runtime_checkable
 class FocusManagerInterface(Protocol):  # Renamed from ArtControllerInterface
     def get_current_focus(self) -> str: ...
     def get_active_tasks(self) -> list[str]: ...
 
 
-@runtime_checkable
-class MetaLearnerInterface(Protocol):
-    def get_heuristics(self) -> list[dict[str, Any]]: ...
-    def update_heuristic(self, heuristic_id: str, updates: dict[str, Any]) -> None: ...
-    def add_heuristic(self, heuristic_data: dict[str, Any]) -> Any: ...
-
-
-@runtime_checkable
-class ModelManagerInterface(Protocol):
-    def get_embedding(self, text: str) -> list[float]: ...
-    def run_simulation(self, scenario: dict[str, Any]) -> dict[str, Any]: ...
-    def evaluate_causal_impact(self, perturbation: dict[str, Any]) -> float: ...
-    def simulate(self, scenario: dict[str, Any]) -> dict[str, Any]: ...
-    def evaluate_impact(self, perturbation: dict[str, Any]) -> float: ...
-
-
-@runtime_checkable
-class MemoryBraidInterface(Protocol):
-    def store_mirrored_data(
-        self,
-        original_key: Any,
-        mirrored_data: Any,
-        metadata: dict[str, Any] | None = None,
-    ) -> None: ...
-    def retrieve_mirrored_data(self, original_key: Any) -> Any | None: ...
-    def get_braid_stats(self) -> dict[str, Any]: ...
-    def adapt_behavior(self, context_key: str) -> dict[str, Any]: ...
+# MetaLearnerInterface, ModelManagerInterface, and MemoryBraidInterface
+# are now imported from unified Vanta interfaces
 
 
 @runtime_checkable
@@ -134,150 +119,8 @@ class EchoMemoryInterface(Protocol):
     def record_cognitive_trace(
         self, component_name: str, action: str, details: dict[str, Any]
     ) -> None: ...
+    
     def get_recent_traces(self, limit: int = 10) -> list[dict[str, Any]]: ...
-
-
-# --- Default Internal Implementations for VantaCore Components ---
-# These are basic, in-memory versions. VantaCore or user code can provide more sophisticated ones.
-class DefaultVantaMemoryCluster(MemoryClusterInterface):
-    def __init__(self, config: dict[str, Any] | None = None):
-        self._mem: list[dict[str, Any]] = []
-        logger.info("DefaultVantaMemoryCluster (in-memory) active.")
-
-    def get_recent_memories(self, limit: int = 10):
-        return self._mem[-limit:]
-
-    def store(self, data: Any, meta: dict[str, Any] | None = None):
-        self._mem.append({"d": data, "m": meta or {}})
-        return f"mem_{len(self._mem) - 1}"
-
-    def store_event(self, data: Any, et: str | None = None):
-        self._mem.append({"evt": data, "et": et})
-        return f"evt_{len(self._mem) - 1}"
-
-    def search_by_modality(self, modality: str, limit: int = 10):
-        results = [
-            item
-            for item in reversed(self._mem)
-            if (
-                (isinstance(item, dict) and item.get("et") == modality)
-                or (
-                    isinstance(item, dict)
-                    and isinstance(item.get("m"), dict)
-                    and item["m"].get("modality") == modality
-                )
-            )
-        ]
-        return results[:limit]
-
-    def search(self, q: str, mf: dict[str, Any] | None = None, limit: int = 10):
-        q_lower = q.lower()
-        results = []
-        for item in reversed(self._mem):
-            text = ""
-            if "d" in item:
-                text = str(item["d"])
-            elif "evt" in item:
-                text = str(item["evt"])
-            if q_lower in text.lower():
-                if mf:
-                    meta = item.get("m", {})
-                    if all(meta.get(k) == v for k, v in mf.items()):
-                        results.append(item)
-                else:
-                    results.append(item)
-            if len(results) >= limit:
-                break
-        return results
-
-    def embed_text(self, t: str):
-        # Simple deterministic embedding based on character codes
-        vec = [0.0] * 16
-        for i, ch in enumerate(t.encode("utf-8")):
-            vec[i % 16] += ch / 255.0
-        return vec
-
-    def get_beliefs(self):
-        beliefs = [
-            item["evt"]
-            for item in self._mem
-            if item.get("et") == "belief" and "evt" in item
-        ]
-        return beliefs
-
-
-class DefaultVantaBeliefRegistry(BeliefRegistryInterface):
-    def __init__(self, config: dict[str, Any] | None = None):
-        self._b: dict = {}
-        self._contradictions: list[dict[str, Any]] = []
-        logger.info("DefaultVantaBeliefRegistry (in-memory) active.")
-
-    def get_active_beliefs(self):
-        return list(self._b.values())
-
-    def update_belief_confidence(self, bid: str, nc: float):
-        if bid in self._b:
-            self._b[bid]["confidence"] = nc
-
-    def add_contradiction(self, cd: dict[str, Any]):
-        self._contradictions.append(cd)
-        logger.debug(f"DefaultBelief: Contradiction added {cd}")
-
-    def add_belief(self, s: str, c: float, bid: str | None = None):
-        _id = bid or f"b_{len(self._b)}"
-        self._b[_id] = {"id": _id, "statement": s, "confidence": c}
-        return _id
-
-    def record_contradiction(self, id1: str, id2: str, type_str: str):
-        self.add_contradiction({"ids": [id1, id2], "type": type_str})
-
-    def get_contradictions_for(self, belief_id: str) -> list[dict[str, Any]]:
-        return [c for c in self._contradictions if belief_id in c.get("ids", [])]
-
-
-class DefaultVantaStateProvider(StateProviderInterface):  # Was Omega3
-    def __init__(self, config: dict[str, Any] | None = None):
-        logger.info("DefaultVantaStateProvider active.")
-
-    def get_current_state(self):
-        return {"default_state_active": True, "val": random.random()}
-
-    def get_data_by_modality(self, modality: str, limit: int = 5):
-        return []
-
-
-class DefaultVantaFocusManager(FocusManagerInterface):  # Was ArtController
-    def __init__(self, config: dict[str, Any] | None = None):
-        logger.info("DefaultVantaFocusManager active.")
-
-    def get_current_focus(self):
-        return "Default Focus"
-
-    def get_active_tasks(self):
-        return ["Default Task"]
-
-
-class DefaultVantaMetaLearner(MetaLearnerInterface):
-    def __init__(self, config: dict[str, Any] | None = None):
-        self._h: list = []
-        logger.info("DefaultVantaMetaLearner active.")
-
-    def get_heuristics(self):
-        return self._h
-
-    def update_heuristic(self, hid: str, u: dict[str, Any]):
-        for h in self._h:
-            if isinstance(h, dict) and h.get("id") == hid:
-                h.update(u)
-                return
-        logger.warning(f"Heuristic {hid} not found; adding new one")
-        new_h = {"id": hid}
-        new_h.update(u)
-        self._h.append(new_h)
-
-    def add_heuristic(self, hd: dict[str, Any]):
-        self._h.append(hd)
-        return f"h_{len(self._h) - 1}"
 
 
 class DefaultVantaModelManager(ModelManagerInterface):
@@ -335,11 +178,195 @@ class DefaultVantaEchoMemory(EchoMemoryInterface):
         return self._log[-limit:]
 
 
+# --- Fallback Implementations for CAT Engine Components ---
+
+class FallbackMemoryCluster:
+    """Minimal fallback memory cluster implementation."""
+    def __init__(self):
+        self._memory_store = []
+        self._beliefs = []
+        logger.info("FallbackMemoryCluster initialized")
+    
+    def get_recent_memories(self, limit: int = 10):
+        return self._memory_store[-limit:] if self._memory_store else []
+    
+    def store(self, data, metadata=None):
+        entry = {"data": data, "metadata": metadata or {}, "timestamp": time.time()}
+        self._memory_store.append(entry)
+        return len(self._memory_store) - 1
+    
+    def store_event(self, data, event_type=None):
+        return self.store(data, {"event_type": event_type})
+    
+    def search_by_modality(self, modality: str, limit: int = 10):
+        return [m for m in self._memory_store if m.get("metadata", {}).get("modality") == modality][:limit]
+    
+    def search(self, query: str, metadata_filter=None, limit: int = 10):
+        # Simple text search in stored data
+        results = []
+        for mem in self._memory_store:
+            if str(query).lower() in str(mem.get("data", "")).lower():
+                results.append(mem)
+                if len(results) >= limit:
+                    break
+        return results
+    
+    def embed_text(self, text: str):
+        # Simple hash-based embedding fallback
+        import hashlib
+        hash_obj = hashlib.md5(text.encode())
+        hash_hex = hash_obj.hexdigest()
+        return [float(int(hash_hex[i:i+2], 16)) / 255.0 for i in range(0, min(len(hash_hex), 32), 2)]
+    
+    def get_beliefs(self):
+        return self._beliefs
+
+
+class FallbackBeliefRegistry:
+    """Minimal fallback belief registry implementation."""
+    def __init__(self):
+        self._beliefs = []
+        self._contradictions = []
+        logger.info("FallbackBeliefRegistry initialized")
+    
+    def get_active_beliefs(self):
+        return [b for b in self._beliefs if b.get("active", True)]
+    
+    def update_belief_confidence(self, belief_id: str, new_confidence: float):
+        for belief in self._beliefs:
+            if belief.get("id") == belief_id:
+                belief["confidence"] = new_confidence
+                break
+    
+    def add_contradiction(self, contradiction_data):
+        self._contradictions.append(contradiction_data)
+    
+    def add_belief(self, statement: str, confidence: float, belief_id=None):
+        belief_id = belief_id or f"belief_{len(self._beliefs)}"
+        belief = {
+            "id": belief_id,
+            "statement": statement,
+            "confidence": confidence,
+            "active": True,
+            "timestamp": time.time()
+        }
+        self._beliefs.append(belief)
+        return belief_id
+    
+    def record_contradiction(self, id1: str, id2: str, type: str):
+        self._contradictions.append({"id1": id1, "id2": id2, "type": type})
+
+
+class FallbackStateProvider:
+    """Minimal fallback state provider implementation."""
+    def __init__(self):
+        self._state = {"status": "active", "focus": "general", "timestamp": time.time()}
+        logger.info("FallbackStateProvider initialized")
+    
+    def get_current_state(self):
+        self._state["timestamp"] = time.time()
+        return self._state.copy()
+    
+    def get_data_by_modality(self, modality: str, limit: int = 5):
+        # Return sample data based on modality
+        if modality == "text":
+            return ["sample text data", "another text entry"]
+        elif modality == "image_embedding":
+            return [[0.1, 0.2, 0.3] for _ in range(min(limit, 3))]
+        return []
+
+
+class FallbackFocusManager:
+    """Minimal fallback focus manager implementation."""
+    def __init__(self):
+        self._current_focus = "general_analysis"
+        self._active_tasks = ["categorize", "analyze", "test"]
+        logger.info("FallbackFocusManager initialized")
+    
+    def get_current_focus(self):
+        return self._current_focus
+    
+    def get_active_tasks(self):
+        return self._active_tasks.copy()
+
+
+class FallbackMetaLearner:
+    """Minimal fallback meta learner implementation."""
+    def __init__(self):
+        self._heuristics = [
+            {"id": "h_0", "rule": "default heuristic", "novelty_score": 0.5}
+        ]
+        logger.info("FallbackMetaLearner initialized")
+    
+    def get_heuristics(self):
+        return self._heuristics.copy()
+    
+    def update_heuristic(self, heuristic_id: str, updates):
+        for h in self._heuristics:
+            if h.get("id") == heuristic_id:
+                h.update(updates)
+                break
+    
+    def add_heuristic(self, heuristic_data):
+        self._heuristics.append(heuristic_data)
+        return heuristic_data.get("id", f"h_{len(self._heuristics) - 1}")
+
+
+class VoxSigilMemoryAdapter:
+    """Adapter to connect CAT Engine to VoxSigil mesh."""
+    def __init__(self, voxsigil_mesh):
+        self.mesh = voxsigil_mesh
+        logger.info("VoxSigilMemoryAdapter initialized")
+    
+    def get_recent_memories(self, limit: int = 10):
+        try:
+            return self.mesh.get_recent_data(limit=limit)
+        except:
+            return []
+    
+    def store(self, data, metadata=None):
+        try:
+            return self.mesh.store_data(data, metadata)
+        except:
+            return None
+    
+    def store_event(self, data, event_type=None):
+        return self.store(data, {"event_type": event_type})
+    
+    def search_by_modality(self, modality: str, limit: int = 10):
+        try:
+            return self.mesh.search_by_type(modality, limit)
+        except:
+            return []
+    
+    def search(self, query: str, metadata_filter=None, limit: int = 10):
+        try:
+            return self.mesh.search(query, limit=limit)
+        except:
+            return []
+    
+    def embed_text(self, text: str):
+        try:
+            return self.mesh.embed_text(text)
+        except:
+            # Fallback embedding
+            import hashlib
+            hash_obj = hashlib.md5(text.encode())
+            hash_hex = hash_obj.hexdigest()
+            return [float(int(hash_hex[i:i+2], 16)) / 255.0 for i in range(0, min(len(hash_hex), 32), 2)]
+    
+    def get_beliefs(self):
+        try:
+            return self.mesh.get_beliefs()
+        except:
+            return []
+
+
 # --- C.A.T. Engine Implementation ---
 class CATEngine:
     COMPONENT_NAME = "cat_engine"
-
-    def __init(
+    
+    def __init__(
         self,
         vanta_core: VantaCore,
         config: CATEngineConfig,
@@ -355,49 +382,37 @@ class CATEngine:
     ):
         self.vanta_core = vanta_core
         self.config = config
+        
         logger.info(
             f"CATEngine initializing. Interval: {self.config.interval_s}s. LogLevel: {self.config.log_level}"
         )
 
-        self.memory: MemoryClusterInterface = (
-            memory_cluster or DefaultVantaMemoryCluster()
-        )
-        self.beliefs: BeliefRegistryInterface = (
-            belief_registry or DefaultVantaBeliefRegistry()
-        )
-        self.state_provider: StateProviderInterface = (
-            state_provider or DefaultVantaStateProvider()
-        )  # Renamed omega3
-        self.focus_manager: FocusManagerInterface = (
-            focus_manager or DefaultVantaFocusManager()
-        )  # Renamed art
-        self.learner: MetaLearnerInterface = meta_learner or DefaultVantaMetaLearner()
-        self.model_mgr: ModelManagerInterface = (
-            model_manager or DefaultVantaModelManager()
+        # Initialize components with Vanta connections or fallbacks
+        self.memory = memory_cluster or self._get_memory_cluster_from_vanta()
+        self.beliefs = belief_registry or self._get_belief_registry_from_vanta()
+        self.state_provider = state_provider or self._get_state_provider_from_vanta()
+        self.focus_manager = focus_manager or self._get_focus_manager_from_vanta()
+        self.learner = meta_learner or self._get_meta_learner_from_vanta()
+        self.model_mgr = model_manager or DefaultVantaModelManager()
+
+        self.memory_braid_instance = (
+            memory_braid or DefaultVantaMemoryBraid(self.config.default_memory_braid_config)
         )
 
-        self.memory_braid_instance: MemoryBraidInterface = (
-            memory_braid
-            or DefaultVantaMemoryBraid(self.config.default_memory_braid_config)
+        self.echo_memory_instance = (
+            echo_memory or DefaultVantaEchoMemory(self.config.default_echo_memory_config)
         )
 
-        self.echo_memory_instance: EchoMemoryInterface = (
-            echo_memory
-            or DefaultVantaEchoMemory(self.config.default_echo_memory_config)
-        )
+        self.rag_component = rag_engine  # Optional component for some operations
 
-        self.rag_component = (
-            rag_engine  # Assumed to be an optional component for some operations
-        )
-
+        # Engine state
         self.running = False
-        self.thread: threading.Thread | None = None
-        self.current_phase: str | None = None
-        self.last_error: str | None = None
+        self.thread = None
+        self.current_phase = None
+        self.last_error = None
 
-        self.advanced_learner: MetaLearnerInterface | None = (
-            self.vanta_core.get_component("advanced_meta_learner")
-        )  # Example: an optional advanced learner
+        # Try to get advanced learner from Vanta
+        self.advanced_learner = self.vanta_core.get_component("advanced_meta_learner")
 
         # Register with VantaCore
         self.vanta_core.register_component(
@@ -1054,17 +1069,16 @@ class CATEngine:
 
         belief_health = 0.5
         try:
+            # Retrieve active beliefs and calculate their average confidence
             active_b_list = self.beliefs.get_active_beliefs()
-            if active_b_list:
-                avg_conf = sum(b.get("confidence", 0.5) for b in active_b_list) / max(
-                    1, len(active_b_list)
-                )
-                belief_health = avg_conf * (
-                    min(len(active_b_list), 10) / 10
-                )  # penalize very few beliefs
+            avg_conf = sum(b.get("confidence", 0.5) for b in active_b_list) / max(
+                1, len(active_b_list)
+            )
+            # Scale health by number of beliefs (penalise if there are very few)
+            belief_health = avg_conf * (min(len(active_b_list), 10) / 10)
         except Exception as e:
             logger.warning(f"Error calculating belief health: {e}")
-            pass  # Keep default if error
+            # Keep default belief_health if an error occurs
 
         return {
             "overall": (ph * 0.6 + belief_health * 0.4),
@@ -1106,6 +1120,78 @@ class CATEngine:
             )
         return recs if recs else ["Address identified issues based on logs."]
 
+    # --- Vanta Component Connection Methods ---
+    def _get_memory_cluster_from_vanta(self):
+        """Get memory cluster from Vanta core or create VoxSigil mesh connection."""
+        try:
+            # Try to get memory component from Vanta registry
+            memory_component = self.vanta_core.get_component("memory_cluster")
+            if memory_component:
+                return memory_component
+            
+            # Try to get VoxSigil mesh connection
+            voxsigil_mesh = self.vanta_core.get_component("voxsigil_mesh")
+            if voxsigil_mesh:
+                return VoxSigilMemoryAdapter(voxsigil_mesh)
+            
+            # Fallback to minimal implementation
+            logger.warning("No memory cluster found in Vanta, using fallback")
+            return FallbackMemoryCluster()
+        except Exception as e:
+            logger.error(f"Error connecting to memory cluster: {e}")
+            return FallbackMemoryCluster()
+    
+    def _get_belief_registry_from_vanta(self):
+        """Get belief registry from Vanta core."""
+        try:
+            belief_registry = self.vanta_core.get_component("belief_registry")
+            if belief_registry:
+                return belief_registry
+            
+            logger.warning("No belief registry found in Vanta, using fallback")
+            return FallbackBeliefRegistry()
+        except Exception as e:
+            logger.error(f"Error connecting to belief registry: {e}")
+            return FallbackBeliefRegistry()
+    
+    def _get_state_provider_from_vanta(self):
+        """Get state provider from Vanta core."""
+        try:
+            state_provider = self.vanta_core.get_component("state_provider")
+            if state_provider:
+                return state_provider
+            
+            logger.warning("No state provider found in Vanta, using fallback")
+            return FallbackStateProvider()
+        except Exception as e:
+            logger.error(f"Error connecting to state provider: {e}")
+            return FallbackStateProvider()
+    
+    def _get_focus_manager_from_vanta(self):
+        """Get focus manager from Vanta core."""
+        try:
+            focus_manager = self.vanta_core.get_component("focus_manager")
+            if focus_manager:
+                return focus_manager
+            
+            logger.warning("No focus manager found in Vanta, using fallback")
+            return FallbackFocusManager()
+        except Exception as e:
+            logger.error(f"Error connecting to focus manager: {e}")
+            return FallbackFocusManager()
+    
+    def _get_meta_learner_from_vanta(self):
+        """Get meta learner from Vanta core."""
+        try:
+            meta_learner = self.vanta_core.get_component("meta_learner")
+            if meta_learner:
+                return meta_learner
+            
+            logger.warning("No meta learner found in Vanta, using fallback")
+            return FallbackMetaLearner()
+        except Exception as e:
+            logger.error(f"Error connecting to meta learner: {e}")
+            return FallbackMetaLearner()
 
 # --- Example Usage (Adapted for VantaCore) ---
 if __name__ == "__main__":

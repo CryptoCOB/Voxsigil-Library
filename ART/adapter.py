@@ -56,22 +56,16 @@ VOXSIGIL_AVAILABLE = False
 HAS_ADAPTIVE = False
 HAS_ART = False
 
+# Import unified interfaces from Vanta
+from Vanta.interfaces.base_interfaces import BaseLlmInterface, BaseMemoryInterface, BaseRagInterface
+
 # Define placeholder classes to satisfy type checking
 if TYPE_CHECKING:
     # Only used for type checking, never imported at runtime
-    from ARC.llm.llm_interface import BaseLlmInterface
     from Voxsigil_Library.Scaffolds.scaffold_router import ScaffoldRouter
     from voxsigil_supervisor.evaluation_heuristics import ResponseEvaluator
-    from Vanta.interfaces.memory_interface import BaseMemoryInterface
-    from Vanta.interfaces.rag_interface import BaseRagInterface
     from voxsigil_supervisor.retry_policy import RetryPolicy
-else:
-    # Runtime placeholders
-    class BaseLlmInterface:
-        """Placeholder for BaseLlmInterface."""
-
-        pass
-
+else:    # Runtime placeholders for components not yet unified
     class ScaffoldRouter:
         """Placeholder for ScaffoldRouter."""
 
@@ -79,16 +73,6 @@ else:
 
     class ResponseEvaluator:
         """Placeholder for ResponseEvaluator."""
-
-        pass
-
-    class BaseMemoryInterface:
-        """Placeholder for BaseMemoryInterface."""
-
-        pass
-
-    class BaseRagInterface:
-        """Placeholder for BaseRagInterface."""
 
         pass
 

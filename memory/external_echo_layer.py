@@ -63,47 +63,30 @@ class EchoStreamInterface(Protocol):
     ) -> None: ...
 
 
+# Import unified MemoryBraidInterface
+from Vanta.interfaces.protocol_interfaces import MemoryBraidInterface
+
 @runtime_checkable
 class MetaReflexLayerInterface(Protocol):
     def process_echo(self, echo_data: dict[str, Any]) -> None: ...
 
 
-@runtime_checkable
-class MemoryBraidInterface(Protocol):  # Assuming a basic MemoryBraid interface
-    def imprint(self, key: str, value: Any, ttl_seconds: int | None = None) -> None: ...
+# --- Minimal Fallback Implementations ---
+# Use minimal implementations instead of complex stubs
 
-    # Add other methods if EEL needs more interaction with MemoryBraid
+class _FallbackEchoStream:
+    """Minimal fallback for EchoStreamInterface."""
+    def add_source(self, cb): pass
+    def add_sink(self, cb): pass
+    def emit(self, ch, txt, meta): pass
 
+class _FallbackMetaReflexLayer:
+    """Minimal fallback for MetaReflexLayerInterface."""
+    def process_echo(self, data): pass
 
-# --- Default/Stub Implementations ---
-class DefaultStubEchoStream(EchoStreamInterface):
-    def add_source(self, cb):
-        logger.debug("DefaultStubEchoStream: add_source.")
-
-    def add_sink(self, cb):
-        logger.debug("DefaultStubEchoStream: add_sink.")
-
-    def emit(self, ch, txt, meta):
-        if txt is not None and _default_compressor is not None:
-            try:
-                txt = _default_compressor.compress(txt) or txt
-            except Exception:
-                pass
-        logger.debug(
-            f"DefaultStubEchoStream: emit on {ch}: Text='{txt}', Meta={meta}"
-        )
-
-
-class DefaultStubMetaReflexLayer(MetaReflexLayerInterface):
-    def process_echo(self, data):
-        logger.debug(f"DefaultStubMetaReflexLayer: process_echo with {data}")
-
-
-class DefaultStubMemoryBraid(MemoryBraidInterface):
-    def imprint(self, key: str, value: Any, ttl: int | None = None):
-        logger.debug(
-            f"DefaultStubMemoryBraid: imprint key='{key}', value_type='{type(value).__name__}', ttl={ttl}"
-        )
+class _FallbackMemoryBraid:
+    """Minimal fallback for MemoryBraidInterface."""
+    def imprint(self, key: str, value: Any, ttl: int | None = None): pass
 
 
 class ExternalEchoLayer:
@@ -131,16 +114,16 @@ class ExternalEchoLayer:
 
         # Fetch or create default dependencies
         self.echo_stream: EchoStreamInterface = self.vanta_core.get_component(
-            self.config.echo_stream_component_name, DefaultStubEchoStream()
+            self.config.echo_stream_component_name, _FallbackEchoStream()
         )
         self.meta_reflex_layer: MetaReflexLayerInterface | None = (
             self.vanta_core.get_component(
-                self.config.meta_reflex_component_name, DefaultStubMetaReflexLayer()
+                self.config.meta_reflex_component_name, _FallbackMetaReflexLayer()
             )
         )
         self.memory_braid: MemoryBraidInterface | None = (
             self.vanta_core.get_component(  # Get MemoryBraid
-                self.config.memory_braid_component_name, DefaultStubMemoryBraid()
+                self.config.memory_braid_component_name, _FallbackMemoryBraid()
             )
         )
 
@@ -164,16 +147,17 @@ class ExternalEchoLayer:
             "component_id": self.component_id,
             "record_seconds": self.config.record_seconds,
             "has_handler": self.transcription_handler is not None,
-            "echo_connected": not isinstance(self.echo_stream, DefaultStubEchoStream),
+            "echo_connected": not isinstance(self.echo_stream, _FallbackEchoStream),
             "reflex_connected": self.meta_reflex_layer is not None
-            and not isinstance(self.meta_reflex_layer, DefaultStubMetaReflexLayer),
-            "memory_braid_connected": self.memory_braid is not None
-            and not isinstance(self.memory_braid, DefaultStubMemoryBraid),
+            and not isinstance(self.meta_reflex_layer, _FallbackMetaReflexLayer),            
+            "memory_braid_connected": 
+                self.memory_braid is not None
+            and not isinstance(self.memory_braid, _FallbackMemoryBraid),
         }
 
     def _connect_to_internal_echo_stream(self):
         if self.echo_stream and not isinstance(
-            self.echo_stream, DefaultStubEchoStream
+            self.echo_stream, _FallbackEchoStream
         ):  # Only connect if real
             try:
                 self.echo_stream.add_source(self._echo_source_callback)
@@ -185,9 +169,9 @@ class ExternalEchoLayer:
                 logger.error(
                     f"Error connecting {self.COMPONENT_NAME} to EchoStream: {e}"
                 )
-        elif isinstance(self.echo_stream, DefaultStubEchoStream):
+        elif isinstance(self.echo_stream, _FallbackEchoStream):
             logger.info(
-                f"{self.COMPONENT_NAME} using DefaultStubEchoStream. Callbacks registered nominally."
+                f"{self.COMPONENT_NAME} using _FallbackEchoStream. Callbacks registered nominally."
             )
             self.echo_stream.add_source(
                 self._echo_source_callback
@@ -258,7 +242,7 @@ class ExternalEchoLayer:
         if (
             self.meta_reflex_layer
             and hasattr(self.meta_reflex_layer, "process_echo")
-            and not isinstance(self.meta_reflex_layer, DefaultStubMetaReflexLayer)
+            and not isinstance(self.meta_reflex_layer, _FallbackMetaReflexLayer)
         ):
             try:
                 self.meta_reflex_layer.process_echo(message)
@@ -350,11 +334,9 @@ class ExternalEchoLayer:
             except Exception as e:
                 logger.error(
                     f"Error in output handler '{getattr(handler, '__name__', 'unknown')}': {e}"
-                )
-
-        # Imprint this output to MemoryBraid
+                )        # Imprint this output to MemoryBraid
         if self.memory_braid and not isinstance(
-            self.memory_braid, DefaultStubMemoryBraid
+            self.memory_braid, _FallbackMemoryBraid
         ):
             try:
                 braid_key = f"eel:output:{output_data.get('timestamp', time.time())}:{uuid.uuid4().hex[:6]}"
@@ -420,11 +402,9 @@ class ExternalEchoLayer:
                 f"{self.COMPONENT_NAME}.transcription.processed",
                 event_data_for_vanta,
                 source=self.COMPONENT_NAME,
-            )
-
-            # Imprint transcription to MemoryBraid
+            )            # Imprint transcription to MemoryBraid
             if self.memory_braid and not isinstance(
-                self.memory_braid, DefaultStubMemoryBraid
+                self.memory_braid, _FallbackMemoryBraid
             ):
                 try:
                     # Create a more structured key for MemoryBraid
@@ -438,11 +418,9 @@ class ExternalEchoLayer:
                         f"Imprinted transcription to MemoryBraid with key '{braid_key}'."
                     )
                 except Exception as e:
-                    logger.error(f"Failed to imprint transcription to MemoryBraid: {e}")
-
-            # If echo_stream is "real", also emit the raw/processed data to it
+                    logger.error(f"Failed to imprint transcription to MemoryBraid: {e}")            # If echo_stream is "real", also emit the raw/processed data to it
             if self.echo_stream and not isinstance(
-                self.echo_stream, DefaultStubEchoStream
+                self.echo_stream, _FallbackEchoStream
             ):
                 self.echo_stream.emit(
                     channel=f"{self.config.echo_stream_component_name}.transcription_input",
@@ -484,7 +462,7 @@ class ExternalEchoLayer:
         channel_suffix: str = "data_out",
     ):
         """Emit to the configured echo_stream component."""
-        if not self.echo_stream or isinstance(self.echo_stream, DefaultStubEchoStream):
+        if not self.echo_stream or isinstance(self.echo_stream, _FallbackEchoStream):
             logger.warning(
                 f"{self.COMPONENT_NAME}: Cannot emit. EchoStream is a stub or not configured."
             )

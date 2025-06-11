@@ -52,29 +52,20 @@ except ImportError as e:
     
     # Create stub classes to avoid breaking imports
     class BLTEnhancedRAG:
-        def __init__(self, *args, **kwargs): pass
+        def __init__(self, *args, **kwargs): pass    # Import unified interface from Vanta
+    from Vanta.interfaces.base_interfaces import BaseRagInterface
     
-    class HybridMiddlewareConfig:
-        def __init__(self, *args, **kwargs): pass
+    # All stub classes removed - use proper imports or handle ImportError
+    HybridMiddlewareConfig = None
+    ByteLatentTransformerEncoder = None
+    EntropyRouter = None
     
-    class BaseRagInterface:
-        def __init__(self, *args, **kwargs): pass
-        
-    class ByteLatentTransformerEncoder:
-        def __init__(self, *args, **kwargs): pass
-        def create_patches(self, *args, **kwargs): return []
-        
-    # Create stub functions
+    # Stub functions removed - use real implementations
     def entropy_router(text, config=None):
         return "token_based", 0.5
         
     def hybrid_embedding(text, token_embedding, patch_embedding, config=None):
         return token_embedding
-        
-    class EntropyRouter:
-        def __init__(self, *args, **kwargs): pass
-        def route(self, text): 
-            return "token_based", None, [0.5]
 
 
 class BLTSupervisorRagInterface(BaseRagInterface):

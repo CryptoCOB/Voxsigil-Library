@@ -1,8 +1,7 @@
 # voxsigil_supervisor/interfaces/memory_interface.py
 """
-Defines the interface for memory management in the VoxSigil Supervisor.
-This includes storing past interactions, retrieval, and supporting
-iterative improvement through memory of previous attempts.
+Memory Interface for VoxSigil Supervisor.
+Now imports unified interface from Vanta instead of defining its own.
 """
 
 from abc import ABC, abstractmethod
@@ -13,128 +12,11 @@ import os
 from pathlib import Path
 from datetime import datetime
 
+# Import unified interface from Vanta - replaces local definition
+from Vanta.interfaces.base_interfaces import BaseMemoryInterface
+
 # Setup the logger
 logger_memory_interface = logging.getLogger("VoxSigilSupervisor.interfaces.memory")
-
-
-class BaseMemoryInterface(ABC):
-    """
-    Abstract Base Class for a memory interface.
-    Implementations will manage storage and retrieval of past interactions,
-    including queries, responses, evaluations, and metadata.
-    """
-
-    @abstractmethod
-    def store_interaction(self, interaction_data: Dict[str, Any]) -> bool:
-        """
-        Stores a complete interaction, including query, response, evaluation, etc.
-
-        Args:
-            interaction_data: Dictionary containing all data to be stored.
-                Must contain at least 'query', 'response', and 'timestamp'.
-
-        Returns:
-            Boolean indicating success.
-        """
-        pass
-
-    def store(
-        self, query: str, response: str, metadata: Optional[Dict[str, Any]] = None
-    ) -> str:
-        """
-        Convenience method to store an interaction with basic fields.
-        This bridges the gap between supervisor_engine and memory implementations.
-
-        Args:
-            query: The query string
-            response: The response string
-            metadata: Optional additional metadata
-
-        Returns:
-            Interaction ID as a string
-        """
-        interaction_data = {
-            "query": query,
-            "response": response,
-            "timestamp": datetime.now().isoformat(),
-        }
-
-        if metadata:
-            interaction_data["metadata"] = metadata
-
-        # Generate ID for this interaction
-        interaction_id = f"int_{datetime.now().strftime('%Y%m%d%H%M%S%f')}"
-        interaction_data["id"] = interaction_id
-
-        # Store using the abstract method that implementations must provide
-        success = self.store_interaction(interaction_data)
-
-        if success:
-            return interaction_id
-        else:
-            return "storage_failed"
-
-    @abstractmethod
-    def retrieve_similar_interactions(
-        self, query: str, limit: int = 3
-    ) -> List[Dict[str, Any]]:
-        """
-        Retrieves interactions with similar queries.
-
-        Args:
-            query: The query to find similar interactions for.
-            limit: Maximum number of interactions to return.
-
-        Returns:
-            List of interaction dictionaries.
-        """
-        pass
-
-    @abstractmethod
-    def retrieve_interaction_by_id(
-        self, interaction_id: str
-    ) -> Optional[Dict[str, Any]]:
-        """
-        Retrieves a specific interaction by ID.
-
-        Args:
-            interaction_id: The ID of the interaction to retrieve.
-
-        Returns:
-            The interaction dictionary if found, None otherwise.
-        """
-        pass
-
-    @abstractmethod
-    def get_interaction_history(
-        self, query_id: Optional[str] = None, limit: int = 10
-    ) -> List[Dict[str, Any]]:
-        """
-        Retrieves the history of interactions, either for a specific query
-        or the most recent interactions overall.
-
-        Args:
-            query_id: Optional ID to get history for a specific query chain.
-            limit: Maximum number of interactions to return.
-
-        Returns:
-            List of interaction dictionaries.
-        """
-        pass
-
-    @abstractmethod
-    def update_interaction(self, interaction_id: str, updates: Dict[str, Any]) -> bool:
-        """
-        Updates an existing interaction with new data.
-
-        Args:
-            interaction_id: The ID of the interaction to update.
-            updates: Dictionary containing the fields to update.
-
-        Returns:
-            Boolean indicating success.
-        """
-        pass
 
 
 class JsonFileMemoryInterface(BaseMemoryInterface):
