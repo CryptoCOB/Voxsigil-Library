@@ -52,9 +52,9 @@ async def register_rag_interfaces(module_registry, config: Dict[str, Any]):
         from training.rag_interface import (
             SupervisorRagInterface,
             SimpleRagInterface,
-            MockRagInterface,
             VOXSIGIL_RAG_AVAILABLE
         )
+        from Vanta.core.fallback_implementations import FallbackRagInterface
         
         # Register SupervisorRagInterface
         if VOXSIGIL_RAG_AVAILABLE:
@@ -105,12 +105,11 @@ async def register_rag_interfaces(module_registry, config: Dict[str, Any]):
             'get_scaffold_definition': 'get_scaffold_definition',
             'get_sigil_by_id': 'get_sigil_by_id'
         }
-        
-        # Note: SimpleRagInterface requires a rag_processor parameter
+          # Note: SimpleRagInterface requires a rag_processor parameter
         # This would typically be provided during specific usage
         logger.info("SimpleRagInterface registration skipped (requires rag_processor)")
         
-        # Register MockRagInterface for testing
+        # Register FallbackRagInterface for testing
         mock_mapping = {
             'retrieve_documents': 'retrieve_documents',
             'index_document': 'index_document',
@@ -126,7 +125,7 @@ async def register_rag_interfaces(module_registry, config: Dict[str, Any]):
         
         success = await module_registry.register_class_based_module(
             module_id='training_mock_rag',
-            module_class=MockRagInterface,
+            module_class=FallbackRagInterface,
             interface_mapping=mock_mapping,
             init_args={},
             module_info={
@@ -138,9 +137,9 @@ async def register_rag_interfaces(module_registry, config: Dict[str, Any]):
         )
         
         if success:
-            logger.info("Registered MockRagInterface with Vanta")
+            logger.info("Registered FallbackRagInterface with Vanta")
         else:
-            logger.warning("Failed to register MockRagInterface")
+            logger.warning("Failed to register FallbackRagInterface")
         
     except Exception as e:
         logger.error(f"Error registering RAG interfaces: {str(e)}")
@@ -180,17 +179,17 @@ async def create_training_adapter(rag_processor=None, interface_type='supervisor
     Args:
         rag_processor: Optional RAG processor for SimpleRagInterface
         interface_type: Type of interface ('supervisor', 'simple', 'mock')
-    
-    Returns:
+      Returns:
         Configured adapter ready for Vanta registration
     """
+        
     try:
         from training.rag_interface import (
             SupervisorRagInterface,
             SimpleRagInterface,
-            MockRagInterface,
             VOXSIGIL_RAG_AVAILABLE
         )
+        from Vanta.core.fallback_implementations import FallbackRagInterface
         from Vanta.integration.module_adapters import ClassBasedAdapter
         
         if interface_type == 'supervisor' and VOXSIGIL_RAG_AVAILABLE:
@@ -236,8 +235,7 @@ async def create_training_adapter(rag_processor=None, interface_type='supervisor
             adapter = ClassBasedAdapter(
                 module_id=f'training_rag_{interface_type}',
                 module_class=SimpleRagInterface,
-                interface_mapping=interface_mapping,
-                init_args={'rag_processor': rag_processor},
+                interface_mapping=interface_mapping,                init_args={'rag_processor': rag_processor},
                 module_info={
                     'name': f'Training {interface_type.title()} RAG Adapter',
                     'type': 'training_rag_adapter',
@@ -262,7 +260,7 @@ async def create_training_adapter(rag_processor=None, interface_type='supervisor
             
             adapter = ClassBasedAdapter(
                 module_id=f'training_rag_{interface_type}',
-                module_class=MockRagInterface,
+                module_class=FallbackRagInterface,
                 interface_mapping=interface_mapping,
                 init_args={},
                 module_info={

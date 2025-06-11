@@ -1,7 +1,7 @@
 
 import logging
 import asyncio
-
+from typing import Optional
 from Vanta.core.UnifiedAsyncBus import AsyncMessage, MessageType
 
 

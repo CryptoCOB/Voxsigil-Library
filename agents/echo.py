@@ -7,8 +7,8 @@ class Echo(BaseAgent):
     invocations = ['Echo log', 'What do you remember?']
 
     def initialize_subsystem(self, core):
-        # Optional: bind to subsystem if defined
-        pass
+        # Bind Echo to a specific subsystem within the core
+        self.subsystem = core.get_subsystem('EchoSubsystem')
 
     def on_gui_call(self):
         # Optional: link to GUI invocation
@@ -16,4 +16,6 @@ class Echo(BaseAgent):
 
     def bind_echo_routes(self):
         # Optional: connect signals to/from UnifiedAsyncBus
-        pass
+        if hasattr(self, 'subsystem'):
+            self.subsystem.bind_routes(self)
+
