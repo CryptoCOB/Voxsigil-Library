@@ -2,7 +2,7 @@
 
 This repository hosts the VoxSigil experimental agent framework. It bundles the
 ``UnifiedVantaCore`` orchestration engine, a collection of 30+ agents and a
-Tkinter based GUI for visual model interaction. Phase 6 and Phase 7 of the
+PyQt5-based GUI for visual model interaction. Phase 6 and Phase 7 of the
 integration plan are now complete: agents live under the ``agents`` package and
 validation tools generate status reports.
 
@@ -44,7 +44,7 @@ validation tools generate status reports.
 ```
 Vanta/           # Core orchestration modules and integration utilities
 handlers/        # Pluggable integration handlers
-gui/             # Tkinter GUI components and tab interfaces
+gui/             # PyQt5 GUI components and tab interfaces
 agents/          # Individual agent class implementations
 scripts/         # Entry points and demo launchers
 ```
