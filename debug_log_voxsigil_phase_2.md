@@ -10,11 +10,11 @@ New issues discovered during deep logic sweep. ✅ indicates fix applied.
 6. Vanta/core/UnifiedVantaCore.py init – async bus start failure silently ignored. Now logs error. ✅
 7. Vanta/core/UnifiedVantaCore.py EventBus.emit – Did not log when no subscribers. Added debug log. ✅
 8. legacy_gui/gui_utils.py _ToolTip – Tooltip windows persisted after root close. Bound destroy event. ✅
-9. async_tts_engine.py _start_background_processing – Used get_event_loop without running loop. Now obtains running loop or creates background loop. ✅
+13. Legacy Tkinter modules moved to `archive/`. See migrated_gui_status.md.
 10. agent_validation.py – agent_status.log lacked trailing newline. Added. ✅
 11. agent_status.log – file recreated with newline. ✅
 12. event "vmb.swarm.initialized" has no subscribers; log at emit covers this. (not fixed)
-13. Multiple legacy Tkinter modules remain under legacy_gui/. Documented in migrated_gui_status.md. (not fixed)
+13. Legacy Tkinter modules archived. (resolved)
 14. path_helper.py – create_sigil_supervisor_instance fallback logging lacked module-level logger. (not fixed)
 15. UnifiedAsyncBus.stop – race condition when stop called while processing queue. Cancel added (see 4). ✅
 16. AsyncTTSEngine background tasks may run without shutdown due to thread loops. Partially mitigated with new loop management. ✅
