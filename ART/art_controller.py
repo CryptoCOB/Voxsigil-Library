@@ -24,7 +24,7 @@ from .art_logger import get_art_logger  # Use the new logger
 
 # HOLO-1.5 Cognitive Mesh Integration
 try:
-    from ..core.vanta_registration import vanta_agent, CognitiveMeshRole, BaseAgent
+    from ..agents.base import vanta_agent, CognitiveMeshRole, BaseAgent
     from ..core.base_agent import VantaAgentCapability
     HOLO_AVAILABLE = True
 except ImportError:
