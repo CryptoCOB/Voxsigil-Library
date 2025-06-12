@@ -2,26 +2,83 @@
 """
 Core Utilities Registration with Vanta
 Registers core utility modules and managers
+
+HOLO-1.5 Enhanced Core Module Registration Manager:
+- Cognitive mesh registration and coordination for core utilities
+- VantaCore-integrated module lifecycle management
+- Neural-symbolic coordination of core module capabilities
+- Recursive symbolic cognition mesh for enhanced system coordination
 """
 
 import logging
 from typing import Dict, Any, List, Optional, Type
 
+# HOLO-1.5 Core Integration
+from .base import BaseCore, vanta_core_module, CognitiveMeshRole
+
 logger = logging.getLogger("Vanta.CoreRegistration")
 
 
-class CoreModuleAdapter:
-    """Adapter for registering core utility modules as Vanta modules."""
+@vanta_core_module(
+    name="core_module_adapter",
+    subsystem="system_management",
+    mesh_role=CognitiveMeshRole.MANAGER,
+    description="HOLO-1.5 enhanced core module registration and lifecycle management adapter",
+    capabilities=[
+        "module_registration",
+        "lifecycle_management",
+        "adaptive_initialization",
+        "capability_extraction",
+        "cognitive_coordination"
+    ],
+    cognitive_load=3.0,
+    symbolic_depth=2,
+    collaboration_patterns=[
+        "module_orchestration",
+        "registration_synthesis",
+        "adaptive_management"
+    ]
+)
+class CoreModuleAdapter(BaseCore):
+    """
+    HOLO-1.5 Enhanced Adapter for registering core utility modules as Vanta modules.
     
-    def __init__(self, module_id: str, module_class: Type, description: str):
+    Provides cognitive mesh registration and coordination capabilities for:
+    - Intelligent module lifecycle management with adaptive initialization
+    - Neural-symbolic capability extraction and registration
+    - Cognitive mesh coordination for enhanced system integration
+    """
+    
+    def __init__(self, vanta_core=None, config: Dict[str, Any] = None, 
+                 module_id: str = None, module_class: Type = None, description: str = None):
+        super().__init__(vanta_core, config)
         self.module_id = module_id
         self.module_class = module_class
         self.description = description
         self.module_instance = None
+        self.cognitive_metrics = {
+            "registration_attempts": 0,
+            "successful_initializations": 0,
+            "capability_extractions": 0,
+            "mesh_coordination_events": 0
+        }
         
-    async def initialize(self, vanta_core):
-        """Initialize the core module instance with vanta core."""
+    async def initialize(self) -> bool:
+        """Initialize the HOLO-1.5 enhanced core module adapter."""
         try:
+            if self.holo15_adapter:
+                await self.holo15_adapter.initialize()
+            
+            logger.info(f"🧠 HOLO-1.5 CoreModuleAdapter initialized for: {self.module_id}")
+            return True
+        except Exception as e:
+            logger.error(f"Failed to initialize HOLO-1.5 CoreModuleAdapter: {e}")
+            return False        
+    async def initialize_module(self, vanta_core):
+        """Initialize the core module instance with cognitive enhancement."""
+        try:
+            self.cognitive_metrics["registration_attempts"] += 1
+            
             # Try to initialize with vanta_core parameter first
             if hasattr(self.module_class, '__init__'):
                 import inspect
@@ -50,14 +107,23 @@ class CoreModuleAdapter:
             elif hasattr(self.module_instance, 'setup'):
                 self.module_instance.setup()
                 
-            logger.info(f"Core module {self.module_id} initialized successfully")
+            self.cognitive_metrics["successful_initializations"] += 1
+            
+            # Update cognitive mesh with registration event
+            if self.holo15_adapter:
+                await self.holo15_adapter.process_symbolic_request(
+                    "module_registered",
+                    {"module_id": self.module_id, "type": "core_utility"}                )
+                self.cognitive_metrics["mesh_coordination_events"] += 1
+                
+            logger.info(f"✅ Core module {self.module_id} initialized successfully with cognitive enhancement")
             return True
         except Exception as e:
-            logger.error(f"Failed to initialize core module {self.module_id}: {e}")
+            logger.error(f"❌ Failed to initialize core module {self.module_id}: {e}")
             return False
             
     async def process_request(self, request: Dict[str, Any]) -> Dict[str, Any]:
-        """Process a request through the core module."""
+        """Process a request through the core module with cognitive enhancement."""
         if not self.module_instance:
             return {"error": f"Core module {self.module_id} not initialized"}
             
@@ -74,25 +140,40 @@ class CoreModuleAdapter:
             else:
                 result = {"message": f"Core module {self.module_id} processed request"}
                 
-            return {"module": self.module_id, "result": result}
+            # Update cognitive mesh with processing event
+            if self.holo15_adapter:
+                await self.holo15_adapter.process_symbolic_request(
+                    "request_processed",
+                    {"module_id": self.module_id, "request_type": request.get("type", "unknown")}
+                )
+                self.cognitive_metrics["mesh_coordination_events"] += 1
+                
+            return {"module": self.module_id, "result": result, "cognitive_enhanced": True}
         except Exception as e:
             logger.error(f"Error processing request in core module {self.module_id}: {e}")
-            return {"error": str(e)}
-            
+            return {"error": str(e)}            
+        
     def get_metadata(self) -> Dict[str, Any]:
-        """Get core module metadata for Vanta registration."""
+        """Get enhanced core module metadata for Vanta registration."""
+        self.cognitive_metrics["capability_extractions"] += 1
+        
         metadata = {
             "type": "core_utility",
             "description": self.description,
             "capabilities": self._extract_capabilities(),
             "module_class": self.module_class.__name__,
+            "holo15_enhanced": True,
+            "cognitive_metrics": self.cognitive_metrics.copy(),
+            "mesh_role": "MANAGER",
+            "subsystem": "system_management"
         }
         return metadata
         
     def _extract_capabilities(self) -> List[str]:
-        """Extract capabilities based on module type."""
+        """Extract capabilities based on module type with cognitive enhancement."""        
+        
         module_name = self.module_id.lower()
-        capabilities = ["utility"]
+        capabilities = ["utility", "cognitive_enhanced"]
         
         if 'learning' in module_name:
             capabilities.extend(['learning', 'training'])

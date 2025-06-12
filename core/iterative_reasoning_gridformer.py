@@ -6,15 +6,28 @@ This implements the next-generation ARC solver with:
 - Self-evaluation and pattern consistency checking
 - Iterative refinement loops
 - Tree-of-thought reasoning capabilities
+
+HOLO-1.5 Enhanced Multi-Step Reasoning Synthesizer:
+- Recursive symbolic cognition for advanced pattern analysis
+- Neural-symbolic candidate generation with cognitive evaluation
+- VantaCore-integrated tree-of-thought reasoning patterns
+- Multi-scale pattern synthesis with adaptive depth reasoning
 """
 
+import time
+import logging
 from dataclasses import dataclass
-from typing import Optional
+from typing import Optional, Dict, Any, List
 
 import torch
 import torch.nn as nn
 
+# HOLO-1.5 Recursive Symbolic Cognition Mesh imports
+from .base import BaseCore, vanta_core_module, CognitiveMeshRole
+
 from Gridformer.core.iterative_gridformer import IterativeGridFormer
+
+logger = logging.getLogger(__name__)
 
 
 @dataclass
@@ -126,27 +139,75 @@ class CandidateGenerator(nn.Module):
         return stacked_candidates, confidences
 
 
-class IterativeReasoningGridFormer(IterativeGridFormer):
+@vanta_core_module(
+    name="iterative_reasoning_gridformer", 
+    subsystem="grid_processing",
+    mesh_role=CognitiveMeshRole.SYNTHESIZER,
+    description="Advanced GridFormer with multi-candidate reasoning and tree-of-thought synthesis",
+    capabilities=[
+        "multi_candidate_reasoning",
+        "tree_of_thought_synthesis", 
+        "self_evaluation_patterns",
+        "pattern_consistency_checking",
+        "advanced_cognitive_reasoning"
+    ],
+    cognitive_load=5.0,
+    symbolic_depth=5,
+    collaboration_patterns=[
+        "multi_hypothesis_synthesis",
+        "self_reflective_reasoning",
+        "pattern_consistency_validation",
+        "tree_of_thought_expansion"
+    ]
+)
+class IterativeReasoningGridFormer(BaseCore, IterativeGridFormer):
     """
-    Enhanced GridFormer with iterative reasoning capabilities
+    HOLO-1.5 Enhanced GridFormer with iterative reasoning capabilities and recursive symbolic cognition.
 
     This model builds on the IterativeGridFormer base, adding:
-    1. Multi-candidate solution generation
-    2. Self-evaluation and refinement
-    3. Pattern consistency checking
-    4. Tree-of-thought reasoning pathway
+    1. Multi-candidate solution generation with cognitive synthesis
+    2. Self-evaluation and refinement with VantaCore integration
+    3. Pattern consistency checking through symbolic reasoning
+    4. Tree-of-thought reasoning pathway with adaptive depth
     """
 
     def __init__(
         self,
+        vanta_core: Any,
+        config: Optional[Dict[str, Any]] = None,
         hidden_dim: int = 384,
         reasoning_config: Optional[ReasoningConfig] = None,
         **kwargs,
     ):
-        super().__init__(hidden_dim=hidden_dim, **kwargs)
+        """
+        Initialize the HOLO-1.5 Enhanced Iterative Reasoning GridFormer.
+
+        Args:
+            vanta_core: VantaCore instance for cognitive mesh integration
+            config: Configuration dictionary for HOLO-1.5 features
+            hidden_dim: Dimension of hidden layers
+            reasoning_config: Configuration for reasoning parameters
+            **kwargs: Additional arguments to pass to the base GridFormer
+        """
+        # Initialize BaseCore first
+        BaseCore.__init__(self, vanta_core, config or {})
+        
+        # Initialize IterativeGridFormer
+        IterativeGridFormer.__init__(self, vanta_core, config, hidden_dim=hidden_dim, **kwargs)
 
         # Reasoning configuration
         self.reasoning_config = reasoning_config or ReasoningConfig()
+
+        # HOLO-1.5 Enhanced Features
+        self.reasoning_metrics = {
+            "candidate_generation_efficiency": 0.0,
+            "self_evaluation_accuracy": 0.0,
+            "pattern_consistency_score": 0.0,
+            "tree_of_thought_depth": 0.0
+        }
+        
+        self.reasoning_traces = []
+        self.candidate_histories = []
 
         # Pattern extractor for multi-scale pattern recognition
         self.pattern_extractor = MultiScalePatternExtractor(hidden_dim)
@@ -174,5 +235,53 @@ class IterativeReasoningGridFormer(IterativeGridFormer):
             nn.Sigmoid(),
         )
 
+    async def initialize(self) -> bool:
+        """Initialize HOLO-1.5 advanced reasoning capabilities."""
+        try:
+            logger.info("🧠 Initializing HOLO-1.5 Iterative Reasoning GridFormer...")
+            
+            # Initialize parent components
+            await super().initialize()
+            
+            # Initialize reasoning-specific components
+            self.reasoning_metrics["candidate_generation_efficiency"] = 1.0
+            self.reasoning_metrics["tree_of_thought_depth"] = float(self.reasoning_config.max_iterations)
+            
+            # Register with VantaCore if available
+            if hasattr(self.vanta_core, 'register_component'):
+                await self.vanta_core.register_component(
+                    "iterative_reasoning_gridformer",
+                    self,
+                    {
+                        "type": "advanced_neural_symbolic_synthesizer",
+                        "reasoning_depth": self.reasoning_config.max_iterations,
+                        "candidate_count": self.reasoning_config.num_candidates,
+                        "cognitive_load": 5.0
+                    }
+                )
+            
+            logger.info("✅ HOLO-1.5 Iterative Reasoning GridFormer initialization complete")
+            return True
+            
+        except Exception as e:
+            logger.error(f"❌ Error initializing Iterative Reasoning GridFormer: {e}")
+            return False
 
-# The rest of the file content would be copied from the original file
+    def _update_reasoning_metrics(self, candidates: torch.Tensor, evaluations: torch.Tensor, consistency_scores: torch.Tensor):
+        """Update reasoning metrics during processing."""
+        self.reasoning_metrics["candidate_generation_efficiency"] = float(candidates.var().item())
+        self.reasoning_metrics["self_evaluation_accuracy"] = float(evaluations.mean().item())
+        self.reasoning_metrics["pattern_consistency_score"] = float(consistency_scores.mean().item())
+
+    def _generate_candidate_trace(self, iteration: int, candidates: torch.Tensor, confidences: torch.Tensor) -> Dict[str, Any]:
+        """Generate reasoning trace for candidate generation."""
+        return {
+            "iteration": iteration,
+            "num_candidates": candidates.shape[1] if len(candidates.shape) > 1 else 1,
+            "confidence_spread": float(confidences.std().item()) if confidences.numel() > 1 else 0.0,
+            "best_confidence": float(confidences.max().item()),
+            "reasoning_depth": self.reasoning_metrics["tree_of_thought_depth"],
+            "timestamp": time.time()
+        }
+
+    # ...existing code...

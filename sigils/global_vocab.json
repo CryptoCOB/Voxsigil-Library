@@ -1,0 +1,153 @@
+{
+  "_metadata": {
+    "version": "1.5.0",
+    "description": "Global VoxSigil tag vocabulary with expanded music genre support",
+    "last_updated": "2024-12-28T00:00:00Z",
+    "encoding_format": "BLT_enhanced",
+    "cognitive_mesh_compatible": true
+  },
+  
+  "core_categories": {
+    "cognitive_primitives": [
+      "reasoning", "memory", "perception", "attention", "learning", 
+      "abstraction", "pattern_recognition", "symbolic_processing"
+    ],
+    
+    "architectural_roles": [
+      "synthesizer", "processor", "coordinator", "manager", "translator",
+      "adapter", "interface", "gateway", "bridge", "mesh_node"
+    ],
+    
+    "system_components": [
+      "vanta_core", "holo_mesh", "blt_engine", "mini_cache", "sleep_compute",
+      "evo_nas", "grid_former", "arc_solver", "memory_braid"
+    ],
+    
+    "processing_stages": [
+      "input_validation", "feature_extraction", "embedding_generation",
+      "similarity_search", "context_optimization", "output_formatting"
+    ]
+  },
+  
+  "music_genres": {
+    "hip_hop_family": [
+      "Hip Hop", "Rap", "Alternative Hip Hop", "Southern Hip Hop", 
+      "Grime", "Beats", "Motivation"
+    ],
+    
+    "electronic_family": [
+      "EDM", "Electronic", "Synthesized", "Digital", "Techno", 
+      "House", "Ambient Electronic", "Experimental Electronic"
+    ],
+    
+    "world_fusion": [
+      "Afrobeats", "Dancehall", "Reggaeton", "Latin Fusion", 
+      "Caribbean", "African Rhythms", "Global Beats"
+    ],
+    
+    "mainstream_commercial": [
+      "Pop", "Contemporary", "Radio Friendly", "Commercial", 
+      "Crossover", "Chart Topper"
+    ],
+    
+    "atmospheric_moods": [
+      "Chill", "Mellow", "Relaxed", "Ambient", "Lounge", 
+      "Downtempo", "Peaceful", "Meditative", "Background"
+    ],
+    
+    "cinematic_narrative": [
+      "Soundtrack", "Cinematic", "Film Score", "Game Music", 
+      "Orchestral", "Epic", "Dramatic", "Narrative"
+    ],
+    
+    "sensual_intimate": [
+      "Sensual", "Romantic", "Intimate", "Smooth", "Sultry", 
+      "Bedroom", "Late Night", "Slow Jam"
+    ]
+  },
+  
+  "audio_characteristics": {
+    "tempo_descriptors": [
+      "fast_tempo", "moderate_tempo", "slow_tempo", "variable_tempo",
+      "accelerating", "decelerating", "rhythmic_complex", "steady_beat"
+    ],
+    
+    "energy_levels": [
+      "high_energy", "medium_energy", "low_energy", "building_energy",
+      "explosive", "calm", "intense", "gentle", "powerful", "subtle"
+    ],
+    
+    "textural_qualities": [
+      "smooth", "rough", "layered", "minimal", "dense", "sparse",
+      "warm", "cold", "bright", "dark", "crisp", "muddy"
+    ],
+    
+    "instrumental_focus": [
+      "vocal_prominent", "instrumental", "acapella", "vocal_harmony",
+      "rap_vocals", "sung_vocals", "spoken_word", "lyrical_focus"
+    ]
+  },
+  
+  "contextual_usage": {
+    "application_scenarios": [
+      "background_music", "focus_music", "workout_music", "relaxation",
+      "studying", "gaming", "socializing", "meditation", "creative_work"
+    ],
+    
+    "emotional_intent": [
+      "motivational", "calming", "energizing", "inspiring", "melancholic",
+      "joyful", "aggressive", "peaceful", "nostalgic", "futuristic"
+    ],
+    
+    "cultural_contexts": [
+      "urban", "rural", "metropolitan", "underground", "mainstream",
+      "subculture", "traditional", "modern", "experimental", "commercial"
+    ]
+  },
+  
+  "technical_metadata": {
+    "production_qualities": [
+      "professional_production", "lo_fi", "hi_fi", "studio_quality",
+      "live_recording", "processed", "raw", "polished", "experimental_mix"
+    ],
+    
+    "audio_processing": [
+      "stem_separated", "mastered", "compressed", "dynamic_range_high",
+      "dynamic_range_low", "eq_enhanced", "effects_heavy", "effects_minimal"
+    ],
+    
+    "format_specifications": [
+      "stereo", "mono", "surround", "binaural", "spatial_audio",
+      "high_res", "standard_res", "streaming_quality", "audiophile_quality"
+    ]
+  },
+  
+  "blt_embedding_hints": {
+    "semantic_clusters": {
+      "rhythmic_patterns": ["beats", "rhythm", "groove", "pulse", "syncopation"],
+      "melodic_content": ["melody", "harmony", "chord_progression", "scale", "mode"],
+      "vocal_styles": ["singing", "rapping", "chanting", "humming", "vocoding"],
+      "genre_fusion": ["crossover", "hybrid", "fusion", "blend", "mix"]
+    },
+    
+    "embedding_weights": {
+      "genre_primary": 0.4,
+      "mood_secondary": 0.25,
+      "tempo_tertiary": 0.15,
+      "cultural_context": 0.1,
+      "technical_quality": 0.1
+    }
+  },
+  
+  "expansion_ready": {
+    "future_genres": [
+      "AI_Generated", "Procedural", "Algorithmic", "Neural_Composed",
+      "Human_AI_Collaborative", "Real_Time_Generated"
+    ],
+    
+    "emerging_categories": [
+      "Binaural_Beats", "Frequency_Healing", "Neurofeedback_Music",
+      "Adaptive_Soundscapes", "Interactive_Audio", "VR_Spatial_Audio"
+    ]
+  }
+}

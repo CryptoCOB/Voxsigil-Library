@@ -1,0 +1,311 @@
+
+{
+  "_metadata": {
+    "preset_name": "urban_ambience",
+    "version": "1.0.0", 
+    "description": "Urban soundscape presets for music genre enhancement",
+    "cognitive_mesh_compatible": true,
+    "last_updated": "2024-12-28T00:00:00Z"
+  },
+
+  "urban_environments": {
+    "hip_hop_street": {
+      "base_layers": [
+        {
+          "name": "street_traffic",
+          "description": "Distant traffic with occasional horn",
+          "volume": 0.2,
+          "loop_duration": 30.0,
+          "frequency_range": [50, 2000],
+          "spatial_positioning": "background",
+          "cognitive_load": 1.5
+        },
+        {
+          "name": "urban_voices", 
+          "description": "Distant conversations and street chatter",
+          "volume": 0.15,
+          "loop_duration": 45.0,
+          "frequency_range": [200, 3000],
+          "spatial_positioning": "mid-ground",
+          "cognitive_load": 2.0
+        },
+        {
+          "name": "subway_rumble",
+          "description": "Underground subway passing underneath",
+          "volume": 0.1,
+          "loop_duration": 60.0,
+          "frequency_range": [20, 500],
+          "spatial_positioning": "underground",
+          "cognitive_load": 1.2
+        }
+      ],
+      
+      "accent_elements": [
+        {
+          "name": "siren_distant",
+          "trigger_probability": 0.15,
+          "duration_range": [2.0, 4.0],
+          "volume_range": [0.05, 0.15],
+          "frequency_doppler": true,
+          "cognitive_impact": "tension_builder"
+        },
+        {
+          "name": "car_door_slam",
+          "trigger_probability": 0.08,
+          "duration_range": [0.5, 1.0],
+          "volume_range": [0.1, 0.25],
+          "spatial_random": true,
+          "cognitive_impact": "rhythm_punctuation"
+        },
+        {
+          "name": "footsteps_concrete",
+          "trigger_probability": 0.12,
+          "duration_range": [3.0, 8.0],
+          "volume_range": [0.08, 0.18],
+          "tempo_sync": true,
+          "cognitive_impact": "groove_enhancement"
+        }
+      ],
+
+      "genre_adaptations": {
+        "Hip Hop": {
+          "emphasis": "rhythmic_elements",
+          "volume_boost": 0.1,
+          "frequency_emphasis": [80, 120, 1000, 2000],
+          "accent_probability_multiplier": 1.2
+        },
+        "Rap": {
+          "emphasis": "vocal_clarity", 
+          "volume_reduction": 0.05,
+          "frequency_ducking": [300, 3000],
+          "accent_probability_multiplier": 0.9
+        },
+        "Grime": {
+          "emphasis": "tension_building",
+          "volume_boost": 0.15,
+          "frequency_emphasis": [200, 500, 2000, 4000],
+          "accent_probability_multiplier": 1.5
+        }
+      }
+    },
+
+    "downtown_electronic": {
+      "base_layers": [
+        {
+          "name": "neon_hum",
+          "description": "Electrical hum from neon signs and electronics",
+          "volume": 0.08,
+          "loop_duration": 120.0,
+          "frequency_range": [60, 300],
+          "spatial_positioning": "ambient",
+          "cognitive_load": 0.8
+        },
+        {
+          "name": "ventilation_systems",
+          "description": "Building ventilation and air conditioning",
+          "volume": 0.12,
+          "loop_duration": 90.0,
+          "frequency_range": [100, 1000],
+          "spatial_positioning": "background",
+          "cognitive_load": 1.0
+        },
+        {
+          "name": "electronic_interference",
+          "description": "Subtle electronic buzzing and interference",
+          "volume": 0.05,
+          "loop_duration": 15.0,
+          "frequency_range": [1000, 8000],
+          "spatial_positioning": "foreground",
+          "cognitive_load": 1.8
+        }
+      ],
+
+      "accent_elements": [
+        {
+          "name": "elevator_ding",
+          "trigger_probability": 0.06,
+          "duration_range": [1.0, 2.0],
+          "volume_range": [0.08, 0.15],
+          "pitch_variation": true,
+          "cognitive_impact": "structural_marker"
+        },
+        {
+          "name": "phone_ring_distant",
+          "trigger_probability": 0.04,
+          "duration_range": [3.0, 6.0],
+          "volume_range": [0.05, 0.12],
+          "frequency_modulation": true,
+          "cognitive_impact": "attention_focal"
+        }
+      ],
+
+      "genre_adaptations": {
+        "EDM": {
+          "emphasis": "electronic_elements",
+          "volume_boost": 0.2,
+          "frequency_emphasis": [125, 250, 4000, 8000],
+          "sync_to_bpm": true
+        },
+        "Electronic": {
+          "emphasis": "ambient_texture",
+          "volume_neutral": 0.0,
+          "frequency_emphasis": [60, 120, 2000, 4000],
+          "reverb_enhancement": 0.3
+        }
+      }
+    },
+
+    "late_night_chill": {
+      "base_layers": [
+        {
+          "name": "night_wind",
+          "description": "Gentle wind through urban corridors",
+          "volume": 0.18,
+          "loop_duration": 180.0,
+          "frequency_range": [20, 800],
+          "spatial_positioning": "ambient",
+          "cognitive_load": 0.5
+        },
+        {
+          "name": "distant_music",
+          "description": "Muffled music from nearby apartments",
+          "volume": 0.08,
+          "loop_duration": 240.0,
+          "frequency_range": [100, 1500],
+          "spatial_positioning": "far_background",
+          "cognitive_load": 1.2
+        },
+        {
+          "name": "night_insects",
+          "description": "Urban crickets and night sounds",
+          "volume": 0.12,
+          "loop_duration": 300.0,
+          "frequency_range": [1000, 6000],
+          "spatial_positioning": "environmental",
+          "cognitive_load": 0.8
+        }
+      ],
+
+      "accent_elements": [
+        {
+          "name": "cat_meow_distant",
+          "trigger_probability": 0.03,
+          "duration_range": [1.0, 2.0],
+          "volume_range": [0.06, 0.12],
+          "pitch_natural_variation": true,
+          "cognitive_impact": "intimacy_enhancer"
+        },
+        {
+          "name": "window_close",
+          "trigger_probability": 0.05,
+          "duration_range": [2.0, 3.0],
+          "volume_range": [0.08, 0.15],
+          "spatial_random": true,
+          "cognitive_impact": "narrative_punctuation"
+        }
+      ],
+
+      "genre_adaptations": {
+        "Chill": {
+          "emphasis": "relaxation_inducing",
+          "volume_reduction": 0.1,
+          "frequency_emphasis": [50, 100, 500, 1000],
+          "accent_probability_multiplier": 0.7
+        },
+        "Mellow": {
+          "emphasis": "warm_atmosphere",
+          "volume_neutral": 0.0,
+          "frequency_emphasis": [80, 200, 800, 2000],
+          "reverb_enhancement": 0.2
+        },
+        "Sensual": {
+          "emphasis": "intimate_atmosphere",
+          "volume_reduction": 0.15,
+          "frequency_emphasis": [60, 150, 600, 1200],
+          "accent_probability_multiplier": 0.5
+        }
+      }
+    }
+  },
+
+  "processing_parameters": {
+    "cognitive_mesh_integration": {
+      "real_time_adaptation": true,
+      "context_awareness": true,
+      "user_preference_learning": true,
+      "emotional_state_responsive": true
+    },
+
+    "audio_processing": {
+      "sample_rate": 44100,
+      "bit_depth": 24,
+      "spatial_audio_enabled": true,
+      "binaural_processing": true,
+      "reverb_room_modeling": true
+    },
+
+    "generation_algorithms": {
+      "procedural_variation": {
+        "enabled": true,
+        "variation_strength": 0.3,
+        "evolution_rate": 0.1,
+        "pattern_memory": 300
+      },
+      
+      "adaptive_mixing": {
+        "enabled": true,
+        "genre_aware": true,
+        "dynamic_eq": true,
+        "multi_band_compression": true
+      },
+
+      "cognitive_modulation": {
+        "attention_focus_adjustment": true,
+        "cognitive_load_balancing": true,
+        "emotional_arc_following": true,
+        "user_fatigue_prevention": true
+      }
+    }
+  },
+
+  "integration_apis": {
+    "music_composer_agent": {
+      "endpoint": "/agents/ensemble/music/composer",
+      "real_time_sync": true,
+      "genre_conditioning_shared": true,
+      "tempo_sync_enabled": true
+    },
+
+    "music_sense_agent": {
+      "endpoint": "/agents/ensemble/music/sense", 
+      "feedback_loop_enabled": true,
+      "audio_analysis_shared": true,
+      "context_detection_shared": true
+    },
+
+    "vanta_core_mesh": {
+      "cognitive_load_reporting": true,
+      "context_state_sharing": true,
+      "user_preference_sync": true,
+      "emotional_state_sync": true
+    }
+  },
+
+  "user_customization": {
+    "preference_categories": [
+      "urban_density_preference",
+      "electronic_vs_organic_balance", 
+      "foreground_vs_background_emphasis",
+      "rhythmic_vs_ambient_focus",
+      "day_vs_night_atmosphere"
+    ],
+
+    "adaptive_parameters": [
+      "base_volume_adjustment",
+      "frequency_balance_preference",
+      "accent_element_frequency",
+      "spatial_positioning_preference",
+      "cognitive_load_tolerance"
+    ]
+  }
+}

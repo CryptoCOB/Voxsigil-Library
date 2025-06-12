@@ -1,0 +1,358 @@
+
+{
+  "_metadata": {
+    "preset_name": "foley_effects_library",
+    "version": "1.0.0",
+    "description": "Comprehensive foley effects for genre-aware music production",
+    "cognitive_mesh_compatible": true,
+    "last_updated": "2024-12-28T00:00:00Z"
+  },
+
+  "rhythmic_elements": {
+    "percussion_foley": [
+      {
+        "name": "vinyl_scratch",
+        "description": "Classic turntable scratch for hip-hop",
+        "duration_range": [0.2, 2.0],
+        "frequency_range": [200, 8000],
+        "genres": ["Hip Hop", "Rap", "Beats"],
+        "cognitive_impact": "groove_enhancement",
+        "tempo_sync": true,
+        "variations": 12
+      },
+      {
+        "name": "tape_stop",
+        "description": "Analog tape machine stopping effect",
+        "duration_range": [0.5, 3.0],
+        "frequency_range": [50, 4000],
+        "genres": ["Hip Hop", "Alternative Hip Hop", "Chill"],
+        "cognitive_impact": "transition_marker",
+        "pitch_drop": true,
+        "variations": 8
+      },
+      {
+        "name": "cassette_flip",
+        "description": "Cassette tape being flipped",
+        "duration_range": [1.0, 2.5],
+        "frequency_range": [100, 3000],
+        "genres": ["Beats", "Mellow", "Soundtrack"],
+        "cognitive_impact": "nostalgic_punctuation",
+        "mechanical_character": true,
+        "variations": 6
+      }
+    ],
+
+    "digital_glitches": [
+      {
+        "name": "bit_crush_drop",
+        "description": "Digital bit crushing effect",
+        "duration_range": [0.1, 1.0],
+        "frequency_range": [100, 12000],
+        "genres": ["EDM", "Electronic", "Grime"],
+        "cognitive_impact": "tension_builder",
+        "aliasing_effect": true,
+        "variations": 15
+      },
+      {
+        "name": "buffer_underrun",
+        "description": "Digital audio dropout/glitch",
+        "duration_range": [0.05, 0.5],
+        "frequency_range": [50, 16000],
+        "genres": ["EDM", "Electronic", "Alternative Hip Hop"],
+        "cognitive_impact": "rhythmic_disruption",
+        "stutter_pattern": true,
+        "variations": 20
+      }
+    ]
+  },
+
+  "atmospheric_textures": {
+    "urban_atmosphere": [
+      {
+        "name": "subway_train_approach",
+        "description": "Underground train approaching and departing",
+        "duration_range": [8.0, 15.0],
+        "frequency_range": [20, 2000],
+        "genres": ["Hip Hop", "Grime", "Soundtrack"],
+        "cognitive_impact": "narrative_building",
+        "doppler_effect": true,
+        "spatial_movement": true,
+        "variations": 4
+      },
+      {
+        "name": "rain_on_concrete",
+        "description": "Urban rainfall on pavement",
+        "duration_range": [30.0, 300.0],
+        "frequency_range": [200, 8000],
+        "genres": ["Chill", "Mellow", "Sensual", "Soundtrack"],
+        "cognitive_impact": "mood_setting",
+        "intensity_variable": true,
+        "layered_texture": true,
+        "variations": 8
+      },
+      {
+        "name": "neon_electric_buzz",
+        "description": "Electrical hum from neon signage",
+        "duration_range": [10.0, 120.0],
+        "frequency_range": [60, 500],
+        "genres": ["EDM", "Electronic", "Sensual"],
+        "cognitive_impact": "atmospheric_tension",
+        "harmonic_content": true,
+        "flicker_variation": true,
+        "variations": 6
+      }
+    ],
+
+    "natural_elements": [
+      {
+        "name": "ocean_waves_distant",
+        "description": "Distant ocean waves for relaxation",
+        "duration_range": [60.0, 600.0],
+        "frequency_range": [30, 2000],
+        "genres": ["Chill", "Mellow", "Ambient"],
+        "cognitive_impact": "stress_reduction",
+        "rhythmic_pattern": true,
+        "binaural_compatible": true,
+        "variations": 5
+      },
+      {
+        "name": "wind_through_trees",
+        "description": "Wind rustling through foliage",
+        "duration_range": [15.0, 180.0],
+        "frequency_range": [100, 6000],
+        "genres": ["Chill", "Mellow", "Soundtrack"],
+        "cognitive_impact": "natural_grounding",
+        "dynamic_variation": true,
+        "spatial_imaging": true,
+        "variations": 10
+      }
+    ]
+  },
+
+  "vocal_elements": {
+    "speech_textures": [
+      {
+        "name": "radio_chatter",
+        "description": "Distant radio communication",
+        "duration_range": [2.0, 8.0],
+        "frequency_range": [300, 3000],
+        "genres": ["Hip Hop", "Grime", "Soundtrack"],
+        "cognitive_impact": "narrative_context",
+        "intelligibility": "low",
+        "static_overlay": true,
+        "variations": 12
+      },
+      {
+        "name": "crowd_murmur",
+        "description": "Distant crowd conversation",
+        "duration_range": [10.0, 60.0],
+        "frequency_range": [200, 4000],
+        "genres": ["Hip Hop", "Pop", "Dancehall"],
+        "cognitive_impact": "social_energy",
+        "density_variable": true,
+        "emotional_tone_variable": true,
+        "variations": 8
+      }
+    ],
+
+    "breath_and_vocal": [
+      {
+        "name": "intimate_breath",
+        "description": "Close intimate breathing sounds",
+        "duration_range": [1.0, 4.0],
+        "frequency_range": [50, 1000],
+        "genres": ["Sensual", "Mellow", "Pop"],
+        "cognitive_impact": "intimacy_enhancement",
+        "proximity_feeling": true,
+        "emotional_resonance": "high",
+        "variations": 15
+      },
+      {
+        "name": "vocal_hum_ambient",
+        "description": "Soft background vocal humming",
+        "duration_range": [5.0, 30.0],
+        "frequency_range": [80, 800],
+        "genres": ["Chill", "Mellow", "Sensual"],
+        "cognitive_impact": "emotional_warmth",
+        "harmonic_content": true,
+        "melody_fragments": true,
+        "variations": 10
+      }
+    ]
+  },
+
+  "mechanical_industrial": {
+    "studio_equipment": [
+      {
+        "name": "tape_machine_transport",
+        "description": "Analog tape machine mechanical sounds",
+        "duration_range": [0.5, 3.0],
+        "frequency_range": [100, 2000],
+        "genres": ["Hip Hop", "Beats", "Alternative Hip Hop"],
+        "cognitive_impact": "authentic_production",
+        "mechanical_precision": true,
+        "nostalgic_character": true,
+        "variations": 8
+      },
+      {
+        "name": "vinyl_surface_noise",
+        "description": "Record player surface noise and pops",
+        "duration_range": [1.0, 30.0],
+        "frequency_range": [500, 12000],
+        "genres": ["Hip Hop", "Beats", "Mellow"],
+        "cognitive_impact": "warmth_and_character",
+        "random_pattern": true,
+        "density_adjustable": true,
+        "variations": 12
+      }
+    ],
+
+    "urban_machinery": [
+      {
+        "name": "construction_distant",
+        "description": "Distant construction site activity",
+        "duration_range": [10.0, 60.0],
+        "frequency_range": [50, 5000],
+        "genres": ["Hip Hop", "Grime", "EDM"],
+        "cognitive_impact": "urban_energy",
+        "rhythmic_elements": true,
+        "industrial_character": true,
+        "variations": 6
+      },
+      {
+        "name": "air_conditioning_hum",
+        "description": "Building HVAC system ambient",
+        "duration_range": [30.0, 300.0],
+        "frequency_range": [60, 1000],
+        "genres": ["Electronic", "Sensual", "Chill"],
+        "cognitive_impact": "indoor_atmosphere",
+        "consistent_drone": true,
+        "frequency_modulation": "subtle",
+        "variations": 4
+      }
+    ]
+  },
+
+  "narrative_elements": {
+    "story_punctuation": [
+      {
+        "name": "door_creak_slow",
+        "description": "Slow creaking door opening",
+        "duration_range": [2.0, 5.0],
+        "frequency_range": [100, 3000],
+        "genres": ["Soundtrack", "Sensual", "Mellow"],
+        "cognitive_impact": "tension_and_anticipation",
+        "emotional_weight": "medium",
+        "narrative_function": "transition",
+        "variations": 6
+      },
+      {
+        "name": "footsteps_echo",
+        "description": "Footsteps in reverberant space",
+        "duration_range": [3.0, 10.0],
+        "frequency_range": [50, 2000],
+        "genres": ["Soundtrack", "Hip Hop", "Grime"],
+        "cognitive_impact": "spatial_storytelling",
+        "tempo_sync_capable": true,
+        "character_weight_variable": true,
+        "variations": 12
+      }
+    ],
+
+    "emotional_markers": [
+      {
+        "name": "phone_vibration",
+        "description": "Cell phone vibrating on surface",
+        "duration_range": [0.5, 3.0],
+        "frequency_range": [80, 400],
+        "genres": ["Hip Hop", "Pop", "Sensual"],
+        "cognitive_impact": "modern_life_interruption",
+        "pattern_rhythm": "notification",
+        "urgency_variable": true,
+        "variations": 8
+      },
+      {
+        "name": "clock_ticking",
+        "description": "Wall clock steady ticking",
+        "duration_range": [5.0, 120.0],
+        "frequency_range": [200, 2000],
+        "genres": ["Soundtrack", "Mellow", "Sensual"],
+        "cognitive_impact": "time_awareness",
+        "tempo_implications": true,
+        "psychological_pressure": "subtle",
+        "variations": 4
+      }
+    ]
+  },
+
+  "processing_configurations": {
+    "cognitive_mesh_parameters": {
+      "context_awareness": {
+        "genre_detection": true,
+        "tempo_analysis": true,
+        "emotional_state_tracking": true,
+        "user_preference_learning": true
+      },
+
+      "adaptive_selection": {
+        "probability_weighting": true,
+        "cognitive_load_balancing": true,
+        "narrative_coherence": true,
+        "genre_appropriateness": true
+      },
+
+      "real_time_modulation": {
+        "volume_automation": true,
+        "frequency_shaping": true,
+        "spatial_positioning": true,
+        "timing_adjustment": true
+      }
+    },
+
+    "audio_processing": {
+      "format_specifications": {
+        "sample_rate": 44100,
+        "bit_depth": 24,
+        "format": "WAV",
+        "compression": "lossless"
+      },
+
+      "effects_processing": {
+        "reverb_simulation": true,
+        "distance_modeling": true,
+        "material_acoustic_simulation": true,
+        "binaural_spatialization": true
+      },
+
+      "dynamic_processing": {
+        "automatic_gain_control": true,
+        "multi_band_compression": true,
+        "noise_gate": true,
+        "limiter": true
+      }
+    }
+  },
+
+  "integration_apis": {
+    "music_composer_integration": {
+      "tempo_sync": true,
+      "key_signature_awareness": true,
+      "harmonic_content_analysis": true,
+      "rhythmic_grid_alignment": true
+    },
+
+    "storytelling_integration": {
+      "narrative_arc_following": true,
+      "character_development_support": true,
+      "scene_transition_enhancement": true,
+      "emotional_pacing_assistance": true
+    },
+
+    "user_interaction": {
+      "manual_trigger_support": true,
+      "gesture_control_compatibility": true,
+      "voice_command_integration": true,
+      "midi_controller_mapping": true
+    }
+  }
+}

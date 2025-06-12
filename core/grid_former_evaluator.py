@@ -1,14 +1,16 @@
 #!/usr/bin/env python3
 """
-🔮 VoxSigil GridFormer Evaluator - Complete Evaluation Tool v1.0
+🔮 VoxSigil GridFormer Evaluator - Complete Evaluation Tool v1.5
+Enhanced with HOLO-1.5 Recursive Symbolic Cognition Mesh processing capabilities
 Integrates visualization and inference capabilities for ARC tasks
 
 Features:
-- Comprehensive model evaluation
+- Comprehensive model evaluation with cognitive processing
 - Visual side-by-side comparison (input, expected output, prediction)
-- Multi-strategy inference testing
-- Performance metrics with detailed reports
-- Batch testing across multiple tasks
+- Multi-strategy inference testing with symbolic reasoning traces
+- Performance metrics with meta-cognitive insights
+- Batch testing across multiple tasks with collaborative evaluation
+- Enhanced evaluation metrics with cognitive load assessment
 """
 
 import sys
@@ -22,6 +24,9 @@ from datetime import datetime
 import argparse
 import logging
 from enum import Enum
+
+# HOLO-1.5 Recursive Symbolic Cognition Mesh imports
+from .base import BaseCore, vanta_core_module, CognitiveMeshRole
 
 # Setup logging
 logging.basicConfig(
@@ -84,15 +89,47 @@ class EvaluationMode(Enum):
     BATCH = "batch"
     INTERACTIVE = "interactive"
     BENCHMARK = "benchmark"
+    COGNITIVE_ANALYSIS = "cognitive_analysis"  # HOLO-1.5 enhanced mode
 
 
-class GridFormerEvaluator:
-    """Complete evaluation system for GridFormer models"""
+@vanta_core_module(
+    name="grid_former_evaluator",
+    subsystem="grid_processing",
+    mesh_role=CognitiveMeshRole.PROCESSOR,
+    description="Enhanced GridFormer evaluation processor with cognitive assessment and symbolic reasoning trace analysis",
+    capabilities=[
+        "model_evaluation",
+        "performance_assessment", 
+        "visual_analysis",
+        "batch_processing",
+        "cognitive_load_analysis",
+        "symbolic_reasoning_traces",
+        "meta_cognitive_insights",
+        "collaborative_evaluation"
+    ],
+    cognitive_load=3.2,
+    symbolic_depth=3,
+    collaboration_patterns=[
+        "evaluation_coordination",
+        "cognitive_assessment",
+        "performance_synthesis",
+        "collaborative_analysis"
+    ]
+)
+class GridFormerEvaluator(BaseCore):
+    """Complete evaluation system for GridFormer models with HOLO-1.5 cognitive processing"""
 
     def __init__(
-        self, model_path: Optional[str] = None, output_dir: str = "results/evaluation"
+        self, 
+        vanta_core: Any,  # VantaCore instance for HOLO-1.5
+        config: Optional[Dict[str, Any]] = None,
+        model_path: Optional[str] = None, 
+        output_dir: str = "results/evaluation"
     ):
-        """Initialize the evaluator with optional model path"""
+        """Initialize the evaluator with HOLO-1.5 cognitive processing capabilities"""
+        # Initialize BaseCore first
+        super().__init__(vanta_core, config or {})
+        
         self.output_dir = Path(output_dir)
         self.output_dir.mkdir(parents=True, exist_ok=True)
 
@@ -103,13 +140,106 @@ class GridFormerEvaluator:
             model_loader=self.model_loader, data_loader=self.data_loader
         )
 
+        # HOLO-1.5 Enhanced Features
+        self.cognitive_metrics = {
+            "evaluation_complexity": 0.0,
+            "reasoning_depth": 0.0,
+            "symbolic_coherence": 0.0,
+            "collaborative_efficiency": 0.0
+        }
+        
+        self.evaluation_traces = []
+        self.meta_cognitive_insights = {}
+        
+        # Evaluation performance tracking
+        self.evaluation_history = []
+        self.performance_patterns = {}
+
         # Load model if provided
         if model_path:
             try:
                 self.model_loader.load_model(model_path)
                 logger.info(f"✅ Model loaded from: {model_path}")
+                self._update_cognitive_metrics("model_loaded", {"path": model_path})
             except Exception as e:
                 logger.error(f"❌ Failed to load model: {e}")
+                self._update_cognitive_metrics("model_load_failed", {"error": str(e)})
+
+    async def initialize(self) -> bool:
+        """Initialize the HOLO-1.5 enhanced evaluator"""
+        try:
+            logger.info("🧠 Initializing HOLO-1.5 GridFormer Evaluator...")
+            
+            # Verify core components
+            if not self.data_loader:
+                logger.warning("Data loader not available")
+                return False
+                
+            if not self.model_loader:
+                logger.warning("Model loader not available") 
+                return False
+                
+            # Initialize cognitive processing
+            self.cognitive_metrics["evaluation_complexity"] = 1.0
+            self.cognitive_metrics["reasoning_depth"] = 2.0
+            
+            # Register with mesh for collaborative evaluation
+            if hasattr(self.vanta_core, 'register_component'):
+                self.vanta_core.register_component(
+                    "grid_former_evaluator",
+                    self,
+                    {
+                        "type": "cognitive_evaluator",
+                        "capabilities": self.holo15_adapter.metadata.capabilities,
+                        "cognitive_load": self.holo15_adapter.metadata.cognitive_load
+                    }
+                )
+            
+            logger.info("✅ HOLO-1.5 GridFormer Evaluator initialized successfully")
+            return True
+            
+        except Exception as e:
+            logger.error(f"❌ GridFormer Evaluator initialization failed: {e}")
+            return False
+
+    def _update_cognitive_metrics(self, event_type: str, context: Dict[str, Any]):
+        """Update cognitive metrics based on evaluation events"""
+        try:
+            if event_type == "model_loaded":
+                self.cognitive_metrics["evaluation_complexity"] += 0.2
+            elif event_type == "evaluation_started":
+                self.cognitive_metrics["reasoning_depth"] += 0.3
+            elif event_type == "collaborative_analysis":
+                self.cognitive_metrics["collaborative_efficiency"] += 0.1
+            elif event_type == "symbolic_trace_generated":
+                self.cognitive_metrics["symbolic_coherence"] += 0.15
+                
+            # Store evaluation trace
+            trace_entry = {
+                "timestamp": datetime.now().isoformat(),
+                "event_type": event_type,
+                "context": context,
+                "cognitive_state": self.cognitive_metrics.copy()
+            }
+            self.evaluation_traces.append(trace_entry)
+            
+            # Limit trace history to prevent memory growth
+            if len(self.evaluation_traces) > 1000:
+                self.evaluation_traces = self.evaluation_traces[-500:]
+                
+        except Exception as e:
+            logger.warning(f"Failed to update cognitive metrics: {e}")
+
+    def get_cognitive_evaluation_summary(self) -> Dict[str, Any]:
+        """Get comprehensive cognitive evaluation summary"""
+        return {
+            "cognitive_metrics": self.cognitive_metrics.copy(),
+            "evaluation_trace_count": len(self.evaluation_traces),
+            "meta_insights": self.meta_cognitive_insights.copy(),
+            "evaluation_history_count": len(self.evaluation_history),
+            "mesh_status": self.get_mesh_status() if hasattr(self, 'get_mesh_status') else {},
+            "performance_patterns": list(self.performance_patterns.keys())
+        }
 
     def grid_to_image(self, grid: List[List[int]]) -> np.ndarray:
         """Convert ARC grid to colored image array"""
@@ -231,12 +361,10 @@ class GridFormerEvaluator:
             save_path = Path(save_path)
             save_path.parent.mkdir(parents=True, exist_ok=True)
             plt.savefig(save_path, dpi=150, bbox_inches="tight")
-            logger.info(f"📊 Visualization saved to: {save_path}")
-
-        # Show if requested
+            logger.info(f"📊 Visualization saved to: {save_path}")        # Show if requested
         if show:
             plt.show()
-
+            
         return fig
 
     def evaluate_task(
@@ -249,6 +377,13 @@ class GridFormerEvaluator:
         """Evaluate a single task with the specified strategy"""
 
         start_time = time.time()
+        
+        # HOLO-1.5 Enhancement: Update cognitive metrics for evaluation start
+        self._update_cognitive_metrics("evaluation_started", {
+            "task_id": task_id,
+            "strategy": strategy.value,
+            "timestamp": datetime.now().isoformat()
+        })
 
         # Load the specified task
         task = self.data_loader.load_arc_task(task_id)
@@ -257,6 +392,9 @@ class GridFormerEvaluator:
             logger.error(f"❌ Failed to load task: {task_id}")
             return {"error": f"Task {task_id} not found"}
 
+        # HOLO-1.5 Enhancement: Analyze task complexity
+        task_complexity = self._analyze_task_complexity(task)
+        
         # Generate predictions
         try:
             predictions = self.inference_engine.predict(task, strategy=strategy)
@@ -269,18 +407,52 @@ class GridFormerEvaluator:
                 "num_test_examples": len(test_examples),
                 "num_predictions": len(predictions) if predictions else 0,
                 "time_taken": time.time() - start_time,
+                # HOLO-1.5 Enhancement: Add cognitive metrics
+                "task_complexity": task_complexity,
+                "cognitive_load": self.cognitive_metrics["evaluation_complexity"],
+                "reasoning_depth": self.cognitive_metrics["reasoning_depth"]
             }
 
             # Check for ground truth if available
             correct_predictions = 0
+            reasoning_traces = []
+            
             for i, test in enumerate(test_examples):
                 if "output" in test and i < len(predictions):
                     if predictions[i] == test["output"]:
                         correct_predictions += 1
+                    
+                    # HOLO-1.5 Enhancement: Generate symbolic reasoning trace
+                    reasoning_trace = self._generate_reasoning_trace(
+                        test["input"], 
+                        test.get("output"), 
+                        predictions[i],
+                        strategy
+                    )
+                    reasoning_traces.append(reasoning_trace)
 
             if correct_predictions > 0:
                 metrics["correct_predictions"] = correct_predictions
                 metrics["accuracy"] = correct_predictions / len(test_examples)
+
+            # HOLO-1.5 Enhancement: Add symbolic reasoning traces
+            metrics["reasoning_traces"] = reasoning_traces
+            metrics["symbolic_coherence"] = self.cognitive_metrics["symbolic_coherence"]
+            
+            # Update cognitive metrics based on results
+            self._update_cognitive_metrics("symbolic_trace_generated", {
+                "traces_count": len(reasoning_traces),
+                "accuracy": metrics.get("accuracy", 0.0)
+            })
+
+            # Store evaluation in history for pattern analysis
+            self.evaluation_history.append({
+                "task_id": task_id,
+                "strategy": strategy.value,
+                "metrics": metrics,
+                "timestamp": datetime.now().isoformat(),
+                "cognitive_state": self.cognitive_metrics.copy()
+            })
 
             # Visualize if requested
             if visualize:
@@ -303,7 +475,269 @@ class GridFormerEvaluator:
 
         except Exception as e:
             logger.error(f"❌ Error during evaluation: {e}")
+            self._update_cognitive_metrics("evaluation_failed", {"error": str(e)})
             return {"error": str(e)}
+
+    def _analyze_task_complexity(self, task: Dict[str, Any]) -> Dict[str, float]:
+        """Analyze cognitive complexity of an ARC task"""
+        try:
+            complexity_metrics = {
+                "grid_size_complexity": 0.0,
+                "pattern_complexity": 0.0,
+                "transformation_complexity": 0.0,
+                "overall_complexity": 0.0
+            }
+            
+            train_examples = task.get("train", [])
+            test_examples = task.get("test", [])
+            
+            if not train_examples and not test_examples:
+                return complexity_metrics
+            
+            # Analyze grid size complexity
+            max_grid_size = 0
+            for example in train_examples + test_examples:
+                input_grid = example.get("input", [])
+                output_grid = example.get("output", [])
+                
+                if input_grid:
+                    size = len(input_grid) * len(input_grid[0]) if input_grid[0] else 0
+                    max_grid_size = max(max_grid_size, size)
+                    
+                if output_grid:
+                    size = len(output_grid) * len(output_grid[0]) if output_grid[0] else 0
+                    max_grid_size = max(max_grid_size, size)
+            
+            complexity_metrics["grid_size_complexity"] = min(1.0, max_grid_size / 900)  # Normalize to 30x30
+            
+            # Analyze pattern complexity (number of unique colors)
+            unique_colors = set()
+            for example in train_examples:
+                input_grid = example.get("input", [])
+                output_grid = example.get("output", [])
+                
+                for row in input_grid:
+                    unique_colors.update(row)
+                for row in output_grid:
+                    unique_colors.update(row)
+                    
+            complexity_metrics["pattern_complexity"] = min(1.0, len(unique_colors) / 10)  # Normalize to 10 colors
+            
+            # Analyze transformation complexity (difference between input/output)
+            transformation_score = 0.0
+            for example in train_examples:
+                input_grid = example.get("input", [])
+                output_grid = example.get("output", [])
+                
+                if input_grid and output_grid:
+                    # Simple measure: percentage of changed cells
+                    changed_cells = 0
+                    total_cells = 0
+                    
+                    min_rows = min(len(input_grid), len(output_grid))
+                    for i in range(min_rows):
+                        min_cols = min(len(input_grid[i]), len(output_grid[i]))
+                        for j in range(min_cols):
+                            total_cells += 1
+                            if input_grid[i][j] != output_grid[i][j]:
+                                changed_cells += 1
+                    
+                    if total_cells > 0:
+                        transformation_score += changed_cells / total_cells
+                        
+            if train_examples:
+                transformation_score /= len(train_examples)
+                
+            complexity_metrics["transformation_complexity"] = min(1.0, transformation_score)
+            
+            # Calculate overall complexity
+            complexity_metrics["overall_complexity"] = (
+                0.3 * complexity_metrics["grid_size_complexity"] +
+                0.3 * complexity_metrics["pattern_complexity"] +
+                0.4 * complexity_metrics["transformation_complexity"]
+            )
+            
+            return complexity_metrics
+            
+        except Exception as e:
+            logger.warning(f"Failed to analyze task complexity: {e}")
+            return {
+                "grid_size_complexity": 0.5,
+                "pattern_complexity": 0.5, 
+                "transformation_complexity": 0.5,
+                "overall_complexity": 0.5
+            }
+
+    def _generate_reasoning_trace(
+        self, 
+        input_grid: List[List[int]], 
+        expected_output: Optional[List[List[int]]], 
+        predicted_output: List[List[int]],
+        strategy: InferenceStrategy
+    ) -> Dict[str, Any]:
+        """Generate symbolic reasoning trace for prediction analysis"""
+        try:
+            trace = {
+                "strategy_used": strategy.value,
+                "input_analysis": {},
+                "transformation_analysis": {},
+                "output_analysis": {},
+                "accuracy_assessment": {},
+                "symbolic_patterns": []
+            }
+            
+            # Analyze input characteristics
+            if input_grid:
+                trace["input_analysis"] = {
+                    "dimensions": f"{len(input_grid)}x{len(input_grid[0]) if input_grid[0] else 0}",
+                    "unique_colors": len(set(cell for row in input_grid for cell in row)),
+                    "dominant_color": max(set(cell for row in input_grid for cell in row), 
+                                        key=lambda x: sum(row.count(x) for row in input_grid)),
+                    "pattern_density": sum(1 for row in input_grid for cell in row if cell != 0) / 
+                                    (len(input_grid) * len(input_grid[0]) if input_grid[0] else 1)
+                }
+            
+            # Analyze transformation if expected output available
+            if expected_output and predicted_output:
+                # Check accuracy
+                correct = (predicted_output == expected_output)
+                trace["accuracy_assessment"] = {
+                    "prediction_correct": correct,
+                    "confidence_score": 1.0 if correct else 0.0
+                }
+                
+                # Analyze transformation patterns
+                if input_grid and expected_output:
+                    transformation_type = self._classify_transformation(input_grid, expected_output)
+                    trace["transformation_analysis"] = {
+                        "transformation_type": transformation_type,
+                        "complexity_level": "high" if transformation_type in ["complex", "multi_step"] else "low"
+                    }
+            
+            # Symbolic pattern recognition
+            symbolic_patterns = []
+            if input_grid:
+                # Look for basic patterns
+                if self._has_symmetry(input_grid):
+                    symbolic_patterns.append("symmetrical_structure")
+                if self._has_repetition(input_grid):
+                    symbolic_patterns.append("repetitive_pattern")
+                if self._has_boundary_pattern(input_grid):
+                    symbolic_patterns.append("boundary_defined")
+                    
+            trace["symbolic_patterns"] = symbolic_patterns
+            
+            return trace
+            
+        except Exception as e:
+            logger.warning(f"Failed to generate reasoning trace: {e}")
+            return {
+                "strategy_used": strategy.value,
+                "error": str(e),
+                "trace_incomplete": True
+            }
+
+    def _classify_transformation(self, input_grid: List[List[int]], output_grid: List[List[int]]) -> str:
+        """Classify the type of transformation between input and output"""
+        try:
+            if len(input_grid) != len(output_grid):
+                return "size_change"
+            
+            if not input_grid or not output_grid:
+                return "unknown"
+                
+            changed_cells = 0
+            total_cells = 0
+            
+            for i in range(len(input_grid)):
+                if i < len(output_grid):
+                    for j in range(len(input_grid[i])):
+                        if j < len(output_grid[i]):
+                            total_cells += 1
+                            if input_grid[i][j] != output_grid[i][j]:
+                                changed_cells += 1
+            
+            if total_cells == 0:
+                return "unknown"
+                
+            change_ratio = changed_cells / total_cells
+            
+            if change_ratio == 0:
+                return "identity"
+            elif change_ratio < 0.1:
+                return "minor_modification"
+            elif change_ratio < 0.5:
+                return "moderate_transformation"
+            else:
+                return "major_transformation"
+                
+        except Exception:
+            return "unknown"
+
+    def _has_symmetry(self, grid: List[List[int]]) -> bool:
+        """Check if grid has symmetrical patterns"""
+        try:
+            if not grid or not grid[0]:
+                return False
+                
+            # Check horizontal symmetry
+            for row in grid:
+                if row != row[::-1]:
+                    break
+            else:
+                return True
+                
+            # Check vertical symmetry
+            if grid == grid[::-1]:
+                return True
+                
+            return False
+        except Exception:
+            return False
+
+    def _has_repetition(self, grid: List[List[int]]) -> bool:
+        """Check if grid has repetitive patterns"""
+        try:
+            if not grid or len(grid) < 2:
+                return False
+                
+            # Check for repeated rows
+            for i in range(len(grid) - 1):
+                if grid[i] == grid[i + 1]:
+                    return True
+                    
+            # Check for repeated columns
+            if grid[0]:
+                for j in range(len(grid[0])):
+                    column = [grid[i][j] for i in range(len(grid))]
+                    if len(set(column)) == 1:  # All same value
+                        return True
+                        
+            return False
+        except Exception:
+            return False
+
+    def _has_boundary_pattern(self, grid: List[List[int]]) -> bool:
+        """Check if grid has distinct boundary patterns"""
+        try:
+            if not grid or len(grid) < 3 or not grid[0] or len(grid[0]) < 3:
+                return False
+                
+            # Check if boundary is different from interior
+            boundary_colors = set()
+            interior_colors = set()
+            
+            for i in range(len(grid)):
+                for j in range(len(grid[i])):
+                    if i == 0 or i == len(grid) - 1 or j == 0 or j == len(grid[i]) - 1:
+                        boundary_colors.add(grid[i][j])
+                    else:
+                        interior_colors.add(grid[i][j])
+            
+            return len(boundary_colors.intersection(interior_colors)) < min(len(boundary_colors), len(interior_colors))
+            
+        except Exception:
+            return False
 
     def batch_evaluate(
         self,

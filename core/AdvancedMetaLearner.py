@@ -8,7 +8,8 @@ and improving learning efficiency across domains.
 import logging
 import time
 import numpy as np
-from typing import Dict, Any, List, Optional, Tuple
+from typing import Dict, Any, List, Optional, Tuple, AsyncIterator
+import asyncio
 
 # Import Vanta Core for integration
 from Vanta.core.UnifiedVantaCore import UnifiedVantaCore
@@ -307,26 +308,37 @@ class CrossDomainKnowledgeTransfer:
     name="advanced_meta_learner",
     subsystem="learning_management",
     mesh_role=CognitiveMeshRole.PROCESSOR,
-    description="Advanced meta-learning system for cross-domain knowledge transfer with HOLO-1.5 integration",
-    capabilities=["cross_domain_transfer", "parameter_optimization", "performance_tracking", "meta_learning", "task_adaptation", "knowledge_integration"],
-    cognitive_load=3.5,
-    symbolic_depth=3,
-    collaboration_patterns=["meta_learning", "knowledge_transfer", "cross_domain_learning", "performance_optimization"]
+    description="Advanced meta-learning system for cross-domain knowledge transfer with HOLO-1.5 integration and API-driven communication enhancement",
+    capabilities=[
+        "cross_domain_transfer", "parameter_optimization", "performance_tracking", 
+        "meta_learning", "task_adaptation", "knowledge_integration",
+        "communication_enhancement", "tts_learning", "stt_learning", 
+        "api_driven_learning", "speech_optimization"
+    ],
+    cognitive_load=4.0,
+    symbolic_depth=4,
+    collaboration_patterns=[
+        "meta_learning", "knowledge_transfer", "cross_domain_learning", 
+        "performance_optimization", "communication_adaptation", "api_integration"
+    ]
 )
 class AdvancedMetaLearner(BaseCore, MetaLearnerInterface):
     """
-    Advanced meta-learning system for cross-domain knowledge transfer.
+    Advanced meta-learning system for cross-domain knowledge transfer with API-driven communication enhancement.
 
     This system:
     - Identifies common patterns across learning tasks
     - Transfers knowledge between domains
     - Adapts learning strategies based on task characteristics
-    - Optimizes learning parameters for efficiency    - Tracks performance metrics across domains
+    - Optimizes learning parameters for efficiency
+    - Tracks performance metrics across domains
+    - Learns from TTS/STT API interactions to improve communication
+    - Provides VantaCore with enhanced communication capabilities through submodel learning
     """
 
     def __init__(self, vanta_core: VantaCore, config: Optional[Dict[str, Any]] = None) -> None:
         """
-        Initialize the advanced meta-learner.
+        Initialize the advanced meta-learner with communication enhancement capabilities.
 
         Args:
             vanta_core: VantaCore instance for HOLO-1.5 integration
@@ -353,10 +365,24 @@ class AdvancedMetaLearner(BaseCore, MetaLearnerInterface):
         self.performance_tracker = PerformanceTracker(max_history=self.max_history)
         self.knowledge_transfer = CrossDomainKnowledgeTransfer()
         
+        # Initialize communication enhancement learning system
+        self.communication_learner = CommunicationEnhancementLearner(
+            max_history=self.config.get("communication_history", 1000)
+        )
+        
+        # TTS/STT engine references for API-driven learning
+        self.tts_engine = None
+        self.stt_engine = None
+        self.communication_enhancement_active = self.config.get("communication_enhancement", True)
+        
         # Connect to other systems
-        self._connect_components()        # Log initialization
+        self._connect_components()
+        
+        # Log initialization
         logger.info(
-            f"Advanced meta-learner initialized: enabled={self.enabled}, params={self.meta_parameters}"
+            f"Advanced meta-learner initialized: enabled={self.enabled}, "
+            f"communication_enhancement={self.communication_enhancement_active}, "
+            f"params={self.meta_parameters}"
         )
 
     async def initialize(self) -> bool:
@@ -393,39 +419,48 @@ class AdvancedMetaLearner(BaseCore, MetaLearnerInterface):
                         "capabilities": ["cross_domain_transfer", "parameter_optimization"],
                     },
                 )
-                logger.info("Advanced meta-learner registered with Vanta Core")
-
-                # Try to get required components
+                logger.info("Advanced meta-learner registered with Vanta Core")                    # Try to get required components
                 try:
-                    components = self.vanta_core.list_components()
+                        components = self.vanta_core.list_components()
 
-                    # Look for memory components
-                    if "memory" in components:
-                        self.memory = self.vanta_core.get_component("memory")
-                        self.connected_to.append("memory")
+                        # Look for memory components
+                        if "memory" in components:
+                            self.memory = self.vanta_core.get_component("memory")
+                            self.connected_to.append("memory")
 
-                    if "patterns" in components:
-                        self.pattern_memory = self.vanta_core.get_component("patterns")
-                        self.connected_to.append("patterns")
+                        if "patterns" in components:
+                            self.pattern_memory = self.vanta_core.get_component("patterns")
+                            self.connected_to.append("patterns")
 
-                    # Look for ART controller
-                    if "art_controller" in components:
-                        self.art_controller = self.vanta_core.get_component(
-                            "art_controller"
-                        )
-                        self.connected_to.append("art_controller")
+                        # Look for ART controller
+                        if "art_controller" in components:
+                            self.art_controller = self.vanta_core.get_component(
+                                "art_controller"
+                            )
+                            self.connected_to.append("art_controller")
 
-                    # Look for meta-cognitive engine
-                    if "meta_learning.engine" in components:
-                        self.meta_cognitive = self.vanta_core.get_component(
-                            "meta_learning.engine"
-                        )
-                        self.connected_to.append("meta_learning.engine")
+                        # Look for meta-cognitive engine
+                        if "meta_learning.engine" in components:
+                            self.meta_cognitive = self.vanta_core.get_component(
+                                "meta_learning.engine"
+                            )
+                            self.connected_to.append("meta_learning.engine")
+                            
+                        # Look for TTS/STT engines for communication enhancement
+                        if "async_tts_engine" in components:
+                            self.tts_engine = self.vanta_core.get_component("async_tts_engine")
+                            self.connected_to.append("async_tts_engine")
+                            logger.info("Connected to TTS engine for communication learning")
+                            
+                        if "async_stt_engine" in components:
+                            self.stt_engine = self.vanta_core.get_component("async_stt_engine")
+                            self.connected_to.append("async_stt_engine")
+                            logger.info("Connected to STT engine for communication learning")
 
-                    logger.info(f"Connected to components: {self.connected_to}")
+                        logger.info(f"Connected to components: {self.connected_to}")
 
                 except Exception as e:
-                    logger.warning(f"Error connecting to components: {e}")
+                        logger.warning(f"Error connecting to components: {e}")
             except Exception as e:
                 logger.error(f"Failed to register with Vanta Core: {e}")
         else:
@@ -1187,7 +1222,680 @@ class AdvancedMetaLearner(BaseCore, MetaLearnerInterface):
                 if task_domain not in domain_task_counts:
                     domain_task_counts[task_domain] = 0
                 domain_task_counts[task_domain] += 1
-                
-            metrics["domain_task_counts"] = domain_task_counts
+                metrics["domain_task_counts"] = domain_task_counts
             
         return metrics
+        
+    # === Communication Enhancement Methods for API-Driven Learning ===
+    
+    async def enhance_tts_communication(self, text: str, synthesis_request: Dict[str, Any], context: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
+        """
+        Enhance TTS communication by learning from synthesis interactions.
+        VantaCore can use this to improve speech synthesis through submodel learning.
+        
+        Args:
+            text: Text being synthesized
+            synthesis_request: TTS synthesis request parameters
+            context: Optional context information (user preferences, conversation state, etc.)
+            
+        Returns:
+            Enhanced synthesis parameters and learning insights
+        """
+        if not self.communication_enhancement_active:
+            return {"enhancement_active": False, "original_request": synthesis_request}
+            
+        # Apply learned enhancements to synthesis request
+        enhanced_request = synthesis_request.copy()
+        
+        # Get text features for analysis
+        text_features = self.communication_learner._extract_text_features(text)
+        
+        # Apply learned optimizations
+        if self.communication_learner.tts_performance_metrics:
+            # Find best performing engine for this text complexity
+            complexity = text_features.get("complexity_score", 0)
+            best_engine = self._get_optimal_tts_engine(complexity)
+            
+            if best_engine and best_engine != enhanced_request.get("engine"):
+                enhanced_request["preferred_engine"] = best_engine
+                enhanced_request["engine_reason"] = f"optimal_for_complexity_{complexity:.2f}"
+                
+        # Add communication-specific enhancements
+        enhanced_request["learning_context"] = {
+            "text_features": text_features,
+            "context": context,
+            "enhancement_version": "1.0"
+        }
+        
+        return {
+            "enhancement_active": True,
+            "original_request": synthesis_request,
+            "enhanced_request": enhanced_request,
+            "text_features": text_features,
+            "recommendations": self.communication_learner._generate_tts_recommendations(
+                text_features, {"success": True}, enhanced_request.get("engine", "default")
+            )
+        }
+        
+    async def learn_from_tts_result(self, text: str, synthesis_result: Dict[str, Any], context: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
+        """
+        Learn from TTS synthesis results to improve future communications.
+        VantaCore calls this after TTS synthesis to enable continuous learning.
+        
+        Args:
+            text: Original text that was synthesized
+            synthesis_result: Result from TTS engine
+            context: Optional context information
+            
+        Returns:
+            Learning insights and performance metrics
+        """
+        if not self.communication_enhancement_active:
+            return {"learning_active": False}
+            
+        # Use communication learner to process the interaction
+        learning_result = await self.communication_learner.learn_from_tts_interaction(
+            text, synthesis_result, context
+        )
+        
+        # Update domain knowledge if context provides domain information
+        if context and "domain" in context:
+            domain = context["domain"]
+            domain_knowledge = {
+                "text_synthesis": {
+                    "text_features": learning_result.get("text_features", {}),
+                    "engine_performance": learning_result.get("engine_metrics", {}),
+                    "success_rate": float(synthesis_result.get("success", False))
+                }
+            }
+            
+            # Store in cross-domain knowledge transfer system
+            self.knowledge_transfer.store_domain_knowledge(
+                f"tts_{domain}", domain_knowledge, {
+                    "source": "tts_learning", 
+                    "timestamp": time.time()
+                }
+            )
+            
+            # Update performance tracker
+            self.performance_tracker.update_domain_performance(
+                f"tts_{domain}", 
+                domain_knowledge["text_synthesis"]["success_rate"],
+                {"text_length": len(text), "engine": synthesis_result.get("engine_used")}
+            )
+            
+        return learning_result
+        
+    async def enhance_stt_communication(self, audio_context: Dict[str, Any], transcription_request: Dict[str, Any], context: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
+        """
+        Enhance STT communication by applying learned optimizations.
+        VantaCore can use this to improve speech recognition through submodel learning.
+        
+        Args:
+            audio_context: Audio metadata and context
+            transcription_request: STT transcription request parameters
+            context: Optional context information
+            
+        Returns:
+            Enhanced transcription parameters and insights
+        """
+        if not self.communication_enhancement_active:
+            return {"enhancement_active": False, "original_request": transcription_request}
+            
+        # Apply learned enhancements to transcription request
+        enhanced_request = transcription_request.copy()
+        
+        # Analyze audio context for optimization opportunities
+        if self.communication_learner.stt_performance_metrics:
+            metrics = self.communication_learner.stt_performance_metrics.get("stt", {})
+            
+            # Optimize duration based on learned performance patterns
+            if metrics.get("processing_times"):
+                avg_processing = sum(metrics["processing_times"]) / len(metrics["processing_times"])
+                requested_duration = enhanced_request.get("duration", 10)
+                
+                # Suggest optimal duration based on learned patterns
+                if avg_processing > 3000 and requested_duration > 8:  # Long processing, suggest shorter
+                    enhanced_request["suggested_duration"] = min(6, requested_duration)
+                    enhanced_request["optimization_reason"] = "reduce_processing_time"
+                    
+        # Add learning context
+        enhanced_request["learning_context"] = {
+            "audio_context": audio_context,
+            "context": context,
+            "enhancement_version": "1.0"
+        }
+        
+        return {
+            "enhancement_active": True,
+            "original_request": transcription_request,
+            "enhanced_request": enhanced_request,
+            "optimization_applied": "processing_time_optimization" if "suggested_duration" in enhanced_request else "none"
+        }
+        
+    async def learn_from_stt_result(self, audio_context: Dict[str, Any], transcription_result: Dict[str, Any], context: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
+        """
+        Learn from STT transcription results to improve future communications.
+        VantaCore calls this after STT transcription to enable continuous learning.
+        
+        Args:
+            audio_context: Audio metadata and context
+            transcription_result: Result from STT engine
+            context: Optional context information
+            
+        Returns:
+            Learning insights and performance metrics
+        """
+        if not self.communication_enhancement_active:
+            return {"learning_active": False}
+            
+        # Use communication learner to process the interaction
+        learning_result = await self.communication_learner.learn_from_stt_interaction(
+            audio_context, transcription_result, context
+        )
+        
+        # Update domain knowledge if context provides domain information
+        if context and "domain" in context:
+            domain = context["domain"]
+            domain_knowledge = {
+                "speech_recognition": {
+                    "audio_features": learning_result.get("audio_features", {}),
+                    "processing_metrics": learning_result.get("engine_metrics", {}),
+                    "success_rate": 1.0 if transcription_result.get("text") else 0.0
+                }
+            }
+            
+            # Store in cross-domain knowledge transfer system
+            self.knowledge_transfer.store_domain_knowledge(
+                f"stt_{domain}", domain_knowledge, {
+                    "source": "stt_learning", 
+                    "timestamp": time.time()
+                }
+            )
+            
+            # Update performance tracker
+            self.performance_tracker.update_domain_performance(
+                f"stt_{domain}",
+                domain_knowledge["speech_recognition"]["success_rate"],
+                {"text_length": len(transcription_result.get("text", "")), "processing_time": transcription_result.get("processing_time_ms")}
+            )
+            
+        return learning_result
+        
+    def _get_optimal_tts_engine(self, complexity_score: float) -> Optional[str]:
+        """
+        Get the optimal TTS engine for a given text complexity.
+        
+        Args:
+            complexity_score: Text complexity score (0-1)
+            
+        Returns:
+            Optimal engine name or None
+        """
+        if not self.communication_learner.tts_performance_metrics:
+            return None
+            
+        best_engine = None
+        best_score = 0.0
+        
+        for engine, metrics in self.communication_learner.tts_performance_metrics.items():
+            if not metrics.get("text_complexity_handling"):
+                continue
+                
+            # Find performance for similar complexity levels
+            complexity_key = round(complexity_score, 1)  # Round to nearest 0.1
+            performance_data = metrics["text_complexity_handling"].get(complexity_key, [])
+            
+            if performance_data:
+                success_rate = sum(performance_data) / len(performance_data)
+                
+                # Factor in overall engine performance
+                overall_success = sum(metrics.get("success_rate", [])) / len(metrics.get("success_rate", [1])) if metrics.get("success_rate") else 0.5
+                
+                # Combined score
+                combined_score = (success_rate * 0.7) + (overall_success * 0.3)
+                
+                if combined_score > best_score:
+                    best_score = combined_score
+                    best_engine = engine
+                    
+        return best_engine
+        
+    def get_communication_insights(self) -> Dict[str, Any]:
+        """
+        Get comprehensive insights about communication learning and performance.
+        
+        Returns:
+            Dict with communication insights and metrics
+        """
+        if not self.communication_enhancement_active:
+            return {"enhancement_active": False}
+            
+        insights = self.communication_learner.get_communication_insights()
+        
+        # Add domain-specific communication performance
+        domain_communication_performance = {}
+        
+        # Get TTS domain performance
+        for domain, knowledge in self.knowledge_transfer.get_all_domain_knowledge().items():
+            if domain.startswith("tts_") or domain.startswith("stt_"):
+                domain_type = domain.split("_")[0]
+                domain_name = "_".join(domain.split("_")[1:])
+                
+                if domain_name not in domain_communication_performance:
+                    domain_communication_performance[domain_name] = {}
+                    
+                domain_communication_performance[domain_name][domain_type] = {
+                    "last_update": knowledge.get("timestamp", 0),
+                    "knowledge_available": True
+                }
+                
+        insights["domain_performance"] = domain_communication_performance
+        insights["enhancement_active"] = True
+        insights["engines_connected"] = {
+            "tts": self.tts_engine is not None,
+            "stt": self.stt_engine is not None
+        }
+        
+        return insights
+        
+    def toggle_communication_enhancement(self, active: Optional[bool] = None) -> bool:
+        """
+        Toggle or set communication enhancement learning.
+        
+        Args:
+            active: Optional boolean to set state, None to toggle
+            
+        Returns:
+            New enhancement state
+        """
+        if active is not None:
+            self.communication_enhancement_active = active
+        else:
+            self.communication_enhancement_active = not self.communication_enhancement_active
+            
+        # Also toggle the underlying communication learner
+        self.communication_learner.toggle_learning(self.communication_enhancement_active)
+        
+        logger.info(f"Communication enhancement learning: {'enabled' if self.communication_enhancement_active else 'disabled'}")
+        return self.communication_enhancement_active
+
+
+class CommunicationEnhancementLearner:
+    """
+    Learning system for enhancing TTS/STT communication through API-driven feedback.
+    """
+    
+    def __init__(self, max_history: int = 1000):
+        self.interaction_history = []
+        self.tts_performance_metrics = {}
+        self.stt_performance_metrics = {}
+        self.communication_patterns = {}
+        self.max_history = max_history
+        self.learning_active = True
+        
+        # Communication quality metrics
+        self.quality_indicators = {
+            "speech_clarity": [],
+            "recognition_accuracy": [],
+            "response_timing": [],
+            "user_satisfaction": [],
+            "context_awareness": []
+        }
+        
+    async def learn_from_tts_interaction(self, text: str, synthesis_result: Dict[str, Any], context: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
+        """
+        Learn from TTS synthesis interactions to improve future speech generation.
+        
+        Args:
+            text: Original text that was synthesized
+            synthesis_result: Result from TTS engine
+            context: Optional context information
+            
+        Returns:
+            Learning insights and recommendations
+        """
+        if not self.learning_active:
+            return {"learning_active": False}
+            
+        interaction = {
+            "type": "tts",
+            "timestamp": time.time(),
+            "text": text,
+            "result": synthesis_result,
+            "context": context or {},
+            "text_length": len(text),
+            "success": synthesis_result.get("success", False),
+            "duration_ms": synthesis_result.get("duration_ms", 0),
+            "engine_used": synthesis_result.get("engine_used", "unknown")
+        }
+        
+        # Add to history
+        self.interaction_history.append(interaction)
+        self._trim_history()
+        
+        # Analyze text patterns
+        text_features = self._extract_text_features(text)
+        
+        # Update TTS performance metrics
+        engine = synthesis_result.get("engine_used", "unknown")
+        if engine not in self.tts_performance_metrics:
+            self.tts_performance_metrics[engine] = {
+                "success_rate": [],
+                "avg_duration": [],
+                "text_complexity_handling": {},
+                "error_patterns": []
+            }
+            
+        metrics = self.tts_performance_metrics[engine]
+        metrics["success_rate"].append(float(synthesis_result.get("success", False)))
+        if synthesis_result.get("duration_ms"):
+            metrics["avg_duration"].append(synthesis_result["duration_ms"])
+            
+        # Track text complexity handling
+        complexity = text_features.get("complexity_score", 0)
+        if complexity not in metrics["text_complexity_handling"]:
+            metrics["text_complexity_handling"][complexity] = []
+        metrics["text_complexity_handling"][complexity].append(synthesis_result.get("success", False))
+        
+        # Track errors
+        if not synthesis_result.get("success", False) and synthesis_result.get("error"):
+            metrics["error_patterns"].append({
+                "error": synthesis_result["error"],
+                "text_features": text_features,
+                "timestamp": time.time()
+            })
+            
+        # Generate recommendations
+        recommendations = self._generate_tts_recommendations(text_features, synthesis_result, engine)
+        
+        return {
+            "learning_active": True,
+            "interaction_recorded": True,
+            "text_features": text_features,
+            "recommendations": recommendations,
+            "engine_metrics": self._get_engine_performance_summary(engine, "tts")
+        }
+        
+    async def learn_from_stt_interaction(self, audio_data: Any, transcription_result: Dict[str, Any], context: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
+        """
+        Learn from STT transcription interactions to improve speech recognition.
+        
+        Args:
+            audio_data: Audio data that was transcribed (metadata only for learning)
+            transcription_result: Result from STT engine
+            context: Optional context information
+            
+        Returns:
+            Learning insights and recommendations
+        """
+        if not self.learning_active:
+            return {"learning_active": False}
+            
+        # Extract audio metadata without storing raw audio
+        audio_features = self._extract_audio_features(transcription_result)
+        
+        interaction = {
+            "type": "stt",
+            "timestamp": time.time(),
+            "audio_features": audio_features,
+            "result": transcription_result,
+            "context": context or {},
+            "text": transcription_result.get("text", ""),
+            "is_final": transcription_result.get("is_final", False),
+            "processing_time_ms": transcription_result.get("processing_time_ms", 0),
+            "confidence": transcription_result.get("confidence", None)
+        }
+        
+        # Add to history
+        self.interaction_history.append(interaction)
+        self._trim_history()
+        
+        # Update STT performance metrics
+        if "stt" not in self.stt_performance_metrics:
+            self.stt_performance_metrics["stt"] = {
+                "transcription_accuracy": [],
+                "processing_times": [],
+                "audio_quality_handling": {},
+                "error_patterns": []
+            }
+            
+        metrics = self.stt_performance_metrics["stt"]
+        
+        # Track processing times
+        if transcription_result.get("processing_time_ms"):
+            metrics["processing_times"].append(transcription_result["processing_time_ms"])
+            
+        # Track audio quality handling
+        audio_quality = audio_features.get("quality_score", 0)
+        if audio_quality not in metrics["audio_quality_handling"]:
+            metrics["audio_quality_handling"][audio_quality] = []
+        metrics["audio_quality_handling"][audio_quality].append({
+            "success": bool(transcription_result.get("text")),
+            "text_length": len(transcription_result.get("text", ""))
+        })
+        
+        # Track errors
+        if transcription_result.get("error"):
+            metrics["error_patterns"].append({
+                "error": transcription_result["error"],
+                "audio_features": audio_features,
+                "timestamp": time.time()
+            })
+            
+        # Generate recommendations
+        recommendations = self._generate_stt_recommendations(audio_features, transcription_result)
+        
+        return {
+            "learning_active": True,
+            "interaction_recorded": True,
+            "audio_features": audio_features,
+            "recommendations": recommendations,
+            "engine_metrics": self._get_engine_performance_summary("stt", "stt")
+        }
+        
+    def _extract_text_features(self, text: str) -> Dict[str, Any]:
+        """Extract features from text for TTS learning."""
+        words = text.split()
+        
+        # Basic text features
+        features = {
+            "length": len(text),
+            "word_count": len(words),
+            "avg_word_length": sum(len(word) for word in words) / len(words) if words else 0,
+            "sentence_count": text.count('.') + text.count('!') + text.count('?'),
+            "punctuation_density": sum(1 for char in text if not char.isalnum() and not char.isspace()) / len(text) if text else 0,
+            "uppercase_ratio": sum(1 for char in text if char.isupper()) / len(text) if text else 0,
+            "complexity_score": 0
+        }
+        
+        # Calculate complexity score
+        complexity = (
+            min(features["word_count"] / 10, 1.0) * 0.3 +  # Word count factor
+            min(features["avg_word_length"] / 8, 1.0) * 0.3 +  # Word length factor
+            min(features["punctuation_density"] * 10, 1.0) * 0.2 +  # Punctuation factor
+            min(features["sentence_count"] / 5, 1.0) * 0.2  # Sentence count factor
+        )
+        features["complexity_score"] = complexity
+        
+        return features
+        
+    def _extract_audio_features(self, transcription_result: Dict[str, Any]) -> Dict[str, Any]:
+        """Extract features from audio/transcription for STT learning."""
+        text = transcription_result.get("text", "")
+        
+        features = {
+            "transcribed_length": len(text),
+            "processing_time_ms": transcription_result.get("processing_time_ms", 0),
+            "is_final": transcription_result.get("is_final", False),
+            "has_error": bool(transcription_result.get("error")),
+            "quality_score": 0,
+            "confidence": transcription_result.get("confidence")
+        }
+        
+        # Estimate quality score based on available data
+        if text and not transcription_result.get("error"):
+            quality = 1.0
+            
+            # Adjust based on processing time (faster might indicate clearer audio)
+            proc_time = features["processing_time_ms"]
+            if proc_time > 0:
+                # Normalized processing time factor
+                time_factor = max(0.5, min(1.0, 2000 / proc_time))
+                quality *= time_factor
+                
+            features["quality_score"] = quality
+        else:
+            features["quality_score"] = 0.2 if transcription_result.get("error") else 0.5
+            
+        return features
+        
+    def _generate_tts_recommendations(self, text_features: Dict[str, Any], synthesis_result: Dict[str, Any], engine: str) -> Dict[str, Any]:
+        """Generate recommendations for TTS improvement."""
+        recommendations = {
+            "engine_selection": {},
+            "text_preprocessing": [],
+            "synthesis_parameters": {},
+            "quality_improvements": []
+        }
+        
+        # Engine selection recommendations
+        if engine in self.tts_performance_metrics:
+            metrics = self.tts_performance_metrics[engine]
+            
+            # Success rate analysis
+            if metrics["success_rate"]:
+                success_rate = sum(metrics["success_rate"]) / len(metrics["success_rate"])
+                if success_rate < 0.8:
+                    recommendations["engine_selection"]["consider_alternative"] = True
+                    recommendations["engine_selection"]["current_success_rate"] = success_rate
+                    
+            # Duration analysis
+            if metrics["avg_duration"]:
+                avg_duration = sum(metrics["avg_duration"]) / len(metrics["avg_duration"])
+                text_length = text_features.get("length", 0)
+                if text_length > 0:
+                    ms_per_char = avg_duration / text_length
+                    if ms_per_char > 100:  # Arbitrary threshold
+                        recommendations["synthesis_parameters"]["consider_faster_voice"] = True
+                        
+        # Text preprocessing recommendations
+        complexity = text_features.get("complexity_score", 0)
+        if complexity > 0.7:
+            recommendations["text_preprocessing"].append("consider_simplification")
+            
+        if text_features.get("punctuation_density", 0) > 0.3:
+            recommendations["text_preprocessing"].append("normalize_punctuation")
+            
+        # Quality improvements based on errors
+        if not synthesis_result.get("success", False):
+            error = synthesis_result.get("error", "")
+            if "timeout" in error.lower():
+                recommendations["quality_improvements"].append("reduce_text_length")
+            elif "engine" in error.lower():
+                recommendations["quality_improvements"].append("try_alternative_engine")
+                
+        return recommendations
+        
+    def _generate_stt_recommendations(self, audio_features: Dict[str, Any], transcription_result: Dict[str, Any]) -> Dict[str, Any]:
+        """Generate recommendations for STT improvement."""
+        recommendations = {
+            "audio_quality": [],
+            "processing_optimization": [],
+            "accuracy_improvements": [],
+            "error_handling": []
+        }
+        
+        # Processing time recommendations
+        proc_time = audio_features.get("processing_time_ms", 0)
+        if proc_time > 5000:  # More than 5 seconds
+            recommendations["processing_optimization"].append("consider_shorter_audio_segments")
+            
+        # Quality recommendations
+        quality = audio_features.get("quality_score", 0)
+        if quality < 0.5:
+            recommendations["audio_quality"].append("improve_audio_input_quality")
+            
+        # Error handling recommendations
+        if transcription_result.get("error"):
+            error = transcription_result["error"].lower()
+            if "timeout" in error:
+                recommendations["error_handling"].append("reduce_audio_duration")
+            elif "model" in error:
+                recommendations["error_handling"].append("check_model_availability")
+                
+        # Accuracy improvements
+        text_length = len(transcription_result.get("text", ""))
+        if text_length == 0 and not transcription_result.get("error"):
+            recommendations["accuracy_improvements"].append("check_audio_volume_levels")
+            
+        return recommendations
+        
+    def _get_engine_performance_summary(self, engine: str, engine_type: str) -> Dict[str, Any]:
+        """Get performance summary for an engine."""
+        if engine_type == "tts" and engine in self.tts_performance_metrics:
+            metrics = self.tts_performance_metrics[engine]
+            return {
+                "engine": engine,
+                "type": engine_type,
+                "success_rate": sum(metrics["success_rate"]) / len(metrics["success_rate"]) if metrics["success_rate"] else 0,
+                "avg_duration_ms": sum(metrics["avg_duration"]) / len(metrics["avg_duration"]) if metrics["avg_duration"] else 0,
+                "total_interactions": len(metrics["success_rate"]),
+                "error_count": len(metrics["error_patterns"])
+            }
+        elif engine_type == "stt" and "stt" in self.stt_performance_metrics:
+            metrics = self.stt_performance_metrics["stt"]
+            return {
+                "engine": "stt",
+                "type": engine_type,
+                "avg_processing_ms": sum(metrics["processing_times"]) / len(metrics["processing_times"]) if metrics["processing_times"] else 0,
+                "total_interactions": len(metrics["processing_times"]),
+                "error_count": len(metrics["error_patterns"])
+            }
+        else:
+            return {"engine": engine, "type": engine_type, "data_available": False}
+            
+    def _trim_history(self):
+        """Trim interaction history to max_history size."""
+        if len(self.interaction_history) > self.max_history:
+            self.interaction_history = self.interaction_history[-self.max_history:]
+            
+    def get_communication_insights(self) -> Dict[str, Any]:
+        """Get insights about communication patterns and performance."""
+        insights = {
+            "total_interactions": len(self.interaction_history),
+            "tts_interactions": sum(1 for i in self.interaction_history if i["type"] == "tts"),
+            "stt_interactions": sum(1 for i in self.interaction_history if i["type"] == "stt"),
+            "learning_active": self.learning_active,
+            "engines_tracked": {
+                "tts": list(self.tts_performance_metrics.keys()),
+                "stt": list(self.stt_performance_metrics.keys())
+            }
+        }
+        
+        # Add recent performance trends
+        recent_interactions = self.interaction_history[-50:]  # Last 50 interactions
+        if recent_interactions:
+            insights["recent_trends"] = {
+                "avg_tts_duration": 0,
+                "avg_stt_processing": 0,
+                "success_rates": {}
+            }
+            
+            tts_durations = [i["result"].get("duration_ms", 0) for i in recent_interactions if i["type"] == "tts"]
+            stt_times = [i["result"].get("processing_time_ms", 0) for i in recent_interactions if i["type"] == "stt"]
+            
+            if tts_durations:
+                insights["recent_trends"]["avg_tts_duration"] = sum(tts_durations) / len(tts_durations)
+            if stt_times:
+                insights["recent_trends"]["avg_stt_processing"] = sum(stt_times) / len(stt_times)
+                
+        return insights
+        
+    def toggle_learning(self, active: bool = None) -> bool:
+        """Toggle or set learning state."""
+        if active is not None:
+            self.learning_active = active
+        else:
+            self.learning_active = not self.learning_active
+        return self.learning_active
