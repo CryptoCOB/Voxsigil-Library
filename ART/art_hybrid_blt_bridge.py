@@ -26,6 +26,41 @@ if str(voxsigil_library_path) not in sys.path:
 from .art_logger import get_art_logger
 from .art_manager import ARTManager
 
+# HOLO-1.5 Cognitive Mesh Integration
+try:
+    from ..agents.base import vanta_agent, CognitiveMeshRole, BaseAgent
+    HOLO_AVAILABLE = True
+    
+    # Define VantaAgentCapability locally as it's not in a centralized location
+    class VantaAgentCapability:
+        ADAPTIVE_PROCESSING = "adaptive_processing"
+        ENTROPY_ROUTING = "entropy_routing"
+        HYBRID_COORDINATION = "hybrid_coordination"
+        
+except ImportError:
+    # Fallback for non-HOLO environments
+    def vanta_agent(role=None, cognitive_load=0, symbolic_depth=0, capabilities=None):
+        def decorator(cls):
+            cls._holo_role = role
+            cls._holo_cognitive_load = cognitive_load
+            cls._holo_symbolic_depth = symbolic_depth
+            cls._holo_capabilities = capabilities or []
+            return cls
+        return decorator
+    
+    class CognitiveMeshRole:
+        PROCESSOR = "PROCESSOR"
+    
+    class VantaAgentCapability:
+        ADAPTIVE_PROCESSING = "adaptive_processing"
+        ENTROPY_ROUTING = "entropy_routing"
+        HYBRID_COORDINATION = "hybrid_coordination"
+    
+    class BaseAgent:
+        pass
+    
+    HOLO_AVAILABLE = False
+
 # Global variables for BLT components (will be populated dynamically)
 HAS_BLT = False
 HybridMiddlewareConfig = None
@@ -199,7 +234,22 @@ def load_blt_components():
 HAS_BLT = load_blt_components()
 
 
-class ARTHybridBLTBridge:
+@vanta_agent(
+    name="ARTHybridBLTBridge",
+    subsystem="art_hybrid_processing",
+    mesh_role=CognitiveMeshRole.PROCESSOR,
+    capabilities=[
+        VantaAgentCapability.ADAPTIVE_PROCESSING,
+        VantaAgentCapability.ENTROPY_ROUTING,
+        VantaAgentCapability.HYBRID_COORDINATION,
+        "entropy_based_routing",
+        "hybrid_blt_processing",
+        "adaptive_pattern_analysis"
+    ],
+    cognitive_load=3.5,
+    symbolic_depth=4
+)
+class ARTHybridBLTBridge(BaseAgent if HOLO_AVAILABLE else object):
     """
     Enhanced bridge between the ART module and Hybrid BLT middleware.
 
@@ -207,6 +257,11 @@ class ARTHybridBLTBridge:
     selectively process data with ART, optimizing computational resources by focusing
     ART's pattern recognition on data with high information content or appropriate
     entropy characteristics.
+      Enhanced with HOLO-1.5 Recursive Symbolic Cognition Mesh:
+    - Entropy-based intelligent routing with cognitive load monitoring
+    - Hybrid BLT processing with symbolic depth tracking
+    - Adaptive pattern analysis coordination across hybrid systems
+    - Processing efficiency metrics for mesh optimization
     """
 
     def __init__(
@@ -218,7 +273,7 @@ class ARTHybridBLTBridge:
         logger_instance: Optional[logging.Logger] = None,
     ):
         """
-        Initialize the ARTHybridBLTBridge.
+        Initialize the ARTHybridBLTBridge with HOLO-1.5 cognitive mesh integration.
 
         Args:
             art_manager: Optional ARTManager instance. If None, a new one will be created.
@@ -226,10 +281,33 @@ class ARTHybridBLTBridge:
                 Higher values mean more selective analysis (only high entropy inputs).
             blt_hybrid_weight: Weight for BLT embeddings in hybrid mode (0-1).
             patch_size: Size of BLT patches for entropy calculation.
-        logger_instance: Optional logger instance. If None, a new one will be created."""
+            logger_instance: Optional logger instance. If None, a new one will be created.
+        """
         self.logger = logger_instance or get_art_logger("ARTHybridBLTBridge")
         self.entropy_threshold = entropy_threshold
         self.blt_hybrid_weight = blt_hybrid_weight
+
+        # HOLO-1.5 Cognitive Mesh Initialization
+        if HOLO_AVAILABLE:
+            super().__init__()
+            self.cognitive_metrics = {
+                "processing_efficiency": 0.0,
+                "routing_accuracy": 0.0,
+                "hybrid_coordination": 1.0,
+                "entropy_correlation": 0.0,
+                "cognitive_load": 3.5,
+                "symbolic_depth": 4
+            }
+            # Schedule async initialization
+            try:
+                import asyncio
+                asyncio.create_task(self.async_init())
+            except RuntimeError:
+                # If no event loop, defer initialization
+                self._vanta_initialized = False
+        else:
+            self._vanta_initialized = False
+            self.cognitive_metrics = {}
 
         # Initialize ARTManager
         self.art_manager = art_manager or ARTManager()
@@ -540,6 +618,205 @@ class ARTHybridBLTBridge:
             stats["art_stats"] = art_stats
 
         return stats
+
+    # HOLO-1.5 Async Initialization Methods
+    async def async_init(self):
+        """Async initialization for HOLO-1.5 cognitive mesh integration"""
+        if not HOLO_AVAILABLE:
+            return
+            
+        try:
+            # Initialize cognitive mesh connection
+            await self.initialize_vanta_core()
+            
+            # Register processing capabilities
+            await self.register_processing_capabilities()
+            
+            # Start cognitive monitoring
+            await self.start_cognitive_monitoring()
+            
+            self._vanta_initialized = True
+            self.logger.info("ARTHybridBLTBridge HOLO-1.5 cognitive mesh initialization complete")
+            
+        except Exception as e:
+            self.logger.warning(f"HOLO-1.5 initialization failed: {e}")
+            self._vanta_initialized = False
+
+    async def initialize_vanta_core(self):
+        """Initialize VantaCore connection for cognitive mesh"""
+        if hasattr(super(), 'initialize_vanta_core'):
+            await super().initialize_vanta_core()
+
+    async def register_processing_capabilities(self):
+        """Register ARTHybridBLTBridge processing capabilities with cognitive mesh"""
+        capabilities = {
+            "adaptive_processing": {
+                "entropy_routing": self.blt_available,
+                "hybrid_coordination": True,
+                "blt_components_loaded": self.blt_available,
+                "fallback_mode": not self.blt_available
+            },
+            "entropy_routing": {
+                "threshold": self.entropy_threshold,
+                "hybrid_weight": self.blt_hybrid_weight,
+                "router_available": self.router is not None,
+                "selective_analysis": True
+            },
+            "hybrid_coordination": {
+                "art_manager_integration": self.art_manager is not None,
+                "cognitive_load_balancing": True,
+                "async_operations": True,
+                "batch_processing": True
+            }
+        }
+        
+        if hasattr(self, 'vanta_core') and self.vanta_core:
+            await self.vanta_core.register_capabilities("art_hybrid_blt_bridge", capabilities)
+
+    async def start_cognitive_monitoring(self):
+        """Start cognitive load monitoring for hybrid processing"""
+        # Begin cognitive load monitoring
+        if hasattr(self, 'vanta_core') and self.vanta_core:
+            monitoring_config = {
+                "processing_efficiency_target": 0.85,
+                "routing_accuracy_target": 0.90,
+                "hybrid_coordination_target": 0.95,
+                "entropy_correlation_target": 0.80
+            }
+            await self.vanta_core.start_monitoring("art_hybrid_blt_bridge", monitoring_config)
+
+    def _enhanced_process_input(
+        self,
+        input_data: Union[str, dict[str, Any], list],
+        context: Optional[dict[str, Any]] = None,
+        force_analysis: bool = False,
+    ) -> dict[str, Any]:
+        """Enhanced process_input with cognitive metrics tracking"""
+        # Track cognitive load start
+        cognitive_start_time = time.time()
+        
+        # Call original process_input
+        result = self.process_input(input_data, context, force_analysis)
+        
+        # Update cognitive metrics
+        cognitive_processing_time = time.time() - cognitive_start_time
+        
+        if HOLO_AVAILABLE and self._vanta_initialized:
+            # Update processing efficiency metric
+            entropy_score = result.get("entropy_score", 0.0)
+            analysis_performed = result.get("analysis_performed", False)
+            
+            # Calculate processing efficiency (inverse of processing time, normalized)
+            efficiency = min(1.0, 1.0 / max(cognitive_processing_time, 0.001))
+            self.cognitive_metrics["processing_efficiency"] = (
+                self.cognitive_metrics["processing_efficiency"] * 0.9 + efficiency * 0.1
+            )
+            
+            # Calculate routing accuracy (how well entropy threshold worked)
+            if entropy_score is not None:
+                expected_analysis = entropy_score >= self.entropy_threshold
+                routing_accuracy = 1.0 if (expected_analysis == analysis_performed) else 0.0
+                self.cognitive_metrics["routing_accuracy"] = (
+                    self.cognitive_metrics["routing_accuracy"] * 0.9 + routing_accuracy * 0.1
+                )
+                
+                # Track entropy correlation
+                self.cognitive_metrics["entropy_correlation"] = (
+                    self.cognitive_metrics["entropy_correlation"] * 0.9 + entropy_score * 0.1
+                )
+            
+            # Update hybrid coordination (measure of BLT-ART integration success)
+            coordination_score = 1.0 if result.get("analysis_performed") and not result.get("error") else 0.5
+            self.cognitive_metrics["hybrid_coordination"] = (
+                self.cognitive_metrics["hybrid_coordination"] * 0.9 + coordination_score * 0.1
+            )
+            
+            # Generate cognitive trace
+            result["cognitive_trace"] = self._generate_processing_trace(
+                input_data, result, cognitive_processing_time
+            )
+        
+        return result
+
+    def _generate_processing_trace(self, input_data, result, processing_time):
+        """Generate cognitive trace for mesh learning"""
+        if not HOLO_AVAILABLE:
+            return None
+            
+        trace = {
+            "timestamp": time.time(),
+            "processing_time": processing_time,
+            "cognitive_metrics": self.cognitive_metrics.copy(),
+            "entropy_score": result.get("entropy_score"),
+            "route_decision": result.get("route_decision"),
+            "analysis_performed": result.get("analysis_performed"),
+            "hybrid_coordination_success": not result.get("error", False),
+            "symbolic_depth": self.cognitive_metrics.get("symbolic_depth", 4),
+            "mesh_role": "PROCESSOR"
+        }
+        
+        return trace
+
+    def _calculate_cognitive_load(self) -> float:
+        """Calculate current cognitive load based on processing metrics"""
+        if not HOLO_AVAILABLE:
+            return 0.0
+            
+        base_load = 3.5  # Base cognitive load for PROCESSOR role
+        
+        # Adjust based on BLT availability and complexity
+        if self.blt_available:
+            load_adjustment = 0.0
+            # Higher load if processing many high-entropy inputs
+            if self.stats.get("high_entropy_count", 0) > 10:
+                load_adjustment += 0.5
+            # Lower load if routing is efficient
+            if self.cognitive_metrics.get("routing_accuracy", 0.0) > 0.9:
+                load_adjustment -= 0.3
+        else:
+            # Higher load when operating in fallback mode
+            load_adjustment = 0.8
+            
+        return max(1.0, min(5.0, base_load + load_adjustment))
+
+    def _calculate_symbolic_depth(self) -> int:
+        """Calculate current symbolic processing depth"""
+        if not HOLO_AVAILABLE:
+            return 1
+            
+        base_depth = 4  # Base symbolic depth for hybrid processing
+        
+        # Adjust based on entropy correlation and coordination
+        entropy_correlation = self.cognitive_metrics.get("entropy_correlation", 0.0)
+        hybrid_coordination = self.cognitive_metrics.get("hybrid_coordination", 1.0)
+        
+        depth_adjustment = 0
+        if entropy_correlation > 0.7:
+            depth_adjustment += 1
+        if hybrid_coordination > 0.9:
+            depth_adjustment += 1
+        if self.blt_available and self.router:
+            depth_adjustment += 1
+            
+        return max(1, min(6, base_depth + depth_adjustment))
+
+    def get_cognitive_status(self) -> dict:
+        """Get current cognitive status for HOLO-1.5 mesh"""
+        if not HOLO_AVAILABLE:
+            return {}
+            
+        return {
+            "cognitive_load": self._calculate_cognitive_load(),
+            "symbolic_depth": self._calculate_symbolic_depth(),
+            "processing_efficiency": self.cognitive_metrics.get("processing_efficiency", 0.0),
+            "routing_accuracy": self.cognitive_metrics.get("routing_accuracy", 0.0),
+            "hybrid_coordination": self.cognitive_metrics.get("hybrid_coordination", 1.0),
+            "entropy_correlation": self.cognitive_metrics.get("entropy_correlation", 0.0),
+            "blt_availability": self.blt_available,
+            "total_processed": self.stats.get("total_inputs_processed", 0),
+            "mesh_role": "PROCESSOR",
+            "vanta_initialized": self._vanta_initialized
+        }
 
 
 if __name__ == "__main__":

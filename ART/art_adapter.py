@@ -13,6 +13,11 @@ It centralizes all bridge logic into a single coherent interface, handling:
 2. Cross-system communication and data formatting
 3. Common configuration management
 4. Event propagation and error handling
+
+HOLO-1.5 Recursive Symbolic Cognition Mesh Integration:
+- Role: PROCESSOR (cognitive_load=3.2, symbolic_depth=3)
+- Capabilities: System adaptation, bridge orchestration, cross-domain translation
+- Cognitive metrics: Adaptation efficiency, bridge coherence, translation accuracy
 """
 
 import importlib
@@ -21,9 +26,55 @@ import os
 import sys
 import threading
 import time
+import asyncio
 import numpy as np
 from typing import Any, Dict, List, Optional, Union, Tuple, Callable
 from pathlib import Path
+
+# HOLO-1.5 Cognitive Mesh Integration
+try:
+    from ..agents.base import vanta_agent, CognitiveMeshRole, BaseAgent
+    HOLO_AVAILABLE = True
+    
+    # Define VantaAgentCapability locally as it's not in a centralized location
+    class VantaAgentCapability:
+        SYSTEM_ADAPTATION = "system_adaptation"
+        BRIDGE_ORCHESTRATION = "bridge_orchestration"
+        CROSS_DOMAIN_TRANSLATION = "cross_domain_translation"
+        
+except ImportError:
+    # Fallback for non-HOLO environments
+    def vanta_agent(role=None, cognitive_load=0, symbolic_depth=0, capabilities=None):
+        def decorator(cls):
+            cls._holo_role = role
+            cls._holo_cognitive_load = cognitive_load
+            cls._holo_symbolic_depth = symbolic_depth
+            cls._holo_capabilities = capabilities or []
+            return cls
+        return decorator
+    
+    class CognitiveMeshRole:
+        PROCESSOR = "PROCESSOR"
+    
+    class VantaAgentCapability:
+        SYSTEM_ADAPTATION = "system_adaptation"
+        BRIDGE_ORCHESTRATION = "bridge_orchestration"
+        CROSS_DOMAIN_TRANSLATION = "cross_domain_translation"
+    
+    class BaseAgent:
+        pass
+    
+    HOLO_AVAILABLE = False
+    
+    class VantaAgentCapability:
+        SYSTEM_ADAPTATION = "system_adaptation"
+        BRIDGE_ORCHESTRATION = "bridge_orchestration"
+        CROSS_DOMAIN_TRANSLATION = "cross_domain_translation"
+    
+    class BaseAgent:
+        pass
+    
+    HOLO_AVAILABLE = False
 
 # Import ART components with proper error handling
 try:
@@ -125,10 +176,26 @@ except Exception as e:
     logger.error(f"Error checking for GUI: {e}")
 
 
-class ArtAdapter:
+@vanta_agent(
+    role=CognitiveMeshRole.PROCESSOR,
+    cognitive_load=3.2,
+    symbolic_depth=3,
+    capabilities=[
+        VantaAgentCapability.SYSTEM_ADAPTATION,
+        VantaAgentCapability.BRIDGE_ORCHESTRATION,
+        VantaAgentCapability.CROSS_DOMAIN_TRANSLATION
+    ]
+)
+
+class ArtAdapter(BaseAgent if HOLO_AVAILABLE else object):
     """
     Unified adapter class that provides a single interface for all ART functionality
     and bridges connections to other components (BLT, VantaCore, Gridformer, GUI).
+    
+    HOLO-1.5 Integration:
+    - Processes cross-system communications
+    - Orchestrates bridge connections
+    - Translates between different cognitive domains
     """
 
     def __init__(
@@ -140,7 +207,7 @@ class ArtAdapter:
         enable_bridges: bool = True,
     ):
         """
-        Initialize the ArtAdapter with optional components and configuration.
+        Initialize the ArtAdapter with HOLO-1.5 cognitive mesh integration.
 
         Args:
             config: Configuration dictionary for all components
@@ -149,8 +216,25 @@ class ArtAdapter:
             logger_instance: Optional logger instance
             enable_bridges: Whether to enable automatic bridge connections
         """
+        # Initialize HOLO-1.5 base agent if available
+        if HOLO_AVAILABLE:
+            super().__init__()
+        
         self.logger = logger_instance or get_art_logger("ArtAdapter")
-        self.logger.info("Initializing ArtAdapter...")
+        self.logger.info("Initializing ArtAdapter with HOLO-1.5 cognitive mesh...")
+
+        # HOLO-1.5 Cognitive metrics initialization
+        self._cognitive_metrics = {
+            "adaptation_efficiency": 0.0,
+            "bridge_coherence": 1.0,
+            "translation_accuracy": 0.0,
+            "system_integration_depth": 0,
+            "cross_domain_load": 0.0
+        }
+        
+        # Initialize async components if HOLO available
+        if HOLO_AVAILABLE:
+            asyncio.create_task(self._initialize_cognitive_mesh())
 
         # Set up configuration
         self.config = config or {}
@@ -175,7 +259,241 @@ class ArtAdapter:
         if enable_bridges:
             self._connect_bridges()
 
-        self.logger.info("ArtAdapter initialization complete")
+        self.logger.info("ArtAdapter initialization complete with HOLO-1.5 integration")
+
+    async def _initialize_cognitive_mesh(self) -> None:
+        """Initialize HOLO-1.5 cognitive mesh capabilities"""
+        try:
+            # Register system adaptation capabilities
+            await self.register_capability(
+                VantaAgentCapability.SYSTEM_ADAPTATION,
+                {
+                    'cross_system_integration': True,
+                    'dynamic_component_discovery': True,
+                    'runtime_adaptation': True
+                }
+            )
+            
+            # Register bridge orchestration
+            await self.register_capability(
+                VantaAgentCapability.BRIDGE_ORCHESTRATION,
+                {
+                    'multi_bridge_coordination': True,
+                    'event_propagation': True,
+                    'error_recovery': True
+                }
+            )
+            
+            # Register cross-domain translation
+            await self.register_capability(
+                VantaAgentCapability.CROSS_DOMAIN_TRANSLATION,
+                {
+                    'data_format_translation': True,
+                    'semantic_mapping': True,
+                    'protocol_adaptation': True
+                }
+            )
+            
+            self.logger.info("HOLO-1.5 cognitive mesh capabilities registered successfully")
+            
+        except Exception as e:
+            self.logger.warning(f"HOLO-1.5 initialization partial: {e}")
+
+    async def async_init(self):
+        """Async initialization for HOLO-1.5 cognitive mesh integration"""
+        if not HOLO_AVAILABLE:
+            return
+            
+        try:
+            # Initialize cognitive mesh connection
+            await self.initialize_vanta_core()
+            
+            # Register adaptation capabilities
+            await self.register_adaptation_capabilities()
+            
+            # Start cognitive monitoring
+            await self.start_cognitive_monitoring()
+            
+            self._vanta_initialized = True
+            self.logger.info("ArtAdapter HOLO-1.5 cognitive mesh initialization complete")
+            
+        except Exception as e:
+            self.logger.warning(f"HOLO-1.5 initialization failed: {e}")
+            self._vanta_initialized = False
+
+    async def initialize_vanta_core(self):
+        """Initialize VantaCore connection for cognitive mesh"""
+        if hasattr(super(), 'initialize_vanta_core'):
+            await super().initialize_vanta_core()
+
+    async def register_adaptation_capabilities(self):
+        """Register ArtAdapter adaptation capabilities with cognitive mesh"""
+        capabilities = {
+            "system_adaptation": {
+                "cross_system_integration": True,
+                "dynamic_component_discovery": self._has_components(),
+                "runtime_adaptation": True,
+                "multi_bridge_coordination": len(self.bridges) > 0
+            },
+            "bridge_orchestration": {
+                "active_bridges": len(self.bridges),
+                "bridge_coherence": self._cognitive_metrics.get('bridge_coherence', 1.0),
+                "event_propagation": True,
+                "error_recovery": True
+            },
+            "cross_domain_translation": {
+                "art_to_blt": HAS_BLT_SYSTEM,
+                "art_to_vanta": "vanta_factory" in self.bridges,
+                "data_format_translation": True,
+                "semantic_mapping": True
+            }
+        }
+        
+        if hasattr(self, 'vanta_core') and self.vanta_core:
+            await self.vanta_core.register_capabilities("art_adapter", capabilities)
+
+    async def start_cognitive_monitoring(self):
+        """Start cognitive load monitoring for adaptation processing"""
+        # Begin cognitive load monitoring
+        if hasattr(self, 'vanta_core') and self.vanta_core:
+            monitoring_config = {
+                "adaptation_efficiency_target": 0.85,
+                "bridge_coherence_target": 0.90,
+                "translation_accuracy_target": 0.88,
+                "system_integration_depth_target": 5
+            }
+            await self.vanta_core.start_monitoring("art_adapter", monitoring_config)
+
+    def _has_components(self) -> bool:
+        """Check if any ART components are available"""
+        return any([
+            self.art_controller is not None,
+            self.art_trainer is not None,
+            len(self.bridges) > 0
+        ])
+
+    def get_cognitive_status(self) -> dict:
+        """Get current cognitive status for HOLO-1.5 mesh"""
+        if not HOLO_AVAILABLE:
+            return {}
+            
+        return {
+            "cognitive_load": self._calculate_cognitive_load(),
+            "symbolic_depth": self._calculate_symbolic_depth(),
+            "adaptation_efficiency": self._cognitive_metrics.get("adaptation_efficiency", 0.0),
+            "bridge_coherence": self._cognitive_metrics.get("bridge_coherence", 1.0),
+            "translation_accuracy": self._cognitive_metrics.get("translation_accuracy", 0.0),
+            "system_integration_depth": self._cognitive_metrics.get("system_integration_depth", 0),
+            "cross_domain_load": self._cognitive_metrics.get("cross_domain_load", 0.0),
+            "active_bridges": len(self.bridges),
+            "components_available": self._has_components(),
+            "mesh_role": "PROCESSOR",
+            "vanta_initialized": getattr(self, '_vanta_initialized', False)
+        }
+
+    def _calculate_cognitive_load(self) -> float:
+        """Calculate current cognitive load based on adaptation metrics"""
+        if not HOLO_AVAILABLE:
+            return 0.0
+            
+        base_load = 3.2  # Base cognitive load for PROCESSOR role
+        
+        # Adjust based on bridge complexity
+        bridge_adjustment = len(self.bridges) * 0.2
+        
+        # Adjust based on component integration
+        component_adjustment = 0.0
+        if self.art_controller:
+            component_adjustment += 0.3
+        if self.art_trainer:
+            component_adjustment += 0.2
+        if HAS_BLT_SYSTEM:
+            component_adjustment += 0.4
+            
+        # Reduce load if adaptation is efficient
+        efficiency_adjustment = 0.0
+        adaptation_efficiency = self._cognitive_metrics.get("adaptation_efficiency", 0.0)
+        if adaptation_efficiency > 0.8:
+            efficiency_adjustment = -0.3
+            
+        return max(1.0, min(5.0, base_load + bridge_adjustment + component_adjustment + efficiency_adjustment))
+
+    def _calculate_symbolic_depth(self) -> int:
+        """Calculate current symbolic processing depth"""
+        if not HOLO_AVAILABLE:
+            return 1
+            
+        base_depth = 3  # Base symbolic depth for adapter processing
+        
+        # Adjust based on bridge coherence and integration
+        bridge_coherence = self._cognitive_metrics.get("bridge_coherence", 1.0)
+        integration_depth = self._cognitive_metrics.get("system_integration_depth", 0)
+        
+        depth_adjustment = 0
+        if bridge_coherence > 0.8:
+            depth_adjustment += 1
+        if integration_depth > 3:
+            depth_adjustment += 1
+        if len(self.bridges) > 2:
+            depth_adjustment += 1
+            
+        return max(1, min(6, base_depth + depth_adjustment))
+
+    def _calculate_adaptation_efficiency(self, source_system: str, target_system: str, success_rate: float) -> float:
+        """Calculate cognitive load for system adaptation"""
+        # Base efficiency from success rate
+        base_efficiency = success_rate
+        
+        # System complexity weighting
+        system_complexity = {
+            'art': 1.0,
+            'blt': 1.2,
+            'vanta': 1.5,
+            'gridformer': 1.3,
+            'gui': 0.8
+        }
+        
+        source_weight = system_complexity.get(source_system.lower(), 1.0)
+        target_weight = system_complexity.get(target_system.lower(), 1.0)
+        complexity_factor = (source_weight + target_weight) / 2.0
+        
+        # Calculate final efficiency
+        efficiency = base_efficiency / complexity_factor
+        return min(efficiency, 1.0)
+    
+    def _calculate_bridge_coherence(self, active_bridges: int, failed_bridges: int) -> float:
+        """Calculate bridge coherence metric"""
+        if active_bridges == 0:
+            return 1.0 if failed_bridges == 0 else 0.0
+        
+        total_bridges = active_bridges + failed_bridges
+        coherence = active_bridges / total_bridges
+        return coherence
+    
+    def _generate_adaptation_trace(self, operation: str, inputs: dict, outputs: dict) -> dict:
+        """Generate HOLO-1.5 adaptation trace for cognitive mesh learning"""
+        return {
+            'timestamp': time.time(),
+            'operation': operation,
+            'role': 'PROCESSOR',
+            'cognitive_load': self._cognitive_metrics.get('cross_domain_load', 0.0),
+            'symbolic_depth': self._cognitive_metrics.get('system_integration_depth', 0),
+            'inputs': {
+                'source_system': inputs.get('source_system'),
+                'target_system': inputs.get('target_system'),
+                'data_complexity': inputs.get('data_complexity', 0)
+            },
+            'outputs': {
+                'adaptation_success': outputs.get('success', False),
+                'translation_accuracy': outputs.get('accuracy', 0.0),
+                'bridge_status': outputs.get('bridge_status', 'unknown')
+            },
+            'metrics': {
+                'adaptation_efficiency': self._cognitive_metrics.get('adaptation_efficiency', 0.0),
+                'bridge_coherence': self._cognitive_metrics.get('bridge_coherence', 1.0),
+                'integration_depth': self._cognitive_metrics.get('system_integration_depth', 0)
+            }
+        }
 
     def _init_art_controller(self, existing_controller: Optional[Any] = None) -> None:
         """Initialize the ARTController component"""
@@ -224,19 +542,79 @@ class ArtAdapter:
             self.art_trainer = ArtTrainer(
                 art_controller=self.art_controller,
                 config=trainer_config,
-                logger_instance=self.logger,
-            )
+                logger_instance=self.logger,            )
             self.logger.info("Created new ArtTrainer instance")
         except Exception as e:
             self.logger.error(f"Failed to initialize ArtTrainer: {e}")
 
     def _connect_bridges(self) -> None:
-        """Set up all bridge connections between components"""
-        self.logger.info("Setting up bridge connections...")
-
+        """Set up all bridge connections between components with HOLO-1.5 cognitive tracking"""
+        self.logger.info("Setting up bridge connections with HOLO-1.5 integration...")
+        
+        # Track bridge connection process
+        bridge_start_time = time.time()
+        total_bridges_attempted = 0
+        successful_bridges = 0
+        
         try:
             # Connect ART to BLT if available
-            self._connect_art_blt_bridge()
+            if self._connect_art_blt_bridge():
+                successful_bridges += 1
+            total_bridges_attempted += 1
+            
+            # Connect ART to VantaCore if available
+            if self._connect_art_vanta_bridge():
+                successful_bridges += 1
+            total_bridges_attempted += 1
+            
+            # Connect ART to Gridformer if available
+            if self._connect_art_gridformer_bridge():
+                successful_bridges += 1
+            total_bridges_attempted += 1
+            
+            # Connect to GUI if available
+            if self._connect_gui_bridge():
+                successful_bridges += 1
+            total_bridges_attempted += 1
+            
+            # Update cognitive metrics
+            failed_bridges = total_bridges_attempted - successful_bridges
+            self._cognitive_metrics['bridge_coherence'] = self._calculate_bridge_coherence(
+                successful_bridges, failed_bridges
+            )
+            self._cognitive_metrics['system_integration_depth'] = successful_bridges
+            
+            bridge_duration = time.time() - bridge_start_time
+            self._cognitive_metrics['cross_domain_load'] = min(bridge_duration * 2, 5.0)
+            
+            # Generate cognitive trace for HOLO-1.5 learning
+            if HOLO_AVAILABLE:
+                trace = self._generate_adaptation_trace(
+                    'bridge_connection',
+                    {
+                        'source_system': 'art_adapter',
+                        'target_system': 'multi_system',
+                        'data_complexity': total_bridges_attempted
+                    },
+                    {
+                        'success': successful_bridges > 0,
+                        'accuracy': successful_bridges / total_bridges_attempted if total_bridges_attempted > 0 else 0.0,
+                        'bridge_status': f"{successful_bridges}/{total_bridges_attempted}"
+                    }
+                )
+                # Store trace for cognitive mesh learning
+                if not hasattr(self, 'cognitive_traces'):
+                    self.cognitive_traces = []
+                self.cognitive_traces.append(trace)
+            
+            self.logger.info(
+                f"HOLO-1.5 bridge setup complete: {successful_bridges}/{total_bridges_attempted} successful. "
+                f"Bridge coherence: {self._cognitive_metrics['bridge_coherence']:.3f}"
+            )
+            
+        except Exception as e:
+            self.logger.error(f"Error during HOLO-1.5 bridge setup: {e}")
+            self._cognitive_metrics['bridge_coherence'] = 0.0
 
             # Connect ART to VantaCore if available
             self._connect_art_vanta_bridge()
@@ -255,14 +633,16 @@ class ArtAdapter:
 
             self.logger.info(
                 f"Bridge connections established: {list(self.bridges.keys())}"
-            )
+            )     
+               
         except Exception as e:
             self.logger.error(f"Error setting up bridge connections: {e}")
 
-    def _connect_art_blt_bridge(self) -> None:
-        """Connect ART to BLT system"""
+    def _connect_art_blt_bridge(self) -> bool:
+        """Connect ART to BLT system with HOLO-1.5 cognitive tracking"""
         if not self.art_controller or not HAS_BLT_SYSTEM:
-            return
+            self.logger.info("ART-BLT bridge: Prerequisites not met")
+            return False
 
         try:
             # Try to import the bridge module
@@ -277,16 +657,26 @@ class ArtAdapter:
             )
 
             self.bridges["art_blt"] = blt_bridge
-            self.logger.info("ART-BLT bridge connected")
+            self.logger.info("HOLO-1.5 ART-BLT bridge connected successfully")
+            
+            # Update cognitive metrics
+            self._cognitive_metrics['adaptation_efficiency'] = self._calculate_adaptation_efficiency(
+                'art', 'blt', 1.0
+            )
+            
+            return True
         except ImportError:
             self.logger.warning("ARTBLTBridge not available, skipping BLT connection")
+            return False
         except Exception as e:
             self.logger.error(f"Error connecting ART-BLT bridge: {e}")
+            return False
 
-    def _connect_art_vanta_bridge(self) -> None:
-        """Connect ART to VantaCore system"""
+    def _connect_art_vanta_bridge(self) -> bool:
+        """Connect ART to VantaCore system with HOLO-1.5 cognitive tracking"""
         if not self.art_controller or not HAS_VANTACORE:
-            return
+            self.logger.info("ART-VANTA bridge: Prerequisites not met")
+            return False
 
         try:
             # Try to import VANTA factory from adapter
@@ -294,16 +684,26 @@ class ArtAdapter:
 
             # Store the factory for later use
             self.bridges["vanta_factory"] = VANTAFactory
-            self.logger.info("ART-VANTA connection available via VANTAFactory")
+            self.logger.info("HOLO-1.5 ART-VANTA connection available via VANTAFactory")
+            
+            # Update cognitive metrics
+            self._cognitive_metrics['adaptation_efficiency'] = self._calculate_adaptation_efficiency(
+                'art', 'vanta', 1.0
+            )
+            
+            return True
         except ImportError:
             self.logger.warning("VANTAFactory not available, skipping VANTA connection")
+            return False
         except Exception as e:
             self.logger.error(f"Error connecting ART-VANTA bridge: {e}")
+            return False
 
-    def _connect_art_gridformer_bridge(self) -> None:
-        """Connect ART to Gridformer system"""
+    def _connect_art_gridformer_bridge(self) -> bool:
+        """Connect ART to Gridformer system with HOLO-1.5 cognitive tracking"""
         if not self.art_controller or not HAS_GRIDFORMER:
-            return
+            self.logger.info("ART-Gridformer bridge: Prerequisites not met")
+            return False
 
         try:
             # Placeholder for future Gridformer adapter import
@@ -330,13 +730,22 @@ class ArtAdapter:
             gridformer_adapter = GridformerBLTAdapter(logger=self.logger)
 
             self.bridges["art_gridformer"] = gridformer_adapter
-            self.logger.info("ART-Gridformer bridge connected via BLT adapter")
+            self.logger.info("HOLO-1.5 ART-Gridformer bridge connected via BLT adapter")
+            
+            # Update cognitive metrics
+            self._cognitive_metrics['adaptation_efficiency'] = self._calculate_adaptation_efficiency(
+                'art', 'gridformer', 0.8  # Placeholder has lower efficiency
+            )
+            
+            return True
         except ImportError:
             self.logger.warning(
                 "ARCGridFormerBLTAdapter not available, skipping Gridformer connection"
             )
+            return False
         except Exception as e:
             self.logger.error(f"Error connecting ART-Gridformer bridge: {e}")
+            return False
 
     def _connect_art_gui_bridge(self) -> None:
         """Connect ART to GUI system"""
