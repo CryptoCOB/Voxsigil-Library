@@ -6,6 +6,9 @@ Speech-to-Text (STT) via Vosk and Text-to-Speech (TTS) for voice interaction
 with the VantaCore ecosystem.
 """
 
+# HOLO-1.5 Recursive Symbolic Cognition Mesh imports
+from .base import BaseCore, vanta_core_module, CognitiveMeshRole
+
 import json
 import logging
 import threading
@@ -131,7 +134,17 @@ class ConversationThread:
         }
 
 
-class VantaInteractionManager:
+@vanta_core_module(
+    name="vanta_interaction_manager",
+    subsystem="system_management", 
+    mesh_role=CognitiveMeshRole.MANAGER,
+    description="User interaction manager with voice I/O, conversation tracking, and state monitoring",
+    capabilities=["voice_input", "voice_output", "state_tracking", "conversation_management", "user_monitoring", "stt_processing", "tts_synthesis"],
+    cognitive_load=2.5,
+    symbolic_depth=2,
+    collaboration_patterns=["user_feedback", "state_coordination", "voice_interaction"]
+)
+class VantaInteractionManager(BaseCore):
     COMPONENT_NAME = "interaction_manager"
 
     def __init__(
@@ -201,6 +214,27 @@ class VantaInteractionManager:
         logger.info(
             f"{self.COMPONENT_NAME} initialized. STT: {'Vosk' if self._vosk_recognizer else 'Disabled'}, TTS: {'pyttsx3' if self._tts_engine else 'Disabled'}"
         )
+
+    async def initialize(self) -> bool:
+        """Initialize the VantaInteractionManager for HOLO-1.5 BaseCore compliance."""
+        try:
+            # Initialize audio system check
+            stt_available = self._vosk_recognizer is not None
+            tts_available = self._tts_engine is not None
+            
+            logger.info("VantaInteractionManager initialized with HOLO-1.5 enhancement")
+            logger.info(f"Voice capabilities - STT: {stt_available}, TTS: {tts_available}")
+            
+            # Start passive monitoring if callback is available
+            if self.passive_state_update_callback:
+                self.start_passive_monitoring()
+                logger.info("Passive monitoring started automatically")
+            
+            return True
+            
+        except Exception as e:
+            logger.error(f"Error initializing VantaInteractionManager: {e}")
+            return False
 
     def start_passive_monitoring(self) -> None:
         """Starts the passive monitoring loop if a callback is provided."""

@@ -5,11 +5,14 @@ This module provides a hybrid neural-symbolic network that combines the learning
 capabilities of neural networks with the interpretability of symbolic reasoning.
 """
 
+# HOLO-1.5 Recursive Symbolic Cognition Mesh imports
+from .base import BaseCore, vanta_core_module, CognitiveMeshRole
+
 import logging
 import torch.nn as nn
 import networkx as nx
 import matplotlib.pyplot as plt
-from typing import List, Tuple
+from typing import List, Tuple, Optional, Dict, Any
 
 # Set up logging
 logging.basicConfig(
@@ -18,9 +21,41 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 
-class NeuroSymbolicNetwork(nn.Module):
-    def __init__(self, input_dim, hidden_dims, output_dim):
-        super(NeuroSymbolicNetwork, self).__init__()
+@vanta_core_module(
+    name="neuro_symbolic_network",
+    subsystem="cognitive_processing",
+    mesh_role=CognitiveMeshRole.PROCESSOR,
+    description="Hybrid neural-symbolic network combining neural learning with symbolic reasoning and interpretability",
+    capabilities=["neural_processing", "symbolic_reasoning", "hybrid_inference", "rule_extraction", "graph_reasoning"],
+    cognitive_load=3.0,
+    symbolic_depth=4,
+    collaboration_patterns=["neural_symbolic_fusion", "interpretable_ai", "knowledge_integration"]
+)
+class NeuroSymbolicNetwork(BaseCore, nn.Module):
+    def __init__(
+        self,
+        vanta_core,
+        config: Optional[Dict[str, Any]] = None,
+        input_dim=None,
+        hidden_dims=None,
+        output_dim=None,
+    ):
+        # Initialize BaseCore first
+        BaseCore.__init__(self, vanta_core, config or {})
+
+        # Extract network parameters from config or use provided parameters
+        if config:
+            input_dim = input_dim or config.get("input_dim", 128)
+            hidden_dims = hidden_dims or config.get("hidden_dims", [256, 128])
+            output_dim = output_dim or config.get("output_dim", 64)
+        else:
+            input_dim = input_dim or 128
+            hidden_dims = hidden_dims or [256, 128]
+            output_dim = output_dim or 64
+
+        # Initialize PyTorch Module
+        nn.Module.__init__(self)
+
         layers = []
         dims = [input_dim] + hidden_dims
         for i in range(len(dims) - 1):
@@ -32,6 +67,43 @@ class NeuroSymbolicNetwork(nn.Module):
         self.network = nn.Sequential(*layers)
         self.graph = nx.DiGraph()
         self.connected_to = []
+
+    async def initialize(self) -> bool:
+        """Initialize the NeuroSymbolicNetwork component."""
+        try:
+            logger.info("Initializing NeuroSymbolicNetwork...")
+
+            # Initialize network weights
+            self._initialize_weights()
+
+            # Setup symbolic reasoning graph
+            self._setup_symbolic_graph()
+
+            logger.info("NeuroSymbolicNetwork initialized successfully")
+            return True
+
+        except Exception as e:
+            logger.error(f"Failed to initialize NeuroSymbolicNetwork: {e}")
+            return False
+
+    def _initialize_weights(self):
+        """Initialize network weights using appropriate initialization schemes."""
+        for module in self.network:
+            if isinstance(module, nn.Linear):
+                nn.init.xavier_uniform_(module.weight)
+                nn.init.constant_(module.bias, 0)
+
+    def _setup_symbolic_graph(self):
+        """Setup the symbolic reasoning graph structure."""
+        # Initialize with some basic symbolic relationships
+        # This can be expanded based on domain knowledge
+        self.graph.add_nodes_from(
+            [
+                ("concept_1", {"type": "abstract"}),
+                ("concept_2", {"type": "concrete"}),
+                ("relation_1", {"type": "causal"}),
+            ]
+        )
 
     def forward(self, x):
         if self.training and x.size(0) == 1:

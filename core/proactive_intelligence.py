@@ -18,6 +18,9 @@ from typing import Any, Protocol, runtime_checkable
 # Import unified interface definitions
 from Vanta.interfaces.specialized_interfaces import ModelManagerInterface
 
+# HOLO-1.5 Recursive Symbolic Cognition Mesh imports
+from .base import BaseCore, vanta_core_module, CognitiveMeshRole
+
 from Vanta.core.UnifiedAsyncBus import AsyncMessage, MessageType
 
 # Assuming vanta_core.py is accessible
@@ -62,7 +65,6 @@ class ProactiveIntelligenceConfig:
 
 
 # --- Interface Definitions ---
-# ModelManagerInterface imported from unified Vanta interfaces
 
 @runtime_checkable
 class TaskSchedulerInterface(
@@ -83,7 +85,19 @@ class HealthMonitorInterface(Protocol):  # Interface for health_monitor componen
     def get_health(self) -> dict[str, Any] | None: ...
 
 
-class ProactiveIntelligence:
+# --- Main ProactiveIntelligence Class ---
+
+@vanta_core_module(
+    name="proactive_intelligence",
+    subsystem="intelligence_services",
+    mesh_role=CognitiveMeshRole.PROCESSOR,
+    description="VantaCore proactive intelligence and priority management with predictive action evaluation and system state monitoring",
+    capabilities=["action_evaluation", "priority_management", "system_state_prediction", "risk_assessment", "resource_monitoring"],
+    cognitive_load=2.8,
+    symbolic_depth=3,
+    collaboration_patterns=["predictive_analysis", "intelligent_orchestration", "proactive_adaptation"]
+)
+class ProactiveIntelligence(BaseCore):
     COMPONENT_NAME = "proactive_intelligence"
 
     def __init__(
@@ -92,7 +106,10 @@ class ProactiveIntelligence:
         config: ProactiveIntelligenceConfig,
         model_manager: ModelManagerInterface,
     ):
-        self.vanta_core = vanta_core
+        # Call BaseCore constructor first
+        super().__init__(vanta_core, config)
+        
+        # Store original config object
         self.config = config
 
         if not isinstance(model_manager, ModelManagerInterface):
@@ -107,6 +124,7 @@ class ProactiveIntelligence:
                 logger.critical(
                     "ModelManagerInterface not provided or found in VantaCore registry. ProactiveIntelligence may not function correctly."
                 )                # You might create a very basic DefaultModelManager stub here if partial functionality is acceptable without it.
+                # For completeness, we'll use the passed model_manager regardless, but may fail later operations.
                 from core.learning_manager import DefaultModelManager
                 self.model_manager = DefaultModelManager()
         else:
@@ -129,6 +147,23 @@ class ProactiveIntelligence:
             self.COMPONENT_NAME, self, metadata={"type": "intelligence_service"}
         )
         logger.info("ProactiveIntelligence initialized and registered with VantaCore.")
+
+    async def initialize(self) -> bool:
+        """Initialize the ProactiveIntelligence component."""
+        try:
+            # Register async bus handlers for proactive intelligence events
+            await self.vanta_core.async_bus.subscribe(
+                MessageType.ACTION_EVALUATION, self.handle_action_evaluation
+            )
+            await self.vanta_core.async_bus.subscribe(
+                MessageType.PRIORITY_UPDATE, self.handle_priority_update
+            )
+            
+            logger.info("ProactiveIntelligence async handlers registered successfully")
+            return True
+        except Exception as e:
+            logger.error(f"Failed to initialize ProactiveIntelligence: {e}")
+            return False
 
     # --- Async bus handlers ---
     def handle_action_evaluation(self, message: AsyncMessage) -> None:

@@ -1,3 +1,6 @@
+# HOLO-1.5 Recursive Symbolic Cognition Mesh imports
+from .base import BaseCore, vanta_core_module, CognitiveMeshRole
+
 import logging
 import time
 import numpy as np
@@ -334,7 +337,17 @@ def _task_exists(task_id: str, learning_tasks: Dict[str, Any]) -> bool:
     return exists
 
 
-class AdvancedMetaLearner:
+@vanta_core_module(
+    name="advanced_meta_learner",
+    subsystem="cognitive_processing",
+    mesh_role=CognitiveMeshRole.PROCESSOR,
+    description="Advanced meta-learning system for cross-domain knowledge transfer with adaptive parameter optimization",
+    capabilities=["meta_learning", "cross_domain_transfer", "parameter_adaptation", "performance_analysis", "knowledge_synthesis"],
+    cognitive_load=3.5,
+    symbolic_depth=4,
+    collaboration_patterns=["knowledge_transfer", "adaptive_learning", "performance_optimization"]
+)
+class AdvancedMetaLearner(BaseCore):
     """
     Advanced meta-learning system for cross-domain knowledge transfer.
 
@@ -365,8 +378,7 @@ class AdvancedMetaLearner:
         "performance_decay_factor": None,  # Feature-7: Performance Decay (None = disabled)
         "min_performance_points_for_adapt": 3,
         "min_performance_points_for_meta_opt": 5,
-        "top_n_similar_tasks": 3,  # Control how many tasks influence transfer
-        "allow_transfer_override": True,  # Feature-10 Control flag
+        "top_n_similar_tasks": 3,  # Control how many tasks influence transfer        "allow_transfer_override": True,  # Feature-10 Control flag
         "similarity_weights": {  # Feature-6 Advanced Similarity Weights
             "domain": 1.0,
             "type": 1.0,
@@ -376,14 +388,17 @@ class AdvancedMetaLearner:
         "required_features": ["domain", "type"],  # Minimum features needed for a task
     }
 
-    def __init__(self, config: Optional[Dict[str, Any]] = None) -> None:
+    def __init__(self, vanta_core, config: Optional[Dict[str, Any]] = None) -> None:
         """
         Initialize the advanced meta-learner with enhanced configuration.
 
         Args:
+            vanta_core: VantaCore instance for integration
             config: User-provided configuration dictionary to override defaults.
         """
-        # Merge user config with defaults
+        # Initialize BaseCore first
+        super().__init__(vanta_core, config)
+          # Merge user config with defaults
         # Note: This is a simple update, a deep merge might be needed for nested dicts like param_bounds
         self.config = self.DEFAULT_CONFIG.copy()
         if config:
@@ -402,8 +417,7 @@ class AdvancedMetaLearner:
             self.meta_cognitive = None
             return  # Skip rest of init if disabled
 
-        self.learning_tasks = {}  # task_id -> {features, performances, parameters, created, last_updated, no_transfer}
-        # Initialize meta parameters from config, ensuring keys exist
+        self.learning_tasks = {}  # task_id -> {features, performances, parameters, created, last_updated, no_transfer}        # Initialize meta parameters from config, ensuring keys exist
         self.meta_parameters = {
             "learning_rate": float(self.config.get("learning_rate", 0.1)),
             "exploration_rate": float(self.config.get("exploration_rate", 0.2)),
@@ -415,8 +429,7 @@ class AdvancedMetaLearner:
         # self.task_performances = {} # REMOVED - Use task["performances"] instead
 
         self.transfer_history = []
-        # Use helper to get config value safely
-        self.max_history = int(_get_nested_value(self.config, ["max_history"], 100))
+        # Use helper to get config value safely        self.max_history = int(_get_nested_value(self.config, ["max_history"], 100))
         self.similarity_threshold = float(
             _get_nested_value(self.config, ["similarity_threshold"], 0.3)
         )
@@ -432,13 +445,13 @@ class AdvancedMetaLearner:
 
         log_event(
             "AdvancedMetaLearner initialized", self.get_status()
-        )  # Use get_status for richer log info
+        )  # Use get_status for richer log info        
         logger.info(
             f"Advanced meta-learner initialized. Similarity Threshold: {self.similarity_threshold}, Top N Transfer: {self.top_n_similar_tasks}"
         )
 
     def _validate_meta_parameters(self) -> None:
-        """Validate and clamp initial meta-parameters."""
+        """Validate and clamp initial meta-parameters."""        
         lr_bounds = self.config.get("param_bounds", {}).get(
             "learning_rate", (0.001, 1.0)
         )
@@ -456,6 +469,28 @@ class AdvancedMetaLearner:
         self.meta_parameters["transfer_strength"] = _clamp(
             self.meta_parameters["transfer_strength"], ts_bounds[0], ts_bounds[1]
         )
+
+    async def initialize(self) -> bool:
+        """Initialize the AdvancedMetaLearner component."""
+        try:
+            logger.info("Initializing AdvancedMetaLearner...")
+            
+            if not self.enabled:
+                logger.info("AdvancedMetaLearner is disabled, skipping initialization")
+                return True
+                
+            # Validate meta parameters are properly set
+            self._validate_meta_parameters()
+            
+            # Connect to SDK components
+            self._connect_components()
+            
+            logger.info("AdvancedMetaLearner initialized successfully")
+            return True
+            
+        except Exception as e:
+            logger.error(f"Failed to initialize AdvancedMetaLearner: {e}")
+            return False
 
     def _connect_components(self) -> None:
         """Connect to other SDK components using safe connect helper."""
@@ -1586,7 +1621,17 @@ from typing import Dict, List, Any, Optional, Tuple, Callable
 logger = logging.getLogger("metaconsciousness.meta_cognitive")
 
 
-class MetaCognitiveComponent:
+@vanta_core_module(
+    name="meta_cognitive_component",
+    subsystem="cognitive_processing",
+    mesh_role=CognitiveMeshRole.PROCESSOR,
+    description="Meta-cognitive reflection and self-awareness component with cognitive state monitoring",
+    capabilities=["meta_reflection", "cognitive_monitoring", "self_awareness", "cognitive_regulation", "introspection"],
+    cognitive_load=2.5,
+    symbolic_depth=4,
+    collaboration_patterns=["reflection_cycles", "cognitive_monitoring", "self_regulation"]
+)
+class MetaCognitiveComponent(BaseCore):    
     """
     Core component for meta-cognitive capabilities.
 
@@ -1594,21 +1639,22 @@ class MetaCognitiveComponent:
     own cognitive processes, monitor its own thinking, and regulate its
     cognitive strategies.
     """
-
-    def __init__(self, config: Optional[Dict[str, Any]] = None):
+    
+    def __init__(self, vanta_core, config: Optional[Dict[str, Any]] = None):
         """
         Initialize the meta-cognitive component.
 
         Args:
+            vanta_core: VantaCore instance for integration
             config: Configuration dictionary
         """
-        self.config = config or {}
-        self.enabled = self.config.get("enabled", True)
-        self.reflection_depth = self.config.get("reflection_depth", 2)
+        # Initialize BaseCore first
+        super().__init__(vanta_core, config)
+          
+        self.enabled = config.get("enabled", True) if config else True
+        self.reflection_depth = config.get("reflection_depth", 2) if config else 2
         self.last_reflection = 0.0
-        self.reflection_interval = self.config.get(
-            "reflection_interval_s", 300
-        )  # 5 minutes
+        self.reflection_interval = config.get("reflection_interval_s", 300) if config else 300
         self.reflection_history = []
         self.cognitive_metrics = {
             "certainty": 0.0,
@@ -1669,6 +1715,30 @@ class MetaCognitiveComponent:
             logger.warning("SDKContext not available. Running in standalone mode.")
         except Exception as e:
             logger.error(f"Error connecting components: {e}")
+
+    async def initialize(self) -> bool:
+        """Initialize the MetaCognitiveComponent for HOLO-1.5 BaseCore compliance."""
+        try:
+            # Initialize cognitive metric tracking
+            if self.enabled:
+                logger.info("MetaCognitiveComponent initialized with HOLO-1.5 enhancement")
+                logger.info(f"Reflection interval: {self.reflection_interval}s, Depth: {self.reflection_depth}")
+                
+            # Verify component connections
+            connected_count = sum([
+                self.metaconscious_agent is not None,
+                self.art_controller is not None, 
+                self.memory_cluster is not None,
+                self.omega3_agent is not None,
+                self.belief_registry is not None
+            ])
+            
+            logger.info(f"MetaCognitiveComponent connected to {connected_count}/5 components")
+            return True
+            
+        except Exception as e:
+            logger.error(f"Error initializing MetaCognitiveComponent: {e}")
+            return False
 
     def trigger_reflection(
         self, context: Optional[Dict[str, Any]] = None
@@ -1995,19 +2065,3 @@ class MetaCognitiveComponent:
                 "is_triggered": True,
             }
             self.trigger_reflection(context)
-
-
-# Create a default instance
-def create_metacognitive(
-    config: Optional[Dict[str, Any]] = None,
-) -> MetaCognitiveComponent:
-    """
-    Create a MetaCognitiveComponent instance.
-
-    Args:
-        config: Optional configuration
-
-    Returns:
-        MetaCognitiveComponent instance
-    """
-    return MetaCognitiveComponent(config)

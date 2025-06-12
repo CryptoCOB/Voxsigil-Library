@@ -16,6 +16,10 @@ from Vanta.core.UnifiedVantaCore import UnifiedVantaCore
 # Import MetaLearnerInterface from unified Vanta interfaces
 from Vanta.interfaces.specialized_interfaces import MetaLearnerInterface
 
+# HOLO-1.5 Recursive Symbolic Cognition Mesh imports
+from .base import BaseCore, vanta_core_module, CognitiveMeshRole
+from Vanta.core.UnifiedVantaCore import VantaCore
+
 logger = logging.getLogger("metaconsciousness.meta_learner")
 
 
@@ -299,7 +303,17 @@ class CrossDomainKnowledgeTransfer:
         return self.domain_knowledge
 
 
-class AdvancedMetaLearner(MetaLearnerInterface):
+@vanta_core_module(
+    name="advanced_meta_learner",
+    subsystem="learning_management",
+    mesh_role=CognitiveMeshRole.PROCESSOR,
+    description="Advanced meta-learning system for cross-domain knowledge transfer with HOLO-1.5 integration",
+    capabilities=["cross_domain_transfer", "parameter_optimization", "performance_tracking", "meta_learning", "task_adaptation", "knowledge_integration"],
+    cognitive_load=3.5,
+    symbolic_depth=3,
+    collaboration_patterns=["meta_learning", "knowledge_transfer", "cross_domain_learning", "performance_optimization"]
+)
+class AdvancedMetaLearner(BaseCore, MetaLearnerInterface):
     """
     Advanced meta-learning system for cross-domain knowledge transfer.
 
@@ -307,17 +321,20 @@ class AdvancedMetaLearner(MetaLearnerInterface):
     - Identifies common patterns across learning tasks
     - Transfers knowledge between domains
     - Adapts learning strategies based on task characteristics
-    - Optimizes learning parameters for efficiency
-    - Tracks performance metrics across domains
+    - Optimizes learning parameters for efficiency    - Tracks performance metrics across domains
     """
 
-    def __init__(self, config: Optional[Dict[str, Any]] = None) -> None:
+    def __init__(self, vanta_core: VantaCore, config: Optional[Dict[str, Any]] = None) -> None:
         """
         Initialize the advanced meta-learner.
 
         Args:
+            vanta_core: VantaCore instance for HOLO-1.5 integration
             config: Configuration dictionary
         """
+        # Initialize BaseCore with HOLO-1.5 mesh capabilities
+        super().__init__(vanta_core, config or {})
+        
         self.config = config or {}
         self.enabled = self.config.get("enabled", True)
         self.learning_tasks = {}
@@ -337,12 +354,22 @@ class AdvancedMetaLearner(MetaLearnerInterface):
         self.knowledge_transfer = CrossDomainKnowledgeTransfer()
         
         # Connect to other systems
-        self._connect_components()
-
-        # Log initialization
+        self._connect_components()        # Log initialization
         logger.info(
             f"Advanced meta-learner initialized: enabled={self.enabled}, params={self.meta_parameters}"
-        )    
+        )
+
+    async def initialize(self) -> bool:
+        """Initialize the AdvancedMetaLearner for BaseCore compliance."""
+        try:
+            if self.enabled:
+                logger.info("AdvancedMetaLearner initialized successfully with HOLO-1.5 enhancement")
+            else:
+                logger.info("AdvancedMetaLearner disabled by configuration")
+            return True
+        except Exception as e:
+            logger.error(f"Error initializing AdvancedMetaLearner: {e}")
+            return False
     def _connect_components(self) -> None:
         """Connect to other Vanta components."""
         # Get Vanta Core instance

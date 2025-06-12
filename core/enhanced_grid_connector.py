@@ -17,6 +17,9 @@ from typing import Any, Dict, List, Optional, Tuple, Union
 import numpy as np
 import torch
 
+# HOLO-1.5 imports
+from .base import BaseCore, vanta_core_module, CognitiveMeshRole
+
 # Use standard path helper for imports
 try:
     from utils.path_helper import add_project_root_to_path
@@ -58,7 +61,17 @@ except ImportError:
 logger = logging.getLogger("VoxSigil.GRID-Former.Connector")
 
 
-class EnhancedGridFormerConnector:
+@vanta_core_module(
+    name="enhanced_grid_connector",
+    subsystem="grid_processing",
+    mesh_role=CognitiveMeshRole.SYNTHESIZER,
+    description="Enhanced GRID-Former connector for VantaCore integration with neural-symbolic grid processing",
+    capabilities=["grid_neural_synthesis", "vanta_grid_integration", "model_connector", "arc_task_processing", "hybrid_reasoning"],
+    cognitive_load=4.0,
+    symbolic_depth=3,
+    collaboration_patterns=["neural_symbolic_bridge", "model_integration", "grid_synthesis"]
+)
+class EnhancedGridFormerConnector(BaseCore):
     """
     Enhanced connector class for integrating GRID-Former with VantaCore.
 
@@ -68,8 +81,9 @@ class EnhancedGridFormerConnector:
 
     def __init__(
         self,
+        vanta_core: Any,
+        config: Dict[str, Any],
         grid_former: Optional[GRID_Former] = None,
-        vanta_core: Optional[VantaCore] = None,
         model_dir: str = "./grid_former_models",
         default_model_path: Optional[str] = None,
         device: Optional[str] = None,
@@ -83,8 +97,9 @@ class EnhancedGridFormerConnector:
         Initialize the connector.
 
         Args:
+            vanta_core: VantaCore instance for HOLO-1.5 compliance
+            config: Configuration dictionary for BaseCore
             grid_former: Existing GRID-Former instance or None to create new one
-            vanta_core: Existing VantaCore instance or None
             model_dir: Directory for model storage
             default_model_path: Path to default model or None to create new one
             device: Device for model computation
@@ -94,6 +109,9 @@ class EnhancedGridFormerConnector:
             num_heads: Number of attention heads
             hybrid_mode: Whether to enable hybrid neural-symbolic mode
         """
+        # Initialize BaseCore
+        super().__init__(vanta_core, config)
+        
         # Set device
         self.device = device or ("cuda" if torch.cuda.is_available() else "cpu")
         self.device = torch.device(self.device)
@@ -164,9 +182,9 @@ class EnhancedGridFormerConnector:
             model=self.models[self.default_model_id],
             output_dir=str(self.model_dir),
             device=self.device,
-        )
-
-    def initialize(self) -> bool:
+        )    
+    
+    async def initialize(self) -> bool:
         """
         Initialize the integration with VantaCore.
 

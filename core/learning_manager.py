@@ -332,20 +332,20 @@ class LearningManager(BaseCore):
             "causal_inference_vanta",
             "knowledge_integration_vanta",
             "learning_transfer_vanta",
-        ]  # Made topic names more Vanta-generic
-
-        # Threading
+        ]  # Made topic names more Vanta-generic        # Threading
         self.compression_thread: threading.Thread | None = None
         self._stop_compression_flag = threading.Event()
         self.learning_thread: threading.Thread | None = None
         self._stop_learning_flag = threading.Event()
-        self._lock = threading.RLock()  # For learning_active and missed_checkin_count        # Register with VantaCore registry
+        self._lock = threading.RLock()  # For learning_active and missed_checkin_count
+        
+        # Register with VantaCore registry
         self.vanta_core.register_component(
             self.COMPONENT_NAME, self, {"type": "learning_service"}
         )
 
         # Subscribe to relevant events through VantaCore registry
-        self._setup_event_subscriptions()        
+        self._setup_event_subscriptions()
         logger.info(
             f"{self.COMPONENT_NAME} initialized. Learning Mode initially: {'Enabled' if self.config.enable_learning_mode else 'Disabled'}"
         )
