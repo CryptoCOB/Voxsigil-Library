@@ -18,10 +18,13 @@ from collections import defaultdict
 from typing import Any, Callable, Dict, List, Optional
 
 from BLT import BLTEncoder
-from BLT.hybrid_middleware import HybridMiddleware
+# The HybridMiddleware implementation lives in BLT.hybrid_blt
+from BLT.hybrid_blt import HybridMiddleware
 from Vanta.interfaces.blt_encoder_interface import BaseBLTEncoder
 from Vanta.interfaces.hybrid_middleware_interface import BaseHybridMiddleware
-from Vanta.interfaces.real_supervisor_connector import RealSupervisorConnector
+# RealSupervisorConnector implementation lives in integration.real_supervisor_connector
+# RealSupervisorConnector is located in the top-level integration package
+from integration.real_supervisor_connector import RealSupervisorConnector
 from Vanta.interfaces.supervisor_connector_interface import BaseSupervisorConnector
 
 from ..integration.vanta_supervisor import VantaSupervisor
@@ -62,8 +65,6 @@ from agents import (
     SDKContext,
     SleepTimeComputeAgent,
     HoloMesh,
-    HOLOMeshConfig,
-    HOLOAgentConfig,
     NullAgent,
 )
 from agents.base import AGENT_SUBSYSTEM_MAP
@@ -367,8 +368,7 @@ class UnifiedVantaCore:
 
         # Initialize HOLO mesh runtime loader
         try:
-            holo_cfg = HOLOMeshConfig(agents={})
-            self.holo_mesh = HoloMesh(holo_cfg, agent_registry=self.registry)
+            self.holo_mesh = HoloMesh(agent_registry=self.registry)
         except Exception as e:
             logger.error(f"Failed to initialize HOLO mesh: {e}")
             self.holo_mesh = None
@@ -1106,9 +1106,7 @@ class UnifiedVantaCore:
         for agent_name, agent in all_agents:
             agent_capabilities = []  # Try to get capabilities from agent metadata in registry
             if (
-                hasattr(self.agent_registry, "agents")
-                and self.agent_registry is not None
-                and self.agent_registry is not None
+                self.agent_registry is not None
                 and hasattr(self.agent_registry, "agents")
                 and agent_name in self.agent_registry.agents
             ):

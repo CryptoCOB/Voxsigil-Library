@@ -26,8 +26,11 @@ from .specialized_interfaces import (
     BLTInterface,
     ARCInterface,
     ARTInterface,
-    MiddlewareInterface
+    MiddlewareInterface,
 )
+from .blt_encoder_interface import BaseBLTEncoder
+from .hybrid_middleware_interface import BaseHybridMiddleware
+from .supervisor_connector_interface import BaseSupervisorConnector
 
 from .protocol_interfaces import (
     VantaProtocol,
@@ -50,6 +53,9 @@ __all__ = [
     'ARCInterface',
     'ARTInterface',
     'MiddlewareInterface',
+    'BaseBLTEncoder',
+    'BaseHybridMiddleware',
+    'BaseSupervisorConnector',
     
     # Protocol Interfaces
     'VantaProtocol',

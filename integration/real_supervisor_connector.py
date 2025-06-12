@@ -13,7 +13,8 @@ import time
 from pathlib import Path
 from typing import Any, Dict, List, Optional
 
-from .supervisor_connector_interface import BaseSupervisorConnector
+# Use the shared interface from Vanta.interfaces
+from Vanta.interfaces.supervisor_connector_interface import BaseSupervisorConnector
 
 logger = logging.getLogger("VoxSigil.RealSupervisorConnector")
 
