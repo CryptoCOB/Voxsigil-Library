@@ -15,6 +15,9 @@ import threading
 import time
 from typing import Any, Dict, List, Optional, Protocol, runtime_checkable
 
+# HOLO-1.5 imports
+from .base import BaseCore, vanta_core_module, CognitiveMeshRole
+
 # Configure logger
 logger = logging.getLogger("VantaCore.LearningManager")
 
@@ -271,7 +274,17 @@ class LearningCompressionEngineInterface(Protocol):
     ) -> dict[str, Any] | None: ...  # Changed signature
 
 
-class LearningManager:
+@vanta_core_module(
+    name="learning_manager",
+    subsystem="learning_management",
+    mesh_role=CognitiveMeshRole.MANAGER,
+    description="VantaCore learning and reflection management with cross-component knowledge integration",
+    capabilities=["learning_coordination", "reflection_cycles", "knowledge_integration", "training_awareness", "memory_compression"],
+    cognitive_load=3.0,
+    symbolic_depth=3,
+    collaboration_patterns=["knowledge_transfer", "meta_learning", "reflection_based_learning"]
+)
+class LearningManager(BaseCore):
     COMPONENT_NAME = "learning_manager"
 
     def __init__(
@@ -280,7 +293,9 @@ class LearningManager:
         config: LearningManagerConfig,
         model_manager: ModelManagerProtocol,
     ):  # ModelManager is a firm dependency
-        self.vanta_core = vanta_core
+        # Initialize BaseCore
+        super().__init__(vanta_core, config.__dict__ if hasattr(config, '__dict__') else {})
+        
         self.config = config
 
         # Duck-typing check: ensure model_manager has the required methods
@@ -330,11 +345,21 @@ class LearningManager:
         )
 
         # Subscribe to relevant events through VantaCore registry
-        self._setup_event_subscriptions()
-
+        self._setup_event_subscriptions()        
         logger.info(
             f"{self.COMPONENT_NAME} initialized. Learning Mode initially: {'Enabled' if self.config.enable_learning_mode else 'Disabled'}"
         )
+
+    async def initialize(self) -> bool:
+        """Initialize the LearningManager for BaseCore compliance."""
+        try:
+            # Ensure all internal components are ready
+            if self.config.enable_learning_mode:
+                logger.info("LearningManager initialized successfully with HOLO-1.5 enhancement")
+            return True
+        except Exception as e:
+            logger.error(f"Error initializing LearningManager: {e}")
+            return False
 
     def _setup_event_subscriptions(self):
         """Set up event subscriptions through VantaCore registry."""

@@ -7,20 +7,20 @@ Based on the workspace structure analysis, here are ALL modules that need Vanta 
 
 ### **PHASE 2B: COMPLETE MODULE REGISTRATION (25+ MODULES)**
 
-#### ✅ **COMPLETED REGISTRATIONS (2/27)**
+#### ✅ **COMPLETED REGISTRATIONS (4/27)**
 1. **`training/`** - ✅ Complete with multiple RAG adapters
 2. **`BLT/`** - ✅ Complete with TinyLlama integration
+3. **`agents/`** - ✅ Complete with HOLO-1.5 encapsulated registration (28 agents)
+4. **`engines/`** - ✅ Complete with HOLO-1.5 encapsulated registration (8 engines)
 
-#### 🔄 **IN PROGRESS (3/27)**
-3. **`interfaces/`** - 🔄 Interface consolidation in progress
-4. **`ARC/`** - 🔄 Partial integration, needs completion
-5. **`ART/`** - 🔄 Has adapter framework, needs registration
+#### 🔄 **IN PROGRESS (2/27)**
+5. **`interfaces/`** - 🔄 Interface consolidation in progress
+6. **`ARC/`** - 🔄 Partial integration, needs completion
 
-#### 📋 **PENDING REGISTRATION (22/27)**
+#### 📋 **PENDING REGISTRATION (21/27)**
 
-**CORE PROCESSING MODULES (6)**
-6. **`agents/`** - 25+ individual agent implementations
-7. **`engines/`** - Processing engines (async, training, TTS, STT, etc.)
+**CORE PROCESSING MODULES (4)**
+7. **`ART/`** - Has adapter framework, needs registration
 8. **`core/`** - Core utilities and managers
 9. **`memory/`** - Memory subsystems (braid, echo, external layers)
 10. **`VoxSigilRag/`** - RAG system components and processors
@@ -742,12 +742,12 @@ Module                      Status      Adapter Type          Priority
 ======================================================================
 1. training/               ✅ DONE     ClassBasedAdapter     COMPLETE
 2. BLT/                   ✅ DONE     BLTModuleAdapter      COMPLETE
-3. interfaces/            🔄 PROGRESS InterfaceAdapter      HIGH
-4. ARC/                   🔄 PROGRESS ARCModuleAdapter      HIGH
-5. ART/                   🔄 PROGRESS ARTModuleAdapter      HIGH
-6. agents/                📋 PENDING  AgentModuleAdapter    HIGH
-7. engines/               📋 PENDING  EngineModuleAdapter   HIGH
-8. core/                  📋 PENDING  CoreModuleAdapter     MEDIUM
+3. agents/                ✅ DONE     HOLO-1.5 Encapsulated COMPLETE
+4. engines/               ✅ DONE     HOLO-1.5 Encapsulated COMPLETE
+5. interfaces/            🔄 PROGRESS InterfaceAdapter      HIGH
+6. ARC/                   🔄 PROGRESS ARCModuleAdapter      HIGH
+7. ART/                   📋 PENDING  ARTModuleAdapter      HIGH
+8. core/                  📋 PENDING  CoreModuleAdapter     HIGH
 9. memory/                📋 PENDING  MemoryModuleAdapter   HIGH
 10. VoxSigilRag/          📋 PENDING  RAGModuleAdapter      HIGH
 11. voxsigil_supervisor/  📋 PENDING  SupervisorAdapter     HIGH
@@ -770,8 +770,8 @@ Module                      Status      Adapter Type          Priority
 ```
 
 ### **IMPLEMENTATION PRIORITY ORDER**
-1. **IMMEDIATE (Next 48 hours)**: Modules 3-6 (interfaces, ARC, ART, agents)
-2. **SHORT-TERM (1 week)**: Modules 7-11 (engines, core, memory, RAG, supervisor)
+1. **IMMEDIATE (Next 48 hours)**: Modules 5-8 (interfaces, ARC, ART, core)
+2. **SHORT-TERM (1 week)**: Modules 9-11 (memory, RAG, supervisor)
 3. **MEDIUM-TERM (2 weeks)**: Modules 12-20 (integration, system, strategies)
 4. **LONG-TERM (1 month)**: Modules 21-27 (utilities, content, resources)
 
@@ -780,11 +780,11 @@ Module                      Status      Adapter Type          Priority
 ## ✅ COMPLETION CHECKLIST
 
 ### Phase 2B: Complete Module Registration
-- [ ] Complete interfaces/ consolidation (Module 3)
-- [ ] Complete ARC/ registration (Module 4)  
-- [ ] Complete ART/ registration (Module 5)
-- [ ] Register agents/ system (Module 6) - 25+ agents
-- [ ] Register engines/ system (Module 7) - 8 engines
+- [x] ✅ Register agents/ system (Module 3) - 28 agents with HOLO-1.5
+- [x] ✅ Register engines/ system (Module 4) - 8 engines with HOLO-1.5
+- [ ] Complete interfaces/ consolidation (Module 5)
+- [ ] Complete ARC/ registration (Module 6)  
+- [ ] Complete ART/ registration (Module 7)
 - [ ] Register core/ utilities (Module 8) - 18 components
 - [ ] Register memory/ subsystems (Module 9) - 3 systems
 - [ ] Register VoxSigilRag/ system (Module 10) - 9 components

@@ -40,6 +40,9 @@ except ImportError:
         trace_event,
     )
 
+# HOLO-1.5 Mesh Infrastructure
+from .base import BaseCore, vanta_core_module, CognitiveMeshRole
+
 # Setup logging
 logging.basicConfig(
     level=logging.INFO, format="%(asctime)s - %(name)s - %(levelname)s - %(message)s"
@@ -47,19 +50,33 @@ logging.basicConfig(
 logger = logging.getLogger("voxsigil.supervisor.dialogue")
 
 
-class DialogueManager:
+@vanta_core_module(
+    name="dialogue_manager",
+    subsystem="cognitive_processing",
+    mesh_role=CognitiveMeshRole.ORCHESTRATOR,
+    description="Internal dialogue management for VantaCore ecosystem with cross-component communication",
+    capabilities=["dialogue_orchestration", "component_communication", "conversation_tracking", "multi_agent_facilitation", "context_management"],
+    cognitive_load=2.5,
+    symbolic_depth=3,
+    collaboration_patterns=["cross_component_dialogue", "orchestrated_communication", "context_aware_facilitation"]
+)
+class DialogueManager(BaseCore):
     """
     Manages internal dialogues between components within the VantaCore ecosystem.
     """
 
-    def __init__(self, config: Dict[str, Any], model_manager=None):
+    def __init__(self, vanta_core, config: Dict[str, Any], model_manager=None):
         """
         Initialize the dialogue manager.
 
         Args:
+            vanta_core: VantaCore instance
             config: Configuration dictionary
             model_manager: Optional model manager for dialogue analysis
         """
+        # Initialize BaseCore with HOLO-1.5 mesh capabilities
+        super().__init__(vanta_core, config)
+        
         self.config = config
         self.model_manager = model_manager
 
@@ -72,9 +89,7 @@ class DialogueManager:
         # Dialogue state
         self.active_dialogues: Dict[str, Dict[str, Any]] = {}
         self.dialogue_history: List[Dict[str, Any]] = []
-        self.last_dialogue_timestamp = 0
-
-        # Component registry for dialogue participants
+        self.last_dialogue_timestamp = 0        # Component registry for dialogue participants
         self.participating_components = set(
             [
                 "vox_agent",
@@ -87,15 +102,26 @@ class DialogueManager:
             ]
         )
 
-        # Set up dedicated dialogue logger with daily rotation
-        self._setup_dialogue_logger()
-        self.dialogue_logger.info("DialogueManager initialized")
         self.connected_to = []  # Register this component with VantaCore
         register_component("dialogue_manager", self)
 
-        # Subscribe to relevant events
-        subscribe_to_event("component_registered", self._on_component_registered)
+        # Subscribe to relevant eventssubscribe_to_event("component_registered", self._on_component_registered)
         subscribe_to_event("dialogue_request", self._on_dialogue_request)
+
+    async def initialize(self) -> bool:
+        """Initialize the dialogue manager with HOLO-1.5 capabilities."""
+        try:
+            # Set up dialogue logger
+            self._setup_dialogue_logger()
+            self.dialogue_logger.info("DialogueManager HOLO-1.5 initialized")
+            
+            # Mark as initialized
+            self.is_initialized = True
+            logger.info("🗣️ DialogueManager initialized with HOLO-1.5 mesh capabilities")
+            return True
+        except Exception as e:
+            logger.error(f"Failed to initialize DialogueManager: {e}")
+            return False
 
     def _setup_dialogue_logger(self):
         """Set up a dedicated logger for dialogues with daily rotation."""
