@@ -16,6 +16,9 @@ import math
 import zlib
 from typing import Any, Dict, Optional, Tuple, Union
 
+# HOLO-1.5 Mesh Infrastructure
+from .base import BaseEngine, vanta_engine, CognitiveMeshRole
+
 # Constants for compression modes
 MODE_ZLIB = "zlib"
 MODE_LZMA = "lzma"
@@ -30,13 +33,19 @@ DEFAULT_ENCODING = "utf-8"
 
 class RAGCompressionError(Exception):
     """Exception raised for RAG compression errors."""
-
     pass
 
 
-class RAGCompressionEngine:
+@vanta_engine(
+    name="rag_compression_engine",
+    subsystem="rag_optimization_subsystem",
+    mesh_role=CognitiveMeshRole.SYNTHESIZER,
+    description="RAG compression and optimization engine for data synthesis and compression",
+    capabilities=["data_compression", "rag_optimization", "synthesis", "integration", "fusion"]
+)
+class RAGCompressionEngine(BaseEngine):
     """Compression engine for RAG content."""
-
+    
     def __init__(self, config: Optional[Dict[str, Any]] = None) -> None:
         """
         Initialize the RAG compression engine.
@@ -44,6 +53,9 @@ class RAGCompressionEngine:
         Args:
             config: Optional configuration dictionary
         """
+        # Initialize BaseEngine with HOLO-1.5 mesh capabilities
+        super().__init__(None, config)  # Will set vanta_core later if needed
+        
         # Initialize logger first to ensure it's always available
         self.logger = logging.getLogger("VoxSigilSystem.RAGCompressionEngine")
 

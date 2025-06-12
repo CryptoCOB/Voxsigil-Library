@@ -1,6 +1,7 @@
-from .base import BaseAgent
+from .base import BaseAgent, vanta_agent, CognitiveMeshRole
 
 
+@vanta_agent(name="PulseSmith", subsystem="gridformer_connector", mesh_role=CognitiveMeshRole.GENERATOR)
 class PulseSmith(BaseAgent):
     sigil = "🜖📡🜖📶"
     tags = ['Signal Tuner', 'Transduction Core']

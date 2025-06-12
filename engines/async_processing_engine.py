@@ -17,6 +17,9 @@ from Vanta.core.UnifiedAsyncBus import (
     MessageType,  # Import MessageType for async bus integration
 )
 
+# HOLO-1.5 Mesh Infrastructure  
+from .base import BaseEngine, vanta_engine, CognitiveMeshRole
+
 logger = logging.getLogger("Vanta.AsyncProcessor")
 
 # ML Dependencies
@@ -56,12 +59,21 @@ class ProcessorConfig:
     )
 
 
-class AsyncProcessingEngine:
+@vanta_engine(
+    name="async_processing_engine",
+    subsystem="async_processing_core", 
+    mesh_role=CognitiveMeshRole.ORCHESTRATOR,
+    description="Asynchronous processing and inference engine with model management and task orchestration",
+    capabilities=["model_loading", "inference", "text_generation", "embeddings", "task_prioritization", "resource_management"]
+)
+class AsyncProcessingEngine(BaseEngine):
     """Async Processing and Inference Engine"""
 
-    COMPONENT_NAME = "async_processing_engine"
-
+    COMPONENT_NAME = "async_processing_engine"    
     def __init__(self, vanta_core: Any, config: ProcessorConfig):
+        # Initialize BaseEngine with HOLO-1.5 mesh capabilities
+        super().__init__(vanta_core, config)
+        
         self.vanta_core = vanta_core
         self.config = config  # Processed by Pydantic if FE001 is active
 

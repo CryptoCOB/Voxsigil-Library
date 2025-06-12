@@ -17,6 +17,9 @@ from typing import Any, Callable, Protocol, Union, runtime_checkable
 # Assuming vanta_core.py and vanta_cat_engine.py (for DefaultVantaMemoryBraid if used) are accessible
 from Vanta.core.UnifiedVantaCore import UnifiedVantaCore as VantaCore
 
+# HOLO-1.5 Mesh Infrastructure
+from .base import BaseEngine, vanta_engine, CognitiveMeshRole
+
 # If ToTEngine needs its own default MemoryBraid, it could import the one from vanta_cat_engine or define its own.
 # For simplicity, we'll assume it might use a generic one or one provided by VantaCore.
 # from vanta_cat_engine import DefaultVantaMemoryBraid, MemoryBraidInterface (if sharing defaults)
@@ -186,13 +189,18 @@ class VantaRegisteredContextProvider(ContextProvider):
             "error": f"Failed to retrieve context from {self.component_name}",
             "timestamp": time.time(),
             "_source_component": f"{self.component_name}_error",
-        }
-
-    def get_provider_name(self) -> str:
+        }    def get_provider_name(self) -> str:
         return self.component_name
 
 
-class ToTEngine:
+@vanta_engine(
+    name="tot_engine",
+    subsystem="reasoning_and_learning",
+    mesh_role=CognitiveMeshRole.PROCESSOR,
+    description="Tree-of-Thought engine for structured multi-branch reasoning and decision making",
+    capabilities=["tree_of_thought", "branch_reasoning", "thought_seeding", "branch_evaluation", "meta_learning"]
+)
+class ToTEngine(BaseEngine):
     COMPONENT_NAME = "tot_engine"
 
     def __init__(
@@ -207,8 +215,9 @@ class ToTEngine:
         result_callback: Callable[[Any], None] | None = None,
         memory_braid_instance: MemoryBraidInterface | None = None,
     ):
-        self.vanta_core = vanta_core
-        self.config = config
+        # Initialize BaseEngine with HOLO-1.5 mesh capabilities
+        super().__init__(vanta_core, config)
+        
         logger.info(
             f"ToTEngine initializing via VantaCore. Interval: {self.config.interval_s}s"
         )

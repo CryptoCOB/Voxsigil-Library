@@ -1,9 +1,10 @@
 import asyncio
-from .base import BaseAgent
+from .base import BaseAgent, vanta_agent, CognitiveMeshRole
 from ..blt_compression_middleware import compress_outbound
 from Vanta.core.UnifiedAsyncBus import AsyncMessage, MessageType
 
 
+@vanta_agent(name="VoxAgent", subsystem="system_interface", mesh_role=CognitiveMeshRole.EVALUATOR)
 class VoxAgent(BaseAgent):
     sigil = "🜌⟐🜹🜙"
     tags = ['Coordinator', 'System Interface', 'ContextualCheckInAgent']

@@ -1,6 +1,7 @@
-from .base import BaseAgent
+from .base import BaseAgent, vanta_agent, CognitiveMeshRole
 
 
+@vanta_agent(name="Andy", subsystem="output_composer", mesh_role=CognitiveMeshRole.GENERATOR)
 class Andy(BaseAgent):
     sigil = "📦🔧📤🔁"
     tags = ['Composer', 'Output Synthesizer']

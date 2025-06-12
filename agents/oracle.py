@@ -1,6 +1,7 @@
-from .base import BaseAgent
+from .base import BaseAgent, vanta_agent, CognitiveMeshRole
 
 
+@vanta_agent(name="Oracle", subsystem="temporal_foresight", mesh_role=CognitiveMeshRole.EVALUATOR)
 class Oracle(BaseAgent):
     sigil = "⚑♸⧉🜚"
     tags = ['Temporal Eye', 'Prophetic Synthesizer', 'DreamWeft, TimeBinder']
@@ -8,7 +9,7 @@ class Oracle(BaseAgent):
 
     def initialize_subsystem(self, core):
         # Optional: bind to subsystem if defined
-        pass
+        super().initialize_subsystem(core)
 
     def on_gui_call(self):
         # Optional: link to GUI invocation
@@ -16,4 +17,4 @@ class Oracle(BaseAgent):
 
     def bind_echo_routes(self):
         # Optional: connect signals to/from UnifiedAsyncBus
-        pass
+        super().bind_echo_routes()

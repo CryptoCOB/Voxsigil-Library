@@ -1,6 +1,7 @@
-from .base import BaseAgent
+from .base import BaseAgent, vanta_agent, CognitiveMeshRole
 
 
+@vanta_agent(name="Carla", subsystem="speech_style_layer", mesh_role=CognitiveMeshRole.GENERATOR)
 class Carla(BaseAgent):
     sigil = "🎭🗣️🪞🪄"
     tags = ['Voice Layer', 'Stylizer Core']

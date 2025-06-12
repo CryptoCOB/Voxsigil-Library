@@ -18,6 +18,9 @@ from Vanta.core.UnifiedVantaCore import (
     UnifiedVantaCore as VantaCore,
 )  # VantaCore integration
 
+# HOLO-1.5 Mesh Infrastructure
+from .base import BaseEngine, vanta_engine, CognitiveMeshRole
+
 from .cat_engine import CATEngine  # Use the VantaCore-adapted CATEngine
 from .tot_engine import ToTEngine  # Use the VantaCore-adapted ToTEngine
 
@@ -133,9 +136,16 @@ class HybridThoughtBranch:
 
 
 # --- Hybrid Cognition Engine ---
-class HybridCognitionEngine:
+@vanta_engine(
+    name="hybrid_cognition_engine",
+    subsystem="dual_cognition_core",
+    mesh_role=CognitiveMeshRole.PROCESSOR,
+    description="Hybrid cognition engine fusing ToT and CAT capabilities for advanced multi-modal reasoning",
+    capabilities=["cognitive_fusion", "multi_modal", "hybrid_processing", "thought_synthesis", "adaptive_reasoning"]
+)
+class HybridCognitionEngine(BaseEngine):
     COMPONENT_NAME = "hybrid_cognition_engine"
-
+    
     def __init__(
         self,
         vanta_core: VantaCore,  # Mandatory VantaCore instance
@@ -144,6 +154,9 @@ class HybridCognitionEngine:
         cat_engine_instance: CATEngine,  # Must be VantaCore-adapted CATEngine
         result_callback: Callable[[dict[str, Any]], None] | None = None,
     ):
+        # Initialize BaseEngine with HOLO-1.5 mesh capabilities
+        super().__init__(vanta_core, config)
+        
         self.vanta_core = vanta_core
         self.config = config
         logger.info(

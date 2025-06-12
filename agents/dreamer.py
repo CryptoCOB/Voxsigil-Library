@@ -1,6 +1,7 @@
-from .base import BaseAgent
+from .base import BaseAgent, vanta_agent, CognitiveMeshRole
 
 
+@vanta_agent(name="Dreamer", subsystem="dream_state_core", mesh_role=CognitiveMeshRole.GENERATOR)
 class Dreamer(BaseAgent):
     sigil = "🧿🧠🧩♒"
     tags = ['Dream Generator', 'Dream-State Core']

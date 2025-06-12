@@ -1,6 +1,7 @@
-from .base import BaseAgent
+from .base import BaseAgent, vanta_agent, CognitiveMeshRole
 
 
+@vanta_agent(name="Astra", subsystem="navigation", mesh_role=CognitiveMeshRole.PLANNER)
 class Astra(BaseAgent):
     sigil = "🜁⟁🜔🔭"
     tags = ['Navigator', 'System Pathfinder', 'CompassRose, LumenDrift']

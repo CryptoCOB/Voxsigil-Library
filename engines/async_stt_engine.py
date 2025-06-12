@@ -30,6 +30,9 @@ from Vanta.core.UnifiedAsyncBus import (
     MessageType,  # Import MessageType for async bus integration
 )
 
+# HOLO-1.5 Mesh Infrastructure
+from .base import BaseEngine, vanta_engine, CognitiveMeshRole
+
 # Configure logger first
 logger = logging.getLogger("Vanta.AsyncSTT")
 
@@ -210,12 +213,22 @@ class STTConfig(BaseModel):
             return v
 
 
-class AsyncSTTEngine:
+@vanta_engine(
+    name="async_stt_engine",
+    subsystem="speech_processing",
+    mesh_role=CognitiveMeshRole.PROCESSOR,
+    description="Async Speech-to-Text engine using Vosk for offline speech recognition with VAD",
+    capabilities=["speech_to_text", "voice_activity_detection", "async_transcription", "offline_recognition", "partial_results"]
+)
+class AsyncSTTEngine(BaseEngine):
     """Async Speech-to-Text Engine using Vosk with enhancements"""
 
     COMPONENT_NAME = "async_stt_engine"
 
     def __init__(self, vanta_core: Any, config: STTConfig):
+        # Initialize BaseEngine with HOLO-1.5 mesh capabilities
+        super().__init__(vanta_core, config)
+        
         self.vanta_core = vanta_core
         if not isinstance(config, STTConfig):
             logger.warning(

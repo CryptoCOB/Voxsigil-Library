@@ -1,6 +1,7 @@
-from .base import BaseAgent
+from .base import BaseAgent, vanta_agent, CognitiveMeshRole
 
 
+@vanta_agent(name="OrionApprentice", subsystem="learning_shard", mesh_role=CognitiveMeshRole.EVALUATOR)
 class OrionApprentice(BaseAgent):
     sigil = "🜞🧩🎯🔁"
     tags = ['Light Echo', 'Learning Shard']

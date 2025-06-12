@@ -1,6 +1,7 @@
-from .base import BaseAgent
+from .base import BaseAgent, vanta_agent, CognitiveMeshRole
 
 
+@vanta_agent(name="MirrorWarden", subsystem="meta_learner", mesh_role=CognitiveMeshRole.CRITIC)
 class MirrorWarden(BaseAgent):
     sigil = "⚛️🜂🜍🝕"
     tags = ['Reflected Guard', 'Safeguard Mirror']

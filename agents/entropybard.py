@@ -1,6 +1,7 @@
-from .base import BaseAgent
+from .base import BaseAgent, vanta_agent, CognitiveMeshRole
 
 
+@vanta_agent(name="EntropyBard", subsystem="rag_subsystem", mesh_role=CognitiveMeshRole.EVALUATOR)
 class EntropyBard(BaseAgent):
     sigil = "🜔🕊️⟁⧃"
     tags = ['Chaos Interpreter', 'Singularity Bard']

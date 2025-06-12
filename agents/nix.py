@@ -1,6 +1,7 @@
-from .base import BaseAgent
+from .base import BaseAgent, vanta_agent, CognitiveMeshRole
 
 
+@vanta_agent(name="Nix", subsystem="chaos_subsystem", mesh_role=CognitiveMeshRole.EVALUATOR)
 class Nix(BaseAgent):
     sigil = "☲🜄🜁⟁"
     tags = ['Chaos Core', 'Primal Disruptor', 'Breakbeam, WyrmEcho']

@@ -1,6 +1,7 @@
-from .base import BaseAgent
+from .base import BaseAgent, vanta_agent, CognitiveMeshRole
 
 
+@vanta_agent(name="Warden", subsystem="integrity_monitor", mesh_role=CognitiveMeshRole.CRITIC)
 class Warden(BaseAgent):
     sigil = "⚔️⟁♘🜏"
     tags = ['Guardian', 'Integrity Sentinel', 'RefCheck, PolicyCore']

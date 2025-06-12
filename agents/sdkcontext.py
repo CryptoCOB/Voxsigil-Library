@@ -1,6 +1,7 @@
-from .base import BaseAgent
+from .base import BaseAgent, vanta_agent, CognitiveMeshRole
 
 
+@vanta_agent(name="SDKContext", subsystem="module_registry", mesh_role=CognitiveMeshRole.EVALUATOR)
 class SDKContext(BaseAgent):
     sigil = "⏣📡⏃⚙️"
     tags = ['Registrar', 'Module Tracker']

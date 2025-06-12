@@ -1,6 +1,7 @@
-from .base import BaseAgent
+from .base import BaseAgent, vanta_agent, CognitiveMeshRole
 
 
+@vanta_agent(name="Wendy", subsystem="tone_audit", mesh_role=CognitiveMeshRole.CRITIC)
 class Wendy(BaseAgent):
     sigil = "🎧💓🌈🎶"
     tags = ['Tonal Auditor', 'Emotional Oversight']

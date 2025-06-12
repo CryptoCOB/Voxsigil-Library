@@ -1,7 +1,8 @@
-from .base import BaseAgent
+from .base import BaseAgent, vanta_agent, CognitiveMeshRole
 from Vanta.core.UnifiedAsyncBus import AsyncMessage, MessageType
 
 
+@vanta_agent(name="SleepTimeComputeAgent", subsystem="sleep_scheduler", mesh_role=CognitiveMeshRole.EVALUATOR)
 class SleepTimeComputeAgent(BaseAgent):
     sigil = "🌒🧵🧠🜝"
     tags = ['Reflection Engine', 'Dream-State Scheduler']

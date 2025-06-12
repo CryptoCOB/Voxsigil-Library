@@ -24,6 +24,10 @@ from Vanta.core.UnifiedAsyncBus import AsyncMessage, MessageType
 from Vanta.core.UnifiedVantaCore import (
     UnifiedVantaCore as VantaCore,  # Core orchestrator singleton
 )
+
+# HOLO-1.5 Mesh Infrastructure
+from .base import BaseEngine, vanta_engine, CognitiveMeshRole
+
 # Import unified interface definitions
 from Vanta.interfaces.specialized_interfaces import MetaLearnerInterface, ModelManagerInterface
 from Vanta.interfaces.protocol_interfaces import MemoryBraidInterface
@@ -363,9 +367,15 @@ class VoxSigilMemoryAdapter:
 
 
 # --- C.A.T. Engine Implementation ---
-class CATEngine:
+@vanta_engine(
+    name="cat_engine",
+    subsystem="cognitive_architecture_frame",
+    mesh_role=CognitiveMeshRole.PROCESSOR,
+    description="Cognitive Architecture Toolkit engine for advanced reasoning and belief management",
+    capabilities=["cognitive_architecture", "reasoning", "belief_management", "memory_clustering", "focus_management"]
+)
+class CATEngine(BaseEngine):
     COMPONENT_NAME = "cat_engine"
-    
     def __init__(
         self,
         vanta_core: VantaCore,
@@ -380,6 +390,9 @@ class CATEngine:
         echo_memory: EchoMemoryInterface | None = None,
         rag_engine: Any | None = None,  # Generic RAG for now
     ):
+        # Initialize BaseEngine with HOLO-1.5 mesh capabilities
+        super().__init__(vanta_core, config)
+        
         self.vanta_core = vanta_core
         self.config = config
         

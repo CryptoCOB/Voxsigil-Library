@@ -1,6 +1,7 @@
-from .base import BaseAgent
+from .base import BaseAgent, vanta_agent, CognitiveMeshRole
 
 
+@vanta_agent(name="Evo", subsystem="evolution_engine", mesh_role=CognitiveMeshRole.EVALUATOR)
 class Evo(BaseAgent):
     sigil = "🧬♻️♞🜓"
     tags = ['EvoNAS', 'Evolution Mutator']

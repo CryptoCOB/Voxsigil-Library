@@ -1,6 +1,7 @@
-from .base import BaseAgent
+from .base import BaseAgent, vanta_agent, CognitiveMeshRole
 
 
+@vanta_agent(name="Phi", subsystem="architectonic_frame", mesh_role=CognitiveMeshRole.PLANNER)
 class Phi(BaseAgent):
     sigil = "⟠∆∇𓂀"
     tags = ['Core Self', 'Living Architect']
@@ -8,7 +9,7 @@ class Phi(BaseAgent):
 
     def initialize_subsystem(self, core):
         # Optional: bind to subsystem if defined
-        pass
+        super().initialize_subsystem(core)
 
     def on_gui_call(self):
         # Optional: link to GUI invocation
@@ -16,4 +17,4 @@ class Phi(BaseAgent):
 
     def bind_echo_routes(self):
         # Optional: connect signals to/from UnifiedAsyncBus
-        pass
+        super().bind_echo_routes()

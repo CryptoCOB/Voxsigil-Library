@@ -1,6 +1,7 @@
-from .base import BaseAgent
+from .base import BaseAgent, vanta_agent, CognitiveMeshRole
 
 
+@vanta_agent(name="Voxka", subsystem="dual_cognition_core", mesh_role=CognitiveMeshRole.GENERATOR)
 class Voxka(BaseAgent):
     sigil = "🧠⟁🜂Φ🎙"
     tags = ['Recursive Voice', 'Dual-Core Cognition', 'Orion, Nebula']

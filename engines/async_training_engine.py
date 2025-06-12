@@ -27,6 +27,9 @@ from pydantic import BaseModel, Field, field_validator, model_validator
 from pydantic.types import confloat, conint
 from Vanta.core.UnifiedAsyncBus import AsyncMessage, MessageType
 
+# HOLO-1.5 Mesh Infrastructure
+from .base import BaseEngine, vanta_engine, CognitiveMeshRole
+
 import traceback  # TRFE008
 from pathlib import Path
 from typing import Annotated, Any, Dict, List, Optional, Union
@@ -278,14 +281,23 @@ class TrainingJob(BaseModel):  # TRFE003
         return data
 
 
-class AsyncTrainingEngine:
+@vanta_engine(
+    name="async_training_engine",
+    subsystem="meta_learning_core",
+    mesh_role=CognitiveMeshRole.EVALUATOR,
+    description="Asynchronous training engine for model training, fine-tuning, and performance evaluation",
+    capabilities=["model_training", "fine_tuning", "checkpoint_management", "training_metrics", "performance_evaluation"]
+)
+class AsyncTrainingEngine(BaseEngine):
     """Async Training Engine for model training and fine-tuning (Enhanced)"""
 
-    COMPONENT_NAME = "async_training_engine"
-
+    COMPONENT_NAME = "async_training_engine"    
     def __init__(
         self, vanta_core: Any, default_engine_config: Optional[TrainingConfig] = None
     ):
+        # Initialize BaseEngine with HOLO-1.5 mesh capabilities
+        super().__init__(vanta_core, default_engine_config)
+        
         self.vanta_core = vanta_core
         self.default_engine_config = default_engine_config or TrainingConfig()
         self.device = self._determine_device(self.default_engine_config.device)

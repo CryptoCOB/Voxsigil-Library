@@ -1,6 +1,7 @@
-from .base import BaseAgent
+from .base import BaseAgent, vanta_agent, CognitiveMeshRole
 
 
+@vanta_agent(name="Orion", subsystem="trust_chain", mesh_role=CognitiveMeshRole.PLANNER)
 class Orion(BaseAgent):
     sigil = "🜇🔗🜁🌠"
     tags = ['Light Chain', 'Blockchain Spine', 'OrionsLight, SmartContractManager']

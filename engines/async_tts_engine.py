@@ -24,6 +24,9 @@ from Vanta.core.UnifiedAsyncBus import (
     MessageType,  # Import MessageType for async bus integration
 )
 
+# HOLO-1.5 Mesh Infrastructure
+from .base import BaseEngine, vanta_engine, CognitiveMeshRole
+
 # TTS Engine Dependencies
 try:
     import edge_tts
@@ -87,13 +90,23 @@ class SynthesisResult:
             self.metadata = {}
 
 
-class AsyncTTSEngine:
+@vanta_engine(
+    name="async_tts_engine",
+    subsystem="speech_processing",
+    mesh_role=CognitiveMeshRole.PROCESSOR,
+    description="Async Text-to-Speech engine with multiple backend support for speech synthesis",
+    capabilities=["text_to_speech", "voice_synthesis", "edge_tts", "pyttsx3", "async_synthesis", "audio_caching"]
+)
+class AsyncTTSEngine(BaseEngine):
     """Async Text-to-Speech Engine for Vanta."""
 
     COMPONENT_NAME = "async_tts_engine"
 
     def __init__(self, vanta_core, config: Optional[TTSConfig] = None):
         """Initialize the Async TTS Engine."""
+        # Initialize BaseEngine with HOLO-1.5 mesh capabilities
+        super().__init__(vanta_core, config or TTSConfig())
+        
         self.vanta_core = vanta_core
         self.config = config or TTSConfig()
 

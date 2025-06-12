@@ -1,6 +1,7 @@
-from .base import BaseAgent
+from .base import BaseAgent, vanta_agent, CognitiveMeshRole
 
 
+@vanta_agent(name="SocraticEngine", subsystem="reasoning_module", mesh_role=CognitiveMeshRole.EVALUATOR)
 class SocraticEngine(BaseAgent):
     sigil = "🜏🔍⟡🜒"
     tags = ['Philosopher', 'Dialogic Reasoner']

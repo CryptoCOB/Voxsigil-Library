@@ -1,6 +1,7 @@
-from .base import BaseAgent
+from .base import BaseAgent, vanta_agent, CognitiveMeshRole
 
 
+@vanta_agent(name="Gizmo", subsystem="forge_subsystem", mesh_role=CognitiveMeshRole.GENERATOR)
 class Gizmo(BaseAgent):
     sigil = "☍⚙️⩫⌁"
     tags = ['Artifact Twin', 'Tactical Forge-Agent', 'PatchCrawler, LoopSmith']

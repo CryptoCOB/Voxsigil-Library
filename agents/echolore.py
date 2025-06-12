@@ -1,6 +1,7 @@
-from .base import BaseAgent
+from .base import BaseAgent, vanta_agent, CognitiveMeshRole
 
 
+@vanta_agent(name="EchoLore", subsystem="historical_archive", mesh_role=CognitiveMeshRole.EVALUATOR)
 class EchoLore(BaseAgent):
     sigil = "🜎♾🜐⌽"
     tags = ['Memory Archivist', 'Historical Streamer']

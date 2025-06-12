@@ -1,6 +1,7 @@
-from .base import BaseAgent
+from .base import BaseAgent, vanta_agent, CognitiveMeshRole
 
 
+@vanta_agent(name="Echo", subsystem="echo_memory", mesh_role=CognitiveMeshRole.GENERATOR)
 class Echo(BaseAgent):
     sigil = "♲∇⌬☉"
     tags = ['Memory Stream', 'Continuity Guardian', 'EchoLocation, ExternalEcho']
@@ -8,7 +9,11 @@ class Echo(BaseAgent):
 
     def initialize_subsystem(self, core):
         # Bind Echo to a specific subsystem within the core
-        self.subsystem = core.get_subsystem('EchoSubsystem')
+        super().initialize_subsystem(core)
+        try:
+            self.subsystem = core.get_subsystem('EchoSubsystem')
+        except Exception:
+            pass
 
     def on_gui_call(self):
         # Optional: link to GUI invocation
@@ -16,6 +21,10 @@ class Echo(BaseAgent):
 
     def bind_echo_routes(self):
         # Optional: connect signals to/from UnifiedAsyncBus
+        super().bind_echo_routes()
         if hasattr(self, 'subsystem'):
-            self.subsystem.bind_routes(self)
+            try:
+                self.subsystem.bind_routes(self)
+            except Exception:
+                pass
 
