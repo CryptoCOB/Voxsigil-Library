@@ -1,27 +1,47 @@
 """
-Strategies Module Vanta Registration
+Strategies Module Registration - HOLO-1.5 Enhanced Cognitive Mesh
 
-This module provides registration capabilities for the Strategies module
-with the Vanta orchestrator system.
-
-Components registered:
-- ExecutionStrategy: Base execution strategy interface and implementations
-- EvaluationHeuristics: Evaluation and scoring heuristics
-- RetryPolicy: Retry and fallback policy implementations
-- ScaffoldRouter: Reasoning scaffold routing logic
-
-HOLO-1.5 Integration: Strategic decision-making and execution orchestration capabilities.
+Every module in this package is imported and registered with UnifiedVantaCore
+via the decorator below. Edit ONLY the metadata fields—keep the class + async
+signature identical so the master orchestrator can introspect it.
 """
 
-import asyncio
-import importlib
+from core.base import BaseCore, CognitiveMeshRole, vanta_core_module
 import logging
-from typing import Any, Dict, List, Optional, Type, Union
+import importlib
+import asyncio
+from typing import Any, Dict
 
-# Configure logging
 logger = logging.getLogger(__name__)
 
-class StrategiesModuleAdapter:
+@vanta_core_module(
+    name="strategy_engine",
+    subsystem="strategies",
+    mesh_role=CognitiveMeshRole.ORCHESTRATOR,
+    description=(
+        "Strategy engine for planning, heuristic selection, agent coordination, "
+        "strategic decision making, and cognitive resource management"
+    ),
+    capabilities=[
+        "planning",
+        "heuristic_selection", 
+        "agent_coordination",
+        "resource_optimization",
+        "strategic_reasoning",
+        "multi_agent_orchestration",
+        "decision_trees",
+        "cost_analysis",
+    ],
+    cognitive_load=4.0,
+    symbolic_depth=4,
+    collaboration_patterns=[
+        "strategic_planning",
+        "agent_orchestration",
+        "resource_management",
+        "decision_optimization",
+    ],
+)
+class StrategiesModule(BaseCore):
     """Adapter for integrating Strategies module with Vanta orchestrator."""
     
     def __init__(self):
@@ -397,10 +417,14 @@ class StrategiesModuleAdapter:
                         component.shutdown()
             
             self.initialized = False
-            logger.info("Strategies module shutdown complete")
             
         except Exception as e:
             logger.error(f"Error during Strategies module shutdown: {e}")
+            
+# Back-compatibility alias for external import paths
+StrategiesModuleAdapter = StrategiesModule
+
+
 
 
 # Registration function for the master orchestrator
