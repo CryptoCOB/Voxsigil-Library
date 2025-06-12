@@ -29,7 +29,8 @@ from pydantic import Field, field_validator
 from pydantic_settings import BaseSettings
 
 from . import ByteLatentTransformerEncoder, SigilPatchEncoder
-from ..voxsigil_rag import VoxSigilRAG
+# VoxSigilRAG resides in the top-level VoxSigilRag package
+from VoxSigilRag.voxsigil_rag import VoxSigilRAG
 
 # Configure logging early
 logging.basicConfig(

@@ -13,9 +13,24 @@ import re
 import time
 from typing import Any, Dict, List, Optional, Tuple
 
-import jsonschema
-import numpy as np
-from jsonschema import SchemaError, ValidationError
+try:
+    import jsonschema
+    from jsonschema import SchemaError, ValidationError
+except ImportError:  # pragma: no cover - optional dependency
+    jsonschema = None
+    SchemaError = None
+    ValidationError = None
+    logging.getLogger(__name__).warning(
+        "jsonschema library not installed. Schema validation disabled"
+    )
+
+try:
+    import numpy as np
+except ImportError:  # pragma: no cover - optional dependency
+    np = None
+    logging.getLogger(__name__).warning(
+        "numpy not installed. Some BLTEncoder features will be limited"
+    )
 
 # Try to import the interface, but don't fail if it's not available
 try:
