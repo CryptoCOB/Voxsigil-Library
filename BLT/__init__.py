@@ -99,14 +99,22 @@ class BLTEncoder(BaseBLTEncoder):
         logger.info(f"Loading embedding model '{self.model_name}'")
 
         try:
-            # Placeholder for actual model initialization
-            # from sentence_transformers import SentenceTransformer
-            # self.model = SentenceTransformer(self.model_name, device='cuda' if self.use_gpu else 'cpu')
-            pass
+            from sentence_transformers import SentenceTransformer
+
+            self.model = SentenceTransformer(
+                self.model_name,
+                device="cuda" if self.use_gpu else "cpu",
+            )
+            self.embedding_dim = self.model.get_sentence_embedding_dimension()
+            logger.info(
+                f"Loaded embedding model '{self.model_name}' with dimension {self.embedding_dim}"
+            )
         except Exception as e:
             logger.error(f"Failed to load embedding model: {e}")
-            # Fall back to a dummy model that will produce random embeddings for development
-            logger.warning("Using fallback random embedding generator")
+            self.model = None
+            logger.warning(
+                "Using fallback random embedding generator; embeddings may be inconsistent"
+            )
 
     def get_embedding_dimension(self) -> int:
         """
@@ -177,18 +185,17 @@ class BLTEncoder(BaseBLTEncoder):
         )
 
         try:
-            # Placeholder for actual encoding - in a real implementation, this would use
-            # the loaded model to generate an embedding
-            # embedding = self.model.encode(text_content).tolist()
+            if getattr(self, "model", None) is not None:
+                embedding = self.model.encode(text_content).tolist()
+            else:
+                # Fallback: deterministic embedding based on text hash
+                import hashlib
 
-            # For development, generate a deterministic "embedding" based on text hash
-            import hashlib
-
-            hasher = hashlib.sha256(text_content.encode("utf-8"))
-            embedding = [
-                int(hasher.hexdigest()[i : i + 2], 16) / 255.0
-                for i in range(0, min(self.embedding_dim * 2, 64), 2)
-            ]
+                hasher = hashlib.sha256(text_content.encode("utf-8"))
+                embedding = [
+                    int(hasher.hexdigest()[i : i + 2], 16) / 255.0
+                    for i in range(0, min(self.embedding_dim * 2, 64), 2)
+                ]
 
             # Pad or truncate to the correct dimension
             if len(embedding) < self.embedding_dim:
