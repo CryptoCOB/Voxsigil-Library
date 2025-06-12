@@ -189,7 +189,9 @@ class VantaRegisteredContextProvider(ContextProvider):
             "error": f"Failed to retrieve context from {self.component_name}",
             "timestamp": time.time(),
             "_source_component": f"{self.component_name}_error",
-        }    def get_provider_name(self) -> str:
+        }   
+         
+    def get_provider_name(self) -> str:
         return self.component_name
 
 
