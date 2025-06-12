@@ -10,6 +10,9 @@ import asyncio
 import logging
 from pathlib import Path
 from typing import Dict, Any, Optional
+import importlib
+import inspect
+from Vanta.integration.module_adapters import LegacyModuleAdapter
 
 logger = logging.getLogger(__name__)
 
@@ -32,14 +35,18 @@ async def register_blt_modules(vanta_system, config: Optional[Dict[str, Any]] = 
         # Register BLT RAG interface
         await register_blt_rag_interface(module_registry, config)
         registration_results['blt_rag_interface'] = True
-        
+
         # Register BLT middleware components
         await register_blt_middleware(module_registry, config)
         registration_results['blt_middleware'] = True
-        
+
         # Register TinyLlama integration
         await register_tinyllama_integration(module_registry, config)
         registration_results['tinyllama_integration'] = True
+
+        # Register any remaining BLT modules in this directory
+        await register_all_blt_files(module_registry)
+        registration_results['blt_files'] = True
         
         logger.info("Successfully registered all BLT modules with Vanta")
         return registration_results
@@ -294,6 +301,44 @@ async def register_tinyllama_integration(module_registry, config: Dict[str, Any]
             
     except Exception as e:
         logger.error(f"Error registering TinyLlama integration: {str(e)}")
+
+
+async def register_all_blt_files(module_registry) -> None:
+    """Auto-register all BLT modules in this directory."""
+    blt_dir = Path(__file__).parent
+
+    for py_file in blt_dir.glob("*.py"):
+        stem = py_file.stem
+        if stem in {"__init__", "vanta_registration"}:
+            continue
+
+        module_name = f"BLT.{stem}"
+        try:
+            module = importlib.import_module(module_name)
+            functions = {
+                name: name
+                for name, obj in inspect.getmembers(module, inspect.isfunction)
+                if not name.startswith("_")
+            }
+
+            if not functions:
+                # Skip modules without callable functions
+                continue
+
+            adapter = LegacyModuleAdapter(
+                module_id=f"blt_{stem}",
+                legacy_module=module,
+                method_mapping=functions,
+                module_info={
+                    "name": stem,
+                    "type": "blt_module",
+                    "description": f"BLT module {stem}",
+                },
+            )
+            await module_registry.register_custom_adapter(f"blt_{stem}", adapter)
+            logger.info(f"Registered BLT module file: {stem}")
+        except Exception as exc:
+            logger.warning(f"Failed to register BLT module {stem}: {exc}")
 
 
 async def create_blt_adapter(adapter_type='rag', config: Optional[Dict[str, Any]] = None):
