@@ -19,6 +19,7 @@ import asyncio
 import json
 import logging
 import numpy as np
+import hashlib
 import torch
 import yaml
 from pathlib import Path
@@ -339,6 +340,9 @@ class VoiceModulatorAgent(BaseAgent):
                 raise ValueError(f"Voice profile not found: {request.target_voice_profile}")
             
             target_profile = self.voice_profiles[request.target_voice_profile]
+
+            if target_profile.ethical_consent:
+                self._log_consent_hash(target_profile.profile_id, request.input_audio)
             
             # Apply genre-specific styling if requested
             if request.genre_style:
@@ -666,6 +670,14 @@ class VoiceModulatorAgent(BaseAgent):
             }
             for profile_id, profile in self.voice_profiles.items()
         }
+
+    def _log_consent_hash(self, profile_id: str, audio: np.ndarray) -> None:
+        """Write consent hash to logs/consent.log"""
+        log_path = Path("logs/consent.log")
+        log_path.parent.mkdir(parents=True, exist_ok=True)
+        audio_hash = hashlib.sha256(audio.tobytes()).hexdigest()
+        with open(log_path, "a", encoding="utf-8") as f:
+            f.write(f"{datetime.now().isoformat()}|{profile_id}|{audio_hash}\n")
     
     def generate_reasoning_trace(self) -> Dict[str, Any]:
         """Generate reasoning trace for HOLO-1.5 cognitive mesh"""
