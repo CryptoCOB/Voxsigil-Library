@@ -16,6 +16,7 @@ This orchestrator implements systematic registration for all remaining modules.
 
 import asyncio
 import logging
+import os
 from typing import Dict, Any, List, Optional
 from pathlib import Path
 import importlib
@@ -50,7 +51,7 @@ class RegistrationOrchestrator:
             return {'error': 'Vanta system not available'}
         
         logger.info("🚀 Starting COMPLETE MODULE REGISTRATION for all 27 modules...")
-        
+
         try:
             # Group 1: Core Processing Modules (HIGH PRIORITY)
             await self._register_group_1_core_processing()
@@ -71,6 +72,14 @@ class RegistrationOrchestrator:
             await self._complete_in_progress_modules()
             
             # Generate final report
+            if os.getenv("VANTA_DND") == "1":
+                try:
+                    import Vanta.tabletop  # noqa: F401
+                    self.registration_results["tabletop"] = "enabled"
+                except Exception as dnd_err:
+                    logger.error(f"Failed to load tabletop module: {dnd_err}")
+                    self.failed_modules.append("tabletop")
+
             final_report = await self._generate_registration_report()
             
             logger.info("🎉 MASTER REGISTRATION ORCHESTRATOR COMPLETE!")

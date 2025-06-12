@@ -5,6 +5,7 @@ Registers all 31 agents in the agents/ directory as individual modules
 """
 
 import logging
+import os
 from pathlib import Path
 from typing import Dict, Any, List, Optional
 
@@ -152,6 +153,15 @@ async def register_all_agents():
         ('warden', 'Warden Agent - Security and monitoring'),
         ('wendy', 'Wendy Agent - User experience specialist'),
     ]
+
+    if os.getenv("VANTA_DND") == "1":
+        agent_modules.extend(
+            [
+                ('game_master_agent', 'Tabletop Game Master'),
+                ('voice_table_agent', 'Voice Table Narrator'),
+                ('rules_ref_agent', 'Rules Reference Agent'),
+            ]
+        )
     
     registered_count = 0
     failed_count = 0
