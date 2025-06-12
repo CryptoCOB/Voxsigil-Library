@@ -24,8 +24,7 @@ from .art_logger import get_art_logger  # Use the new logger
 
 # HOLO-1.5 Cognitive Mesh Integration
 try:
-    from ..core.vanta_registration import vanta_agent, CognitiveMeshRole, BaseAgent
-    from ..core.base_agent import VantaAgentCapability
+    from ..agents.base import vanta_agent, CognitiveMeshRole, BaseAgent
     HOLO_AVAILABLE = True
 except ImportError:
     HOLO_AVAILABLE = False
@@ -34,17 +33,18 @@ except ImportError:
         def decorator(cls):
             return cls
         return decorator
-    
+
     class CognitiveMeshRole:
         PROCESSOR = "processor"
-    
+
     class BaseAgent:
         pass
-    
-    class VantaAgentCapability:
-        PATTERN_RECOGNITION = "pattern_recognition"
-        ADAPTIVE_LEARNING = "adaptive_learning"
-        CATEGORY_FORMATION = "category_formation"
+
+# Capability constants
+class VantaAgentCapability:
+    PATTERN_RECOGNITION = "pattern_recognition"
+    ADAPTIVE_LEARNING = "adaptive_learning"
+    CATEGORY_FORMATION = "category_formation"
 
 # Use TYPE_CHECKING to avoid circular imports
 if TYPE_CHECKING:
