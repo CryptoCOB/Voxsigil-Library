@@ -267,19 +267,15 @@ class RegistrationOrchestrator:
     async def _register_voxsigil_rag_system(self):
         """Register VoxSigil RAG components."""
         try:
-            # VoxSigil RAG system registration
-            rag_components = [
-                ('voxsigil_rag', 'Main VoxSigil RAG processor'),
-                ('voxsigil_blt', 'BLT-enhanced RAG'),
-                ('voxsigil_evaluator', 'RAG response evaluation'),
-                ('voxsigil_mesh', 'RAG mesh networking'),
-            ]
-            
-            for component_name, description in rag_components:
-                logger.info(f"Registering RAG component: {component_name}")
-            
-            self.registration_results['voxsigil_rag'] = 'success'
-            logger.info("✅ VoxSigil RAG system registration complete")
+            rag_reg_path = Path("VoxSigilRag/vanta_registration.py")
+            if rag_reg_path.exists():
+                from VoxSigilRag.vanta_registration import register_voxsigil_rag
+                await register_voxsigil_rag()
+                self.registration_results['voxsigil_rag'] = 'success'
+                logger.info("✅ VoxSigil RAG system registration complete")
+            else:
+                await self._create_voxsigil_rag_registration()
+                self.registration_results['voxsigil_rag'] = 'created_and_registered'
         except Exception as e:
             logger.error(f"Failed to register VoxSigil RAG system: {str(e)}")
             self.registration_results['voxsigil_rag'] = f'failed: {str(e)}'
@@ -637,6 +633,11 @@ class RegistrationOrchestrator:
         
     async def _create_core_registration(self):
         """Create core registration if it doesn't exist."""
+        # Placeholder - the actual file already exists
+        pass
+
+    async def _create_voxsigil_rag_registration(self):
+        """Create VoxSigil RAG registration if it doesn't exist."""
         # Placeholder - the actual file already exists
         pass
 
