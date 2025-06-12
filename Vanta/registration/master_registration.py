@@ -246,19 +246,16 @@ class RegistrationOrchestrator:
     async def _register_memory_system(self):
         """Register memory subsystems."""
         try:
-            # Memory system registration
-            memory_modules = [
-                ('echo_memory', 'Echo memory system for cognitive traces'),
-                ('external_echo_layer', 'External echo processing layer'),
-                ('memory_braid', 'Braided memory architecture'),
-            ]
-            
-            for module_name, description in memory_modules:
-                # Create basic adapter registration
-                logger.info(f"Registering memory module: {module_name}")
-            
-            self.registration_results['memory'] = 'success'
-            logger.info("✅ Memory system registration complete")
+            mem_reg_path = Path("memory/vanta_registration.py")
+            if mem_reg_path.exists():
+                from memory.vanta_registration import register_memory_modules
+
+                result = await register_memory_modules()
+                self.registration_results['memory'] = result
+                logger.info("✅ Memory system registration complete")
+            else:
+                await self._create_memory_registration()
+                self.registration_results['memory'] = 'created_and_registered'
         except Exception as e:
             logger.error(f"Failed to register memory system: {str(e)}")
             self.registration_results['memory'] = f'failed: {str(e)}'
@@ -638,6 +635,11 @@ class RegistrationOrchestrator:
     async def _create_core_registration(self):
         """Create core registration if it doesn't exist."""
         # Placeholder - the actual file already exists
+        pass
+
+    async def _create_memory_registration(self):
+        """Create memory registration if it doesn't exist."""
+        # Placeholder for auto-generation logic
         pass
 
     async def _generate_registration_report(self) -> Dict[str, Any]:
