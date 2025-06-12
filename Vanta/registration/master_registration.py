@@ -22,6 +22,9 @@ from pathlib import Path
 import importlib
 import sys
 
+# ARC registration
+from ARC.vanta_registration import register_arc_modules
+
 # Import Vanta core
 try:
     from Vanta.integration.module_adapters import module_registry
@@ -603,6 +606,7 @@ class RegistrationOrchestrator:
         """Complete ARC registration."""
         try:
             logger.info("Completing ARC registration...")
+            await register_arc_modules()
             self.registration_results['arc'] = 'completed'
             logger.info("✅ ARC registration complete")
         except Exception as e:
