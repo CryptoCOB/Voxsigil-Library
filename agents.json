@@ -363,5 +363,73 @@
       "agents.sleep_time_compute_agent"
     ],
     "stub": false
+  },
+  {
+    "name": "GameMasterAgent",
+    "sigil": "\ud83c\udfb2\ud83d\udc51",
+    "class": "Tabletop Controller",
+    "invocation": "\"begin encounter\", \"narrate scene\"",
+    "sub_agents": [
+      "VoiceTableAgent"
+    ],
+    "status": "missing",
+    "dependencies": [
+      "agents.game_master_agent"
+    ],
+    "stub": true
+  },
+  {
+    "name": "GameStateStore",
+    "sigil": "\ud83d\uddc4\ufe0f\ud83d\udcdc",
+    "class": "JSONStateStore",
+    "invocation": "\"\u2014\"",
+    "sub_agents": [],
+    "status": "missing",
+    "dependencies": [],
+    "stub": false
+  },
+  {
+    "name": "DiceRollerService",
+    "sigil": "\ud83c\udfb2",
+    "class": "Dice Roller",
+    "invocation": "\"dice.roll <expr>\"",
+    "sub_agents": [],
+    "status": "missing",
+    "dependencies": [],
+    "stub": false
+  },
+  {
+    "name": "InventoryManager",
+    "sigil": "\ud83c\udf92",
+    "class": "Inventory Service",
+    "invocation": "\"equip\", \"unequip\"",
+    "sub_agents": [],
+    "status": "missing",
+    "dependencies": [],
+    "stub": false
+  },
+  {
+    "name": "VoiceTableAgent",
+    "sigil": "\ud83c\udf99\ufe0f\ud83d\uddfa\ufe0f",
+    "class": "Voice Table",
+    "invocation": "\"speak narration\", \"listen command\"",
+    "sub_agents": [],
+    "status": "missing",
+    "dependencies": [
+      "agents.voice_table_agent"
+    ],
+    "stub": true
+  },
+  {
+    "name": "RulesRefAgent",
+    "sigil": "\ud83d\udcdc\ud83d\udcda",
+    "class": "SRD Reference",
+    "invocation": "\"lookup spell\", \"lookup condition\"",
+    "sub_agents": [],
+    "status": "missing",
+    "dependencies": [
+      "agents.rules_ref_agent"
+    ],
+    "stub": true
   }
 ]

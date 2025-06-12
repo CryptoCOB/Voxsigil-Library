@@ -186,5 +186,33 @@
   {
     "from": "SleepTimeCompute",
     "to": "UnifiedVantaCore"
+  },
+  {
+    "from": "GameMasterAgent",
+    "to": "VoiceTableAgent"
+  },
+  {
+    "from": "GameMasterAgent",
+    "to": "UnifiedVantaCore"
+  },
+  {
+    "from": "GameStateStore",
+    "to": "UnifiedVantaCore"
+  },
+  {
+    "from": "DiceRollerService",
+    "to": "UnifiedVantaCore"
+  },
+  {
+    "from": "InventoryManager",
+    "to": "UnifiedVantaCore"
+  },
+  {
+    "from": "VoiceTableAgent",
+    "to": "UnifiedVantaCore"
+  },
+  {
+    "from": "RulesRefAgent",
+    "to": "UnifiedVantaCore"
   }
 ]

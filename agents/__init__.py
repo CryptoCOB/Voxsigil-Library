@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import logging
+import os
 from importlib import import_module
 from pathlib import Path
 
@@ -67,6 +68,11 @@ SleepTimeComputeAgent = _import_agent(
 )
 SleepTimeCompute = _import_agent("sleep_time_compute_agent", "SleepTimeCompute")
 
+if os.getenv("VANTA_DND") == "1":
+    GameMasterAgent = _import_agent("game_master_agent", "GameMasterAgent")
+    VoiceTableAgent = _import_agent("voice_table_agent", "VoiceTableAgent")
+    RulesRefAgent = _import_agent("rules_ref_agent", "RulesRefAgent")
+
 try:
     _STATUS_FILE.write_text("\n".join(_status_lines) + "\n")
 except Exception as exc:  # pragma: no cover - logging only
@@ -106,5 +112,12 @@ __all__ = [
     "SleepTimeComputeAgent",
     "SleepTimeCompute",
 ]
+# Include tabletop agents when enabled
+if os.getenv("VANTA_DND") == "1":
+    __all__ += [
+        "GameMasterAgent",
+        "VoiceTableAgent",
+        "RulesRefAgent",
+    ]
 # 🧠 Codex BugPatch - Vanta Phase @2025-06-09
 # Ensure agent lists do not register duplicates in UnifiedVantaCore

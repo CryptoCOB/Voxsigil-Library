@@ -666,6 +666,12 @@ properties:
 | 🜌⟐🜹🜙   | VoxAgent         | Coordinator       | System Interface         | "Activate VoxAgent", "Bridge protocols" | ContextualCheckInAgent            | Bridges input/state       |
 | ⏣📡⏃⚙️    | SDKContext       | Registrar         | Module Tracker           | "Scan SDKContext", "Map modules"        | —                                 | Registers component state |
 | 🌒🧵🧠🜝  | SleepTimeCompute | Reflection Engine | Dream-State Scheduler    | "Sleep Compute", "Dream consolidate"    | —                                 | Dream reflection          |
+| 🎲👑      | GameMasterAgent | DM Core           | Tabletop Controller      | "begin encounter", "narrate scene"       | VoiceTableAgent                    | Core D&D logic           |
+| 🗄️📜      | GameStateStore  | Campaign Store    | JSONStateStore           | "—"                                  | —                                 | Persistent campaign state |
+| 🎲       | DiceRollerService | RNG Service       | Dice Roller              | "dice.roll <expr>"                    | —                                 | Cryptographic dice       |
+| 🎒       | InventoryManager | Loot Tracker      | Inventory Service        | "equip", "unequip"                    | —                                 | Tracks loot              |
+| 🎙️🗺️     | VoiceTableAgent | Narrator          | Voice Table              | "speak narration", "listen command"   | —                                 | Audio streaming          |
+| 📜📚      | RulesRefAgent   | Rule Lookup       | SRD Reference            | "lookup spell", "lookup condition"    | —                                 | Quick rules reference    |
 
 ---
 

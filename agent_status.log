@@ -54,3 +54,18 @@ Agent VoxAgent missing run() implementation
 Agent SDKContext not registered in VantaCore
 Agent SDKContext missing run() implementation
 Agent SleepTimeCompute not registered in VantaCore
+Agent GameMasterAgent not registered in VantaCore
+Agent GameMasterAgent missing run() implementation
+Module for agent GameStateStore missing
+Agent file not importable for GameStateStore
+Agent GameStateStore not registered in VantaCore
+Module for agent DiceRollerService missing
+Agent file not importable for DiceRollerService
+Agent DiceRollerService not registered in VantaCore
+Module for agent InventoryManager missing
+Agent file not importable for InventoryManager
+Agent InventoryManager not registered in VantaCore
+Agent VoiceTableAgent not registered in VantaCore
+Agent VoiceTableAgent missing run() implementation
+Agent RulesRefAgent not registered in VantaCore
+Agent RulesRefAgent missing run() implementation
