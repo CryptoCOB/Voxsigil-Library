@@ -21,6 +21,8 @@ from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple
 
+import asyncio
+
 import yaml
 
 # Local import from same directory instead of package import
@@ -1479,3 +1481,52 @@ def initialize_and_validate_models_config(
 
     result["success"] = True
     return result
+
+
+class ARCLLMHandler:
+    """Integration handler wrapper for ARC LLM operations."""
+
+    def __init__(self, vanta_core: Optional[object] = None):
+        self.vanta_core = vanta_core
+        self.initialized = False
+        self.model_info: Optional[Dict[str, Any]] = None
+
+    async def initialize(self, force_discover_models: bool = False) -> Dict[str, Any]:
+        """Initialize models for ARC use."""
+        loop = asyncio.get_event_loop()
+        self.model_info = await loop.run_in_executor(
+            None,
+            initialize_and_validate_models_config,
+            force_discover_models,
+            True,
+            2,
+        )
+        self.initialized = self.model_info.get("success", False)
+        return self.model_info
+
+    async def handle(self, request: Dict[str, Any]) -> Dict[str, Any]:
+        """Process an ARC LLM request."""
+        prompt = request.get("prompt") or request.get("user_prompt")
+        temperature = request.get("temperature", 0.2)
+
+        if not prompt:
+            return {"error": "Missing prompt"}
+
+        if not self.initialized:
+            await self.initialize()
+
+        loop = asyncio.get_event_loop()
+        content, model_cfg, raw = await loop.run_in_executor(
+            None,
+            llm_chat_completion,
+            prompt,
+            request.get("task_requirements"),
+            None,
+            True,
+            temperature,
+        )
+        return {
+            "content": content,
+            "model_config": model_cfg,
+            "raw_response": raw,
+        }
