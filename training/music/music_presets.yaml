@@ -1,0 +1,9 @@
+presets:
+  default:
+    model: MusicGen-Medium
+    sample_rate: 44100
+    duration: 30
+  mellow:
+    model: MusicGen-Melody
+    sample_rate: 32000
+    duration: 60

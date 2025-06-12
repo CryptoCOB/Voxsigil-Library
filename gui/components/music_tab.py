@@ -108,12 +108,13 @@ class AudioVisualizationWidget(QWidget):
 
 class GenreSelectionWidget(QWidget):
     """Genre selection widget with expanded vocabulary"""
-    
+
     genre_changed = pyqtSignal(str)
-    
-    def __init__(self, genre_vocabulary: Dict[str, Any]):
+
+    def __init__(self, genre_vocabulary: Dict[str, Any], favorites: Optional[Dict[str, int]] = None):
         super().__init__()
         self.genre_vocabulary = genre_vocabulary
+        self.favorites = favorites or {}
         self.setup_ui()
     
     def setup_ui(self):
@@ -133,6 +134,11 @@ class GenreSelectionWidget(QWidget):
         layout.addWidget(QLabel("Genre Category:"))
         layout.addWidget(self.category_combo)
         
+        # Favorites filter
+        self.favorites_check = QCheckBox("\xf0\x9f\x8c\x9f Favorites")
+        self.favorites_check.stateChanged.connect(lambda _: self.on_category_changed(self.category_combo.currentText()))
+        layout.addWidget(self.favorites_check)
+
         # Specific genre selection
         self.genre_combo = QComboBox()
         self.genre_combo.currentTextChanged.connect(self.on_genre_changed)
@@ -150,7 +156,11 @@ class GenreSelectionWidget(QWidget):
         
         music_genres = self.genre_vocabulary.get("music_genres", {})
         
-        if category_name == "All Genres":
+        if self.favorites_check.isChecked() and self.favorites:
+            top = sorted(self.favorites.items(), key=lambda x: x[1], reverse=True)
+            top_genres = [g for g, _ in top[:5]]
+            self.genre_combo.addItems(top_genres)
+        elif category_name == "All Genres":
             # Add all genres from all categories
             all_genres = []
             for genres_list in music_genres.values():
@@ -466,8 +476,9 @@ class MusicTabWidget(QWidget):
         self.voice_modulator = None
         self.music_sense = None
         
-        # Load genre vocabulary
+        # Load genre vocabulary and preferences
         self.genre_vocabulary = self.load_genre_vocabulary()
+        self.genre_preferences = self.load_genre_preferences()
         
         self.setup_ui()
         self.initialize_agents()
@@ -491,6 +502,17 @@ class MusicTabWidget(QWidget):
                 "sensual_intimate": ["Sensual"]
             }
         }
+
+    def load_genre_preferences(self) -> Dict[str, int]:
+        """Load genre preference statistics"""
+        try:
+            pref_path = Path("config/music_preferences.json")
+            if pref_path.exists():
+                with open(pref_path, 'r', encoding='utf-8') as f:
+                    return json.load(f)
+        except Exception as e:
+            logger.error(f"Failed to load genre preferences: {e}")
+        return {}
     
     def setup_ui(self):
         main_layout = QHBoxLayout()
@@ -501,7 +523,7 @@ class MusicTabWidget(QWidget):
         left_layout = QVBoxLayout()
         
         # Genre selection
-        self.genre_widget = GenreSelectionWidget(self.genre_vocabulary)
+        self.genre_widget = GenreSelectionWidget(self.genre_vocabulary, self.genre_preferences)
         self.genre_widget.genre_changed.connect(self.on_genre_changed)
         left_layout.addWidget(QLabel("🎼 Genre Selection"))
         left_layout.addWidget(self.genre_widget)

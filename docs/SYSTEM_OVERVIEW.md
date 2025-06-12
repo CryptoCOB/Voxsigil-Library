@@ -31,3 +31,10 @@ Log files such as `vantacore_grid_former_integration.log` and component-specific
 
 See the `docs/architecture` folder for PlantUML diagrams illustrating module relationships, data flow, GUI tabs and agent communication patterns.
 
+## Configuration Resources
+
+Several YAML and JSON files provide presets and shared terminology:
+
+- `training/music/music_presets.yaml` – default presets for the music subsystem.
+- `sigils/global_vocab.json` – global vocabulary referenced by multiple agents.
+

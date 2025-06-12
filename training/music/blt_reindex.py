@@ -13,6 +13,7 @@ Features:
 - Integration with MusicSenseAgent feedback loops
 """
 
+import argparse
 import asyncio
 import json
 import logging
@@ -425,6 +426,9 @@ class BLTMusicReindexer(BaseCore):
         }
 
 async def main():
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--dry-run", action="store_true", help="Only verify paths")
+    args = parser.parse_args()
     """Main execution function for genre reindexing"""
     
     # Configure logging
@@ -448,8 +452,11 @@ async def main():
         
         # Initialize and run reindexer
         reindexer = BLTMusicReindexer(vanta_core, config)
-        
+
         if await reindexer.initialize():
+            if args.dry_run:
+                logger.info(f"FAISS index path: {config.output_dir}")
+                return
             genre_metrics = await reindexer.reindex_all_genres()
             
             logger.info("🎉 Genre reindexing completed successfully!")
