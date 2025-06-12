@@ -66,6 +66,7 @@ from agents import (
     HOLOAgentConfig,
     NullAgent,
 )
+from agents.base import AGENT_SUBSYSTEM_MAP
 from voxsigil_mesh import VoxSigilMesh
 from vanta_mesh_graph import VantaMeshGraph
 
@@ -645,16 +646,7 @@ class UnifiedVantaCore:
         if not self.agent_registry:
             return
 
-        mapping = {
-            "EntropyBard": "rag_interface",
-            "PulseSmith": "gridformer_connector",
-            "MirrorWarden": "meta_learner",
-            "CodeWeaver": "meta_learner",
-            "Dreamer": "art_controller",
-            "BridgeFlesh": "vmb_integration_handler",
-            "Carla": "speech_integration_handler",
-            "Wendy": "speech_integration_handler",
-        }
+        mapping = AGENT_SUBSYSTEM_MAP
 
         for agent_name, component_key in mapping.items():
             agent = self.agent_registry.get_agent(agent_name)
