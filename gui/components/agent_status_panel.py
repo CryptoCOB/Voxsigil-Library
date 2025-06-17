@@ -202,3 +202,9 @@ class AgentStatusPanel(QWidget):
         """Add status text to the display."""
         self._box.appendPlainText(text)
         self._box.moveCursor(QTextCursor.End)
+
+    def update_agents(self, data: dict) -> None:
+        """Update agent list from incoming data."""
+        agents = data.get("agents", []) if isinstance(data, dict) else []
+        self.agent_combo.clear()
+        self.agent_combo.addItems(agents)

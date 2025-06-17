@@ -373,6 +373,10 @@ class MemorySystemsTab(QWidget):
         except Exception as e:
             logger.error(f"Error updating cache display: {e}")
 
+    def update_memory(self, data: dict):
+        """Alias for external memory updates."""
+        self.on_memory_stats(data)
+
 
 def create_memory_systems_tab(event_bus=None) -> MemorySystemsTab:
     """Factory function to create Memory Systems tab"""

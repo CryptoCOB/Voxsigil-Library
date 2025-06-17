@@ -186,6 +186,8 @@ class VoxSigilIntegrationManager:
         self.logger = logging.getLogger("VoxSigil.Integration.Manager")
         # Core integration state
         self.unified_core = None
+        self.vanta_core = None
+        self.memory_service = None
         self.use_unified_core = False
         # Training engine integration
         self.training_engine = None
@@ -262,6 +264,12 @@ class VoxSigilIntegrationManager:
                 self.unified_core = vanta["get_vanta_core"]()
             else:
                 self.unified_core = vanta["UnifiedVantaCore"]()
+
+            self.vanta_core = self.unified_core
+            try:
+                self.memory_service = self.vanta_core.get_component("memory_service")
+            except Exception:
+                self.memory_service = None
 
             self.use_unified_core = True
 

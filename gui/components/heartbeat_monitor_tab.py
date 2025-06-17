@@ -203,6 +203,7 @@ class SystemPulseWidget(QWidget):
                 "error_rate": random.randint(0, 5),  # Error rate still simulated
                 "timestamp": datetime.now().isoformat(),
             }
+            logger.info(f"[SYSTEM STATS] {stats}")
             return stats
         except ImportError:
             logger.warning("psutil not available, using simulated data")
@@ -336,6 +337,10 @@ class HeartbeatMonitorTab(QWidget):
 
         except Exception as e:
             logger.error(f"Error processing heartbeat: {e}")
+
+    def update_stats(self, stats: Dict[str, Any]):
+        """Alias to update metrics from external stream."""
+        self.on_heartbeat_received(stats)
 
     def on_alert_received(self, alert_data: Dict[str, Any]):
         """Handle incoming system alerts"""

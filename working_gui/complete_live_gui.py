@@ -526,9 +526,9 @@ class CompleteVoxSigilGUI(QMainWindow):
         # Create the system initializer
         self.initializer = VoxSigilSystemInitializer()
 
-        # Create the live data streamer
-        # Create the live data streamer
+        # Create the live data streamer and start it immediately
         self.data_streamer = LiveDataStreamer(self.initializer)
+        self.data_streamer.start()  # start thread so signals begin emitting
         # Connect signals
         self.initializer.system_status.connect(self.update_status)
         self.initializer.initialization_complete.connect(
@@ -863,11 +863,31 @@ class CompleteVoxSigilGUI(QMainWindow):
 
         # Connect data streamer to components
         self.data_streamer.set_components(components, vanta_core)
-        self.data_streamer.start()
+        self.connect_data_signal_to_tabs()
+        if not self.data_streamer.isRunning():
+            self.data_streamer.start()
 
         # Update status
         self.statusBar().showMessage("VoxSigil system initialization complete")
         logger.info("VoxSigil system initialization complete")
+
+    def connect_data_signal_to_tabs(self):
+        """Connect data streamer signals to tab update methods."""
+        for tab_name, tab in self.tabs.items():
+            if tab_name == "heartbeat" and hasattr(tab, "on_heartbeat_received"):
+                self.data_streamer.data_updated.connect(
+                    lambda component, data, tab=tab: tab.on_heartbeat_received(data)
+                    if component == "monitoring"
+                    else None
+                )
+                logger.info("Connected heartbeat tab to data stream")
+            elif hasattr(tab, "update_data"):
+                self.data_streamer.data_updated.connect(
+                    lambda component, data, tab=tab, name=tab_name: tab.update_data(data)
+                    if component == name
+                    else None
+                )
+                logger.info(f"Connected {tab_name} tab to data stream")
 
     def closeEvent(self, event):
         """Handle window close event"""
