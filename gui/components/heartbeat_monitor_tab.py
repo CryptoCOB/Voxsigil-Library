@@ -5,6 +5,7 @@ Provides live monitoring of system vital signs and performance metrics.
 """
 
 import logging
+import random
 from datetime import datetime
 from typing import Any, Dict
 
@@ -170,8 +171,7 @@ class SystemPulseWidget(QWidget):
                     memory_reserved = torch.cuda.memory_reserved(i)
                     total_memory = torch.cuda.get_device_properties(i).total_memory
 
-                    # Calculate usage percentage
-                    usage_percent = int((memory_reserved / total_memory) * 100)
+                    # Calculate usage percentage                    usage_percent = int((memory_reserved / total_memory) * 100)
                     gpu_stats.append(min(100, max(0, usage_percent)))
 
             return gpu_stats if gpu_stats else None
@@ -188,8 +188,6 @@ class SystemPulseWidget(QWidget):
             gpu_usage = self.get_real_gpu_stats()
             if gpu_usage is None:
                 # Fall back to simulated data for GPU
-                import random
-
                 if self.gpu_count > 0:
                     gpu_usage = [random.randint(20, 80) for _ in range(self.gpu_count)]
                 else:
@@ -349,7 +347,6 @@ class HeartbeatMonitorTab(QWidget):
 
     def simulate_pulse(self):
         """Simulate heartbeat data for demonstration (with real GPU data when available)"""
-        import random  # Ensure random is always available
 
         # Try to get real system stats first
         real_stats = self.pulse_widget.get_real_system_stats()
