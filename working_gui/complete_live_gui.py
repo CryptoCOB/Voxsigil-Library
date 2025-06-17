@@ -527,13 +527,13 @@ class CompleteVoxSigilGUI(QMainWindow):
         self.initializer = VoxSigilSystemInitializer()
 
         # Create the live data streamer
-        # Create the live data streamer
         self.data_streamer = LiveDataStreamer(self.initializer)
         # Connect signals
         self.initializer.system_status.connect(self.update_status)
         self.initializer.initialization_complete.connect(
             self.on_initialization_complete
         )
+        self.data_streamer.data_updated.connect(self.handle_live_data)
 
         # Create main tab widget
         self.main_tabs = QTabWidget()
@@ -548,6 +548,9 @@ class CompleteVoxSigilGUI(QMainWindow):
 
         # Start system initialization
         self.initializer.start()
+
+        # Start data streaming immediately so signals are available
+        self.data_streamer.start()
 
         # Start data streaming (will connect to components once initialization completes)
         self.statusBar().showMessage("Starting VoxSigil systems...")
@@ -613,6 +616,10 @@ class CompleteVoxSigilGUI(QMainWindow):
         layout.addWidget(status_label)
 
         # Add status overview widgets here
+        self.cpu_label = QLabel("CPU: --%")
+        self.memory_label = QLabel("Memory: --%")
+        layout.addWidget(self.cpu_label)
+        layout.addWidget(self.memory_label)
 
         self.main_tabs.addTab(tab, "📊 System Status")
         self.tabs["system_status"] = tab
@@ -854,6 +861,20 @@ class CompleteVoxSigilGUI(QMainWindow):
     def update_status(self, component, status):
         """Update status bar with component status"""
         self.statusBar().showMessage(f"Component {component}: {status}")
+
+    def handle_live_data(self, component: str, data: dict):
+        """Route live data to the appropriate tab updater"""
+        if component == "monitoring":
+            self.update_system_stats(data)
+
+    def update_system_stats(self, stats: dict):
+        """Update labels in the system status tab"""
+        cpu = stats.get("cpu_usage")
+        memory = stats.get("memory_usage")
+        if hasattr(self, "cpu_label") and cpu is not None:
+            self.cpu_label.setText(f"CPU: {cpu}%")
+        if hasattr(self, "memory_label") and memory is not None:
+            self.memory_label.setText(f"Memory: {memory}%")
 
     def on_initialization_complete(self):
         """Handle completion of system initialization"""
