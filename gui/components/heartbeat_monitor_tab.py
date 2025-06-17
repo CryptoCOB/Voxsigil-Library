@@ -203,6 +203,7 @@ class SystemPulseWidget(QWidget):
                 "error_rate": random.randint(0, 5),  # Error rate still simulated
                 "timestamp": datetime.now().isoformat(),
             }
+            logger.info(f"[SYSTEM STATS] {stats}")
             return stats
         except ImportError:
             logger.warning("psutil not available, using simulated data")

@@ -1,30 +1,71 @@
-[OK] Registered: Phi
-[OK] Registered: Voxka
-[OK] Registered: Gizmo
-[OK] Registered: Nix
-[OK] Registered: Echo
-[OK] Registered: Oracle
-[OK] Registered: Astra
-[OK] Registered: Warden
-[OK] Registered: Nebula
-[OK] Registered: Orion
-[OK] Registered: Evo
-[OK] Registered: OrionApprentice
-[OK] Registered: SocraticEngine
-[OK] Registered: Dreamer
-[OK] Registered: EntropyBard
-[OK] Registered: CodeWeaver
-[OK] Registered: EchoLore
-[OK] Registered: MirrorWarden
-[OK] Registered: PulseSmith
-[OK] Registered: BridgeFlesh
-[OK] Registered: Sam
-[OK] Registered: Dave
-[OK] Registered: Carla
-[OK] Registered: Andy
-[OK] Registered: Wendy
-[OK] Registered: VoxAgent
-[OK] Registered: SDKContext
-[OK] Registered: HoloMesh
-[OK] Registered: SleepTimeComputeAgent
-[OK] Registered: SleepTimeCompute
+UnifiedVantaCore import failed: No module named 'Vanta'
+Agent Phi not registered in VantaCore
+Agent Phi missing run() implementation
+Agent Voxka not registered in VantaCore
+Agent Voxka missing run() implementation
+Agent Gizmo not registered in VantaCore
+Agent Gizmo missing run() implementation
+Agent Nix not registered in VantaCore
+Agent Nix missing run() implementation
+Agent Echo not registered in VantaCore
+Agent Echo missing run() implementation
+Agent Oracle not registered in VantaCore
+Agent Oracle missing run() implementation
+Agent Astra not registered in VantaCore
+Agent Astra missing run() implementation
+Agent Warden not registered in VantaCore
+Agent Warden missing run() implementation
+Agent Nebula not registered in VantaCore
+Agent Nebula missing run() implementation
+Agent Orion not registered in VantaCore
+Agent Orion missing run() implementation
+Agent Evo not registered in VantaCore
+Agent Evo missing run() implementation
+Agent OrionApprentice not registered in VantaCore
+Agent OrionApprentice missing run() implementation
+Agent SocraticEngine not registered in VantaCore
+Agent SocraticEngine missing run() implementation
+Agent Dreamer not registered in VantaCore
+Agent Dreamer missing run() implementation
+Agent EntropyBard not registered in VantaCore
+Agent EntropyBard missing run() implementation
+Agent CodeWeaver not registered in VantaCore
+Agent CodeWeaver missing run() implementation
+Agent EchoLore not registered in VantaCore
+Agent EchoLore missing run() implementation
+Agent MirrorWarden not registered in VantaCore
+Agent MirrorWarden missing run() implementation
+Agent PulseSmith not registered in VantaCore
+Agent PulseSmith missing run() implementation
+Agent BridgeFlesh not registered in VantaCore
+Agent BridgeFlesh missing run() implementation
+Agent Sam not registered in VantaCore
+Agent Sam missing run() implementation
+Agent Dave not registered in VantaCore
+Agent Dave missing run() implementation
+Agent Carla not registered in VantaCore
+Agent Carla missing run() implementation
+Agent Andy not registered in VantaCore
+Agent Andy missing run() implementation
+Agent Wendy not registered in VantaCore
+Agent Wendy missing run() implementation
+Agent VoxAgent not registered in VantaCore
+Agent VoxAgent missing run() implementation
+Agent SDKContext not registered in VantaCore
+Agent SDKContext missing run() implementation
+Agent SleepTimeCompute not registered in VantaCore
+Agent GameMasterAgent not registered in VantaCore
+Agent GameMasterAgent missing run() implementation
+Module for agent GameStateStore missing
+Agent file not importable for GameStateStore
+Agent GameStateStore not registered in VantaCore
+Module for agent DiceRollerService missing
+Agent file not importable for DiceRollerService
+Agent DiceRollerService not registered in VantaCore
+Module for agent InventoryManager missing
+Agent file not importable for InventoryManager
+Agent InventoryManager not registered in VantaCore
+Agent VoiceTableAgent not registered in VantaCore
+Agent VoiceTableAgent missing run() implementation
+Agent RulesRefAgent not registered in VantaCore
+Agent RulesRefAgent missing run() implementation
