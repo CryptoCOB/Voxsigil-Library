@@ -8,7 +8,7 @@ LLM-based ARC solver in the VoxSigil system.
 
 import logging
 
-# --- Robust import for GridFormerConnector ---
+# Import standard libraries
 import os
 import sys
 import time
@@ -20,17 +20,14 @@ import torch
 # Import VoxSigil ARC components
 from .arc_reasoner import ARCReasoner
 
+# Add GRIDFORMER_CORE_DIR to sys.path for potential imports
 GRIDFORMER_CORE_DIR = os.path.abspath(
     os.path.join(os.path.dirname(__file__), "..", "..", "Gridformer", "core")
 )
 if GRIDFORMER_CORE_DIR not in sys.path:
     sys.path.insert(0, GRIDFORMER_CORE_DIR)
 
-try:
-    from core.vantacore_grid_connector import GridFormerConnector
-except ImportError as e:
-    logging.error(f"Could not import GridFormerConnector from {GRIDFORMER_CORE_DIR}: {e}")
-    raise
+# GridFormerConnector will be imported lazily to avoid circular imports
 
 logger = logging.getLogger("VoxSigil.ARC.Integration")
 
@@ -59,14 +56,14 @@ class HybridARCSolver:
             grid_former_confidence_threshold: Threshold for using GRID-Former predictions
             prefer_neural_net: Whether to prefer neural net over LLM when confidence is equal
             device: Device for neural network computation
-            enable_adaptive_routing: Whether to use adaptive routing based on task characteristics
-        """
+            enable_adaptive_routing: Whether to use adaptive routing based on task characteristics        """
         # Set up GRID-Former components
         self.device = device or ("cuda" if torch.cuda.is_available() else "cpu")
-        self.grid_former_connector = GridFormerConnector(
-            default_model_path=grid_former_model_path, device=self.device
-        )
-
+        
+        # Set grid_former_connector to None initially - it will be lazily initialized when needed
+        self.grid_former_connector = None
+        self.grid_former_model_path = grid_former_model_path
+        
         # Set up configuration
         self.confidence_threshold = grid_former_confidence_threshold
         self.prefer_neural_net = prefer_neural_net
@@ -81,6 +78,41 @@ class HybridARCSolver:
         logger.info(
             f"Initialized HybridARCSolver with preference: {'Neural Net' if prefer_neural_net else 'LLM'}"
         )
+    
+    def _init_grid_former(self):
+        """
+        Initialize GridFormer integration.
+        
+        Uses lazy imports to avoid circular dependencies.
+        """
+        try:
+            # Lazy import to avoid circular dependencies
+            if not hasattr(self, '_grid_former'):
+                # First try to import from Vanta integration
+                try:
+                    # Try importing from Vanta integration package first
+                    from Vanta.integration.vantacore_grid_connector import GridFormerConnector
+                    self._grid_former = GridFormerConnector(
+                        model_path=self.grid_former_model_path,
+                        device=self.device
+                    )
+                    logging.info("Using GridFormerConnector from Vanta.integration")
+                except ImportError:
+                    # Fall back to core implementation
+                    from core.vantacore_grid_connector import GridFormerConnector
+                    self._grid_former = GridFormerConnector(
+                        model_path=self.grid_former_model_path,
+                        device=self.device
+                    )
+                    logging.info("Using GridFormerConnector from core")
+                
+                return self._grid_former
+            else:
+                return self._grid_former
+        except Exception as e:
+            logging.error(f"Failed to initialize GridFormer: {e}")
+            self._grid_former = None
+            raise ImportError(f"Failed to integrate with VantaCore: {e}")
 
     def solve_arc_task(
         self,
@@ -114,6 +146,8 @@ class HybridARCSolver:
         # Solve with selected method
         if method_to_use == "neural":
             logger.info(f"Solving task {task_id} with GRID-Former neural network")
+            # Ensure grid_former_connector is initialized
+            self._init_grid_former()
             result = self.grid_former_connector.handle_arc_task(task_data, task_id)
             self.stats["neural_net_uses"] += 1
 
@@ -280,6 +314,9 @@ class HybridARCSolver:
         Returns:
             Solution result
         """
+        # Ensure grid_former_connector is initialized
+        self._init_grid_former()
+        
         # Get neural network prediction
         neural_result = self.grid_former_connector.handle_arc_task(task_data, task_id)
 
@@ -328,23 +365,25 @@ def integrate_with_vantacore(vantacore_instance, model_path: Optional[str] = Non
     # Check for device
     device = "cuda" if torch.cuda.is_available() else "cpu"
 
-    # Create connector
-    connector = GridFormerConnector(default_model_path=model_path, device=device)
-
-    # Register with VantaCore
-    # This is a placeholder - actual registration will depend on VantaCore API
-    if hasattr(vantacore_instance, "register_model_handler"):
-        vantacore_instance.register_model_handler("grid_former", connector)
-        logger.info("Registered GRID-Former with VantaCore")
-    else:
-        logger.warning("Unable to register with VantaCore: missing registration method")
-
-    # Add VantaCore hooks
-    if hasattr(vantacore_instance, "add_task_hook"):
-        vantacore_instance.add_task_hook("arc_tasks", connector.handle_arc_task)
-        logger.info("Added GRID-Former task hook to VantaCore")
-    else:
-        logger.warning("Unable to add task hook to VantaCore: missing hook method")
+    # Use a different approach to avoid circular imports
+    # We'll dynamically import the connector only when this function is called
+    try:
+        # Import from the actual location rather than the proxy module
+        from Vanta.integration.vantacore_grid_connector import GridFormerConnector
+        
+        # Create connector
+        connector = GridFormerConnector(default_model_path=model_path, device=device)
+        logger.info("Successfully created GridFormerConnector for VantaCore integration")
+        
+        # Register with VantaCore
+        if hasattr(vantacore_instance, "register_module"):
+            vantacore_instance.register_module("grid_former", connector)
+            logger.info("Registered GRID-Former with VantaCore")
+        else:
+            logger.warning("VantaCore instance does not have register_module method")
+    except ImportError as e:
+        logger.error(f"Could not import GridFormerConnector: {e}")
+        raise ImportError(f"Failed to integrate with VantaCore: {e}")
 
 
 # Command-line utility for testing integration

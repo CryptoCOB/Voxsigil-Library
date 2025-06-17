@@ -28,46 +28,41 @@ except ImportError as e_dep:
 # This is placed after essential imports like 'logging' itself.
 logger = logging.getLogger("VoxSigil.GRID-Former.Connector")
 
+# Define helper function for lazy imports to avoid circular dependencies
+def lazy_import(module_name, class_or_func=None):
+    """
+    Lazily import a module, class, or function to avoid circular dependencies.
+    
+    Args:
+        module_name: Name of the module to import
+        class_or_func: Optional class or function name to import from the module
+        
+    Returns:
+        The imported module, class, or function
+    """
+    try:
+        module = __import__(module_name, fromlist=[class_or_func] if class_or_func else [])
+        return getattr(module, class_or_func) if class_or_func else module
+    except ImportError as e:
+        logger.error(f"Failed to import {module_name}.{class_or_func if class_or_func else ''}: {e}")
+        raise
+
 # Attempt to import GRID-Former modules from Voxsigil_Library.
-# These are considered essential for the GridFormerConnector to function.
-try:
-    from ARC.core.arc_data_processor import (  # visualize_grid for debugging/logging
-        ARCGridDataProcessor,
-        visualize_grid,
-    )
-    from core.grid_former import GRID_Former
-    from training.arc_grid_trainer import ARCGridTrainer as GridFormerTrainer
-
-    logger.info(
-        "Successfully imported GRID_Former, ARCGridDataProcessor, visualize_grid, "
-        "and GridFormerTrainer from Voxsigil_Library."
-    )
-
-except ImportError as e_grid:
-    logger.error(
-        f"Failed to import essential GRID-Former components from Voxsigil_Library: {e_grid}. "
-        "The GridFormerConnector will not be functional. "
-        "Please ensure Voxsigil_Library is correctly installed and accessible in the Python path."
-    )  # Re-raise the error to prevent the module from being used in a broken state.
-    # This makes it clear that the connector cannot operate without these components.
-    raise ImportError(
-        "Essential GRID-Former components (GRID_Former, ARCGridDataProcessor, GridFormerTrainer) "
-        f"could not be imported from Voxsigil_Library. Please check installation and anaconda_path. Original error: {e_grid}"
-    ) from e_grid
+# These are considered non-essential initially and will be lazily loaded when needed
+# to avoid circular dependencies
+GRID_Former = None
+ARCGridDataProcessor = None
+visualize_grid = None
+GridFormerTrainer = None
+HAVE_ASYNC_TRAINING = False
 
 # Import async training engine for centralized training management
-try:
-    from Vanta.async_training_engine import VantaAsyncTrainingEngine, VantaTrainingConfig
+# Also using lazy loading to avoid circular dependencies
+VantaAsyncTrainingEngine = None
+VantaTrainingConfig = None
 
-    HAVE_ASYNC_TRAINING = True
-    logger.info("Successfully imported VantaAsyncTrainingEngine")
-except ImportError as e_training:
-    logger.warning(f"Could not import async training engine: {e_training}")
-    HAVE_ASYNC_TRAINING = False
-
-# The GridFormerConnector class and other parts of the module will now use the
-# directly imported components. If the imports above failed, execution would have halted.
-# All fallback class definitions and complex conditional import logic have been removed.
+# The GridFormerConnector class and other parts of the module will use
+# lazy loading to avoid circular dependencies
 
 
 class GridFormerConnector:
@@ -80,20 +75,20 @@ class GridFormerConnector:
 
     def __init__(
         self,
-        model_dir: str = "./grid_former_models",
+        model_dir: str = "./models/grid_former",
         default_model_path: Optional[str] = None,
         device: Optional[str] = None,
         max_grid_size: int = 30,
-        hidden_dim: int = 256,
+        hidden_dim: int = 512,
         num_layers: int = 6,
         num_heads: int = 8,
-        async_training_engine: Optional["VantaAsyncTrainingEngine"] = None,
+        async_training_engine=None,
     ):
         """
-        Initialize the connector.
-
+        Initialize the GridFormerConnector.
+        
         Args:
-            model_dir: Directory for model storage
+            model_dir: Directory to store models
             default_model_path: Path to default model or None to create new one
             device: Device for model computation
             max_grid_size: Maximum grid size for padding
@@ -102,6 +97,36 @@ class GridFormerConnector:
             num_heads: Number of attention heads
             async_training_engine: Optional async training engine for centralized training
         """
+        # Lazy-load required modules to avoid circular imports
+        global GRID_Former, ARCGridDataProcessor, visualize_grid, GridFormerTrainer
+        global VantaAsyncTrainingEngine, VantaTrainingConfig, HAVE_ASYNC_TRAINING
+        
+        # Load required classes if not already loaded
+        if GRID_Former is None:
+            GRID_Former = lazy_import('core.grid_former', 'GRID_Former')
+            logger.info("Lazy-loaded GRID_Former from core.grid_former")
+            
+        if ARCGridDataProcessor is None or visualize_grid is None:
+            arc_data_module = lazy_import('ARC.core.arc_data_processor')
+            ARCGridDataProcessor = arc_data_module.ARCGridDataProcessor
+            visualize_grid = arc_data_module.visualize_grid
+            logger.info("Lazy-loaded ARCGridDataProcessor and visualize_grid from ARC.core.arc_data_processor")
+            
+        if GridFormerTrainer is None:
+            GridFormerTrainer = lazy_import('training.arc_grid_trainer', 'ARCGridTrainer')
+            logger.info("Lazy-loaded GridFormerTrainer from training.arc_grid_trainer")
+            
+        if VantaAsyncTrainingEngine is None and VantaTrainingConfig is None:
+            try:
+                async_training_module = lazy_import('Vanta.async_training_engine')
+                VantaAsyncTrainingEngine = async_training_module.VantaAsyncTrainingEngine
+                VantaTrainingConfig = async_training_module.VantaTrainingConfig
+                HAVE_ASYNC_TRAINING = True
+                logger.info("Lazy-loaded VantaAsyncTrainingEngine and VantaTrainingConfig")
+            except ImportError as e:
+                logger.warning(f"Could not import async training engine: {e}")
+                HAVE_ASYNC_TRAINING = False
+        
         # Set device
         self.device = device or ("cuda" if torch.cuda.is_available() else "cpu")
         self.device = torch.device(self.device)

@@ -261,7 +261,9 @@ class HeartbeatMonitorTab(QWidget):
         layout = QVBoxLayout(self)
 
         # Title
-        title = VoxSigilWidgetFactory.create_label("❤️ System Heartbeat Monitor", "title")
+        title = VoxSigilWidgetFactory.create_label(
+            "❤️ System Heartbeat Monitor", "title"
+        )
         layout.addWidget(title)
 
         # Main splitter
@@ -277,7 +279,9 @@ class HeartbeatMonitorTab(QWidget):
         pulse_layout.addWidget(self.pulse_widget)
 
         # Status indicator
-        self.status_label = VoxSigilWidgetFactory.create_label("💚 System Healthy", "section")
+        self.status_label = VoxSigilWidgetFactory.create_label(
+            "💚 System Healthy", "section"
+        )
         pulse_layout.addWidget(self.status_label)
 
         # Right panel - Alerts and logs
@@ -294,7 +298,9 @@ class HeartbeatMonitorTab(QWidget):
         splitter.setSizes([400, 400])
 
         # Bottom status
-        self.last_update_label = VoxSigilWidgetFactory.create_label("Last update: Never", "info")
+        self.last_update_label = VoxSigilWidgetFactory.create_label(
+            "Last update: Never", "info"
+        )
         layout.addWidget(self.last_update_label)
 
     def setup_streaming(self):
@@ -320,7 +326,9 @@ class HeartbeatMonitorTab(QWidget):
         """Handle incoming heartbeat data"""
         try:
             self.pulse_widget.update_metrics(data)
-            self.last_update_label.setText(f"Last update: {datetime.now().strftime('%H:%M:%S')}")
+            self.last_update_label.setText(
+                f"Last update: {datetime.now().strftime('%H:%M:%S')}"
+            )
             self.pulse_detected.emit(data)
 
             # Update system status based on metrics
@@ -336,24 +344,24 @@ class HeartbeatMonitorTab(QWidget):
             message = alert_data.get("message", "System alert")
             self.alerts_widget.add_alert(level, message)
             self.alert_triggered.emit(level, message)
-
         except Exception as e:
             logger.error(f"Error processing alert: {e}")
 
     def simulate_pulse(self):
         """Simulate heartbeat data for demonstration (with real GPU data when available)"""
+        import random  # Ensure random is always available
+
         # Try to get real system stats first
-        real_stats = self.get_real_system_stats()
+        real_stats = self.pulse_widget.get_real_system_stats()
         if real_stats:
             simulated_data = real_stats
         else:
             # Fall back to pure simulation
-            import random
-
             # Generate GPU usage data based on detected GPU count
             gpu_usage_data = []
-            if self.gpu_count > 0:
-                for i in range(self.gpu_count):
+            gpu_count = self.pulse_widget.gpu_count
+            if gpu_count > 0:
+                for i in range(gpu_count):
                     # Simulate realistic GPU usage patterns
                     base_usage = random.randint(20, 80)
                     # Add some variation between GPUs
@@ -361,31 +369,18 @@ class HeartbeatMonitorTab(QWidget):
                     gpu_usage = max(0, min(100, base_usage + variation))
                     gpu_usage_data.append(gpu_usage)
             else:
-                gpu_usage_data = 0  # No GPU available
-
-            # Generate simulated metrics
+                gpu_usage_data = []
             simulated_data = {
-                "tps": random.randint(50, 200),
+                "tps": random.randint(100, 500),
                 "gpu_usage": gpu_usage_data,
-                "cpu_usage": random.randint(15, 60),
-                "memory_usage": random.randint(30, 70),
-                "error_rate": random.randint(0, 5),
                 "timestamp": datetime.now().isoformat(),
             }
-
-        # Process the data
-        self.on_heartbeat_received(simulated_data)
-
-        # Occasionally generate alerts
-        if random.random() < 0.1:  # 10% chance
-            alert_levels = ["info", "warning", "success"]
-            level = random.choice(alert_levels)
-            messages = {
-                "info": "System performing normally",
-                "warning": "High resource usage detected",
-                "success": "Performance optimization applied",
-            }
-            self.on_alert_received({"level": level, "message": messages[level]})
+        self.pulse_widget.update_metrics(simulated_data)
+        self.last_update_label.setText(
+            f"Last update: {datetime.now().strftime('%H:%M:%S')}"
+        )
+        self.pulse_detected.emit(simulated_data)
+        self.update_system_status(simulated_data)
 
     def update_system_status(self, metrics: Dict[str, Any]):
         """Update overall system status based on metrics"""
@@ -397,13 +392,19 @@ class HeartbeatMonitorTab(QWidget):
 
             if errors > 10 or cpu > 90 or memory > 90:
                 self.status_label.setText("🔴 System Under Stress")
-                self.status_label.setStyleSheet(f"color: {VoxSigilStyles.COLORS['error']};")
+                self.status_label.setStyleSheet(
+                    f"color: {VoxSigilStyles.COLORS['error']};"
+                )
             elif errors > 5 or cpu > 70 or memory > 80:
                 self.status_label.setText("🟡 System Busy")
-                self.status_label.setStyleSheet(f"color: {VoxSigilStyles.COLORS['warning']};")
+                self.status_label.setStyleSheet(
+                    f"color: {VoxSigilStyles.COLORS['warning']};"
+                )
             else:
                 self.status_label.setText("💚 System Healthy")
-                self.status_label.setStyleSheet(f"color: {VoxSigilStyles.COLORS['success']};")
+                self.status_label.setStyleSheet(
+                    f"color: {VoxSigilStyles.COLORS['success']};"
+                )
 
         except Exception as e:
             logger.error(f"Error updating system status: {e}")

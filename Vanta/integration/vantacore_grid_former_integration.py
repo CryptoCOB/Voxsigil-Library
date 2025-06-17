@@ -16,9 +16,6 @@ from typing import Any, Optional
 # Add parent directory to system path for imports
 sys.path.append(str(Path(__file__).resolve().parent.parent))
 
-# Import required components
-from ARC.arc_integration import HybridARCSolver, integrate_with_vantacore
-
 # Configure logging
 logging.basicConfig(
     level=logging.INFO,
@@ -32,6 +29,9 @@ logging.basicConfig(
 
 logger = logging.getLogger("VantaCore.Integration")
 
+
+# Remove direct import of HybridARCSolver to avoid circular import
+# Will use lazy loading instead
 
 # Add GridFormerVantaIntegration class
 class GridFormerVantaIntegration:
@@ -48,62 +48,59 @@ class GridFormerVantaIntegration:
         hybrid_mode: bool = False,
     ):
         """
-        Initialize the GridFormerVantaIntegration.
+        Initialize the integration.
 
         Args:
-            vantacore_instance: The VantaCore instance to integrate with
-            model_path: Path to pre-trained GRID-Former model
-            config_path: Path to VantaCore configuration
-            hybrid_mode: Whether to enable hybrid mode combining neural nets with LLMs
+            vantacore_instance: VantaCore instance
+            model_path: Path to GRID-Former model
+            config_path: Path to configuration file
+            hybrid_mode: Whether to use the hybrid solver
         """
         self.vantacore_instance = vantacore_instance
         self.model_path = model_path
         self.config_path = config_path
         self.hybrid_mode = hybrid_mode
-        self.hybrid_solver: Optional[HybridARCSolver] = None
+        self.hybrid_solver = None
 
-        logger.info("GridFormerVantaIntegration initialized")
+        # Set up GRID-Former integration
+        if hybrid_mode:
+            # Lazy load HybridARCSolver only when hybrid_mode is True
+            self._initialize_hybrid_solver()
 
-    def integrate(self):
-        """
-        Perform the integration between GRID-Former and VantaCore.
+        logger.info(
+            f"Initialized GridFormerVantaIntegration with model: {model_path or 'Default'}, "
+            f"hybrid mode: {hybrid_mode}"
+        )
 
-        Returns:
-            bool: True if integration was successful, False otherwise
-        """
-        if not self.vantacore_instance:
-            logger.error("Cannot integrate: no VantaCore instance provided")
-            return False
+    def _initialize_hybrid_solver(self):
+        """Lazily initialize the HybridARCSolver to avoid circular imports"""
+        if self.hybrid_solver is None:
+            try:
+                # Import here to avoid circular dependency
+                from ARC.arc_integration import HybridARCSolver
 
-        try:
-            # Create HybridARCSolver if hybrid mode is enabled
-            if self.hybrid_mode:
-                logger.info("Creating HybridARCSolver")
                 self.hybrid_solver = HybridARCSolver(
-                    grid_former_model_path=self.model_path,
-                    prefer_neural_net=True,
-                    enable_adaptive_routing=True,
+                    grid_former_model_path=self.model_path, prefer_neural_net=True
                 )
+                logger.info("Successfully initialized HybridARCSolver")
+            except ImportError as e:
+                logger.error(f"Could not import HybridARCSolver: {e}")
+                self.hybrid_solver = None
 
-                # Register hybrid solver with VantaCore
-                if hasattr(self.vantacore_instance, "register_arc_solver"):
-                    self.vantacore_instance.register_arc_solver(self.hybrid_solver)
-                    logger.info("Registered HybridARCSolver with VantaCore")
-                else:
-                    logger.warning(
-                        "Unable to register HybridARCSolver: missing registration method"
-                    )
 
-            # Integrate GRID-Former with VantaCore
-            logger.info("Integrating GRID-Former with VantaCore")
-            integrate_with_vantacore(self.vantacore_instance, self.model_path)
+# Lazy version of integrate_with_vantacore function
+def integrate_with_vantacore(vantacore_instance, model_path: Optional[str] = None):
+    """Integrate GRID-Former with VantaCore"""
+    try:
+        # Import here to avoid circular dependency
+        from ARC.arc_integration import integrate_with_vantacore as arc_integrate
 
-            logger.info("Successfully integrated GRID-Former with VantaCore")
-            return True
-
-        except Exception as e:
-            logger.error(f"Failed to integrate GRID-Former with VantaCore: {e}")
-            return False
+        return arc_integrate(vantacore_instance, model_path)
+    except ImportError as e:
+        logger.error(
+            f"Could not import integrate_with_vantacore from ARC.arc_integration: {e}"
+        )
+        raise
 
 
 def parse_arguments():
