@@ -10,8 +10,8 @@ __all__ = [
     "EnhancedGridFormerConnector",
 ]
 
-# These imports will be available when importing from Gridformer.core
+# These imports will be available when importing from core
+from .enhanced_grid_connector import EnhancedGridFormerConnector
 from .grid_former import GRID_Former
 from .vantacore_grid_connector import GridFormerConnector
 from .vantacore_grid_former_integration import GridFormerVantaIntegration
-from .enhanced_grid_connector import EnhancedGridFormerConnector

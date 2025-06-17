@@ -7,18 +7,17 @@ Created by: GitHub Copilot
 Purpose: Encapsulated model discovery interface for Dynamic GridFormer GUI
 """
 
-import sys
 from pathlib import Path
 from PyQt5.QtWidgets import (
     QWidget, QVBoxLayout, QHBoxLayout, QLabel, QPushButton, 
-    QListWidget, QTextEdit, QFrame, QGroupBox, QSplitter,
+    QListWidget, QTextEdit, QGroupBox, QSplitter,
     QMessageBox, QFileDialog, QProgressBar, QComboBox,
     QCheckBox, QSpinBox, QTabWidget, QTableWidget, QTableWidgetItem,
-    QTreeWidget, QTreeWidgetItem, QGraphicsView, QGraphicsScene,
+    QGraphicsView, QGraphicsScene,
     QGraphicsEllipseItem, QGraphicsTextItem
 )
 from PyQt5.QtCore import Qt, QThread, pyqtSignal, QTimer
-from PyQt5.QtGui import QFont, QPalette, QColor, QPen, QBrush
+from PyQt5.QtGui import QFont, QColor, QPen, QBrush
 import torch
 import json
 import time

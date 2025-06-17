@@ -18,12 +18,11 @@ from datetime import datetime
 from pathlib import Path
 from typing import Any, Callable, Dict, List, Optional, Tuple
 
-from echo_memory import EchoMemory
-from memory_braid import MemoryBraid
-from Vanta.core.UnifiedAsyncBus import AsyncMessage, MessageType
-
 # Import memory components
-from Vanta.interfaces.memory_interface import JsonFileMemoryInterface
+from interfaces.memory_interface import JsonFileMemoryInterface
+from memory.echo_memory import EchoMemory
+from memory.memory_braid import MemoryBraid
+from Vanta.core.UnifiedAsyncBus import AsyncMessage, MessageType
 
 # Setup the logger
 logger = logging.getLogger("Vanta.UnifiedMemoryInterface")
@@ -90,9 +89,7 @@ class UnifiedMemoryInterface:
                     )
                 logger.info("UnifiedMemoryInterface registered with VantaCore")
             except Exception as e:
-                logger.error(
-                    f"Failed to register UnifiedMemoryInterface with VantaCore: {e}"
-                )
+                logger.error(f"Failed to register UnifiedMemoryInterface with VantaCore: {e}")
 
     def _initialize_memory_subsystems(self):
         """Initialize all memory subsystems with appropriate configuration."""
@@ -120,9 +117,7 @@ class UnifiedMemoryInterface:
             self.echo_memory = EchoMemory(
                 vanta_core=None,  # We'll manage the registration ourselves
                 max_log_size=getattr(self.config, "max_echo_memory_size", 10000),
-                enable_persistence=getattr(
-                    self.config, "enable_echo_persistence", False
-                ),
+                enable_persistence=getattr(self.config, "enable_echo_persistence", False),
                 persistence_path=getattr(self.config, "echo_persistence_path", None),
             )
             logger.info("EchoMemory initialized")
@@ -309,9 +304,7 @@ class UnifiedMemoryInterface:
 
         # If not found in MemoryBraid, try JsonFileMemoryInterface
         if result is None:
-            similar_interactions = self.file_memory.retrieve_similar_interactions(
-                key, limit=1
-            )
+            similar_interactions = self.file_memory.retrieve_similar_interactions(key, limit=1)
             if similar_interactions and similar_interactions[0].get("query") == key:
                 result = similar_interactions[0].get("response")
 
@@ -358,9 +351,7 @@ class UnifiedMemoryInterface:
             namespace = self.default_namespace
 
         # Retrieve from JsonFileMemoryInterface
-        similar_interactions = self.file_memory.retrieve_similar_interactions(
-            query, limit=limit
-        )
+        similar_interactions = self.file_memory.retrieve_similar_interactions(query, limit=limit)
 
         # Filter by namespace if specified
         if namespace:
@@ -545,9 +536,7 @@ class UnifiedMemoryInterface:
         """
         stats = {
             "file_memory": {
-                "interactions": len(
-                    self.file_memory._get_index().get("interactions", [])
-                ),
+                "interactions": len(self.file_memory._get_index().get("interactions", [])),
                 "last_updated": self.file_memory._get_index().get("last_updated"),
             },
             "memory_braid": {

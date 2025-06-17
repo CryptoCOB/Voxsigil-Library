@@ -7,14 +7,15 @@ This module provides the ARTHybridBLTBridge class that connects voxsigil.art.ART
 with the Hybrid BLT middleware for sophisticated entropy-based routing and pattern analysis.
 """
 
-import sys
 import importlib
-import logging
-from typing import Any, Optional, Union
-from pathlib import Path
-import time
 import importlib.util
-from unittest.mock import patch  # Add this import
+import logging
+import sys
+import time
+from pathlib import Path
+from typing import Any, Optional, Union
+from .art_logger import get_art_logger
+from .art_manager import ARTManager
 
 # Ensure Voxsigil_Library's parent directory is in sys.path
 # This helps Python find Voxsigil_Library as a top-level package
@@ -23,42 +24,45 @@ if str(voxsigil_library_path) not in sys.path:
     sys.path.insert(0, str(voxsigil_library_path))
 
 # Import ART components
-from .art_logger import get_art_logger
-from .art_manager import ARTManager
 
 # HOLO-1.5 Cognitive Mesh Integration
 try:
-    from ..agents.base import vanta_agent, CognitiveMeshRole, BaseAgent
+    from ..agents.base import BaseAgent, CognitiveMeshRole, vanta_agent
+
     HOLO_AVAILABLE = True
-    
+
     # Define VantaAgentCapability locally as it's not in a centralized location
     class VantaAgentCapability:
         ADAPTIVE_PROCESSING = "adaptive_processing"
         ENTROPY_ROUTING = "entropy_routing"
         HYBRID_COORDINATION = "hybrid_coordination"
-        
+
 except ImportError:
     # Fallback for non-HOLO environments
-    def vanta_agent(role=None, cognitive_load=0, symbolic_depth=0, capabilities=None):
+    def vanta_agent(
+        role=None, name=None, cognitive_load=0, symbolic_depth=0, capabilities=None, **kwargs
+    ):
         def decorator(cls):
             cls._holo_role = role
+            cls._vanta_name = name or cls.__name__
             cls._holo_cognitive_load = cognitive_load
             cls._holo_symbolic_depth = symbolic_depth
             cls._holo_capabilities = capabilities or []
             return cls
+
         return decorator
-    
+
     class CognitiveMeshRole:
         PROCESSOR = "PROCESSOR"
-    
+
     class VantaAgentCapability:
         ADAPTIVE_PROCESSING = "adaptive_processing"
         ENTROPY_ROUTING = "entropy_routing"
         HYBRID_COORDINATION = "hybrid_coordination"
-    
+
     class BaseAgent:
         pass
-    
+
     HOLO_AVAILABLE = False
 
 # Global variables for BLT components (will be populated dynamically)
@@ -80,10 +84,8 @@ def load_blt_components():
     logger = get_art_logger("BLTLoader")
 
     try:
-        # Assuming Voxsigil_Library is in sys.path and contains VoxSigilRag
-        hybrid_blt_module_name = (
-            "Voxsigil_Library.VoxSigilRag.hybrid_blt"  # Corrected path
-        )
+        # Use relative import from VoxSigilRag
+        hybrid_blt_module_name = "VoxSigilRag.hybrid_blt"
         hybrid_blt_spec = importlib.util.find_spec(hybrid_blt_module_name)
 
         if hybrid_blt_spec and hybrid_blt_spec.loader:
@@ -106,13 +108,10 @@ def load_blt_components():
         else:
             logger.warning(
                 f"Could not find hybrid_blt module: {hybrid_blt_module_name}"
-            )
-
-        # Try to import BLT Encoder components from their specific modules
+            )  # Try to import BLT Encoder components from their specific modules
         try:
-            voxsigil_blt_module_name = (
-                "Voxsigil_Library.VoxSigilRag.voxsigil_blt"  # Corrected path
-            )
+            # Use relative import from VoxSigilRag
+            voxsigil_blt_module_name = "VoxSigilRag.voxsigil_blt"
             voxsigil_blt_spec = importlib.util.find_spec(voxsigil_blt_module_name)
             if voxsigil_blt_spec and voxsigil_blt_spec.loader:
                 voxsigil_blt_module = importlib.util.module_from_spec(voxsigil_blt_spec)
@@ -121,27 +120,20 @@ def load_blt_components():
                     voxsigil_blt_module, "ByteLatentTransformerEncoder", None
                 )
             else:
-                ByteLatentTransformerEncoder = (
-                    None  # Ensure it's None if module not found
-                )
+                ByteLatentTransformerEncoder = None  # Ensure it's None if module not found
                 logger.warning(
                     f"Could not find module: {voxsigil_blt_module_name} for ByteLatentTransformerEncoder"
                 )
 
-            sigil_patch_encoder_module_name = (
-                "Voxsigil_Library.VoxSigilRag.sigil_patch_encoder"  # Corrected path
-            )
-            sigil_patch_encoder_spec = importlib.util.find_spec(
-                sigil_patch_encoder_module_name
-            )
+            # Use relative import from VoxSigilRag
+            sigil_patch_encoder_module_name = "VoxSigilRag.sigil_patch_encoder"
+            sigil_patch_encoder_spec = importlib.util.find_spec(sigil_patch_encoder_module_name)
             if sigil_patch_encoder_spec and sigil_patch_encoder_spec.loader:
                 sigil_patch_encoder_module = importlib.util.module_from_spec(
                     sigil_patch_encoder_spec
                 )
                 sigil_patch_encoder_spec.loader.exec_module(sigil_patch_encoder_module)
-                SigilPatchEncoder = getattr(
-                    sigil_patch_encoder_module, "SigilPatchEncoder", None
-                )
+                SigilPatchEncoder = getattr(sigil_patch_encoder_module, "SigilPatchEncoder", None)
             else:
                 SigilPatchEncoder = None  # Ensure it's None if module not found
                 logger.warning(
@@ -168,12 +160,8 @@ def load_blt_components():
         except Exception as e_encoder:
             logger.error(f"Error importing encoder components: {e_encoder}")
             ByteLatentTransformerEncoder = None  # Ensure reset on error
-            SigilPatchEncoder = None  # Ensure reset on error
-
-        # Try to import blt_rag module (for BLTEnhancedRAG)
-        blt_rag_module_name = (
-            "Voxsigil_Library.VoxSigilRag.voxsigil_blt_rag"  # Corrected module name
-        )
+            SigilPatchEncoder = None  # Ensure reset on error        # Try to import blt_rag module (for BLTEnhancedRAG)
+        blt_rag_module_name = "VoxSigilRag.voxsigil_blt_rag"
         blt_rag_spec = importlib.util.find_spec(blt_rag_module_name)
         if blt_rag_spec and blt_rag_spec.loader:
             blt_rag = importlib.util.module_from_spec(blt_rag_spec)
@@ -182,9 +170,7 @@ def load_blt_components():
             if BLTEnhancedRAG:
                 logger.info("Successfully imported BLTEnhancedRAG.")
             else:
-                logger.warning(
-                    f"BLTEnhancedRAG not found in {blt_rag_module_name} module."
-                )
+                logger.warning(f"BLTEnhancedRAG not found in {blt_rag_module_name} module.")
         else:
             logger.warning(f"Could not find {blt_rag_module_name} module.")
 
@@ -244,10 +230,10 @@ HAS_BLT = load_blt_components()
         VantaAgentCapability.HYBRID_COORDINATION,
         "entropy_based_routing",
         "hybrid_blt_processing",
-        "adaptive_pattern_analysis"
+        "adaptive_pattern_analysis",
     ],
     cognitive_load=3.5,
-    symbolic_depth=4
+    symbolic_depth=4,
 )
 class ARTHybridBLTBridge(BaseAgent if HOLO_AVAILABLE else object):
     """
@@ -296,11 +282,12 @@ class ARTHybridBLTBridge(BaseAgent if HOLO_AVAILABLE else object):
                 "hybrid_coordination": 1.0,
                 "entropy_correlation": 0.0,
                 "cognitive_load": 3.5,
-                "symbolic_depth": 4
+                "symbolic_depth": 4,
             }
             # Schedule async initialization
             try:
                 import asyncio
+
                 asyncio.create_task(self.async_init())
             except RuntimeError:
                 # If no event loop, defer initialization
@@ -318,12 +305,7 @@ class ARTHybridBLTBridge(BaseAgent if HOLO_AVAILABLE else object):
         self.hybrid_config = None
         self.hybrid_processor = None
 
-        if (
-            self.blt_available
-            and HybridMiddlewareConfig
-            and EntropyRouter
-            and HybridProcessor
-        ):
+        if self.blt_available and HybridMiddlewareConfig and EntropyRouter and HybridProcessor:
             try:
                 # Create configuration
                 self.hybrid_config = HybridMiddlewareConfig(
@@ -345,9 +327,7 @@ class ARTHybridBLTBridge(BaseAgent if HOLO_AVAILABLE else object):
             except Exception as e:
                 self.blt_available = False
                 self.logger.error(f"Failed to initialize Hybrid BLT components: {e}")
-                self.logger.warning(
-                    "ARTHybridBLTBridge will operate without BLT entropy analysis"
-                )
+                self.logger.warning("ARTHybridBLTBridge will operate without BLT entropy analysis")
         else:
             self.logger.warning(
                 "Hybrid BLT components not available. Bridge will use fallback mode."
@@ -411,9 +391,7 @@ class ARTHybridBLTBridge(BaseAgent if HOLO_AVAILABLE else object):
                 route_decision, patches, entropy_scores = self.router.route(input_str)
 
                 # Calculate average entropy
-                avg_entropy = (
-                    sum(entropy_scores) / len(entropy_scores) if entropy_scores else 0.0
-                )
+                avg_entropy = sum(entropy_scores) / len(entropy_scores) if entropy_scores else 0.0
 
                 # Determine if we should analyze based on entropy threshold
                 should_analyze = avg_entropy >= self.entropy_threshold or force_analysis
@@ -424,8 +402,7 @@ class ARTHybridBLTBridge(BaseAgent if HOLO_AVAILABLE else object):
 
                 # Update stats
                 self.stats["avg_entropy"] = (
-                    self.stats["avg_entropy"]
-                    * (self.stats["total_inputs_processed"] - 1)
+                    self.stats["avg_entropy"] * (self.stats["total_inputs_processed"] - 1)
                     + avg_entropy
                 ) / self.stats["total_inputs_processed"]
 
@@ -443,11 +420,7 @@ class ARTHybridBLTBridge(BaseAgent if HOLO_AVAILABLE else object):
                 )
 
                 # If using BLT preprocessing, extract features for ART
-                if (
-                    should_analyze
-                    and "preprocess_input" in context
-                    and context["preprocess_input"]
-                ):
+                if should_analyze and "preprocess_input" in context and context["preprocess_input"]:
                     if patches:
                         # Add patch analysis to context
                         context["blt_patches"] = patches
@@ -477,17 +450,13 @@ class ARTHybridBLTBridge(BaseAgent if HOLO_AVAILABLE else object):
                     context["blt_info"]["route"] = route_decision
                     context["blt_info"]["entropy_scores"] = entropy_scores
 
-                art_result = self.art_manager.analyze_input(
-                    input_data, analysis_type=None
-                )
+                art_result = self.art_manager.analyze_input(input_data, analysis_type=None)
                 result["analysis_performed"] = True
                 result["art_result"] = art_result
 
                 entropy_str = f"entropy {result.get('entropy_score', 'N/A')}"
                 route_str = f"route '{route_decision}'" if route_decision else ""
-                self.logger.info(
-                    f"ART analysis performed on input with {entropy_str} {route_str}"
-                )
+                self.logger.info(f"ART analysis performed on input with {entropy_str} {route_str}")
 
                 # If this detected a novel category and BLT is available,
                 # we could feed this back to BLT for future routing decisions
@@ -545,17 +514,13 @@ class ARTHybridBLTBridge(BaseAgent if HOLO_AVAILABLE else object):
                 try:
                     _, _, entropy_scores = self.router.route(text)
                     avg_entropy = (
-                        sum(entropy_scores) / len(entropy_scores)
-                        if entropy_scores
-                        else 0.0
+                        sum(entropy_scores) / len(entropy_scores) if entropy_scores else 0.0
                     )
 
                     if avg_entropy >= self.entropy_threshold:
                         high_entropy_batch.append(item)
                 except Exception as e:
-                    self.logger.warning(
-                        f"Error calculating entropy during batch filtering: {e}"
-                    )
+                    self.logger.warning(f"Error calculating entropy during batch filtering: {e}")
                     # Include items that caused errors to be safe
                     high_entropy_batch.append(item)
 
@@ -595,25 +560,15 @@ class ARTHybridBLTBridge(BaseAgent if HOLO_AVAILABLE else object):
             stats["art_processing_ratio"] = (
                 stats["art_processed_inputs"] / stats["total_inputs_processed"]
             )
-            if (
-                "patch_based_route_count" in stats
-                and "token_based_route_count" in stats
-            ):
-                total_routed = (
-                    stats["patch_based_route_count"] + stats["token_based_route_count"]
-                )
+            if "patch_based_route_count" in stats and "token_based_route_count" in stats:
+                total_routed = stats["patch_based_route_count"] + stats["token_based_route_count"]
                 if total_routed > 0:
-                    stats["patch_based_ratio"] = (
-                        stats["patch_based_route_count"] / total_routed
-                    )
+                    stats["patch_based_ratio"] = stats["patch_based_route_count"] / total_routed
         else:
             stats["art_processing_ratio"] = 0
             stats["patch_based_ratio"] = 0
         # Add ART stats
-        if (
-            hasattr(self.art_manager, "art_controller")
-            and self.art_manager.art_controller
-        ):
+        if hasattr(self.art_manager, "art_controller") and self.art_manager.art_controller:
             art_stats = self.art_manager.status()
             stats["art_stats"] = art_stats
 
@@ -624,27 +579,27 @@ class ARTHybridBLTBridge(BaseAgent if HOLO_AVAILABLE else object):
         """Async initialization for HOLO-1.5 cognitive mesh integration"""
         if not HOLO_AVAILABLE:
             return
-            
+
         try:
             # Initialize cognitive mesh connection
             await self.initialize_vanta_core()
-            
+
             # Register processing capabilities
             await self.register_processing_capabilities()
-            
+
             # Start cognitive monitoring
             await self.start_cognitive_monitoring()
-            
+
             self._vanta_initialized = True
             self.logger.info("ARTHybridBLTBridge HOLO-1.5 cognitive mesh initialization complete")
-            
+
         except Exception as e:
             self.logger.warning(f"HOLO-1.5 initialization failed: {e}")
             self._vanta_initialized = False
 
     async def initialize_vanta_core(self):
         """Initialize VantaCore connection for cognitive mesh"""
-        if hasattr(super(), 'initialize_vanta_core'):
+        if hasattr(super(), "initialize_vanta_core"):
             await super().initialize_vanta_core()
 
     async def register_processing_capabilities(self):
@@ -654,34 +609,34 @@ class ARTHybridBLTBridge(BaseAgent if HOLO_AVAILABLE else object):
                 "entropy_routing": self.blt_available,
                 "hybrid_coordination": True,
                 "blt_components_loaded": self.blt_available,
-                "fallback_mode": not self.blt_available
+                "fallback_mode": not self.blt_available,
             },
             "entropy_routing": {
                 "threshold": self.entropy_threshold,
                 "hybrid_weight": self.blt_hybrid_weight,
                 "router_available": self.router is not None,
-                "selective_analysis": True
+                "selective_analysis": True,
             },
             "hybrid_coordination": {
                 "art_manager_integration": self.art_manager is not None,
                 "cognitive_load_balancing": True,
                 "async_operations": True,
-                "batch_processing": True
-            }
+                "batch_processing": True,
+            },
         }
-        
-        if hasattr(self, 'vanta_core') and self.vanta_core:
+
+        if hasattr(self, "vanta_core") and self.vanta_core:
             await self.vanta_core.register_capabilities("art_hybrid_blt_bridge", capabilities)
 
     async def start_cognitive_monitoring(self):
         """Start cognitive load monitoring for hybrid processing"""
         # Begin cognitive load monitoring
-        if hasattr(self, 'vanta_core') and self.vanta_core:
+        if hasattr(self, "vanta_core") and self.vanta_core:
             monitoring_config = {
                 "processing_efficiency_target": 0.85,
                 "routing_accuracy_target": 0.90,
                 "hybrid_coordination_target": 0.95,
-                "entropy_correlation_target": 0.80
+                "entropy_correlation_target": 0.80,
             }
             await self.vanta_core.start_monitoring("art_hybrid_blt_bridge", monitoring_config)
 
@@ -694,24 +649,24 @@ class ARTHybridBLTBridge(BaseAgent if HOLO_AVAILABLE else object):
         """Enhanced process_input with cognitive metrics tracking"""
         # Track cognitive load start
         cognitive_start_time = time.time()
-        
+
         # Call original process_input
         result = self.process_input(input_data, context, force_analysis)
-        
+
         # Update cognitive metrics
         cognitive_processing_time = time.time() - cognitive_start_time
-        
+
         if HOLO_AVAILABLE and self._vanta_initialized:
             # Update processing efficiency metric
             entropy_score = result.get("entropy_score", 0.0)
             analysis_performed = result.get("analysis_performed", False)
-            
+
             # Calculate processing efficiency (inverse of processing time, normalized)
             efficiency = min(1.0, 1.0 / max(cognitive_processing_time, 0.001))
             self.cognitive_metrics["processing_efficiency"] = (
                 self.cognitive_metrics["processing_efficiency"] * 0.9 + efficiency * 0.1
             )
-            
+
             # Calculate routing accuracy (how well entropy threshold worked)
             if entropy_score is not None:
                 expected_analysis = entropy_score >= self.entropy_threshold
@@ -719,30 +674,32 @@ class ARTHybridBLTBridge(BaseAgent if HOLO_AVAILABLE else object):
                 self.cognitive_metrics["routing_accuracy"] = (
                     self.cognitive_metrics["routing_accuracy"] * 0.9 + routing_accuracy * 0.1
                 )
-                
+
                 # Track entropy correlation
                 self.cognitive_metrics["entropy_correlation"] = (
                     self.cognitive_metrics["entropy_correlation"] * 0.9 + entropy_score * 0.1
                 )
-            
+
             # Update hybrid coordination (measure of BLT-ART integration success)
-            coordination_score = 1.0 if result.get("analysis_performed") and not result.get("error") else 0.5
+            coordination_score = (
+                1.0 if result.get("analysis_performed") and not result.get("error") else 0.5
+            )
             self.cognitive_metrics["hybrid_coordination"] = (
                 self.cognitive_metrics["hybrid_coordination"] * 0.9 + coordination_score * 0.1
             )
-            
+
             # Generate cognitive trace
             result["cognitive_trace"] = self._generate_processing_trace(
                 input_data, result, cognitive_processing_time
             )
-        
+
         return result
 
     def _generate_processing_trace(self, input_data, result, processing_time):
         """Generate cognitive trace for mesh learning"""
         if not HOLO_AVAILABLE:
             return None
-            
+
         trace = {
             "timestamp": time.time(),
             "processing_time": processing_time,
@@ -752,18 +709,18 @@ class ARTHybridBLTBridge(BaseAgent if HOLO_AVAILABLE else object):
             "analysis_performed": result.get("analysis_performed"),
             "hybrid_coordination_success": not result.get("error", False),
             "symbolic_depth": self.cognitive_metrics.get("symbolic_depth", 4),
-            "mesh_role": "PROCESSOR"
+            "mesh_role": "PROCESSOR",
         }
-        
+
         return trace
 
     def _calculate_cognitive_load(self) -> float:
         """Calculate current cognitive load based on processing metrics"""
         if not HOLO_AVAILABLE:
             return 0.0
-            
+
         base_load = 3.5  # Base cognitive load for PROCESSOR role
-        
+
         # Adjust based on BLT availability and complexity
         if self.blt_available:
             load_adjustment = 0.0
@@ -776,20 +733,20 @@ class ARTHybridBLTBridge(BaseAgent if HOLO_AVAILABLE else object):
         else:
             # Higher load when operating in fallback mode
             load_adjustment = 0.8
-            
+
         return max(1.0, min(5.0, base_load + load_adjustment))
 
     def _calculate_symbolic_depth(self) -> int:
         """Calculate current symbolic processing depth"""
         if not HOLO_AVAILABLE:
             return 1
-            
+
         base_depth = 4  # Base symbolic depth for hybrid processing
-        
+
         # Adjust based on entropy correlation and coordination
         entropy_correlation = self.cognitive_metrics.get("entropy_correlation", 0.0)
         hybrid_coordination = self.cognitive_metrics.get("hybrid_coordination", 1.0)
-        
+
         depth_adjustment = 0
         if entropy_correlation > 0.7:
             depth_adjustment += 1
@@ -797,14 +754,14 @@ class ARTHybridBLTBridge(BaseAgent if HOLO_AVAILABLE else object):
             depth_adjustment += 1
         if self.blt_available and self.router:
             depth_adjustment += 1
-            
+
         return max(1, min(6, base_depth + depth_adjustment))
 
     def get_cognitive_status(self) -> dict:
         """Get current cognitive status for HOLO-1.5 mesh"""
         if not HOLO_AVAILABLE:
             return {}
-            
+
         return {
             "cognitive_load": self._calculate_cognitive_load(),
             "symbolic_depth": self._calculate_symbolic_depth(),
@@ -815,7 +772,7 @@ class ARTHybridBLTBridge(BaseAgent if HOLO_AVAILABLE else object):
             "blt_availability": self.blt_available,
             "total_processed": self.stats.get("total_inputs_processed", 0),
             "mesh_role": "PROCESSOR",
-            "vanta_initialized": self._vanta_initialized
+            "vanta_initialized": self._vanta_initialized,
         }
 
 
@@ -825,9 +782,7 @@ if __name__ == "__main__":
 
     # Check if BLT components are available and print status
     if HAS_BLT:
-        logger.info(
-            "Hybrid BLT components are available. Initializing ARTHybridBLTBridge..."
-        )
+        logger.info("Hybrid BLT components are available. Initializing ARTHybridBLTBridge...")
     else:
         logger.info(
             "Hybrid BLT components are not available. ARTHybridBLTBridge will use fallback mode."

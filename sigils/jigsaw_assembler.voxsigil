@@ -174,7 +174,7 @@ metadata:
   definition_status: active
   author_agent_id: VANTA.⟠∆∇𓂀𐑒
   created_timestamp: '2025-05-11T11:45:00Z'
-  last_updated_timestamp: '2025-05-11T11:45:00Z'
+  last_updated_timestamp: '2025-06-13T05:40:40.617914Z'
   authorship_context:
     motivation: To equip AI with robust sensemaking capabilities for dealing with
       the fragmented and incomplete nature of much real-world information, enabling
@@ -205,6 +205,11 @@ metadata:
     - How can an AI best balance local 'best fit' with global 'best assembly'?
     - Can an AI learn to recognize when it has enough pieces to form a reliable picture
       versus when it needs more data?
+  schema_version: 1.5-holo-alpha
+  impact_and_usage_metrics_profile:
+    avg_completion_time_ms_observed: UNKNOWN
+    success_rate_observed: UNKNOWN
+    complexity_rating: medium
 relationships:
 - target_sigil: 🕸️MEMORY_BRAID_ALGORITHM
   relationship_type: analogous_to

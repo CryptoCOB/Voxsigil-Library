@@ -118,9 +118,14 @@ metadata:
   definition_status: active
   author_agent_id: VOXSIGIL_GENERATOR_VANTA_ASSIST
   created_timestamp: '2024-03-10T16:05:00Z'
-  last_updated_timestamp: '2024-03-10T16:05:00Z'
+  last_updated_timestamp: '2025-06-13T05:40:40.617914Z'
   authorship_context:
     motivation: To systematically enhance AI's capacity for creative analogical thinking.
+  schema_version: 1.5-holo-alpha
+  impact_and_usage_metrics_profile:
+    avg_completion_time_ms_observed: UNKNOWN
+    success_rate_observed: UNKNOWN
+    complexity_rating: medium
 test_criteria:
 - test_id: ANALOGY_DISTANT_001
   description: Generate analogy from a distant domain.

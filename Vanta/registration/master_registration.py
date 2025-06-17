@@ -17,10 +17,8 @@ This orchestrator implements systematic registration for all remaining modules.
 import asyncio
 import logging
 import os
-from typing import Dict, Any, List, Optional
+from typing import Dict, Any
 from pathlib import Path
-import importlib
-import sys
 
 # ARC registration
 from ARC.vanta_registration import register_arc_modules

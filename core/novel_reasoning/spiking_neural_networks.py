@@ -17,16 +17,12 @@ Based on neuromorphic computing principles and spike-based learning.
 Part of HOLO-1.5 Recursive Symbolic Cognition Mesh
 """
 
-import asyncio
 import torch
 import torch.nn as nn
-import torch.nn.functional as F
 from dataclasses import dataclass, field
-from typing import Dict, List, Optional, Set, Any, Union, Tuple
-from enum import Enum
+from typing import Dict, List, Optional, Any, Tuple
 import numpy as np
 import logging
-import math
 
 try:
     from ...agents.base import vanta_agent, CognitiveMeshRole, BaseAgent

@@ -17,14 +17,10 @@ Based on research in neural synchrony and binding-by-synchrony theory.
 Part of HOLO-1.5 Recursive Symbolic Cognition Mesh
 """
 
-import asyncio
 import torch
 import torch.nn as nn
-import torch.nn.functional as F
-from dataclasses import dataclass, field
-from typing import Dict, List, Optional, Set, Any, Union, Tuple
-from enum import Enum
-import numpy as np
+from dataclasses import dataclass
+from typing import Dict, List, Optional, Any, Tuple
 import logging
 import math
 

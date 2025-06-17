@@ -6,8 +6,7 @@ Registers all 31 agents in the agents/ directory as individual modules
 
 import logging
 import os
-from pathlib import Path
-from typing import Dict, Any, List, Optional
+from typing import Dict, Any
 
 logger = logging.getLogger("Vanta.AgentsRegistration")
 

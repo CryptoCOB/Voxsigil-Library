@@ -3,16 +3,15 @@ Model Discovery Interface Module
 Migrated to Qt5 with enhanced features for the Dynamic GridFormer GUI
 """
 
-import sys
 from pathlib import Path
 from PyQt5.QtWidgets import (
     QWidget, QVBoxLayout, QHBoxLayout, QLabel, QLineEdit, QPushButton,
     QTreeWidget, QTreeWidgetItem, QGroupBox, QSplitter, QTextEdit,
     QProgressBar, QComboBox, QCheckBox, QMessageBox, QFileDialog,
-    QHeaderView, QFrame, QTabWidget
+    QTabWidget
 )
 from PyQt5.QtCore import Qt, QThread, pyqtSignal, QTimer
-from PyQt5.QtGui import QFont, QIcon
+from PyQt5.QtGui import QFont
 
 
 class ModelScannerThread(QThread):

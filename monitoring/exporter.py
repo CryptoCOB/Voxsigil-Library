@@ -17,9 +17,8 @@ import psutil
 import logging
 import threading
 from datetime import datetime, timezone
-from typing import Dict, List, Optional, Any
-from dataclasses import dataclass, field
-from pathlib import Path
+from typing import Optional
+from dataclasses import dataclass
 
 try:
     import prometheus_client

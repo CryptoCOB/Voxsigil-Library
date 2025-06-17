@@ -5,14 +5,13 @@ Integrates self-registration pattern with existing Vanta infrastructure
 
 import logging
 import asyncio
-from typing import Dict, Any, List
+from typing import Dict, Any
 from agents.base import (
     set_vanta_instance, 
     get_registered_agents, 
     register_all_agents_auto,
     create_holo_mesh_network,
-    execute_mesh_task,
-    CognitiveMeshRole
+    execute_mesh_task
 )
 
 logger = logging.getLogger(__name__)

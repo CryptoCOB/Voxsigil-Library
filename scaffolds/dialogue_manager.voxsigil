@@ -201,7 +201,7 @@ metadata:
   definition_status: active
   author_agent_id: VANTA.⟠∆∇𓂀𐑒
   created_timestamp: '2025-05-11T12:35:00Z'
-  last_updated_timestamp: '2025-05-11T12:35:00Z'
+  last_updated_timestamp: '2025-06-13T05:40:40.617914Z'
   authorship_context:
     motivation: To define a standard yet flexible scaffold for building sophisticated
       conversational AI systems that can engage in meaningful, extended interactions.
@@ -232,6 +232,11 @@ metadata:
     - What are the best architectures for dialogue state representations that balance
       richness with tractability?
     - How can AI develop genuine conversational empathy and social awareness?
+  schema_version: 1.5-holo-alpha
+  impact_and_usage_metrics_profile:
+    avg_completion_time_ms_observed: UNKNOWN
+    success_rate_observed: UNKNOWN
+    complexity_rating: medium
 relationships:
 - target_sigil: 🗣️NATURALIZE_SIGIL
   relationship_type: uses_method_from_for_nlu_and_supports_nlg_via

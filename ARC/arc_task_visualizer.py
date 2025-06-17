@@ -4,11 +4,12 @@
 Creates visual grids to see what the model is actually doing
 """
 
-import matplotlib.pyplot as plt
-import numpy as np
 import json
 from pathlib import Path
-from typing import List, Dict, Any, Optional, cast
+from typing import Any, Dict, List, Optional, cast
+
+import matplotlib.pyplot as plt
+import numpy as np
 
 # ARC color palette for consistent visualization
 ARC_COLORS = [
@@ -169,7 +170,6 @@ def test_visualization_with_real_data():
 
     try:
         # Try to load real data
-        from ARC.data_loader import ARCDataLoader
         from Gridformer.inference.gridformer_inference_engine import (
             GridFormerInferenceEngine as GridFormerInference,
         )
@@ -241,9 +241,7 @@ def create_simple_demo():
     save_path = "visualization_results/demo_comparison.png"
     Path("visualization_results").mkdir(exist_ok=True)
 
-    fig = visualize_arc_task(
-        demo_task, demo_predictions, save_path=save_path, show=False
-    )
+    fig = visualize_arc_task(demo_task, demo_predictions, save_path=save_path, show=False)
 
     print("✅ Demo visualization created!")
     print(f"📁 Saved to: {save_path}")
@@ -263,9 +261,7 @@ def analyze_model_results(results_file: str = "test_results/batch_test_results.j
         with open(results_file, "r") as f:
             results = json.load(f)
 
-        print(
-            f"✅ Loaded results with {len(results.get('individual_results', []))} samples"
-        )
+        print(f"✅ Loaded results with {len(results.get('individual_results', []))} samples")
 
         # Visualize first few successful predictions
         individual_results = results.get("individual_results", [])
@@ -283,9 +279,7 @@ def analyze_model_results(results_file: str = "test_results/batch_test_results.j
                 save_path = "visualization_results/model_results_analysis.png"
                 Path("visualization_results").mkdir(exist_ok=True)
 
-                fig = visualize_arc_task(
-                    task_data, predictions, save_path=save_path, show=False
-                )
+                fig = visualize_arc_task(task_data, predictions, save_path=save_path, show=False)
 
                 print("✅ Model results visualization complete!")
                 print(f"📁 Saved to: {save_path}")

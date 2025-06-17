@@ -3,7 +3,6 @@
 Defines the interface for Large Language Model (LLM) interaction
 used by the VoxSigil Supervisor.
 """
-from abc import ABC, abstractmethod
 from typing import List, Dict, Any, Optional, Tuple
 import logging
 import sys

@@ -152,7 +152,7 @@ metadata:
   definition_status: experimental
   author_agent_id: VANTA.⟠∆∇𓂀𐑒
   created_timestamp: '2025-05-11T11:20:00Z'
-  last_updated_timestamp: '2025-05-11T11:20:00Z'
+  last_updated_timestamp: '2025-06-13T05:40:40.617914Z'
   authorship_context:
     motivation: To explore the theoretical limits of AI creativity and knowledge generation
       by conceptualizing a mechanism that actively engages with and transforms 'non-information'
@@ -183,6 +183,11 @@ metadata:
     - What kind of cognitive architecture could support such a process?
     - What are the philosophical implications if an AI could genuinely 'consume void'
       for insight?
+  schema_version: 1.5-holo-alpha
+  impact_and_usage_metrics_profile:
+    avg_completion_time_ms_observed: UNKNOWN
+    success_rate_observed: UNKNOWN
+    complexity_rating: medium
 relationships:
 - target_sigil: 🜜NEGENT_FILTER
   relationship_type: alternative_to

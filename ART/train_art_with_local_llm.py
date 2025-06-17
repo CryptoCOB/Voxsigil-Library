@@ -15,15 +15,15 @@ Requirements:
     - A local LLM (this example uses TinyLlama)
 """
 
-import os
-import sys
-import logging
-from pathlib import Path
-import time
-import json
 import argparse
+import json
+import logging
+import os
 import random
-from typing import Dict, Any, List, Optional, Union, Tuple
+import sys
+import time
+from pathlib import Path
+from typing import Any, Dict, List, Optional, Tuple, Union
 
 # Add paths to Python's module search path
 current_dir = Path(os.path.dirname(os.path.abspath(__file__)))
@@ -86,30 +86,43 @@ if str(voxsigil_library_path) not in sys.path:
 
 # Import VoxSigil components
 try:
-    # Corrected import for ARTTrainer (uppercase T)
-    from ART.art_trainer import ArtTrainer, get_art_logger
-    from ART.art_manager import ARTManager
+    # Core ART components
     from ART.art_hybrid_blt_bridge import ARTHybridBLTBridge
-    from ART.art_entropy_bridge import ArtEntropyBridge
-    from ART.blt.art_blt_bridge import ARTBLTBridge
+    from ART.art_manager import ARTManager
     from ART.art_rag_bridge import ARTRAGBridge
+    from ART.art_trainer import get_art_logger
 
     # Assuming tinyllama_assistant.py is at the root of Voxsigil_Library or a top-level package
     # If it's inside a sub-package of Voxsigil_Library, adjust the import accordingly.
-    # e.g., from some_sub_package.tinyllama_assistant import TinyLlamaAssistant
-    from tinyllama_assistant import TinyLlamaAssistant
-
+    # e.g., from some_sub_package.tinyllama_assistant import TinyLlamaAssistant    from tinyllama_assistant import TinyLlamaAssistant
     # Assuming VoxSigilRag is a package at the root of Voxsigil_Library or a top-level package
     # If it's inside a sub-package of Voxsigil_Library, adjust the import accordingly.
     # e.g., from some_sub_package.VoxSigilRag.voxsigil_blt_rag import BLTEnhancedRAG
-    from BLT.voxsigil_blt_rag import BLTEnhancedRAG
+    from VoxSigilRag.voxsigil_blt_rag import BLTEnhancedRAG
+
+    # Import TinyLlamaAssistant for the local LLM; provide a stub if it is absent.
+    try:
+        from tinyllama_assistant import TinyLlamaAssistant  # noqa: F401
+    except ImportError:
+
+        class TinyLlamaAssistant:
+            """
+            Fallback TinyLlamaAssistant used when the real implementation
+            is unavailable. Generates a dummy response and logs a warning.
+            """
+
+            def __init__(self, *args, **kwargs):
+                logging.getLogger("ART_LLM_Training").warning(
+                    "tinyllama_assistant module not found; using stub TinyLlamaAssistant."
+                )
+
+            def generate_response(self, prompt: str) -> str:
+                return "[TinyLlamaAssistant unavailable]"
 
     IMPORTS_SUCCESS = True
 except ImportError as e:
     print(f"Error importing required modules: {e}")
-    print(
-        "Please ensure that VoxSigil, ART module, and local LLM are properly installed."
-    )
+    print("Please ensure that VoxSigil, ART module, and local LLM are properly installed.")
     IMPORTS_SUCCESS = False
 
 # Configure logging
@@ -159,9 +172,7 @@ class ARTLLMTrainer:
 
         # Set default paths if not specified
         self.llm_model_path = llm_model_path
-        self.voxsigil_library_path = voxsigil_library_path or str(
-            voxsigil_library_actual_dir
-        )
+        self.voxsigil_library_path = voxsigil_library_path or str(voxsigil_library_actual_dir)
 
         # Initialize ART Manager
         self.logger.info("Initializing ART Manager...")
@@ -211,9 +222,7 @@ class ARTLLMTrainer:
         self.llm = None
         try:
             self.logger.info("Initializing local LLM...")
-            self.llm = TinyLlamaAssistant(
-                model_path=self.llm_model_path, cache_dir=cache_dir
-            )
+            self.llm = TinyLlamaAssistant(model_path=self.llm_model_path, cache_dir=cache_dir)
             self.logger.info("Local LLM initialized successfully")
         except Exception as e:
             self.logger.error(f"Failed to initialize local LLM: {e}")
@@ -278,9 +287,7 @@ class ARTLLMTrainer:
             self.logger.error(f"Error enhancing query with RAG: {e}")
             return query, []
 
-    def process_with_blt(
-        self, input_data: Union[str, Dict[str, Any]]
-    ) -> Dict[str, Any]:
+    def process_with_blt(self, input_data: Union[str, Dict[str, Any]]) -> Dict[str, Any]:
         """
         Process input data with the BLT bridge.
 
@@ -451,9 +458,7 @@ class ARTLLMTrainer:
             stats["high_entropy_ratio"] = (
                 stats["high_entropy_examples"] / stats["total_examples_processed"]
             )
-            stats["examples_per_second"] = stats["total_examples_processed"] / max(
-                elapsed_time, 1
-            )
+            stats["examples_per_second"] = stats["total_examples_processed"] / max(elapsed_time, 1)
         else:
             stats["high_entropy_ratio"] = 0
             stats["examples_per_second"] = 0
@@ -589,9 +594,7 @@ def load_sample_data(
             elif prompt.startswith("How"):
                 more_samples.append(prompt.replace("How", "I need to understand how"))
             elif prompt.startswith("Explain"):
-                more_samples.append(
-                    prompt.replace("Explain", "I need an explanation of")
-                )
+                more_samples.append(prompt.replace("Explain", "I need an explanation of"))
 
         sample_prompts.extend(more_samples)
         return sample_prompts
@@ -603,35 +606,21 @@ def main():
     """Main function to run the ART LLM training script."""
     parser = argparse.ArgumentParser(description="Train ART with a local LLM")
     parser.add_argument("--model-path", type=str, help="Path to the local LLM model")
-    parser.add_argument(
-        "--voxsigil-path", type=str, help="Path to the VoxSigil library"
-    )
+    parser.add_argument("--voxsigil-path", type=str, help="Path to the VoxSigil library")
     parser.add_argument("--data-path", type=str, help="Path to training data file")
-    parser.add_argument(
-        "--batch-size", type=int, default=8, help="Batch size for training"
-    )
-    parser.add_argument(
-        "--entropy-threshold", type=float, default=0.4, help="Entropy threshold"
-    )
-    parser.add_argument(
-        "--hybrid-weight", type=float, default=0.7, help="Hybrid weight"
-    )
+    parser.add_argument("--batch-size", type=int, default=8, help="Batch size for training")
+    parser.add_argument("--entropy-threshold", type=float, default=0.4, help="Entropy threshold")
+    parser.add_argument("--hybrid-weight", type=float, default=0.7, help="Hybrid weight")
     parser.add_argument("--no-rag", action="store_true", help="Disable RAG")
     parser.add_argument(
         "--no-hybrid-blt",
         action="store_true",
         help="Use standard BLT instead of hybrid",
     )
-    parser.add_argument(
-        "--save-path", type=str, default="art_llm_model", help="Path to save model"
-    )
+    parser.add_argument("--save-path", type=str, default="art_llm_model", help="Path to save model")
     parser.add_argument("--load-path", type=str, help="Path to load model from")
-    parser.add_argument(
-        "--num-epochs", type=int, default=1, help="Number of training epochs"
-    )
-    parser.add_argument(
-        "--interactive", action="store_true", help="Run in interactive mode"
-    )
+    parser.add_argument("--num-epochs", type=int, default=1, help="Number of training epochs")
+    parser.add_argument("--interactive", action="store_true", help="Run in interactive mode")
     args = parser.parse_args()
 
     if not IMPORTS_SUCCESS:
@@ -702,9 +691,7 @@ def main():
                 print(
                     f"  {stats['high_entropy_examples']} high entropy examples ({stats['high_entropy_ratio']:.2%})"
                 )
-                print(
-                    f"  Processing speed: {stats['examples_per_second']:.2f} examples/sec"
-                )
+                print(f"  Processing speed: {stats['examples_per_second']:.2f} examples/sec")
 
                 # Save state after each epoch
                 if args.save_path:
@@ -719,9 +706,7 @@ def main():
 
         # Interactive mode
         else:
-            print(
-                "\nEntering interactive mode. Type 'exit' to quit, 'stats' for statistics."
-            )
+            print("\nEntering interactive mode. Type 'exit' to quit, 'stats' for statistics.")
             while True:
                 query = input("\nEnter a query: ")
 
@@ -767,9 +752,7 @@ def main():
 
                 if result.get("rag_enhanced"):
                     print("\nRAG Enhancement:")
-                    print(
-                        f"  Used documents: {', '.join(result.get('rag_docs', ['none']))}"
-                    )
+                    print(f"  Used documents: {', '.join(result.get('rag_docs', ['none']))}")
 
                 print("\nResponse:")
                 print(result.get("llm_response", "No response generated"))

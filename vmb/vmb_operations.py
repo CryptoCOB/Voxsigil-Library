@@ -6,7 +6,6 @@ Continuing VMB operations after successful activation
 
 import asyncio
 import logging
-import sys
 from pathlib import Path
 from typing import Any, Dict
 

@@ -7,14 +7,14 @@ with the VantaCore ecosystem.
 """
 
 # HOLO-1.5 Recursive Symbolic Cognition Mesh imports
-from .base import BaseCore, vanta_core_module, CognitiveMeshRole
-
 import json
 import logging
 import threading
 import time
 from dataclasses import dataclass, field
-from typing import Any, Callable, Dict, List, Union, Type
+from typing import Any, Callable, Dict, List, Optional, Type
+
+from .base import BaseCore, CognitiveMeshRole, vanta_core_module
 
 logger = logging.getLogger("VantaInteractionManager")
 
@@ -26,30 +26,23 @@ try:
     VantaCoreType = Type[UnifiedVantaCore]
 except ImportError:
     HAVE_VANTA_CORE = False
-    UnifiedVantaCore = None
+    UnifiedVantaCore = None  # Minimal VantaCore stub for standalone functionality / testing
 
-    # Minimal VantaCore stub for standalone functionality / testing
     class VantaCore:
         def get_component(self, name: str, default: Any = None):
-            logger.warning(
-                f"[VantaCoreStubEIM] get_component for '{name}' returning default."
-            )
+            logger.warning(f"[VantaCoreStubEIM] get_component for '{name}' returning default.")
             return default
 
-        def register_component(self, name: str, comp: Any, meta: dict | None = None):
+        def register_component(self, name: str, comp: Any, meta: Optional[dict] = None):
             logger.info(f"[VantaCoreStubEIM] Component '{name}' registered (stub).")
 
         def publish_event(
-            self, etype: str, data: dict | None = None, source: str | None = None
+            self, etype: str, data: Optional[dict] = None, source: Optional[str] = None
         ):
-            logger.debug(
-                f"[VantaCoreStubEIM] Event: {etype}, Data: {data}, Src: {source}"
-            )
+            logger.debug(f"[VantaCoreStubEIM] Event: {etype}, Data: {data}, Src: {source}")
 
     VantaCoreType = Type[VantaCore]
-    logger.warning(
-        "VantaCore class not found, using a stub. Full integration may be affected."
-    )
+    logger.debug("VantaCore class not found, using a stub. Full integration may be affected.")
 
 # STT (Vosk) and Audio Input Dependencies
 try:
@@ -136,13 +129,21 @@ class ConversationThread:
 
 @vanta_core_module(
     name="vanta_interaction_manager",
-    subsystem="system_management", 
+    subsystem="system_management",
     mesh_role=CognitiveMeshRole.MANAGER,
     description="User interaction manager with voice I/O, conversation tracking, and state monitoring",
-    capabilities=["voice_input", "voice_output", "state_tracking", "conversation_management", "user_monitoring", "stt_processing", "tts_synthesis"],
+    capabilities=[
+        "voice_input",
+        "voice_output",
+        "state_tracking",
+        "conversation_management",
+        "user_monitoring",
+        "stt_processing",
+        "tts_synthesis",
+    ],
     cognitive_load=2.5,
     symbolic_depth=2,
-    collaboration_patterns=["user_feedback", "state_coordination", "voice_interaction"]
+    collaboration_patterns=["user_feedback", "state_coordination", "voice_interaction"],
 )
 class VantaInteractionManager(BaseCore):
     COMPONENT_NAME = "interaction_manager"
@@ -151,8 +152,8 @@ class VantaInteractionManager(BaseCore):
         self,
         vanta_core: Any,  # Changed from VantaCore to Any to fix type issues
         config: VantaInteractionManagerConfig,
-        model_manager: Any | None = None,
-        passive_state_update_callback: Callable[[Dict[str, Any]], None] | None = None,
+        model_manager: Optional[Any] = None,
+        passive_state_update_callback: Optional[Callable[[Dict[str, Any]], None]] = None,
     ):
         self.vanta_core = vanta_core
         self.config = config
@@ -168,17 +169,13 @@ class VantaInteractionManager(BaseCore):
         self.explicit_user_state: str = "unknown"
         self.interaction_count: int = 0
         self.active_conversations: Dict[str, ConversationThread] = {}
-        self.current_topic: str = "general"
-
-        # STT/Vosk state
-        self._vosk_model: Any | None = None
-        self._vosk_recognizer: Any | None = None
+        self.current_topic: str = "general"  # STT/Vosk state
+        self._vosk_model: Optional[Any] = None
+        self._vosk_recognizer: Optional[Any] = None
         if HAVE_VOSK and vosk:
             try:
                 if self.config.vosk_model_path:
-                    logger.info(
-                        f"Loading Vosk model from: {self.config.vosk_model_path}..."
-                    )
+                    logger.info(f"Loading Vosk model from: {self.config.vosk_model_path}...")
                     self._vosk_model = vosk.Model(self.config.vosk_model_path)
                 else:
                     # Use default small model - will auto-download if needed
@@ -190,10 +187,8 @@ class VantaInteractionManager(BaseCore):
             except Exception as e:
                 logger.error(f"Failed to load Vosk model: {e}")
                 self._vosk_model = None
-                self._vosk_recognizer = None
-
-        # TTS/pyttsx3 state
-        self._tts_engine: Any | None = None
+                self._vosk_recognizer = None  # TTS/pyttsx3 state
+        self._tts_engine: Optional[Any] = None
         if HAVE_PYTTSX3 and pyttsx3:
             try:
                 self._tts_engine = pyttsx3.init()
@@ -205,7 +200,7 @@ class VantaInteractionManager(BaseCore):
 
         # Thread for passive monitoring
         self.running_passive_loop: bool = False
-        self.passive_loop_thread: threading.Thread | None = None
+        self.passive_loop_thread: Optional[threading.Thread] = None
         self.thread_lock = threading.RLock()
 
         self.vanta_core.register_component(
@@ -221,17 +216,17 @@ class VantaInteractionManager(BaseCore):
             # Initialize audio system check
             stt_available = self._vosk_recognizer is not None
             tts_available = self._tts_engine is not None
-            
+
             logger.info("VantaInteractionManager initialized with HOLO-1.5 enhancement")
             logger.info(f"Voice capabilities - STT: {stt_available}, TTS: {tts_available}")
-            
+
             # Start passive monitoring if callback is available
             if self.passive_state_update_callback:
                 self.start_passive_monitoring()
                 logger.info("Passive monitoring started automatically")
-            
+
             return True
-            
+
         except Exception as e:
             logger.error(f"Error initializing VantaInteractionManager: {e}")
             return False
@@ -246,9 +241,7 @@ class VantaInteractionManager(BaseCore):
 
         with self.thread_lock:
             if self.running_passive_loop:
-                logger.warning(
-                    f"{self.COMPONENT_NAME} passive monitoring loop already running."
-                )
+                logger.warning(f"{self.COMPONENT_NAME} passive monitoring loop already running.")
                 return
             self.running_passive_loop = True
             self.passive_loop_thread = threading.Thread(
@@ -268,9 +261,7 @@ class VantaInteractionManager(BaseCore):
         """Stops the passive monitoring loop."""
         with self.thread_lock:
             if not self.running_passive_loop:
-                logger.info(
-                    f"{self.COMPONENT_NAME} passive monitoring loop not running."
-                )
+                logger.info(f"{self.COMPONENT_NAME} passive monitoring loop not running.")
                 return
             self.running_passive_loop = False
 
@@ -293,9 +284,7 @@ class VantaInteractionManager(BaseCore):
 
     def _run_passive_loop(self) -> None:
         """Runs the passive monitoring loop for check-ins or state updates."""
-        logger.info(
-            f"{self.COMPONENT_NAME} passive monitoring loop entering run state."
-        )
+        logger.info(f"{self.COMPONENT_NAME} passive monitoring loop entering run state.")
         last_prune_time = time.monotonic()
 
         while self.running_passive_loop:
@@ -307,16 +296,11 @@ class VantaInteractionManager(BaseCore):
                     self._perform_passive_checkin_event()
                     self.last_checkin_event_ts = now_mono
 
-                if (
-                    now_mono - last_prune_time
-                    > self.config.conversation_prune_interval_s
-                ):
+                if now_mono - last_prune_time > self.config.conversation_prune_interval_s:
                     self.prune_stale_conversations()
                     last_prune_time = now_mono
             except Exception as e:
-                logger.error(
-                    f"Error in {self.COMPONENT_NAME} passive loop: {e}", exc_info=True
-                )
+                logger.error(f"Error in {self.COMPONENT_NAME} passive loop: {e}", exc_info=True)
 
             elapsed = time.monotonic() - loop_start_time
             sleep_interval = min(
@@ -364,9 +348,7 @@ class VantaInteractionManager(BaseCore):
             "last_interaction_timestamp": self.last_user_interaction_ts,
             "current_interaction_count": self.interaction_count,
             "active_conversations_summary": {
-                t: cd.to_dict()
-                for t, cd in self.active_conversations.items()
-                if cd.incomplete
+                t: cd.to_dict() for t, cd in self.active_conversations.items() if cd.incomplete
             },
             "current_topic": self.current_topic,
         }
@@ -386,11 +368,11 @@ class VantaInteractionManager(BaseCore):
     def update_user_interaction(
         self,
         interaction_type: str = "unspecified_voice_or_text",
-        topic: str | None = None,
-        message_text: str | None = None,
+        topic: Optional[str] = None,
+        message_text: Optional[str] = None,
         message_role: str = "user",
-        metadata: Dict[str, Any] | None = None,
-        explicit_state_override: str | None = None,
+        metadata: Optional[Dict[str, Any]] = None,
+        explicit_state_override: Optional[str] = None,
     ) -> None:
         """Tracks user interaction, updating state and conversation context."""
         now = time.time()
@@ -484,26 +466,21 @@ class VantaInteractionManager(BaseCore):
                 )
             return True
         logger.warning(f"Attempt to set invalid user state: {state}")
-        return False
+        return False  # --- STT (Speech-to-Text) Methods ---
 
-    # --- STT (Speech-to-Text) Methods ---
     def listen_and_transcribe(
-        self, duration_s: int | None = None, silence_timeout_s: float | None = None
-    ) -> str | None:
+        self, duration_s: Optional[int] = None, silence_timeout_s: Optional[float] = None
+    ) -> Optional[str]:
         """Listens to microphone input and returns transcribed text using Vosk."""
         if not self._vosk_recognizer or not self._vosk_model:
             logger.error("Vosk STT model not loaded. Cannot listen and transcribe.")
             return None
         if not HAVE_SOUNDDEVICE or sd is None or np is None:
-            logger.error(
-                "Sounddevice/Numpy not available. Cannot record audio for STT."
-            )
+            logger.error("Sounddevice/Numpy not available. Cannot record audio for STT.")
             return None
 
         listen_duration = (
-            duration_s
-            if duration_s is not None
-            else self.config.stt_default_listen_duration_s
+            duration_s if duration_s is not None else self.config.stt_default_listen_duration_s
         )
         effective_silence_timeout = (
             silence_timeout_s
@@ -595,9 +572,7 @@ class VantaInteractionManager(BaseCore):
             return None
 
     # --- TTS (Text-to-Speech) Methods ---
-    def speak_text(
-        self, text_to_speak: str, voice_config: Dict[str, Any] | None = None
-    ) -> bool:
+    def speak_text(self, text_to_speak: str, voice_config: Optional[Dict[str, Any]] = None) -> bool:
         """Speaks the given text using the configured TTS engine."""
         if not self._tts_engine:
             logger.error("pyttsx3 TTS engine not initialized. Cannot speak.")
@@ -656,10 +631,7 @@ class VantaInteractionManager(BaseCore):
 
     # --- Conversation Management ---
     def get_active_conversations(self) -> Dict[str, Dict[str, Any]]:
-        return {
-            topic: thread.to_dict()
-            for topic, thread in self.active_conversations.items()
-        }
+        return {topic: thread.to_dict() for topic, thread in self.active_conversations.items()}
 
     def prune_stale_conversations(self) -> int:
         max_age = self.config.stale_conversation_max_age_s
@@ -697,7 +669,7 @@ class VantaInteractionManager(BaseCore):
 
     def get_conversation_history(
         self, topic: str, limit: int = 20
-    ) -> List[Dict[str, Any]] | None:
+    ) -> Optional[List[Dict[str, Any]]]:
         thread = self.active_conversations.get(topic)
         return thread.messages[-limit:] if thread else None
 
@@ -705,15 +677,12 @@ class VantaInteractionManager(BaseCore):
         """Provides current interaction state as context."""
         user_act_state = self.get_user_activity_state()
         active_convs = {
-            t: th.to_dict()
-            for t, th in self.active_conversations.items()
-            if th.incomplete
+            t: th.to_dict() for t, th in self.active_conversations.items() if th.incomplete
         }
         return {
             "user_activity_state": user_act_state,
             "last_interaction_timestamp": self.last_user_interaction_ts,
-            "time_since_last_interaction_s": time.time()
-            - self.last_user_interaction_ts,
+            "time_since_last_interaction_s": time.time() - self.last_user_interaction_ts,
             "current_interaction_count_session": self.interaction_count,
             "active_incomplete_conversations": active_convs,
             "current_topic_focus": self.current_topic,
@@ -729,9 +698,7 @@ if __name__ == "__main__":
     example_logger = logging.getLogger("VantaInteractionManagerExample")
     example_logger.setLevel(logging.DEBUG)
 
-    example_logger.info(
-        "--- Vanta Interaction Manager Example ---"
-    )  # 1. Initialize VantaCore
+    example_logger.info("--- Vanta Interaction Manager Example ---")  # 1. Initialize VantaCore
     if HAVE_VANTA_CORE and UnifiedVantaCore is not None:
         vanta_system_im = UnifiedVantaCore()
     else:
@@ -804,9 +771,7 @@ if __name__ == "__main__":
             example_logger.info("No command transcribed or an error occurred.")
             interaction_mgr.speak_text("I didn't catch that. Could you please repeat?")
     else:
-        example_logger.warning(
-            "Vosk model not available, skipping listen_and_transcribe demo."
-        )
+        example_logger.warning("Vosk model not available, skipping listen_and_transcribe demo.")
 
     try:
         time.sleep(im_config.checkin_interval_s * 2.5)

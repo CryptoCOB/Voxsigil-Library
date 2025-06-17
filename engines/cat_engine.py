@@ -19,24 +19,22 @@ import uuid
 from typing import Any, Protocol, runtime_checkable
 
 import numpy as np
-
 from Vanta.core.UnifiedAsyncBus import AsyncMessage, MessageType
 from Vanta.core.UnifiedVantaCore import (
     UnifiedVantaCore as VantaCore,  # Core orchestrator singleton
 )
-
-# HOLO-1.5 Mesh Infrastructure
-from .base import BaseEngine, vanta_engine, CognitiveMeshRole
+from Vanta.interfaces.protocol_interfaces import MemoryBraidInterface
 
 # Import unified interface definitions
-from Vanta.interfaces.specialized_interfaces import MetaLearnerInterface, ModelManagerInterface
-from Vanta.interfaces.protocol_interfaces import MemoryBraidInterface
-# Import Vanta fallback implementations  
-from Vanta.core.fallback_implementations import (
-    FallbackLlmInterface,
-    FallbackMemoryInterface,
-    FallbackRagInterface
+from Vanta.interfaces.specialized_interfaces import (
+    MetaLearnerInterface,
+    ModelManagerInterface,
 )
+
+# HOLO-1.5 Mesh Infrastructure
+from .base import BaseEngine, CognitiveMeshRole, vanta_engine
+
+# Import Vanta fallback implementations
 
 # --- Basic logging setup ---
 logging.basicConfig(
@@ -123,7 +121,7 @@ class EchoMemoryInterface(Protocol):
     def record_cognitive_trace(
         self, component_name: str, action: str, details: dict[str, Any]
     ) -> None: ...
-    
+
     def get_recent_traces(self, limit: int = 10) -> list[dict[str, Any]]: ...
 
 
@@ -184,27 +182,33 @@ class DefaultVantaEchoMemory(EchoMemoryInterface):
 
 # --- Fallback Implementations for CAT Engine Components ---
 
+
 class FallbackMemoryCluster:
     """Minimal fallback memory cluster implementation."""
+
     def __init__(self):
         self._memory_store = []
         self._beliefs = []
         logger.info("FallbackMemoryCluster initialized")
-    
+
     def get_recent_memories(self, limit: int = 10):
         return self._memory_store[-limit:] if self._memory_store else []
-    
+
     def store(self, data, metadata=None):
         entry = {"data": data, "metadata": metadata or {}, "timestamp": time.time()}
         self._memory_store.append(entry)
         return len(self._memory_store) - 1
-    
+
     def store_event(self, data, event_type=None):
         return self.store(data, {"event_type": event_type})
-    
+
     def search_by_modality(self, modality: str, limit: int = 10):
-        return [m for m in self._memory_store if m.get("metadata", {}).get("modality") == modality][:limit]
-    
+        return [
+            m
+            for m in self._memory_store
+            if m.get("metadata", {}).get("modality") == modality
+        ][:limit]
+
     def search(self, query: str, metadata_filter=None, limit: int = 10):
         # Simple text search in stored data
         results = []
@@ -214,37 +218,42 @@ class FallbackMemoryCluster:
                 if len(results) >= limit:
                     break
         return results
-    
+
     def embed_text(self, text: str):
         # Simple hash-based embedding fallback
         import hashlib
+
         hash_obj = hashlib.md5(text.encode())
         hash_hex = hash_obj.hexdigest()
-        return [float(int(hash_hex[i:i+2], 16)) / 255.0 for i in range(0, min(len(hash_hex), 32), 2)]
-    
+        return [
+            float(int(hash_hex[i : i + 2], 16)) / 255.0
+            for i in range(0, min(len(hash_hex), 32), 2)
+        ]
+
     def get_beliefs(self):
         return self._beliefs
 
 
 class FallbackBeliefRegistry:
     """Minimal fallback belief registry implementation."""
+
     def __init__(self):
         self._beliefs = []
         self._contradictions = []
         logger.info("FallbackBeliefRegistry initialized")
-    
+
     def get_active_beliefs(self):
         return [b for b in self._beliefs if b.get("active", True)]
-    
+
     def update_belief_confidence(self, belief_id: str, new_confidence: float):
         for belief in self._beliefs:
             if belief.get("id") == belief_id:
                 belief["confidence"] = new_confidence
                 break
-    
+
     def add_contradiction(self, contradiction_data):
         self._contradictions.append(contradiction_data)
-    
+
     def add_belief(self, statement: str, confidence: float, belief_id=None):
         belief_id = belief_id or f"belief_{len(self._beliefs)}"
         belief = {
@@ -252,25 +261,26 @@ class FallbackBeliefRegistry:
             "statement": statement,
             "confidence": confidence,
             "active": True,
-            "timestamp": time.time()
+            "timestamp": time.time(),
         }
         self._beliefs.append(belief)
         return belief_id
-    
+
     def record_contradiction(self, id1: str, id2: str, type: str):
         self._contradictions.append({"id1": id1, "id2": id2, "type": type})
 
 
 class FallbackStateProvider:
     """Minimal fallback state provider implementation."""
+
     def __init__(self):
         self._state = {"status": "active", "focus": "general", "timestamp": time.time()}
         logger.info("FallbackStateProvider initialized")
-    
+
     def get_current_state(self):
         self._state["timestamp"] = time.time()
         return self._state.copy()
-    
+
     def get_data_by_modality(self, modality: str, limit: int = 5):
         # Return sample data based on modality
         if modality == "text":
@@ -282,35 +292,37 @@ class FallbackStateProvider:
 
 class FallbackFocusManager:
     """Minimal fallback focus manager implementation."""
+
     def __init__(self):
         self._current_focus = "general_analysis"
         self._active_tasks = ["categorize", "analyze", "test"]
         logger.info("FallbackFocusManager initialized")
-    
+
     def get_current_focus(self):
         return self._current_focus
-    
+
     def get_active_tasks(self):
         return self._active_tasks.copy()
 
 
 class FallbackMetaLearner:
     """Minimal fallback meta learner implementation."""
+
     def __init__(self):
         self._heuristics = [
             {"id": "h_0", "rule": "default heuristic", "novelty_score": 0.5}
         ]
         logger.info("FallbackMetaLearner initialized")
-    
+
     def get_heuristics(self):
         return self._heuristics.copy()
-    
+
     def update_heuristic(self, heuristic_id: str, updates):
         for h in self._heuristics:
             if h.get("id") == heuristic_id:
                 h.update(updates)
                 break
-    
+
     def add_heuristic(self, heuristic_data):
         self._heuristics.append(heuristic_data)
         return heuristic_data.get("id", f"h_{len(self._heuristics) - 1}")
@@ -318,51 +330,88 @@ class FallbackMetaLearner:
 
 class VoxSigilMemoryAdapter:
     """Adapter to connect CAT Engine to VoxSigil mesh."""
+
     def __init__(self, voxsigil_mesh):
         self.mesh = voxsigil_mesh
         logger.info("VoxSigilMemoryAdapter initialized")
-    
+
     def get_recent_memories(self, limit: int = 10):
         try:
             return self.mesh.get_recent_data(limit=limit)
-        except:
+        except AttributeError as e:
+            logger.error(f"Mesh missing get_recent_data method: {e}")
             return []
-    
+        except Exception as e:
+            logger.error(
+                f"Unexpected error getting recent memories: {e}", exc_info=True
+            )
+            return []
+
     def store(self, data, metadata=None):
         try:
             return self.mesh.store_data(data, metadata)
-        except:
+        except AttributeError as e:
+            logger.error(f"Mesh missing store_data method: {e}")
             return None
-    
+        except Exception as e:
+            logger.error(f"Unexpected error storing data: {e}", exc_info=True)
+            return None
+
     def store_event(self, data, event_type=None):
         return self.store(data, {"event_type": event_type})
-    
+
     def search_by_modality(self, modality: str, limit: int = 10):
         try:
             return self.mesh.search_by_type(modality, limit)
-        except:
+        except AttributeError as e:
+            logger.error(f"Mesh missing search_by_type method: {e}")
             return []
-    
+        except Exception as e:
+            logger.error(
+                f"Unexpected error searching by modality '{modality}': {e}",
+                exc_info=True,
+            )
+            return []
+
     def search(self, query: str, metadata_filter=None, limit: int = 10):
         try:
             return self.mesh.search(query, limit=limit)
-        except:
+        except AttributeError as e:
+            logger.error(f"Mesh missing search method: {e}")
             return []
-    
+        except Exception as e:
+            logger.error(
+                f"Unexpected error searching for '{query}': {e}", exc_info=True
+            )
+            return []
+
     def embed_text(self, text: str):
         try:
             return self.mesh.embed_text(text)
-        except:
+        except AttributeError as e:
+            logger.error(f"Mesh missing embed_text method: {e}")
+            return None
+        except Exception as e:
+            logger.error(f"Unexpected error embedding text: {e}", exc_info=True)
+            return None
             # Fallback embedding
             import hashlib
+
             hash_obj = hashlib.md5(text.encode())
             hash_hex = hash_obj.hexdigest()
-            return [float(int(hash_hex[i:i+2], 16)) / 255.0 for i in range(0, min(len(hash_hex), 32), 2)]
-    
+            return [
+                float(int(hash_hex[i : i + 2], 16)) / 255.0
+                for i in range(0, min(len(hash_hex), 32), 2)
+            ]
+
     def get_beliefs(self):
         try:
             return self.mesh.get_beliefs()
-        except:
+        except AttributeError as e:
+            logger.error(f"Mesh missing get_beliefs method: {e}")
+            return []
+        except Exception as e:
+            logger.error(f"Unexpected error getting beliefs: {e}", exc_info=True)
             return []
 
 
@@ -372,10 +421,17 @@ class VoxSigilMemoryAdapter:
     subsystem="cognitive_architecture_frame",
     mesh_role=CognitiveMeshRole.PROCESSOR,
     description="Cognitive Architecture Toolkit engine for advanced reasoning and belief management",
-    capabilities=["cognitive_architecture", "reasoning", "belief_management", "memory_clustering", "focus_management"]
+    capabilities=[
+        "cognitive_architecture",
+        "reasoning",
+        "belief_management",
+        "memory_clustering",
+        "focus_management",
+    ],
 )
 class CATEngine(BaseEngine):
     COMPONENT_NAME = "cat_engine"
+
     def __init__(
         self,
         vanta_core: VantaCore,
@@ -392,10 +448,10 @@ class CATEngine(BaseEngine):
     ):
         # Initialize BaseEngine with HOLO-1.5 mesh capabilities
         super().__init__(vanta_core, config)
-        
+
         self.vanta_core = vanta_core
         self.config = config
-        
+
         logger.info(
             f"CATEngine initializing. Interval: {self.config.interval_s}s. LogLevel: {self.config.log_level}"
         )
@@ -408,12 +464,12 @@ class CATEngine(BaseEngine):
         self.learner = meta_learner or self._get_meta_learner_from_vanta()
         self.model_mgr = model_manager or DefaultVantaModelManager()
 
-        self.memory_braid_instance = (
-            memory_braid or DefaultVantaMemoryBraid(self.config.default_memory_braid_config)
+        self.memory_braid_instance = memory_braid or DefaultVantaMemoryBraid(
+            self.config.default_memory_braid_config
         )
 
-        self.echo_memory_instance = (
-            echo_memory or DefaultVantaEchoMemory(self.config.default_echo_memory_config)
+        self.echo_memory_instance = echo_memory or DefaultVantaEchoMemory(
+            self.config.default_echo_memory_config
         )
 
         self.rag_component = rag_engine  # Optional component for some operations
@@ -886,7 +942,9 @@ class CATEngine(BaseEngine):
     def _update_belief_confidence(self, bid: str, nc: float):
         self.beliefs.update_belief_confidence(bid, nc)
 
-    def _select_beliefs_for_testing(self, bl: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    def _select_beliefs_for_testing(
+        self, bl: list[dict[str, Any]]
+    ) -> list[dict[str, Any]]:
         return sorted(
             [b for b in bl if isinstance(b, dict)],
             key=lambda x: x.get("confidence", 0.5),
@@ -1141,70 +1199,71 @@ class CATEngine(BaseEngine):
             memory_component = self.vanta_core.get_component("memory_cluster")
             if memory_component:
                 return memory_component
-            
+
             # Try to get VoxSigil mesh connection
             voxsigil_mesh = self.vanta_core.get_component("voxsigil_mesh")
             if voxsigil_mesh:
                 return VoxSigilMemoryAdapter(voxsigil_mesh)
-            
+
             # Fallback to minimal implementation
             logger.warning("No memory cluster found in Vanta, using fallback")
             return FallbackMemoryCluster()
         except Exception as e:
             logger.error(f"Error connecting to memory cluster: {e}")
             return FallbackMemoryCluster()
-    
+
     def _get_belief_registry_from_vanta(self):
         """Get belief registry from Vanta core."""
         try:
             belief_registry = self.vanta_core.get_component("belief_registry")
             if belief_registry:
                 return belief_registry
-            
+
             logger.warning("No belief registry found in Vanta, using fallback")
             return FallbackBeliefRegistry()
         except Exception as e:
             logger.error(f"Error connecting to belief registry: {e}")
             return FallbackBeliefRegistry()
-    
+
     def _get_state_provider_from_vanta(self):
         """Get state provider from Vanta core."""
         try:
             state_provider = self.vanta_core.get_component("state_provider")
             if state_provider:
                 return state_provider
-            
+
             logger.warning("No state provider found in Vanta, using fallback")
             return FallbackStateProvider()
         except Exception as e:
             logger.error(f"Error connecting to state provider: {e}")
             return FallbackStateProvider()
-    
+
     def _get_focus_manager_from_vanta(self):
         """Get focus manager from Vanta core."""
         try:
             focus_manager = self.vanta_core.get_component("focus_manager")
             if focus_manager:
                 return focus_manager
-            
+
             logger.warning("No focus manager found in Vanta, using fallback")
             return FallbackFocusManager()
         except Exception as e:
             logger.error(f"Error connecting to focus manager: {e}")
             return FallbackFocusManager()
-    
+
     def _get_meta_learner_from_vanta(self):
         """Get meta learner from Vanta core."""
         try:
             meta_learner = self.vanta_core.get_component("meta_learner")
             if meta_learner:
                 return meta_learner
-            
+
             logger.warning("No meta learner found in Vanta, using fallback")
             return FallbackMetaLearner()
         except Exception as e:
             logger.error(f"Error connecting to meta learner: {e}")
             return FallbackMetaLearner()
+
 
 # --- Example Usage (Adapted for VantaCore) ---
 if __name__ == "__main__":

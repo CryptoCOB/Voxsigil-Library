@@ -5,7 +5,7 @@ import json
 import argparse
 from pathlib import Path
 import torch
-from torch.utils.data import Dataset, DataLoader
+from torch.utils.data import Dataset
 from transformers import (
     AutoModelForCausalLM,
     AutoTokenizer,
@@ -61,7 +61,7 @@ import json
 import argparse
 from pathlib import Path
 import torch
-from torch.utils.data import Dataset, DataLoader
+from torch.utils.data import Dataset
 from transformers import (
     AutoModelForCausalLM,
     AutoTokenizer,

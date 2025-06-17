@@ -19,7 +19,7 @@ import pickle
 import threading
 import os
 import asyncio
-from typing import TYPE_CHECKING, Any, Dict, List, Optional, Tuple, Union
+from typing import TYPE_CHECKING, Any, Optional, Union
 from collections import deque
 
 # HOLO-1.5 Cognitive Mesh Integration
@@ -35,9 +35,10 @@ try:
     HOLO_AVAILABLE = True
 except ImportError:
     # Fallback for non-HOLO environments
-    def vanta_agent(role=None, cognitive_load=0, symbolic_depth=0, capabilities=None):
+    def vanta_agent(role=None, name=None, cognitive_load=0, symbolic_depth=0, capabilities=None, **kwargs):
         def decorator(cls):
             cls._holo_role = role
+            cls._vanta_name = name or cls.__name__
             cls._holo_cognitive_load = cognitive_load
             cls._holo_symbolic_depth = symbolic_depth
             cls._holo_capabilities = capabilities or []

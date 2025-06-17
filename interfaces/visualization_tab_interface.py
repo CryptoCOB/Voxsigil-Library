@@ -7,8 +7,6 @@ Created by: GitHub Copilot
 Purpose: Encapsulated visualization interface for Dynamic GridFormer GUI
 """
 
-import sys
-from typing import Dict, List, Optional, Tuple, Any
 
 import numpy as np
 import matplotlib.pyplot as plt
@@ -17,10 +15,9 @@ from matplotlib.figure import Figure
 from PyQt5.QtWidgets import (
     QWidget, QVBoxLayout, QHBoxLayout, QLabel, QSpinBox, QPushButton,
     QCheckBox, QGroupBox, QMessageBox, QComboBox, QSlider, QTextEdit,
-    QSplitter, QFrame, QGridLayout, QTabWidget, QScrollArea
+    QSplitter, QGridLayout
 )
 from PyQt5.QtCore import Qt, pyqtSignal, QTimer
-from PyQt5.QtGui import QFont, QPalette
 
 
 class VoxSigilStyles:

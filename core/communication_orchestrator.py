@@ -7,9 +7,8 @@ control while delegating to LMStudio/Ollama for specialized tasks.
 """
 
 import logging
-import asyncio
 import time
-from typing import Dict, Any, List, Optional, AsyncIterator, Union
+from typing import Dict, Any, Optional
 from dataclasses import dataclass
 
 # HOLO-1.5 Recursive Symbolic Cognition Mesh imports

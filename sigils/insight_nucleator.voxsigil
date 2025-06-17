@@ -179,7 +179,7 @@ metadata:
   definition_status: experimental
   author_agent_id: VANTA.⟠∆∇𓂀𐑒
   created_timestamp: '2025-05-11T11:35:00Z'
-  last_updated_timestamp: '2025-05-11T11:35:00Z'
+  last_updated_timestamp: '2025-06-13T05:40:40.617914Z'
   authorship_context:
     motivation: To model and facilitate the conditions that lead to 'Aha!' moments
       or sudden insights, enabling AI to achieve more profound conceptual breakthroughs
@@ -210,6 +210,11 @@ metadata:
     - How can an AI be trained to become better at recognizing and articulating its
       own nascent insights?
     - Can this process be scaled or parallelized effectively?
+  schema_version: 1.5-holo-alpha
+  impact_and_usage_metrics_profile:
+    avg_completion_time_ms_observed: UNKNOWN
+    success_rate_observed: UNKNOWN
+    complexity_rating: medium
 relationships:
 - target_sigil: 🌒DREAM_STATE
   relationship_type: uses_method_from

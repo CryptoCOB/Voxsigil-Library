@@ -25,12 +25,10 @@ Requirements:
 - Thread-safe GUI operations
 """
 
-import asyncio
 import logging
 import importlib
 import sys
-from typing import Dict, Any, Optional, List, Callable, Union
-from pathlib import Path
+from typing import Dict, Any
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)

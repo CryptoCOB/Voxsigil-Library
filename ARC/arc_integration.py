@@ -7,18 +7,18 @@ LLM-based ARC solver in the VoxSigil system.
 """
 
 import logging
+
+# --- Robust import for GridFormerConnector ---
+import os
+import sys
 import time
-from typing import Dict, List, Any, Optional
+from typing import Any, Dict, List, Optional
 
 import numpy as np
 import torch
 
 # Import VoxSigil ARC components
 from .arc_reasoner import ARCReasoner
-
-# --- Robust import for GridFormerConnector ---
-import os
-import sys
 
 GRIDFORMER_CORE_DIR = os.path.abspath(
     os.path.join(os.path.dirname(__file__), "..", "..", "Gridformer", "core")
@@ -27,11 +27,9 @@ if GRIDFORMER_CORE_DIR not in sys.path:
     sys.path.insert(0, GRIDFORMER_CORE_DIR)
 
 try:
-    from Gridformer.core.vantacore_grid_connector import GridFormerConnector
+    from core.vantacore_grid_connector import GridFormerConnector
 except ImportError as e:
-    logging.error(
-        f"Could not import GridFormerConnector from {GRIDFORMER_CORE_DIR}: {e}"
-    )
+    logging.error(f"Could not import GridFormerConnector from {GRIDFORMER_CORE_DIR}: {e}")
     raise
 
 logger = logging.getLogger("VoxSigil.ARC.Integration")
@@ -204,9 +202,7 @@ class HybridARCSolver:
 
         # Check for complex reasoning (favor LLM)
         if self._needs_complex_reasoning(train_pairs):
-            logger.info(
-                f"Task {task_id} likely needs complex reasoning, favoring LLM approach"
-            )
+            logger.info(f"Task {task_id} likely needs complex reasoning, favoring LLM approach")
             return "llm" if not self.prefer_neural_net else "hybrid"
 
         # Default to hybrid
@@ -295,15 +291,11 @@ class HybridARCSolver:
         )
 
         # Compare and select the best prediction
-        neural_prediction = neural_result.get("predictions", [{}])[0].get(
-            "predicted_grid", []
-        )
+        neural_prediction = neural_result.get("predictions", [{}])[0].get("predicted_grid", [])
         llm_prediction = llm_result.get("solution_grid", [])
 
         # Simple ensemble: if predictions match, high confidence
-        predictions_match = np.array_equal(
-            np.array(neural_prediction), np.array(llm_prediction)
-        )
+        predictions_match = np.array_equal(np.array(neural_prediction), np.array(llm_prediction))
 
         # Create combined result
         combined_result = {
@@ -321,15 +313,11 @@ class HybridARCSolver:
             ],
         }
 
-        logger.info(
-            f"Hybrid solution for task {task_id}, predictions match: {predictions_match}"
-        )
+        logger.info(f"Hybrid solution for task {task_id}, predictions match: {predictions_match}")
         return combined_result
 
 
-def integrate_with_vantacore(
-    vantacore_instance, model_path: Optional[str] = None
-) -> None:
+def integrate_with_vantacore(vantacore_instance, model_path: Optional[str] = None) -> None:
     """
     Integrate GRID-Former with VantaCore.
 
@@ -387,7 +375,5 @@ if __name__ == "__main__":
         f"Neural network result: {neural_result.get('predictions', [{}])[0].get('predicted_grid')}"
     )
     print(f"LLM result: {llm_result.get('predicted_grid')}")
-    print(
-        f"Hybrid result: {hybrid_result.get('predictions', [{}])[0].get('predicted_grid')}"
-    )
+    print(f"Hybrid result: {hybrid_result.get('predictions', [{}])[0].get('predicted_grid')}")
     print(f"Usage statistics: {solver.stats}")

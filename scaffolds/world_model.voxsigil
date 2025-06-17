@@ -189,7 +189,7 @@ metadata:
   definition_status: active
   author_agent_id: VANTA.⟠∆∇𓂀𐑒
   created_timestamp: '2025-05-11T12:25:00Z'
-  last_updated_timestamp: '2025-05-11T12:25:00Z'
+  last_updated_timestamp: '2025-06-13T05:40:40.617914Z'
   authorship_context:
     motivation: To define a robust and flexible scaffold for how an AI represents
       and reasons about its world, enabling deeper situational awareness and more
@@ -223,6 +223,11 @@ metadata:
       and reasoning?
     - Can an AI learn to 'debug' its own world model when it detects significant discrepancies
       with reality?
+  schema_version: 1.5-holo-alpha
+  impact_and_usage_metrics_profile:
+    avg_completion_time_ms_observed: UNKNOWN
+    success_rate_observed: UNKNOWN
+    complexity_rating: medium
 relationships:
 - target_sigil: ✧👁️‍🗨️☞PAC_LOOP
   relationship_type: is_a_core_component_of_and_updated_by

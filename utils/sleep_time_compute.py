@@ -22,7 +22,7 @@ import time
 from collections import deque  # Removed defaultdict as it wasn't used
 from datetime import datetime, timezone
 from enum import Enum
-from typing import Any, Callable, Optional, Union, Deque  # Added Deque
+from typing import Any, Callable, Optional, Union  # Added Deque
 
 # Safe imports with fallbacks
 try:

@@ -11,7 +11,7 @@ Legacy wrapper for backward compatibility - use Vanta.interfaces directly.
 """
 
 import logging
-from abc import ABC, abstractmethod
+from abc import abstractmethod
 from pathlib import Path
 from typing import List, Dict, Any, Optional
 

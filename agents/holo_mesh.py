@@ -8,7 +8,7 @@ quantization and LoRA adapter fusion.
 """
 
 from dataclasses import dataclass, field
-from typing import Dict, List, Any, Callable, Coroutine
+from typing import Dict, List, Any
 
 import asyncio
 import logging

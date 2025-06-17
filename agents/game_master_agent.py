@@ -1,10 +1,8 @@
 from __future__ import annotations
-import os
 from .base import BaseAgent, vanta_agent, CognitiveMeshRole
 from services.game_state_store import GameStateStore
 from services.dice_roller_service import DiceRollerService
 from services.inventory_manager import InventoryManager
-from rules import rolls
 
 @vanta_agent(name="GameMasterAgent", subsystem="tabletop", mesh_role=CognitiveMeshRole.PLANNER)
 class GameMasterAgent(BaseAgent):

@@ -14,7 +14,6 @@ import os
 import itertools
 import subprocess
 import time
-from pathlib import Path
 from datetime import datetime
 
 # Configure logging

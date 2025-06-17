@@ -19,44 +19,62 @@ HOLO-1.5 Recursive Symbolic Cognition Mesh Integration:
 
 import asyncio
 import logging
-import time
 import threading
-import numpy as np  # For variance calculation
+import time
 from typing import Any, Optional
+
+import numpy as np  # For variance calculation
 
 # HOLO-1.5 Cognitive Mesh Integration
 try:
-    from ..agents.base import vanta_agent, CognitiveMeshRole, BaseAgent
+    from ..agents.base import BaseAgent, CognitiveMeshRole, vanta_agent
+
     HOLO_AVAILABLE = True
-    
+
     # Define VantaAgentCapability locally as it's not in a centralized location
     class VantaAgentCapability:
         ADAPTIVE_CONTROL = "adaptive_control"
         ENTROPY_MONITORING = "entropy_monitoring"
         BRIDGE_COORDINATION = "bridge_coordination"
-        
+
 except ImportError:
     # Fallback for non-HOLO environments
-    def vanta_agent(role=None, cognitive_load=0, symbolic_depth=0, capabilities=None):
+    def vanta_agent(
+        name=None,
+        subsystem=None,
+        mesh_role=None,
+        role=None,
+        cognitive_load=0,
+        symbolic_depth=0,
+        capabilities=None,
+        **kwargs,
+    ):
         def decorator(cls):
+            cls._holo_name = name
+            cls._holo_subsystem = subsystem
+            cls._holo_mesh_role = mesh_role
             cls._holo_role = role
+            cls._vanta_name = name or cls.__name__
             cls._holo_cognitive_load = cognitive_load
             cls._holo_symbolic_depth = symbolic_depth
             cls._holo_capabilities = capabilities or []
+            for key, value in kwargs.items():
+                setattr(cls, f"_holo_{key}", value)
             return cls
+
         return decorator
-    
+
     class CognitiveMeshRole:
         PROCESSOR = "PROCESSOR"
-    
+
     class VantaAgentCapability:
         ADAPTIVE_CONTROL = "adaptive_control"
         ENTROPY_MONITORING = "entropy_monitoring"
         BRIDGE_COORDINATION = "bridge_coordination"
-    
+
     class BaseAgent:
         pass
-    
+
     HOLO_AVAILABLE = False
 
 # Assuming art_logger is in the same directory or properly pathed
@@ -94,15 +112,15 @@ except ImportError:
         VantaAgentCapability.BRIDGE_COORDINATION,
         "entropy_pattern_bridging",
         "adaptive_vigilance_control",
-        "cognitive_stability_monitoring"
+        "cognitive_stability_monitoring",
     ],
     cognitive_load=3.0,
-    symbolic_depth=3
+    symbolic_depth=3,
 )
 class ArtEntropyBridge(BaseAgent if HOLO_AVAILABLE else object):
     """
     Bridge component that connects an ARTController with an EntropyGuardian system.
-    
+
     Enhanced with HOLO-1.5 Recursive Symbolic Cognition Mesh:
     - Entropy-pattern correlation analysis with cognitive load monitoring
     - Adaptive vigilance control with symbolic depth tracking
@@ -127,9 +145,7 @@ class ArtEntropyBridge(BaseAgent if HOLO_AVAILABLE else object):
             logger_instance: Optional logger instance.
         """
         self.logger = (
-            logger_instance
-            if logger_instance
-            else get_art_logger("voxsigil.art.entropy_bridge")
+            logger_instance if logger_instance else get_art_logger("voxsigil.art.entropy_bridge")
         )
         self.config = config or {}
         self.art_controller = art_controller
@@ -144,7 +160,7 @@ class ArtEntropyBridge(BaseAgent if HOLO_AVAILABLE else object):
                 "entropy_correlation": 0.0,
                 "vigilance_stability": 1.0,
                 "cognitive_load": 3.0,
-                "symbolic_depth": 3
+                "symbolic_depth": 3,
             }
             # Schedule async initialization
             try:
@@ -174,9 +190,7 @@ class ArtEntropyBridge(BaseAgent if HOLO_AVAILABLE else object):
             self.config.get("enabled", True) if self.enabled else False
         )  # Ensure self.enabled reflects component availability
         self.active = False
-        self.lock = (
-            threading.RLock()
-        )  # Changed to RLock for re-entrant scenarios if any
+        self.lock = threading.RLock()  # Changed to RLock for re-entrant scenarios if any
 
         self.adaptation_interval = self.config.get("adaptation_interval_seconds", 60)
         self.min_vigilance = self.config.get("min_vigilance", 0.3)
@@ -214,31 +228,31 @@ class ArtEntropyBridge(BaseAgent if HOLO_AVAILABLE else object):
         """
         if not HOLO_AVAILABLE:
             return
-            
+
         try:
             # Initialize cognitive mesh connection
             await self.initialize_vanta_core()
-            
+
             # Register bridge capabilities with cognitive mesh
             await self.register_bridge_capabilities()
-            
+
             # Initialize entropy correlation tracking
             self.cognitive_metrics["entropy_correlation"] = 0.0
             self.cognitive_metrics["bridge_coherence"] = 1.0
-            
+
             # Start cognitive monitoring
             await self.start_cognitive_monitoring()
-            
+
             self._vanta_initialized = True
             self.logger.info("ArtEntropyBridge HOLO-1.5 cognitive mesh initialization complete")
-            
+
         except Exception as e:
             self.logger.warning(f"HOLO-1.5 initialization failed: {e}")
             self._vanta_initialized = False
 
     async def initialize_vanta_core(self):
         """Initialize VantaCore connection for cognitive mesh"""
-        if hasattr(super(), 'initialize_vanta_core'):
+        if hasattr(super(), "initialize_vanta_core"):
             await super().initialize_vanta_core()
 
     async def register_bridge_capabilities(self):
@@ -247,36 +261,31 @@ class ArtEntropyBridge(BaseAgent if HOLO_AVAILABLE else object):
             "entropy_pattern_bridging": {
                 "entropy_sensitivity": self.entropy_sensitivity,
                 "vigilance_range": (self.min_vigilance, self.max_vigilance),
-                "adaptation_interval": self.adaptation_interval
+                "adaptation_interval": self.adaptation_interval,
             },
             "adaptive_vigilance_control": {
                 "threshold": self.significant_change_threshold,
                 "stability_tracking": True,
-                "real_time_adjustment": True
+                "real_time_adjustment": True,
             },
             "cognitive_stability_monitoring": {
                 "bridge_coherence": True,
                 "correlation_analysis": True,
-                "cross_system_coordination": True
-            }
+                "cross_system_coordination": True,
+            },
         }
-        
-        if hasattr(self, 'register_capabilities'):
+
+        if hasattr(self, "register_capabilities"):
             await self.register_capabilities(capabilities)
 
     async def start_cognitive_monitoring(self):
         """Start monitoring cognitive load and bridge performance"""
-        if hasattr(self, 'start_monitoring'):
+        if hasattr(self, "start_monitoring"):
             await self.start_monitoring()
 
     def _start_adaptation_thread(self):
-        if (
-            not hasattr(self, "adaptation_thread")
-            or not self.adaptation_thread.is_alive()
-        ):
-            self.adaptation_thread = threading.Thread(
-                target=self._adaptation_loop, daemon=True
-            )
+        if not hasattr(self, "adaptation_thread") or not self.adaptation_thread.is_alive():
+            self.adaptation_thread = threading.Thread(target=self._adaptation_loop, daemon=True)
             self.adaptation_thread.start()
             self.logger.debug("ArtEntropyBridge adaptation thread started.")
         else:
@@ -317,9 +326,7 @@ class ArtEntropyBridge(BaseAgent if HOLO_AVAILABLE else object):
             ):
                 try:
                     self.entropy_guardian.connect_to_art_controller(self.art_controller)
-                    self.logger.info(
-                        "Entropy monitor successfully connected to ARTController."
-                    )
+                    self.logger.info("Entropy monitor successfully connected to ARTController.")
                 except Exception as e:
                     self.logger.error(
                         f"Failed to connect EntropyGuardian to ARTController: {e}",
@@ -334,9 +341,7 @@ class ArtEntropyBridge(BaseAgent if HOLO_AVAILABLE else object):
                 self._perform_adaptation_cycle()  # Perform initial adaptation
                 self.logger.info("Initial adaptation cycle completed upon activation.")
             except Exception as e:
-                self.logger.error(
-                    f"Error during initial adaptation cycle: {e}", exc_info=True
-                )
+                self.logger.error(f"Error during initial adaptation cycle: {e}", exc_info=True)
                 self.stats["errors_in_adaptation"] += 1
 
             self.active = True
@@ -382,7 +387,7 @@ class ArtEntropyBridge(BaseAgent if HOLO_AVAILABLE else object):
             return
 
         cycle_start_time = time.time()
-        
+
         try:
             entropy_state = self.entropy_guardian.get_status()
             total_entropy = entropy_state.get(
@@ -393,9 +398,7 @@ class ArtEntropyBridge(BaseAgent if HOLO_AVAILABLE else object):
             art_stats = self.art_controller.get_statistics()
             current_vigilance = art_stats.get(
                 "vigilance",
-                self.art_controller.vigilance
-                if hasattr(self.art_controller, "vigilance")
-                else 0.5,
+                self.art_controller.vigilance if hasattr(self.art_controller, "vigilance") else 0.5,
             )
             avg_resonance = art_stats.get(
                 "avg_resonance",
@@ -408,18 +411,20 @@ class ArtEntropyBridge(BaseAgent if HOLO_AVAILABLE else object):
             self.stats["last_adaptation_time"] = time.time()
 
             # HOLO-1.5 Cognitive Metrics: Calculate entropy correlation
-            if hasattr(self, 'cognitive_metrics'):
+            if hasattr(self, "cognitive_metrics"):
                 prev_entropy = self.cognitive_metrics.get("last_entropy", 0.5)
                 entropy_change = abs(total_entropy - prev_entropy)
-                vigilance_change = abs(current_vigilance - self.cognitive_metrics.get("last_vigilance", 0.5))
-                
+                vigilance_change = abs(
+                    current_vigilance - self.cognitive_metrics.get("last_vigilance", 0.5)
+                )
+
                 # Correlation between entropy and vigilance changes
                 if entropy_change > 0.01:  # Significant entropy change
                     correlation = 1.0 - min(abs(entropy_change - vigilance_change), 1.0)
                     self.cognitive_metrics["entropy_correlation"] = (
                         self.cognitive_metrics["entropy_correlation"] * 0.9 + correlation * 0.1
                     )
-                
+
                 self.cognitive_metrics["last_entropy"] = total_entropy
                 self.cognitive_metrics["last_vigilance"] = current_vigilance
 
@@ -435,19 +440,14 @@ class ArtEntropyBridge(BaseAgent if HOLO_AVAILABLE else object):
                 target_vigilance_adjustment = entropy_delta * dimension_factor * 0.5
 
             target_vigilance = current_vigilance * (1 + target_vigilance_adjustment)
-            target_vigilance = max(
-                self.min_vigilance, min(self.max_vigilance, target_vigilance)
-            )
+            target_vigilance = max(self.min_vigilance, min(self.max_vigilance, target_vigilance))
 
             adaptation_made = False
-            if (
-                abs(target_vigilance - current_vigilance)
-                > self.significant_change_threshold
-            ):
+            if abs(target_vigilance - current_vigilance) > self.significant_change_threshold:
                 self.art_controller.set_vigilance(target_vigilance)
                 self.stats["vigilance_adjustments"] += 1
                 adaptation_made = True
-                
+
                 adjustment_info = {
                     "old_vigilance": round(current_vigilance, 4),
                     "new_vigilance": round(target_vigilance, 4),
@@ -458,12 +458,15 @@ class ArtEntropyBridge(BaseAgent if HOLO_AVAILABLE else object):
                 self.logger.info(
                     f"Adjusted ART vigilance: {adjustment_info['old_vigilance']} -> {adjustment_info['new_vigilance']} (entropy: {adjustment_info['entropy_level']}, dimension: {critical_dimension})"
                 )
-                
+
                 # HOLO-1.5: Update vigilance stability metric
-                if hasattr(self, 'cognitive_metrics'):
-                    stability_change = abs(target_vigilance - current_vigilance) / self.significant_change_threshold
-                    self.cognitive_metrics["vigilance_stability"] = max(0.0, 
-                        self.cognitive_metrics["vigilance_stability"] - stability_change * 0.1
+                if hasattr(self, "cognitive_metrics"):
+                    stability_change = (
+                        abs(target_vigilance - current_vigilance)
+                        / self.significant_change_threshold
+                    )
+                    self.cognitive_metrics["vigilance_stability"] = max(
+                        0.0, self.cognitive_metrics["vigilance_stability"] - stability_change * 0.1
                     )
 
             # Report resonance patterns to EntropyGuardian
@@ -477,37 +480,41 @@ class ArtEntropyBridge(BaseAgent if HOLO_AVAILABLE else object):
                 )
 
             # HOLO-1.5: Calculate adaptation efficiency
-            if hasattr(self, 'cognitive_metrics'):
+            if hasattr(self, "cognitive_metrics"):
                 cycle_duration = time.time() - cycle_start_time
                 efficiency = 1.0 / max(cycle_duration, 0.001)  # Higher efficiency for faster cycles
                 if adaptation_made:
                     efficiency *= 1.5  # Bonus for productive cycles
-                
+
                 self.cognitive_metrics["adaptation_efficiency"] = (
                     self.cognitive_metrics["adaptation_efficiency"] * 0.8 + efficiency * 0.2
                 )
-                
+
                 # Update bridge coherence based on system stability
                 coherence = (
-                    self.cognitive_metrics["entropy_correlation"] * 0.4 +
-                    self.cognitive_metrics["vigilance_stability"] * 0.3 +
-                    min(self.cognitive_metrics["adaptation_efficiency"] / 10.0, 1.0) * 0.3
+                    self.cognitive_metrics["entropy_correlation"] * 0.4
+                    + self.cognitive_metrics["vigilance_stability"] * 0.3
+                    + min(self.cognitive_metrics["adaptation_efficiency"] / 10.0, 1.0) * 0.3
                 )
                 self.cognitive_metrics["bridge_coherence"] = coherence
 
             # HOLO-1.5: Generate cognitive trace
-            if HOLO_AVAILABLE and hasattr(self, 'generate_cognitive_trace'):
+            if HOLO_AVAILABLE and hasattr(self, "generate_cognitive_trace"):
                 trace_data = self._generate_adaptation_trace(
-                    total_entropy, current_vigilance, target_vigilance, adaptation_made, cycle_duration
+                    total_entropy,
+                    current_vigilance,
+                    target_vigilance,
+                    adaptation_made,
+                    cycle_duration,
                 )
                 self.generate_cognitive_trace(trace_data)
 
         except Exception as e:
             self.logger.error(f"Error during adaptation cycle: {e}", exc_info=True)
             self.stats["errors_in_adaptation"] += 1
-            
+
             # HOLO-1.5: Reduce bridge coherence on errors
-            if hasattr(self, 'cognitive_metrics'):
+            if hasattr(self, "cognitive_metrics"):
                 self.cognitive_metrics["bridge_coherence"] *= 0.9
 
     def _get_dimension_factor(self, dimension: str) -> float:
@@ -520,9 +527,7 @@ class ArtEntropyBridge(BaseAgent if HOLO_AVAILABLE else object):
             "default": 0.6,
         }
         factor = (
-            dimension_sensitivity.get(
-                dimension.lower(), dimension_sensitivity["default"]
-            )
+            dimension_sensitivity.get(dimension.lower(), dimension_sensitivity["default"])
             * self.entropy_sensitivity
         )
         return factor
@@ -547,17 +552,13 @@ class ArtEntropyBridge(BaseAgent if HOLO_AVAILABLE else object):
         ):
             recent_resonance = list(self.art_controller.recent_resonance)  # Make a copy
             if len(recent_resonance) > 1:
-                resonance_variance = float(
-                    np.var(recent_resonance)
-                )  # np import needed at top
+                resonance_variance = float(np.var(recent_resonance))  # np import needed at top
 
         try:
             self.entropy_guardian.update_system_entropy(
                 efficiency_metrics={
                     "task_completion_rate": round(avg_resonance, 4),
-                    "resource_utilization": round(
-                        max(0.1, min(0.9, 0.5 + resonance_variance)), 4
-                    ),
+                    "resource_utilization": round(max(0.1, min(0.9, 0.5 + resonance_variance)), 4),
                     "execution_time_factor": round(
                         self._calculate_resonance_trend(recent_resonance), 4
                     ),
@@ -589,18 +590,14 @@ class ArtEntropyBridge(BaseAgent if HOLO_AVAILABLE else object):
         recent_avg = sum(recent_slice) / len(recent_slice)
         older_avg = sum(older_slice) / len(older_slice)
 
-        trend_diff = (
-            recent_avg - older_avg
-        )  # Positive if improving, negative if declining
+        trend_diff = recent_avg - older_avg  # Positive if improving, negative if declining
         # Convert to a factor: <1 improving, >1 declining
         # Max change capped to e.g., 0.5 (factor 0.5 or 1.5)
         trend_factor = 1.0 - np.clip(trend_diff, -0.5, 0.5)
         return trend_factor
 
     def notify_goal_change(self, goal_data: dict[str, Any]) -> None:
-        if (
-            not self.active or not self.art_controller
-        ):  # Check for art_controller directly
+        if not self.active or not self.art_controller:  # Check for art_controller directly
             self.logger.debug(
                 "Goal change notification ignored: bridge inactive or ARTController invalid."
             )
@@ -618,9 +615,7 @@ class ArtEntropyBridge(BaseAgent if HOLO_AVAILABLE else object):
             art_stats = self.art_controller.get_statistics()
             current_vigilance = art_stats.get(
                 "vigilance",
-                self.art_controller.vigilance
-                if hasattr(self.art_controller, "vigilance")
-                else 0.5,
+                self.art_controller.vigilance if hasattr(self.art_controller, "vigilance") else 0.5,
             )
 
             if drift > 0.4:  # Significant drift
@@ -657,7 +652,7 @@ class ArtEntropyBridge(BaseAgent if HOLO_AVAILABLE else object):
     def get_status(self) -> dict[str, Any]:
         """Return status information including HOLO-1.5 cognitive metrics."""
         uptime = time.time() - self.stats["start_time"]
-        
+
         status = {
             "active": self.active,
             "enabled": self.enabled,
@@ -671,15 +666,17 @@ class ArtEntropyBridge(BaseAgent if HOLO_AVAILABLE else object):
                 "significant_change_threshold": self.significant_change_threshold,
             },
         }
-        
+
         # Add HOLO-1.5 cognitive metrics if available
-        if hasattr(self, 'cognitive_metrics') and self.cognitive_metrics:
+        if hasattr(self, "cognitive_metrics") and self.cognitive_metrics:
             status["cognitive_metrics"] = self.cognitive_metrics.copy()
-            status["holo_mesh_initialized"] = getattr(self, '_vanta_initialized', False)
-        
+            status["holo_mesh_initialized"] = getattr(self, "_vanta_initialized", False)
+
         return status
 
-    def _generate_adaptation_trace(self, entropy_level, current_vigilance, target_vigilance, adaptation_made, cycle_duration):
+    def _generate_adaptation_trace(
+        self, entropy_level, current_vigilance, target_vigilance, adaptation_made, cycle_duration
+    ):
         """
         Generate HOLO-1.5 cognitive trace for adaptation events
         """
@@ -691,53 +688,56 @@ class ArtEntropyBridge(BaseAgent if HOLO_AVAILABLE else object):
                 "current_vigilance": round(current_vigilance, 4),
                 "target_vigilance": round(target_vigilance, 4),
                 "adaptation_made": adaptation_made,
-                "cycle_duration": round(cycle_duration, 4)
+                "cycle_duration": round(cycle_duration, 4),
             },
-            "cognitive_metrics": self.cognitive_metrics.copy() if hasattr(self, 'cognitive_metrics') else {},
+            "cognitive_metrics": self.cognitive_metrics.copy()
+            if hasattr(self, "cognitive_metrics")
+            else {},
             "bridge_state": {
                 "active": self.active,
                 "enabled": self.enabled,
-                "adaptation_interval": self.adaptation_interval
-            }
+                "adaptation_interval": self.adaptation_interval,
+            },
         }
 
     def _calculate_cognitive_load(self):
         """Calculate current cognitive processing load"""
         base_load = 3.0
-        
+
         # Increase load based on adaptation frequency
         adaptation_rate = self.stats.get("vigilance_adjustments", 0) / max(
-            (time.time() - self.stats["start_time"]) / 3600, 0.1  # per hour
+            (time.time() - self.stats["start_time"]) / 3600,
+            0.1,  # per hour
         )
         adaptation_load = min(adaptation_rate / 10.0, 2.0)
-        
+
         # Increase load based on error rate
         error_rate = self.stats.get("errors_in_adaptation", 0) / max(
             self.stats.get("vigilance_adjustments", 1), 1
         )
         error_load = error_rate * 1.5
-        
+
         total_load = base_load + adaptation_load + error_load
-        
-        if hasattr(self, 'cognitive_metrics'):
+
+        if hasattr(self, "cognitive_metrics"):
             self.cognitive_metrics["cognitive_load"] = min(total_load, 8.0)
-        
+
         return min(total_load, 8.0)
 
     def _calculate_symbolic_depth(self):
         """Calculate symbolic processing depth"""
         base_depth = 3
-        
+
         # Depth increases with system complexity
-        if hasattr(self, 'cognitive_metrics'):
+        if hasattr(self, "cognitive_metrics"):
             correlation_depth = min(self.cognitive_metrics.get("entropy_correlation", 0) * 2, 2)
             coherence_depth = min(self.cognitive_metrics.get("bridge_coherence", 0) * 2, 2)
-            
+
             total_depth = base_depth + correlation_depth + coherence_depth
             self.cognitive_metrics["symbolic_depth"] = min(total_depth, 6)
-            
+
             return min(total_depth, 6)
-        
+
         return base_depth
 
     @property
@@ -775,10 +775,7 @@ def get_art_entropy_bridge_instance(
                 "ArtEntropyBridge already exists with a different ARTController. Re-configuring."
             )
             _bridge_instance.art_controller = art_controller
-        if (
-            entropy_guardian
-            and _bridge_instance.entropy_guardian is not entropy_guardian
-        ):
+        if entropy_guardian and _bridge_instance.entropy_guardian is not entropy_guardian:
             _bridge_instance.logger.warning(
                 "ArtEntropyBridge already exists with a different EntropyGuardian. Re-configuring."
             )
@@ -827,9 +824,7 @@ if __name__ == "__main__":
 
     class MockEntropyGuardian:
         def __init__(self, logger_instance=None):
-            self.logger = logger_instance or get_art_logger(
-                "MockEntropyGuardianExample"
-            )
+            self.logger = logger_instance or get_art_logger("MockEntropyGuardianExample")
             self.total_entropy = 0.4
             self.critical_dimension = "semantic"
             self.logger.info("MockEntropyGuardian (example) initialized.")
@@ -878,12 +873,8 @@ if __name__ == "__main__":
             for i in range(3):
                 time.sleep(bridge.adaptation_interval + 1)
                 # Simulate entropy change
-                mock_entropy.total_entropy = (
-                    np.random.rand()
-                )  # Random entropy between 0 and 1
-                mock_entropy.critical_dimension = np.random.choice(
-                    ["focus", "semantic", "goal"]
-                )
+                mock_entropy.total_entropy = np.random.rand()  # Random entropy between 0 and 1
+                mock_entropy.critical_dimension = np.random.choice(["focus", "semantic", "goal"])
                 main_logger.info(
                     f"Simulated entropy change: {mock_entropy.total_entropy:.2f}, dim: {mock_entropy.critical_dimension}"
                 )

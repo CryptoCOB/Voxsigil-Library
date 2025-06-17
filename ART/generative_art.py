@@ -28,9 +28,10 @@ try:
         
 except ImportError:
     # Fallback for non-HOLO environments
-    def vanta_agent(role=None, cognitive_load=0, symbolic_depth=0, capabilities=None):
+    def vanta_agent(role=None, name=None, cognitive_load=0, symbolic_depth=0, capabilities=None, **kwargs):
         def decorator(cls):
             cls._holo_role = role
+            cls._vanta_name = name or cls.__name__
             cls._holo_cognitive_load = cognitive_load
             cls._holo_symbolic_depth = symbolic_depth
             cls._holo_capabilities = capabilities or []

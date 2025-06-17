@@ -157,12 +157,17 @@ metadata:
   definition_status: experimental
   author_agent_id: VOXSIGIL_CONVERTER_BOT_ASSISTED_BY_USER_INPUT
   created_timestamp: '2024-03-10T14:05:00Z'
-  last_updated_timestamp: '2024-03-10T14:05:00Z'
+  last_updated_timestamp: '2025-06-13T05:40:40.617914Z'
   authorship_context:
     motivation: To introduce more nuanced temporal control over AI cognition, drawing
       inspiration from biological rhythms.
     theoretical_framework: Circadian rhythms, attention decay models, phase-locked
       loops, cognitive load management.
+  schema_version: 1.5-holo-alpha
+  impact_and_usage_metrics_profile:
+    avg_completion_time_ms_observed: UNKNOWN
+    success_rate_observed: UNKNOWN
+    complexity_rating: medium
 test_criteria:
 - test_id: PULSE_BPM_EFFECT_001
   description: Verify that changing BPM affects response cadence.

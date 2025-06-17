@@ -8,15 +8,16 @@ with the BLT middleware for entropy-based selective pattern analysis.
 """
 
 import logging
-from typing import Dict, Any, List, Optional, Union, Tuple
 import time
-from .art_logger import get_art_logger
+from typing import Any, Dict, List, Optional, Tuple, Union
+
 from .art_controller import ARTManager
+from .art_logger import get_art_logger
 
 # Try to import BLT components - only importing what we need
 try:
     # Only import the SigilPatchEncoder which is actually used in this module
-    from Voxsigil_Library.VoxSigilRag.sigil_patch_encoder import SigilPatchEncoder
+    from VoxSigilRag.sigil_patch_encoder import SigilPatchEncoder
 
     # Set flag that BLT is available
     HAS_BLT = True
@@ -71,9 +72,7 @@ class ARTBLTBridge:
             except Exception as e:
                 self.blt_available = False
                 self.logger.error(f"Failed to initialize BLT components: {e}")
-                self.logger.warning(
-                    "ARTBLTBridge will operate without BLT entropy analysis"
-                )
+                self.logger.warning("ARTBLTBridge will operate without BLT entropy analysis")
         else:
             self.logger.warning(
                 "BLT components not available. ARTBLTBridge will use fallback mode."
@@ -130,16 +129,13 @@ class ARTBLTBridge:
             try:
                 # Calculate entropy using BLT's patch encoder
                 entropy_score = self.patch_encoder.compute_average_entropy(input_str)
-                should_analyze = (
-                    entropy_score >= self.entropy_threshold or force_analysis
-                )
+                should_analyze = entropy_score >= self.entropy_threshold or force_analysis
 
                 result["entropy_score"] = entropy_score
 
                 # Update stats
                 self.stats["avg_entropy"] = (
-                    self.stats["avg_entropy"]
-                    * (self.stats["total_inputs_processed"] - 1)
+                    self.stats["avg_entropy"] * (self.stats["total_inputs_processed"] - 1)
                     + entropy_score
                 ) / self.stats["total_inputs_processed"]
 
@@ -151,11 +147,7 @@ class ARTBLTBridge:
                 )
 
                 # If using BLT preprocessing, extract features for ART
-                if (
-                    should_analyze
-                    and "preprocess_input" in context
-                    and context["preprocess_input"]
-                ):
+                if should_analyze and "preprocess_input" in context and context["preprocess_input"]:
                     # Use BLT's patch-based processing to preprocess data
                     patches = self.patch_encoder.segment_into_patches(input_str)
                     if patches:
@@ -201,9 +193,7 @@ class ARTBLTBridge:
                 self.logger.error(f"Error in ART analysis: {e}")
                 result["error"] = str(e)
         else:
-            self.logger.info(
-                f"Skipped ART analysis due to low entropy: {entropy_score:.4f}"
-            )
+            self.logger.info(f"Skipped ART analysis due to low entropy: {entropy_score:.4f}")
 
         # Calculate processing time
         result["processing_time"] = time.time() - start_time
@@ -245,9 +235,7 @@ class ARTBLTBridge:
                     if entropy >= self.entropy_threshold:
                         high_entropy_batch.append(item)
                 except Exception as e:
-                    self.logger.warning(
-                        f"Error calculating entropy during batch filtering: {e}"
-                    )
+                    self.logger.warning(f"Error calculating entropy during batch filtering: {e}")
                     # Include items that caused errors to be safe
                     high_entropy_batch.append(item)
 
@@ -307,9 +295,7 @@ if __name__ == "__main__":
     if HAS_BLT:
         logger.info("BLT components are available. Initializing ARTBLTBridge...")
     else:
-        logger.info(
-            "BLT components are not available. ARTBLTBridge will use fallback mode."
-        )
+        logger.info("BLT components are not available. ARTBLTBridge will use fallback mode.")
 
     # Create bridge
     bridge = ARTBLTBridge(entropy_threshold=0.4)

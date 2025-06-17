@@ -15,14 +15,14 @@ import sys
 import asyncio
 import time
 import json
-from typing import Optional, Dict, Any, List
+from typing import Optional, Dict, Any
 
 # HOLO-1.5 Core Imports
 try:
     from ..agents.base import vanta_agent, CognitiveMeshRole, BaseAgent
 except (ImportError, ValueError):
     # Fallback for non-HOLO environments
-    def vanta_agent(role):
+    def vanta_agent(role=None, name=None, **kwargs):
         def decorator(cls):
             return cls
         return decorator
@@ -184,22 +184,53 @@ class ARTLogger(BaseAgent):
                     description,
                     self
                 )
-    
     async def start_cognitive_monitoring(self):
         """Start background cognitive monitoring and adaptive logging"""
         async def monitor_loop():
-            while True:
-                await asyncio.sleep(60)  # Monitor every minute
-                self._update_cognitive_metrics()
-                self._adapt_logging_behavior()
-                
-                # Generate cognitive trace for mesh learning
-                if self.vanta_core:
-                    trace = self._generate_cognitive_trace()
-                    await self.vanta_core.emit_cognitive_trace(trace)
+            try:
+                while not getattr(self, '_shutdown_requested', False):
+                    await asyncio.sleep(60)  # Monitor every minute
+                    
+                    if getattr(self, '_shutdown_requested', False):
+                        break
+                        
+                    self._update_cognitive_metrics()
+                    self._adapt_logging_behavior()
+                    
+                    # Generate cognitive trace for mesh learning
+                    if self.vanta_core:
+                        try:
+                            trace = self._generate_cognitive_trace()
+                            await self.vanta_core.emit_cognitive_trace(trace)
+                        except Exception as e:
+                            logger.error(f"Error emitting cognitive trace: {e}")
+                            
+            except asyncio.CancelledError:
+                logger.info("Cognitive monitoring cancelled")
+                raise
+            except Exception as e:
+                logger.error(f"Error in cognitive monitoring loop: {e}", exc_info=True)
         
         task = asyncio.create_task(monitor_loop())
         self._background_tasks.append(task)
+    
+    async def shutdown(self):
+        """Gracefully shutdown the ART logger"""
+        self._shutdown_requested = True
+        
+        # Cancel all background tasks
+        for task in self._background_tasks:
+            if not task.done():
+                task.cancel()
+                try:
+                    await task
+                except asyncio.CancelledError:
+                    pass
+                except Exception as e:
+                    logger.error(f"Error cancelling background task: {e}")
+        
+        self._background_tasks.clear()
+        logger.info("ART logger shutdown complete")
     
     def _update_cognitive_metrics(self):
         """Update real-time cognitive metrics"""

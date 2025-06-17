@@ -14,21 +14,21 @@ HOLO-1.5 Enhanced Iterative Grid Processing Synthesizer:
 """
 
 import logging
-from typing import Dict, Any, Optional, List, Tuple
 import time
+from typing import Any, Dict, Optional
 
 import torch
 import torch.nn as nn
 
-# HOLO-1.5 Recursive Symbolic Cognition Mesh imports
-from .base import BaseCore, vanta_core_module, CognitiveMeshRole
-
 # Import from Voxsigil_Library structure
-from Gridformer.core.grid_former import (
+from core.grid_former import (
     HIDDEN_DIM,
     NUM_COLORS,
     GRID_Former,
 )
+
+# HOLO-1.5 Recursive Symbolic Cognition Mesh imports
+from .base import BaseCore, CognitiveMeshRole, vanta_core_module
 
 logger = logging.getLogger(__name__)
 
@@ -43,7 +43,7 @@ logger = logging.getLogger(__name__)
         "multi_step_synthesis",
         "cognitive_pattern_refinement",
         "adaptive_reasoning_depth",
-        "neural_symbolic_iteration"
+        "neural_symbolic_iteration",
     ],
     cognitive_load=4.5,
     symbolic_depth=4,
@@ -51,8 +51,8 @@ logger = logging.getLogger(__name__)
         "iterative_synthesis",
         "multi_step_reasoning",
         "cognitive_refinement",
-        "adaptive_processing"
-    ]
+        "adaptive_processing",
+    ],
 )
 class IterativeGridFormer(BaseCore, GRID_Former):
     """
@@ -89,7 +89,7 @@ class IterativeGridFormer(BaseCore, GRID_Former):
         """
         # Initialize BaseCore first
         BaseCore.__init__(self, vanta_core, config or {})
-        
+
         # Initialize GRID_Former
         GRID_Former.__init__(
             self,
@@ -107,9 +107,9 @@ class IterativeGridFormer(BaseCore, GRID_Former):
             "iteration_complexity": 0.0,
             "reasoning_depth": 0.0,
             "synthesis_efficiency": 0.0,
-            "convergence_rate": 0.0
+            "convergence_rate": 0.0,
         }
-        
+
         self.reasoning_traces = []
         self.iteration_history = []
 
@@ -135,26 +135,26 @@ class IterativeGridFormer(BaseCore, GRID_Former):
         """Initialize HOLO-1.5 iterative reasoning capabilities."""
         try:
             logger.info("🔄 Initializing HOLO-1.5 Iterative GridFormer...")
-            
+
             # Initialize cognitive processing
             self.cognitive_metrics["iteration_complexity"] = 1.0
             self.cognitive_metrics["reasoning_depth"] = float(self.num_iterations)
-            
+
             # Register with VantaCore if available
-            if hasattr(self.vanta_core, 'register_component'):
+            if hasattr(self.vanta_core, "register_component"):
                 await self.vanta_core.register_component(
                     "iterative_gridformer",
                     self,
                     {
                         "type": "neural_symbolic_synthesizer",
                         "iterations": self.num_iterations,
-                        "cognitive_load": 4.5
-                    }
+                        "cognitive_load": 4.5,
+                    },
                 )
-            
+
             logger.info("✅ HOLO-1.5 Iterative GridFormer initialization complete")
             return True
-            
+
         except Exception as e:
             logger.error(f"❌ Error initializing Iterative GridFormer: {e}")
             return False
@@ -163,16 +163,20 @@ class IterativeGridFormer(BaseCore, GRID_Former):
         """Update cognitive metrics during iterative processing."""
         self.cognitive_metrics["iteration_complexity"] = iteration / self.num_iterations
         self.cognitive_metrics["convergence_rate"] = convergence_score
-        self.cognitive_metrics["synthesis_efficiency"] = 1.0 - (iteration / self.num_iterations) + convergence_score
+        self.cognitive_metrics["synthesis_efficiency"] = (
+            1.0 - (iteration / self.num_iterations) + convergence_score
+        )
 
-    def _generate_reasoning_trace(self, iteration: int, hidden_state: torch.Tensor, prediction: torch.Tensor) -> Dict[str, Any]:
+    def _generate_reasoning_trace(
+        self, iteration: int, hidden_state: torch.Tensor, prediction: torch.Tensor
+    ) -> Dict[str, Any]:
         """Generate symbolic reasoning trace for current iteration."""
         return {
             "iteration": iteration,
             "hidden_state_norm": float(torch.norm(hidden_state).item()),
             "prediction_confidence": float(torch.softmax(prediction, dim=-1).max().item()),
             "cognitive_load": self.cognitive_metrics["iteration_complexity"],
-            "timestamp": time.time()
+            "timestamp": time.time(),
         }
 
     # ...existing code...

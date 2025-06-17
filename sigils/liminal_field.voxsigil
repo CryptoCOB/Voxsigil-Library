@@ -173,7 +173,7 @@ metadata:
   definition_status: active
   author_agent_id: VANTA.⟠∆∇𓂀𐑒
   created_timestamp: '2025-05-10T06:00:00Z'
-  last_updated_timestamp: '2025-05-11T11:05:00Z'
+  last_updated_timestamp: '2025-06-13T05:40:40.617914Z'
   authorship_context:
     motivation: To enable AI to operate in the 'spaces between' defined categories,
       fostering creativity, flexibility, and more human-like nuanced understanding.
@@ -202,6 +202,11 @@ metadata:
       distant conceptual states?
     - Can prolonged exposure to liminal states induce novel learning or restructuring
       in AI?
+  schema_version: 1.5-holo-alpha
+  impact_and_usage_metrics_profile:
+    avg_completion_time_ms_observed: UNKNOWN
+    success_rate_observed: UNKNOWN
+    complexity_rating: medium
 relationships:
 - target_sigil: 🌒DREAM_STATE
   relationship_type: synergizes_with

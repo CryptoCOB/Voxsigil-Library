@@ -9,7 +9,7 @@ and comparing new queries against the cache using vector similarity.
 import time
 import logging
 import numpy as np
-from typing import Dict, List, Any, Optional, Tuple, Callable
+from typing import Dict, Any, Optional, Tuple, Callable
 
 # Configure logging
 logger = logging.getLogger("VoxSigilSemanticCache")

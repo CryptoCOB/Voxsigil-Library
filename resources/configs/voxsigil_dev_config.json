@@ -1,0 +1,258 @@
+{
+  "version": "1.0",
+  "global_dev_mode": true,
+  "global_debug_logging": false,
+  "auto_save_config": true,
+  "tabs": {
+    "models": {
+      "enabled": true,
+      "dev_mode": true,
+      "auto_refresh": false,
+      "refresh_interval": 5000,
+      "debug_logging": true,
+      "show_advanced_controls": true,
+      "custom_settings": {}
+    },
+    "model_discovery": {
+      "enabled": true,
+      "dev_mode": true,
+      "auto_refresh": false,
+      "refresh_interval": 5000,
+      "debug_logging": true,
+      "show_advanced_controls": true,
+      "custom_settings": {}
+    },
+    "training": {
+      "enabled": true,
+      "dev_mode": true,
+      "auto_refresh": false,
+      "refresh_interval": 5000,
+      "debug_logging": true,
+      "show_advanced_controls": true,
+      "custom_settings": {}
+    },
+    "novel_reasoning": {
+      "enabled": true,
+      "dev_mode": true,
+      "auto_refresh": false,
+      "refresh_interval": 5000,
+      "debug_logging": true,
+      "show_advanced_controls": true,
+      "custom_settings": {}
+    },
+    "visualization": {
+      "enabled": true,
+      "dev_mode": true,
+      "auto_refresh": false,
+      "refresh_interval": 5000,
+      "debug_logging": true,
+      "show_advanced_controls": true,
+      "custom_settings": {}
+    },
+    "performance": {
+      "enabled": true,
+      "dev_mode": true,
+      "auto_refresh": false,
+      "refresh_interval": 5000,
+      "debug_logging": true,
+      "show_advanced_controls": true,
+      "custom_settings": {}
+    },
+    "gridformer": {
+      "enabled": true,
+      "dev_mode": true,
+      "auto_refresh": false,
+      "refresh_interval": 5000,
+      "debug_logging": true,
+      "show_advanced_controls": true,
+      "custom_settings": {}
+    },
+    "music": {
+      "enabled": true,
+      "dev_mode": true,
+      "auto_refresh": false,
+      "refresh_interval": 5000,
+      "debug_logging": true,
+      "show_advanced_controls": true,
+      "custom_settings": {}
+    },
+    "neural_tts": {
+      "enabled": true,
+      "dev_mode": true,
+      "auto_refresh": false,
+      "refresh_interval": 5000,
+      "debug_logging": true,
+      "show_advanced_controls": true,
+      "custom_settings": {}
+    },
+    "echo_log": {
+      "enabled": true,
+      "dev_mode": true,
+      "auto_refresh": false,
+      "refresh_interval": 5000,
+      "debug_logging": true,
+      "show_advanced_controls": true,
+      "custom_settings": {}
+    },
+    "mesh_map": {
+      "enabled": true,
+      "dev_mode": true,
+      "auto_refresh": false,
+      "refresh_interval": 5000,
+      "debug_logging": true,
+      "show_advanced_controls": true,
+      "custom_settings": {}
+    },
+    "agent_status": {
+      "enabled": true,
+      "dev_mode": true,
+      "auto_refresh": false,
+      "refresh_interval": 5000,
+      "debug_logging": true,
+      "show_advanced_controls": true,
+      "custom_settings": {}
+    },
+    "blt_rag": {
+      "enabled": true,
+      "dev_mode": true,
+      "auto_refresh": false,
+      "refresh_interval": 5000,
+      "debug_logging": true,
+      "show_advanced_controls": true,
+      "custom_settings": {}
+    },
+    "arc": {
+      "enabled": true,
+      "dev_mode": true,
+      "auto_refresh": false,
+      "refresh_interval": 5000,
+      "debug_logging": true,
+      "show_advanced_controls": true,
+      "custom_settings": {}
+    },
+    "vanta_core": {
+      "enabled": true,
+      "dev_mode": true,
+      "auto_refresh": false,
+      "refresh_interval": 5000,
+      "debug_logging": true,
+      "show_advanced_controls": true,
+      "custom_settings": {}
+    }
+  },
+  "neural_tts": {
+    "preferred_engine": "auto",
+    "voice_profile_override": null,
+    "speed_multiplier": 1.0,
+    "energy_multiplier": 1.0,
+    "pitch_adjustment": 0.0,
+    "enable_text_enhancement": true,
+    "cache_audio_files": true,
+    "max_cache_size_mb": 100,
+    "enable_voice_morphing": false,
+    "dev_show_engine_stats": true,
+    "dev_show_synthesis_time": false
+  },
+  "agents": {
+    "Nova": {
+      "enabled": true,
+      "voice_enabled": true,
+      "auto_greet_on_startup": false,
+      "status_update_interval": 1000,
+      "show_detailed_metrics": false,
+      "dev_mode_verbose": false,
+      "custom_greeting": null
+    },
+    "Aria": {
+      "enabled": true,
+      "voice_enabled": true,
+      "auto_greet_on_startup": false,
+      "status_update_interval": 1000,
+      "show_detailed_metrics": false,
+      "dev_mode_verbose": false,
+      "custom_greeting": null
+    },
+    "Kai": {
+      "enabled": true,
+      "voice_enabled": true,
+      "auto_greet_on_startup": false,
+      "status_update_interval": 1000,
+      "show_detailed_metrics": false,
+      "dev_mode_verbose": false,
+      "custom_greeting": null
+    },
+    "Echo": {
+      "enabled": true,
+      "voice_enabled": true,
+      "auto_greet_on_startup": false,
+      "status_update_interval": 1000,
+      "show_detailed_metrics": false,
+      "dev_mode_verbose": false,
+      "custom_greeting": null
+    },
+    "Sage": {
+      "enabled": true,
+      "voice_enabled": true,
+      "auto_greet_on_startup": false,
+      "status_update_interval": 1000,
+      "show_detailed_metrics": false,
+      "dev_mode_verbose": false,
+      "custom_greeting": null
+    }
+  },
+  "training": {
+    "auto_start_monitoring": false,
+    "default_batch_size": 32,
+    "default_learning_rate": 0.001,
+    "max_epochs": 100,
+    "early_stopping_patience": 10,
+    "save_checkpoints": true,
+    "checkpoint_interval": 10,
+    "dev_show_gradients": false,
+    "dev_show_loss_details": false,
+    "dev_enable_profiling": false
+  },
+  "visualization": {
+    "default_plot_theme": "dark",
+    "auto_update_plots": true,
+    "plot_update_interval": 2000,
+    "max_data_points": 1000,
+    "enable_3d_plots": true,
+    "show_grid": true,
+    "show_legends": true,
+    "dev_show_render_stats": false,
+    "dev_enable_plot_caching": true
+  },
+  "performance": {
+    "monitor_cpu": true,
+    "monitor_memory": true,
+    "monitor_gpu": true,
+    "monitor_network": false,
+    "update_interval": 1000,
+    "history_length": 300,
+    "alert_cpu_threshold": 80.0,
+    "alert_memory_threshold": 85.0,
+    "dev_detailed_metrics": false,
+    "dev_export_metrics": false
+  },
+  "music": {
+    "default_volume": 0.7,
+    "enable_visualizations": true,
+    "auto_play_on_generation": false,
+    "default_genre": "ambient",
+    "default_tempo": 120,
+    "enable_real_time_effects": false,
+    "dev_show_audio_metrics": true,
+    "dev_enable_advanced_synthesis": false
+  },
+  "gridformer": {
+    "auto_start_processing": false,
+    "default_grid_size": 64,
+    "visualization_enabled": true,
+    "real_time_updates": true,
+    "update_interval": 500,
+    "max_iterations": 1000,
+    "dev_show_internal_state": false,
+    "dev_enable_step_debugging": false
+  }
+}

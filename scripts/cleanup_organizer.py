@@ -5,7 +5,6 @@ This script moves files from the root directory to their proper organized folder
 """
 
 import logging
-import os
 import shutil
 from pathlib import Path
 

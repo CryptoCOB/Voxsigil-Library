@@ -41,36 +41,36 @@ try:
     )
 
     try:
-        from BLT.hybrid_blt import (
+        from VoxSigilRag.hybrid_blt import (
             entropy_router_util,  # noqa: F401 - Import used for availability check
         )
 
         ENTROPY_ROUTER_AVAILABLE = True
 
-            # Create a wrapper function that matches the expected interface
+        # Create a wrapper function that matches the expected interface
         def entropy_router(entropy_score, threshold=0.3):
-                """Wrapper for entropy_router_util to match expected interface"""
-                return entropy_score > threshold
+            """Wrapper for entropy_router_util to match expected interface"""
+            return entropy_score > threshold
     except ImportError:
-            ENTROPY_ROUTER_AVAILABLE = False
-
-            # Define a simple fallback entropy router
-            def entropy_router(entropy_score, threshold=0.3):
-                return entropy_score > threshold
-
-    BLT_AVAILABLE = True
-    logger.info("Successfully imported VoxSigil BLT components")
-    
-except ImportError as e:
-        BLT_AVAILABLE = False
         ENTROPY_ROUTER_AVAILABLE = False
 
-        # Fallback entropy router
+        # Define a simple fallback entropy router
         def entropy_router(entropy_score, threshold=0.3):
             return entropy_score > threshold
 
-        logger.error(f"Failed to import VoxSigil BLT components: {e}")
-        logger.warning("BLT middleware will not be available")
+    BLT_AVAILABLE = True
+    logger.info("Successfully imported VoxSigil BLT components")
+
+except ImportError as e:
+    BLT_AVAILABLE = False
+    ENTROPY_ROUTER_AVAILABLE = False
+
+    # Fallback entropy router
+    def entropy_router(entropy_score, threshold=0.3):
+        return entropy_score > threshold
+
+    logger.error(f"Failed to import VoxSigil BLT components: {e}")
+    logger.warning("BLT middleware will not be available")
 
 
 class VoxSigilBLTMiddleware:
@@ -100,9 +100,7 @@ class VoxSigilBLTMiddleware:
         self.rag_processor = None
 
         if not BLT_AVAILABLE:
-            logger.warning(
-                "BLT components are not available. Middleware will be disabled."
-            )
+            logger.warning("BLT components are not available. Middleware will be disabled.")
             return
 
         self._initialize_middleware()
@@ -135,9 +133,7 @@ class VoxSigilBLTMiddleware:
                 dtype = None
                 if torch.cuda.is_available():
                     for i in range(torch.cuda.device_count()):
-                        if (
-                            torch.cuda.get_device_capability(i)[0] >= 8
-                        ):  # Ampere or newer (BF16)
+                        if torch.cuda.get_device_capability(i)[0] >= 8:  # Ampere or newer (BF16)
                             dtype = torch.bfloat16
                             logger.info(f"Using BF16 precision (GPU {i})")
                             break
@@ -179,12 +175,8 @@ class VoxSigilBLTMiddleware:
             else:
                 # Create the directory if it doesn't exist
                 os.makedirs(self.voxsigil_library_path, exist_ok=True)
-                logger.warning(
-                    f"VoxSigil library not found at {self.voxsigil_library_path}"
-                )
-                logger.info(
-                    "BLT middleware will operate in standalone mode without RAG features"
-                )
+                logger.warning(f"VoxSigil library not found at {self.voxsigil_library_path}")
+                logger.info("BLT middleware will operate in standalone mode without RAG features")
 
         except Exception as e:
             logger.error(f"Error initializing BLT middleware: {e}")
@@ -224,9 +216,7 @@ class VoxSigilBLTMiddleware:
             if self.rag and self.rag.patch_encoder:
                 try:
                     # Use entropy router to determine if BLT enhancement should be used
-                    entropy_score = self.rag.patch_encoder.compute_average_entropy(
-                        prompt
-                    )
+                    entropy_score = self.rag.patch_encoder.compute_average_entropy(prompt)
                     should_use_blt = entropy_router(
                         entropy_score,
                         threshold=self.blt_config.get("entropy_threshold", 0.3),
@@ -245,12 +235,12 @@ class VoxSigilBLTMiddleware:
                                 context += f"{result.get('content', '')}"
 
                             # Use context to enhance prompt
-                            enhanced_prompt = f"Context information:\n{context}\n\nQuestion: {prompt}\n\nAnswer:"
+                            enhanced_prompt = (
+                                f"Context information:\n{context}\n\nQuestion: {prompt}\n\nAnswer:"
+                            )
 
                             # Generate with enhanced prompt
-                            inputs = self.tokenizer(
-                                enhanced_prompt, return_tensors="pt"
-                            )
+                            inputs = self.tokenizer(enhanced_prompt, return_tensors="pt")
                             device = next(self.model.parameters()).device
                             inputs = {k: v.to(device) for k, v in inputs.items()}
 
@@ -275,9 +265,7 @@ class VoxSigilBLTMiddleware:
                                 response,
                                 "BLT-Enhanced RAG",
                             )  # Fall through to standard generation if BLT is not needed or failed
-                    logger.info(
-                        f"Falling back to standard generation (entropy={entropy_score})"
-                    )
+                    logger.info(f"Falling back to standard generation (entropy={entropy_score})")
 
                 except Exception as e:
                     logger.error(f"Error using BLT-Enhanced RAG: {e}")
@@ -331,17 +319,13 @@ class VoxSigilBLTMiddleware:
                     # Safely unpack the tuple
                     context = result[0]
                     sigils = result[1]
-                    if hasattr(
-                        sigils, "__len__"
-                    ):  # Check if it has length (list, tuple, etc.)
+                    if hasattr(sigils, "__len__"):  # Check if it has length (list, tuple, etc.)
                         logger.info(f"Created RAG context with {len(sigils)} sigils")
                     return str(context) if context else ""
                 elif isinstance(result, str):
                     return result
                 else:
-                    logger.warning(
-                        "Unexpected return type from rag_processor.create_rag_context"
-                    )
+                    logger.warning("Unexpected return type from rag_processor.create_rag_context")
                     return ""
             return ""
         except Exception as e:

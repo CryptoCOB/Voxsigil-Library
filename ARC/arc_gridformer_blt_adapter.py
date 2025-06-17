@@ -9,7 +9,7 @@ and only attempts to integrate with the hybrid_blt system if available.
 """
 
 import logging
-from typing import Any, Tuple, Optional
+from typing import Any, Optional, Tuple
 
 import numpy as np
 
@@ -25,7 +25,7 @@ logger = logging.getLogger("ARCGridFormerAdapter")
 # Try to import from hybrid_blt.py, but don't fail if it's not available
 BLT_AVAILABLE = False
 try:
-    from BLT.hybrid_blt import (
+    from VoxSigilRag.hybrid_blt import (
         BLTEnhancedRAG,
         ByteLatentTransformerEncoder,
         HybridMiddleware,

@@ -11,14 +11,17 @@ import logging
 import threading
 import time
 import uuid
-from typing import Any, Callable, Protocol, runtime_checkable
+from typing import TYPE_CHECKING, Any, Callable, Optional, Protocol, runtime_checkable
 
+# Import unified MemoryBraidInterface
+from Vanta.interfaces.protocol_interfaces import MemoryBraidInterface
 from VoxSigilRag.voxsigil_rag_compression import RAGCompressionEngine
 
 _default_compressor = RAGCompressionEngine()
 
-# Use UnifiedVantaCore for all orchestration
-from .UnifiedVantaCore import UnifiedVantaCore as VantaCore  # VantaCore integration
+# Use TYPE_CHECKING to avoid circular imports
+if TYPE_CHECKING:
+    from Vanta.core.UnifiedVantaCore import UnifiedVantaCore
 
 # --- Logging Setup ---
 logging.basicConfig(
@@ -54,17 +57,12 @@ class ExternalEchoLayerConfig:
 # --- Interface Definitions (Protocols) ---
 @runtime_checkable
 class EchoStreamInterface(Protocol):
-    def add_source(
-        self, callback: Callable[[str, dict[str, Any]], dict[str, Any]]
-    ) -> None: ...
+    def add_source(self, callback: Callable[[str, dict[str, Any]], dict[str, Any]]) -> None: ...
     def add_sink(self, callback: Callable[[str, dict[str, Any]], None]) -> None: ...
     def emit(
-        self, channel: str, text: str | None, metadata: dict[str, Any] | None
+        self, channel: str, text: Optional[str], metadata: Optional[dict[str, Any]]
     ) -> None: ...
 
-
-# Import unified MemoryBraidInterface
-from Vanta.interfaces.protocol_interfaces import MemoryBraidInterface
 
 @runtime_checkable
 class MetaReflexLayerInterface(Protocol):
@@ -74,19 +72,32 @@ class MetaReflexLayerInterface(Protocol):
 # --- Minimal Fallback Implementations ---
 # Use minimal implementations instead of complex stubs
 
+
 class _FallbackEchoStream:
     """Minimal fallback for EchoStreamInterface."""
-    def add_source(self, cb): pass
-    def add_sink(self, cb): pass
-    def emit(self, ch, txt, meta): pass
+
+    def add_source(self, cb):
+        pass
+
+    def add_sink(self, cb):
+        pass
+
+    def emit(self, ch, txt, meta):
+        pass
+
 
 class _FallbackMetaReflexLayer:
     """Minimal fallback for MetaReflexLayerInterface."""
-    def process_echo(self, data): pass
+
+    def process_echo(self, data):
+        pass
+
 
 class _FallbackMemoryBraid:
     """Minimal fallback for MemoryBraidInterface."""
-    def imprint(self, key: str, value: Any, ttl: int | None = None): pass
+
+    def imprint(self, key: str, value: Any, ttl: Optional[int] = None):
+        pass
 
 
 class ExternalEchoLayer:
@@ -94,9 +105,9 @@ class ExternalEchoLayer:
 
     def __init__(
         self,
-        vanta_core: VantaCore,
+        vanta_core: "UnifiedVantaCore",
         config: ExternalEchoLayerConfig,
-        transcription_handler: Callable[[dict[str, Any]], None] | None = None,
+        transcription_handler: Optional[Callable[[dict[str, Any]], None]] = None,
     ):
         self.vanta_core = vanta_core
         self.config = config
@@ -109,19 +120,15 @@ class ExternalEchoLayer:
 
         self.blt = RAGCompressionEngine()
 
-        self.heartbeat_thread: threading.Thread | None = None
-        self.heartbeat_active: bool = False
-
-        # Fetch or create default dependencies
+        self.heartbeat_thread: Optional[threading.Thread] = None
+        self.heartbeat_active: bool = False  # Fetch or create default dependencies
         self.echo_stream: EchoStreamInterface = self.vanta_core.get_component(
             self.config.echo_stream_component_name, _FallbackEchoStream()
         )
-        self.meta_reflex_layer: MetaReflexLayerInterface | None = (
-            self.vanta_core.get_component(
-                self.config.meta_reflex_component_name, _FallbackMetaReflexLayer()
-            )
+        self.meta_reflex_layer: Optional[MetaReflexLayerInterface] = self.vanta_core.get_component(
+            self.config.meta_reflex_component_name, _FallbackMetaReflexLayer()
         )
-        self.memory_braid: MemoryBraidInterface | None = (
+        self.memory_braid: Optional[MemoryBraidInterface] = (
             self.vanta_core.get_component(  # Get MemoryBraid
                 self.config.memory_braid_component_name, _FallbackMemoryBraid()
             )
@@ -129,9 +136,7 @@ class ExternalEchoLayer:
 
         self._connect_to_internal_echo_stream()
 
-        self.vanta_core.register_component(
-            self.COMPONENT_NAME, self, {"id": self.component_id}
-        )
+        self.vanta_core.register_component(self.COMPONENT_NAME, self, {"id": self.component_id})
         self.vanta_core.publish_event(
             f"{self.COMPONENT_NAME}.initialized",
             self._get_init_event_data(),
@@ -149,9 +154,8 @@ class ExternalEchoLayer:
             "has_handler": self.transcription_handler is not None,
             "echo_connected": not isinstance(self.echo_stream, _FallbackEchoStream),
             "reflex_connected": self.meta_reflex_layer is not None
-            and not isinstance(self.meta_reflex_layer, _FallbackMetaReflexLayer),            
-            "memory_braid_connected": 
-                self.memory_braid is not None
+            and not isinstance(self.meta_reflex_layer, _FallbackMetaReflexLayer),
+            "memory_braid_connected": self.memory_braid is not None
             and not isinstance(self.memory_braid, _FallbackMemoryBraid),
         }
 
@@ -166,21 +170,15 @@ class ExternalEchoLayer:
                     f"{self.COMPONENT_NAME} registered with EchoStream: {type(self.echo_stream).__name__}."
                 )
             except Exception as e:
-                logger.error(
-                    f"Error connecting {self.COMPONENT_NAME} to EchoStream: {e}"
-                )
+                logger.error(f"Error connecting {self.COMPONENT_NAME} to EchoStream: {e}")
         elif isinstance(self.echo_stream, _FallbackEchoStream):
             logger.info(
                 f"{self.COMPONENT_NAME} using _FallbackEchoStream. Callbacks registered nominally."
             )
-            self.echo_stream.add_source(
-                self._echo_source_callback
-            )  # Call on stub is fine
+            self.echo_stream.add_source(self._echo_source_callback)  # Call on stub is fine
             self.echo_stream.add_sink(self._echo_sink_callback)
         else:
-            logger.warning(
-                f"{self.COMPONENT_NAME}: EchoStream not available for connection."
-            )
+            logger.warning(f"{self.COMPONENT_NAME}: EchoStream not available for connection.")
 
     def _start_heartbeat_thread(self):
         if self.heartbeat_active:
@@ -217,9 +215,7 @@ class ExternalEchoLayer:
             f"{self.COMPONENT_NAME} heartbeat thread initiated (interval: {self.config.heartbeat_interval_s}s)."
         )
 
-    def _echo_source_callback(
-        self, channel: str, message: dict[str, Any]
-    ) -> dict[str, Any]:
+    def _echo_source_callback(self, channel: str, message: dict[str, Any]) -> dict[str, Any]:
         # logger.debug(f"EEL EchoSource on '{channel}': {str(message)[:100]}...") # Too verbose for default
         return message
 
@@ -227,8 +223,7 @@ class ExternalEchoLayer:
         # logger.debug(f"EEL EchoSink on '{channel}': {str(message)[:100]}...") # Too verbose for default
         # If message comes from a specific channel EEL should react to by sending to output handlers
         if (
-            channel == self.config.echo_stream_component_name + ".output"
-            and self.active
+            channel == self.config.echo_stream_component_name + ".output" and self.active
         ):  # Example channel naming
             output_data = {
                 "text": message.get("text", message.get("content", "")),
@@ -292,9 +287,7 @@ class ExternalEchoLayer:
         self.transcription_handler = handler
         logger.info(f"{self.COMPONENT_NAME}: Transcription handler set/updated.")
 
-    def add_output_handler(
-        self, handler: Callable[[dict[str, Any]], None]
-    ):  # Same as before
+    def add_output_handler(self, handler: Callable[[dict[str, Any]], None]):  # Same as before
         if not callable(handler):
             logger.warning("Invalid output handler.")
             return
@@ -305,9 +298,7 @@ class ExternalEchoLayer:
             f"{self.COMPONENT_NAME}: Output handler added: {getattr(handler, '__name__', 'unnamed_handler')}"
         )
 
-    def remove_output_handler(
-        self, handler: Callable[[dict[str, Any]], None]
-    ):  # Same as before
+    def remove_output_handler(self, handler: Callable[[dict[str, Any]], None]):  # Same as before
         with self.lock:
             if handler in self.output_handlers:
                 self.output_handlers.remove(handler)
@@ -317,13 +308,9 @@ class ExternalEchoLayer:
 
     def handle_output(self, output_data: dict[str, Any]):
         if not self.active:
-            logger.warning(
-                f"Output handling skipped: {self.COMPONENT_NAME} not active."
-            )
+            logger.warning(f"Output handling skipped: {self.COMPONENT_NAME} not active.")
             return
-        text_preview = str(
-            output_data.get("text", output_data.get("content", "N/A_text"))
-        )[:50]
+        text_preview = str(output_data.get("text", output_data.get("content", "N/A_text")))[:50]
         logger.debug(f"{self.COMPONENT_NAME} forwarding output: {text_preview}...")
         with self.lock:
             handlers_copy = list(self.output_handlers)
@@ -334,18 +321,16 @@ class ExternalEchoLayer:
             except Exception as e:
                 logger.error(
                     f"Error in output handler '{getattr(handler, '__name__', 'unknown')}': {e}"
-                )        # Imprint this output to MemoryBraid
-        if self.memory_braid and not isinstance(
-            self.memory_braid, _FallbackMemoryBraid
-        ):
+                )  # Imprint this output to MemoryBraid
+        if self.memory_braid and not isinstance(self.memory_braid, _FallbackMemoryBraid):
             try:
-                braid_key = f"eel:output:{output_data.get('timestamp', time.time())}:{uuid.uuid4().hex[:6]}"
+                braid_key = (
+                    f"eel:output:{output_data.get('timestamp', time.time())}:{uuid.uuid4().hex[:6]}"
+                )
                 self.memory_braid.imprint(
                     braid_key, output_data, ttl_seconds=self.config.default_event_ttl_s
                 )
-                logger.debug(
-                    f"Imprinted EEL output to MemoryBraid with key '{braid_key}'."
-                )
+                logger.debug(f"Imprinted EEL output to MemoryBraid with key '{braid_key}'.")
             except Exception as e:
                 logger.error(f"Failed to imprint EEL output to MemoryBraid: {e}")
 
@@ -363,9 +348,7 @@ class ExternalEchoLayer:
             "meta_reflex_type": type(self.meta_reflex_layer).__name__
             if self.meta_reflex_layer
             else "None",
-            "memory_braid_type": type(self.memory_braid).__name__
-            if self.memory_braid
-            else "None",
+            "memory_braid_type": type(self.memory_braid).__name__ if self.memory_braid else "None",
             "output_handlers": len(self.output_handlers),
             "timestamp": time.time(),
         }
@@ -374,9 +357,7 @@ class ExternalEchoLayer:
         self, text: str, confidence: float = 0.9, source: str = "simulated_mic_input"
     ):
         if not self.active:
-            logger.warning(
-                f"Transcription simulation skipped: {self.COMPONENT_NAME} inactive."
-            )
+            logger.warning(f"Transcription simulation skipped: {self.COMPONENT_NAME} inactive.")
             return
         if not self.transcription_handler:
             logger.warning(
@@ -393,19 +374,15 @@ class ExternalEchoLayer:
         }
         try:
             self.transcription_handler(transcription_data)
-            logger.info(
-                f"{self.COMPONENT_NAME} processed simulated transcription: {text[:50]}..."
-            )
+            logger.info(f"{self.COMPONENT_NAME} processed simulated transcription: {text[:50]}...")
 
             event_data_for_vanta = transcription_data.copy()
             self.vanta_core.publish_event(
                 f"{self.COMPONENT_NAME}.transcription.processed",
                 event_data_for_vanta,
                 source=self.COMPONENT_NAME,
-            )            # Imprint transcription to MemoryBraid
-            if self.memory_braid and not isinstance(
-                self.memory_braid, _FallbackMemoryBraid
-            ):
+            )  # Imprint transcription to MemoryBraid
+            if self.memory_braid and not isinstance(self.memory_braid, _FallbackMemoryBraid):
                 try:
                     # Create a more structured key for MemoryBraid
                     braid_key = f"eel:transcription:{transcription_data['timestamp']}:{transcription_data['id']}"
@@ -414,14 +391,12 @@ class ExternalEchoLayer:
                         transcription_data,
                         ttl_seconds=self.config.default_event_ttl_s,
                     )
-                    logger.debug(
-                        f"Imprinted transcription to MemoryBraid with key '{braid_key}'."
-                    )
+                    logger.debug(f"Imprinted transcription to MemoryBraid with key '{braid_key}'.")
                 except Exception as e:
-                    logger.error(f"Failed to imprint transcription to MemoryBraid: {e}")            # If echo_stream is "real", also emit the raw/processed data to it
-            if self.echo_stream and not isinstance(
-                self.echo_stream, _FallbackEchoStream
-            ):
+                    logger.error(
+                        f"Failed to imprint transcription to MemoryBraid: {e}"
+                    )  # If echo_stream is "real", also emit the raw/processed data to it
+            if self.echo_stream and not isinstance(self.echo_stream, _FallbackEchoStream):
                 self.echo_stream.emit(
                     channel=f"{self.config.echo_stream_component_name}.transcription_input",
                     text=text,
@@ -432,7 +407,7 @@ class ExternalEchoLayer:
             logger.error(f"Error in transcription handler during simulation: {e}")
 
     def connect_to_external_system(
-        self, system_name: str, connection_config: dict[str, Any] | None = None
+        self, system_name: str, connection_config: Optional[dict[str, Any]] = None
     ):  # No change needed
         logger.info(
             f"{self.COMPONENT_NAME} VantaCore: Simulating connection to external system: {system_name}"
@@ -457,8 +432,8 @@ class ExternalEchoLayer:
 
     def emit_to_configured_echo_stream(
         self,
-        text: str | None,
-        metadata: dict[str, Any] | None = None,
+        text: Optional[str],
+        metadata: Optional[dict[str, Any]] = None,
         channel_suffix: str = "data_out",
     ):
         """Emit to the configured echo_stream component."""
@@ -470,31 +445,26 @@ class ExternalEchoLayer:
         try:
             full_metadata = metadata or {}
             full_metadata.update({"_vanta_eel_source_id": self.component_id})
-            target_channel = (
-                f"{self.config.echo_stream_component_name}.{channel_suffix}"
-            )
+            target_channel = f"{self.config.echo_stream_component_name}.{channel_suffix}"
             compressed = self.blt.compress(text) if text is not None else None
-            self.echo_stream.emit(
-                channel=target_channel, text=compressed, metadata=full_metadata
-            )
+            self.echo_stream.emit(channel=target_channel, text=compressed, metadata=full_metadata)
             logger.debug(
                 f"{self.COMPONENT_NAME} emitted to configured EchoStream on channel '{target_channel}'."
             )
             return True
         except Exception as e:
-            logger.error(
-                f"Error emitting to configured EchoStream from {self.COMPONENT_NAME}: {e}"
-            )
+            logger.error(f"Error emitting to configured EchoStream from {self.COMPONENT_NAME}: {e}")
             return False
 
 
 # --- Singleton Accessor ---
-_vanta_external_echo_layer_instance: ExternalEchoLayer | None = None
+_vanta_external_echo_layer_instance: Optional[ExternalEchoLayer] = None
 _vanta_instance_lock = threading.Lock()
 
 
 def get_vanta_external_echo_layer(
-    vanta_core: VantaCore | None = None, config: ExternalEchoLayerConfig | None = None
+    vanta_core: Optional["UnifiedVantaCore"] = None,
+    config: Optional[ExternalEchoLayerConfig] = None,
 ) -> ExternalEchoLayer:
     global _vanta_external_echo_layer_instance
     if _vanta_external_echo_layer_instance is None:
@@ -513,15 +483,18 @@ def get_vanta_external_echo_layer(
 # --- Example Usage (Adapted for VantaCore) ---
 if __name__ == "__main__":
     main_logger_eel_v = logging.getLogger("VantaExternalEchoExample")
-    main_logger_eel_v.setLevel(logging.DEBUG)  # Main example logger
+    main_logger_eel_v.setLevel(
+        logging.DEBUG
+    )  # Main example logger    main_logger_eel_v.info("--- Starting Vanta External Echo Layer Example ---")
 
-    main_logger_eel_v.info("--- Starting Vanta External Echo Layer Example ---")
+    # Lazy import to avoid circular dependency
+    from Vanta.core.UnifiedVantaCore import UnifiedVantaCore
 
-    vanta_system_eel_v = VantaCore()  # Initialize VantaCore
+    vanta_system_eel_v = UnifiedVantaCore()  # Initialize VantaCore
 
     # Example: Register a mock MemoryBraid for EEL to find and use
     class MyMemoryBraid(MemoryBraidInterface):
-        def imprint(self, key: str, value: Any, ttl: int | None = None):
+        def imprint(self, key: str, value: Any, ttl: Optional[int] = None):
             main_logger_eel_v.info(
                 f"MyMemoryBraid: Imprint key='{key}', value='{str(value)[:50]}...'"
             )
@@ -531,14 +504,10 @@ if __name__ == "__main__":
         heartbeat_interval_s=3,
         memory_braid_component_name="global_memory_braid",
     )
-    vanta_system_eel_v.register_component(
-        "global_memory_braid", MyMemoryBraid()
-    )  # Register it
+    vanta_system_eel_v.register_component("global_memory_braid", MyMemoryBraid())  # Register it
 
     try:  # Use try-except for first singleton get, as it now requires params
-        eel = get_vanta_external_echo_layer(
-            vanta_core=vanta_system_eel_v, config=eel_conf
-        )
+        eel = get_vanta_external_echo_layer(vanta_core=vanta_system_eel_v, config=eel_conf)
     except ValueError as e:
         main_logger_eel_v.critical(f"Could not start EEL example: {e}")
         exit()

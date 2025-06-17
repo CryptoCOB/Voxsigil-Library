@@ -61,7 +61,7 @@ metadata:
   definition_status: active
   author_agent_id: claude
   created_timestamp: '2025-05-14T12:30:00Z'
-  last_updated_timestamp: '2025-05-14T12:30:00Z'
+  last_updated_timestamp: '2025-06-13T05:40:40.617914Z'
   authorship_context:
     motivation: To develop systematic approaches for identifying what's missing rather
       than analyzing what's present.
@@ -71,4 +71,20 @@ metadata:
     - negative space in art
     - epistemic completeness theory
     - blind spot detection
+  schema_version: 1.5-holo-alpha
+  impact_and_usage_metrics_profile:
+    avg_completion_time_ms_observed: UNKNOWN
+    success_rate_observed: UNKNOWN
+    complexity_rating: medium
 name: Lacuna
+structure:
+  components:
+  - name: DefaultComponent
+    description: Default component - needs specification
+  composite_type: simple
+  temporal_structure: atomic
+activation_context:
+  triggers:
+  - explicit_invocation
+  prerequisites: []
+  inhibitors: []

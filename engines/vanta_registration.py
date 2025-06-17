@@ -5,7 +5,7 @@ Registers all processing engines as individual modules
 """
 
 import logging
-from typing import Dict, Any, List, Optional, Type
+from typing import Dict, Any, List, Type
 
 logger = logging.getLogger("Vanta.EnginesRegistration")
 

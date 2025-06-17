@@ -45,6 +45,11 @@ SMART_MRAP:
   achievable: Via LLM fine-tuning on emotion-symbol datasets.
   relevant: Enables affective alignment in multi-agent systems.
   transferable: Can extend to human-AI emotional interfaces.
+  Specific: TBD
+  Measurable: TBD
+  Achievable: TBD
+  Relevant: TBD
+  Transferable: TBD
 metadata:
   definition_version: 1.4.1
   author_agent_id: CLAUDE-3.5-OPUS
@@ -53,6 +58,14 @@ metadata:
   - Emotion wheels
   - Sentiment analysis
   - Symbolic AI
+  definition_status: TBD
+  created_timestamp: TBD
+  last_updated_timestamp: '2025-06-13T05:40:40.617914Z'
+  schema_version: 1.5-holo-alpha
+  impact_and_usage_metrics_profile:
+    avg_completion_time_ms_observed: UNKNOWN
+    success_rate_observed: UNKNOWN
+    complexity_rating: medium
 why_special: 'Fills a Gap: No prior VoxSigil explicitly handles emotion-symbol fusion.
 
   Recursive Affect: Emotions can now propagate through symbolic chains (e.g., <emo:fear><deviate:mutation>
@@ -63,3 +76,14 @@ why_special: 'Fills a Gap: No prior VoxSigil explicitly handles emotion-symbol f
   '
 sigil: 🌎 Emores
 name: Emores
+structure:
+  components:
+  - name: DefaultComponent
+    description: Default component - needs specification
+  composite_type: simple
+  temporal_structure: atomic
+activation_context:
+  triggers:
+  - explicit_invocation
+  prerequisites: []
+  inhibitors: []

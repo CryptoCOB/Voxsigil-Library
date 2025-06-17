@@ -8,19 +8,17 @@ Purpose: Encapsulated performance analysis interface for Dynamic GridFormer GUI
 """
 
 import json
-import sys
 from datetime import datetime
-from typing import Union, Any, TYPE_CHECKING, Optional, Dict, List
+from typing import TYPE_CHECKING
 
-import numpy as np
 from PyQt5.QtWidgets import (
     QWidget, QVBoxLayout, QHBoxLayout, QGridLayout, QLabel, QComboBox,
-    QPushButton, QScrollArea, QFrame, QGroupBox, QFileDialog, QMessageBox,
+    QPushButton, QScrollArea, QGroupBox, QFileDialog, QMessageBox,
     QDialog, QTableWidget, QTableWidgetItem, QTabWidget, QSpinBox,
     QCheckBox, QProgressBar, QTextEdit, QSplitter, QSlider
 )
-from PyQt5.QtCore import Qt, QTimer, pyqtSignal, QThread, pyqtSlot, QObject
-from PyQt5.QtGui import QFont, QPixmap, QIcon, QPalette, QColor
+from PyQt5.QtCore import Qt, QTimer, pyqtSignal, pyqtSlot, QObject
+from PyQt5.QtGui import QFont
 
 # Matplotlib imports with fallback
 if TYPE_CHECKING:

@@ -8,10 +8,10 @@ controls, and interface elements based on each module's capabilities.
 """
 
 import logging
-from typing import Dict, Any, Optional, List, Callable
+from typing import Dict, Any, Optional, List
 from PyQt5.QtWidgets import (
-    QWidget, QVBoxLayout, QHBoxLayout, QGroupBox, QCheckBox, 
-    QPushButton, QLabel, QSlider, QSpinBox, QComboBox, QFrame
+    QWidget, QVBoxLayout, QHBoxLayout, QCheckBox, 
+    QLabel, QSlider, QSpinBox, QComboBox, QFrame
 )
 from PyQt5.QtCore import Qt, pyqtSignal
 

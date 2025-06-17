@@ -21,8 +21,6 @@ from ..interfaces import (
     BaseRagInterface,
     BaseLlmInterface, 
     BaseMemoryInterface,
-    BaseAgentInterface,
-    BaseModelInterface,
     FallbackProtocol
 )
 

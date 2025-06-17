@@ -20,7 +20,7 @@ HOLO-1.5 Integration: Interface adaptation and cross-system communication capabi
 import asyncio
 import importlib
 import logging
-from typing import Any, Dict, List, Optional, Type, Union
+from typing import Any, Dict
 
 # Configure logging
 logger = logging.getLogger(__name__)

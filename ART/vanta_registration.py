@@ -16,7 +16,7 @@ HOLO-1.5 Integration: Full cognitive mesh integration with adaptive resonance ca
 import asyncio
 import importlib
 import logging
-from typing import Any, Dict, List, Optional, Type, Union
+from typing import Any, Dict
 
 # Configure logging
 logger = logging.getLogger(__name__)

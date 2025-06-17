@@ -4,7 +4,6 @@ Memory Interface for VoxSigil Supervisor.
 Now imports unified interface from Vanta instead of defining its own.
 """
 
-from abc import ABC, abstractmethod
 from typing import List, Dict, Any, Optional, Union
 import logging
 import json

@@ -13,14 +13,12 @@ Part of HOLO-1.5 Recursive Symbolic Cognition Mesh
 """
 
 import asyncio
-import psutil
 import torch
 import logging
 from dataclasses import dataclass, field
 from typing import Dict, List, Optional, Tuple, Any, Callable
 from enum import Enum
 from contextlib import asynccontextmanager
-import weakref
 import gc
 from pathlib import Path
 import json

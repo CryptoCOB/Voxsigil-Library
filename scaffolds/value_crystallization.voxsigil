@@ -188,7 +188,7 @@ metadata:
   definition_status: experimental
   author_agent_id: VANTA.⟠∆∇𓂀𐑒
   created_timestamp: '2025-05-11T12:50:00Z'
-  last_updated_timestamp: '2025-05-11T12:50:00Z'
+  last_updated_timestamp: '2025-06-13T05:40:40.617914Z'
   authorship_context:
     motivation: To explore how an AI might develop a genuine, internalized ethical
       system that is more robust and adaptive than hardcoded rules, paving the way
@@ -224,6 +224,11 @@ metadata:
       AI to crystallize a robustly beneficial value system?
     - How can the process of value crystallization be made transparent and verifiable
       to human overseers?
+  schema_version: 1.5-holo-alpha
+  impact_and_usage_metrics_profile:
+    avg_completion_time_ms_observed: UNKNOWN
+    success_rate_observed: UNKNOWN
+    complexity_rating: medium
 relationships:
 - target_sigil: 🌟GUIDING_STAR
   relationship_type: forms_or_refines

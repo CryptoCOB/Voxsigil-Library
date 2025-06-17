@@ -7,7 +7,7 @@ This script provides a compatibility layer for the VoxSigil Supervisor.
 """
 
 import logging
-from typing import Any, Dict, List, Optional
+from typing import Optional
 
 logger = logging.getLogger("voxsigil_compat")
 

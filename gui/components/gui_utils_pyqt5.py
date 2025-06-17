@@ -1,11 +1,9 @@
 
 import json
-from typing import Optional
 from PyQt5.QtWidgets import (
-    QWidget, QLabel, QFrame, QHBoxLayout, QPushButton, QToolTip
+    QWidget, QLabel, QFrame, QHBoxLayout, QPushButton
 )
 from PyQt5.QtCore import Qt, QEvent, QPoint
-from PyQt5.QtGui import QFont, QEnterEvent
 
 
 class ToolTip(QWidget):

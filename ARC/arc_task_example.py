@@ -6,15 +6,15 @@ This example demonstrates how to use the ARC-aware LLM interface both directly
 and through the VoxSigil VANTA supervisor for symbolic reasoning tasks.
 """
 
-import sys
 import json
+import sys
 from pathlib import Path
 
 # Add the repository root to the path
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent.parent))
 
 # Import VoxSigil components
-from ARC.llm.arc_llm_interface import ARCAwareLLMInterface
+from .llm.arc_llm_interface import ARCAwareLLMInterface
 
 try:
     from Vanta.integration.vanta_integration import create_vanta_supervisor
@@ -112,9 +112,7 @@ def run_vanta_arc_example(model_path, task_data):
             ]
 
     # Create the VANTA supervisor
-    vanta = create_vanta_supervisor(
-        rag_interface=EnhancedRagInterface(), llm_interface=llm
-    )
+    vanta = create_vanta_supervisor(rag_interface=EnhancedRagInterface(), llm_interface=llm)
 
     # Check if VANTA supervisor is available
     if vanta is None:

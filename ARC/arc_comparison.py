@@ -6,14 +6,14 @@ the performance of different strategies, particularly the effectiveness
 of the CATENGINE for categorization-based reasoning.
 """
 
-import os
-import sys
-import json
-import random
-import time
 import argparse
-from pathlib import Path
+import json
 import logging
+import os
+import random
+import sys
+import time
+from pathlib import Path
 
 # Setup a basic logger if not provided by arc_config
 logger = logging.getLogger("arc_comparison")
@@ -26,19 +26,19 @@ sys.path.append(str(SCRIPT_DIR))
 
 # Import only after adding to path
 try:
-    from ARC.arc_config import (
-        load_llm_response_cache,
-        save_llm_response_cache,
-        initialize_and_validate_models_config,
-        load_voxsigil_entries,
-        VoxSigilComponent,
+    from .arc_config import (
+        ARC_DATA_DIR,
+        LMSTUDIO_API_BASE_URL,
+        OLLAMA_API_BASE_URL,
+        RESULTS_OUTPUT_DIR,
         USE_LLM_CACHE,
+        VoxSigilComponent,
         # logger  # Removed because it's not provided by arc_config
         analyze_task_for_categorization_needs,
-        OLLAMA_API_BASE_URL,
-        LMSTUDIO_API_BASE_URL,
-        RESULTS_OUTPUT_DIR,
-        ARC_DATA_DIR,
+        initialize_and_validate_models_config,
+        load_llm_response_cache,
+        load_voxsigil_entries,
+        save_llm_response_cache,
     )
 except ImportError as e:
     print(f"Error importing ARC.py: {e}")
@@ -67,8 +67,7 @@ def run_comparison_test(
     # Load VoxSigil components
     voxsigil_entries = load_voxsigil_entries(Path(SCRIPT_DIR) / "VoxSigil-Library")
     voxsigil_components = [
-        VoxSigilComponent(entry, entry.get("capabilities", []))
-        for entry in voxsigil_entries
+        VoxSigilComponent(entry, entry.get("capabilities", [])) for entry in voxsigil_entries
     ]
     logger.info(f"Loaded {len(voxsigil_components)} VoxSigil components")
 
@@ -109,14 +108,10 @@ def run_comparison_test(
 
     # Group tasks by categorization need
     catengine_candidates = [
-        tid
-        for tid, result in categorization_results.items()
-        if result["needs_categorization"]
+        tid for tid, result in categorization_results.items() if result["needs_categorization"]
     ]
     arc_solver_candidates = [
-        tid
-        for tid, result in categorization_results.items()
-        if not result["needs_categorization"]
+        tid for tid, result in categorization_results.items() if not result["needs_categorization"]
     ]
 
     logger.info(
@@ -125,9 +120,7 @@ def run_comparison_test(
     )
 
     # Save categorization analysis to a file for reference
-    analysis_file = (
-        RESULTS_OUTPUT_DIR / f"categorization_analysis_{run_timestamp_str}.json"
-    )
+    analysis_file = RESULTS_OUTPUT_DIR / f"categorization_analysis_{run_timestamp_str}.json"
     with open(analysis_file, "w", encoding="utf-8") as f:
         json.dump(categorization_results, f, indent=2)
     logger.info(f"Saved categorization analysis to {analysis_file}")
@@ -150,9 +143,7 @@ def run_comparison_test(
         f.write("# ARC Solver Comparison Test Commands\n\n")
         f.write("## Commands to test different strategies\n\n")
         f.write("# Run with CATENGINE for all tasks:\n")
-        f.write(
-            f'$env:FORCE_CATENGINE="True"; $env:MAX_ARC_TASKS="{max_tasks}"; python ARC.py\n\n'
-        )
+        f.write(f'$env:FORCE_CATENGINE="True"; $env:MAX_ARC_TASKS="{max_tasks}"; python ARC.py\n\n')
         f.write("# Run with ARC_SOLVER for all tasks:\n")
         f.write(
             f'$env:FORCE_ARC_SOLVER="True"; $env:MAX_ARC_TASKS="{max_tasks}"; python ARC.py\n\n'

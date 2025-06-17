@@ -5,10 +5,8 @@ This script provides a simple way to interact with the VANTA Supervisor.
 It uses mock implementations for RAG, LLM, and Memory interfaces.
 """
 
-import os
 import sys
 import logging
-import time
 
 # Configure logging
 logging.basicConfig(

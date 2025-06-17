@@ -6,9 +6,7 @@ Automatically registers training-related modules with the Vanta orchestrator.
 This bridges the existing training implementations with the new modular architecture.
 """
 
-import asyncio
 import logging
-from pathlib import Path
 from typing import Dict, Any, Optional
 
 logger = logging.getLogger(__name__)
@@ -51,7 +49,6 @@ async def register_rag_interfaces(module_registry, config: Dict[str, Any]):
     try:
         from training.rag_interface import (
             SupervisorRagInterface,
-            SimpleRagInterface,
             VOXSIGIL_RAG_AVAILABLE
         )
         from Vanta.core.fallback_implementations import FallbackRagInterface

@@ -1,6 +1,5 @@
 import json
 import tkinter as tk
-from typing import Optional
 
 
 class _ToolTip:

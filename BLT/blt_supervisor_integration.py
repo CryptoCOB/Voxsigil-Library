@@ -7,14 +7,17 @@ It provides a BLTSupervisorRagInterface that uses the BLTEnhancedRAG implementat
 for enhanced retrieval and processing capabilities.
 """
 
+import logging
 import os
 import sys
-import logging
 from pathlib import Path
-from typing import List, Dict, Any, Optional
+from typing import Any, Dict, List, Optional
 
 import numpy as np
 import torch  # Added for TinyLlama interface
+
+# Import unified interface from Vanta
+from Vanta.interfaces.base_interfaces import BaseRagInterface
 
 # Configure logging
 logging.basicConfig(
@@ -49,43 +52,23 @@ except ImportError:
 try:
     from Vanta.core.UnifiedVantaCore import UnifiedVantaCore as VantaCore
 except ImportError:
-    logger.warning(
-        "Could not import UnifiedVantaCore. Some functionality may be limited."
-    )
+    logger.warning("Could not import UnifiedVantaCore. Some functionality may be limited.")
     VantaCore = None
 
 # Import VoxSigil components with comprehensive error handling
 try:
-    from BLT.voxsigil_blt_rag import BLTEnhancedRAG
-    from BLT.hybrid_blt import (
-        HybridMiddlewareConfig,
-        EntropyRouter,
-        ByteLatentTransformerEncoder,
-    )
+    from VoxSigilRag.hybrid_blt import HybridMiddlewareConfig
+    from VoxSigilRag.voxsigil_blt_rag import BLTEnhancedRAG
 
-    # Define flag for component availability
-    COMPONENTS_AVAILABLE = True
+    logger.info("Successfully imported BLT components")
 except ImportError as e:
     logger.warning(f"Some BLT components couldn't be imported: {e}")
-    COMPONENTS_AVAILABLE = False    # BLTEnhancedRAG stub removed - use real BLTEnhancedRAG or proper fallback
+    # COMPONENTS_AVAILABLE will be determined later after proper testing
 
 
-try:
-    from BLT.hybrid_blt import EntropyRouter
-except ImportError:
-    # EntropyRouter stub removed - use real implementation or handle ImportError
-    EntropyRouter = None
+# All components are imported above in the main try-except block
+# Individual component checking is done later when determining COMPONENTS_AVAILABLE
 
-
-try:
-    from BLT.hybrid_blt import ByteLatentTransformerEncoder
-except ImportError:
-    # ByteLatentTransformerEncoder stub removed - use real implementation or handle ImportError
-    ByteLatentTransformerEncoder = None
-
-
-# Import unified interface from Vanta
-from Vanta.interfaces.base_interfaces import BaseRagInterface
 VANTA_INTERFACES_AVAILABLE = True
 
 
@@ -101,15 +84,21 @@ def hybrid_embedding(*args, **kwargs):
 
 
 # Determine components availability
-COMPONENTS_AVAILABLE = True
+COMPONENTS_AVAILABLE = False
+
 try:
     # Test basic imports to determine actual availability
-    from BLT.voxsigil_blt_rag import BLTEnhancedRAG as _test_import
+    import importlib.util
 
-    logger.info("BLTEnhancedRAG is available")
-except ImportError:
-    COMPONENTS_AVAILABLE = False
-    logger.warning("BLTEnhancedRAG not available, using stub implementation")
+    if importlib.util.find_spec("VoxSigilRag.voxsigil_blt_rag"):
+        from VoxSigilRag.voxsigil_blt_rag import BLTEnhancedRAG
+
+        COMPONENTS_AVAILABLE = True
+        logger.info("BLTEnhancedRAG is available")
+    else:
+        logger.warning("VoxSigilRag.voxsigil_blt_rag module not found")
+except ImportError as e:
+    logger.warning(f"BLTEnhancedRAG not available: {e}, using stub implementation")
 
 
 class BLTSupervisorRagInterface(BaseRagInterface):
@@ -150,9 +139,7 @@ class BLTSupervisorRagInterface(BaseRagInterface):
             self.middleware_config = HybridMiddlewareConfig(
                 entropy_threshold=blt_config.get("entropy_threshold", 0.25),
                 blt_hybrid_weight=blt_config.get("blt_hybrid_weight", 0.7),
-                entropy_router_fallback=blt_config.get(
-                    "entropy_router_fallback", "token_based"
-                ),
+                entropy_router_fallback=blt_config.get("entropy_router_fallback", "token_based"),
                 cache_ttl_seconds=blt_config.get("cache_ttl_seconds", 300),
                 log_level=blt_config.get("log_level", "INFO"),
             )
@@ -169,9 +156,7 @@ class BLTSupervisorRagInterface(BaseRagInterface):
         try:
             # Check if voxsigil_library_path exists
             if voxsigil_library_path and not voxsigil_library_path.exists():
-                logger.warning(
-                    f"VoxSigil library path {voxsigil_library_path} does not exist."
-                )
+                logger.warning(f"VoxSigil library path {voxsigil_library_path} does not exist.")
                 if not os.environ.get("VOXSIGIL_LIBRARY_PATH"):
                     logger.warning(
                         "VOXSIGIL_LIBRARY_PATH environment variable not set. Using default paths."
@@ -180,9 +165,7 @@ class BLTSupervisorRagInterface(BaseRagInterface):
             # Validate embedding model name - fallback to default if needed
             embedding_model = embedding_model_name or "all-MiniLM-L6-v2"
             if not embedding_model_name:
-                logger.info(
-                    f"No embedding model specified, using default: {embedding_model}"
-                )
+                logger.info(f"No embedding model specified, using default: {embedding_model}")
 
             # Initialize the RAG instance with validated parameters
             self.rag_instance = BLTEnhancedRAG(
@@ -236,32 +219,22 @@ class BLTSupervisorRagInterface(BaseRagInterface):
                             self._sigil_index_by_id[sigil_id] = sigil
 
             # Verify the BLT encoder is available
-            if (
-                hasattr(self.rag_instance, "blt_encoder")
-                and self.rag_instance.blt_encoder
-            ):
+            if hasattr(self.rag_instance, "blt_encoder") and self.rag_instance.blt_encoder:
                 # Test the encoder with a simple input
                 test_text = "Testing BLT encoder initialization"
                 try:
                     # Test create_patches method
                     if hasattr(self.rag_instance.blt_encoder, "create_patches"):
-                        patches = self.rag_instance.blt_encoder.create_patches(
-                            test_text
-                        )
+                        patches = self.rag_instance.blt_encoder.create_patches(test_text)
                         if patches:
-                            logger.info(
-                                f"BLT encoder successfully created {len(patches)} patches"
-                            )
+                            logger.info(f"BLT encoder successfully created {len(patches)} patches")
                 except Exception as e:
                     logger.warning(f"BLT encoder patch creation test failed: {e}")
             else:
                 logger.warning("BLT encoder not available in RAG instance")
 
             # Verify patch validator
-            if (
-                hasattr(self.rag_instance, "patch_validator")
-                and self.rag_instance.patch_validator
-            ):
+            if hasattr(self.rag_instance, "patch_validator") and self.rag_instance.patch_validator:
                 # Test the validator
                 try:
                     if hasattr(self.rag_instance.patch_validator, "validate_structure"):
@@ -346,17 +319,13 @@ class BLTSupervisorRagInterface(BaseRagInterface):
                     )
                     return retrieved_sigils
                 else:
-                    logger.warning(
-                        "Neither enhanced_rag_process nor create_rag_context available"
-                    )
+                    logger.warning("Neither enhanced_rag_process nor create_rag_context available")
                     return []
         except Exception as e:
             logger.error(f"Error retrieving sigils: {e}")
             return []
 
-    def retrieve_context(
-        self, query: str, params: Optional[Dict[str, Any]] = None
-    ) -> str:
+    def retrieve_context(self, query: str, params: Optional[Dict[str, Any]] = None) -> str:
         """
         Retrieves formatted context using BLTEnhancedRAG with entropy-aware processing.
 
@@ -424,9 +393,7 @@ class BLTSupervisorRagInterface(BaseRagInterface):
                     )
                     return context_text
                 else:
-                    logger.warning(
-                        "Neither enhanced_rag_process nor create_rag_context available"
-                    )
+                    logger.warning("Neither enhanced_rag_process nor create_rag_context available")
                     return "ERROR: No context retrieval method available"
         except Exception as e:
             logger.error(f"Error retrieving context: {e}")
@@ -598,10 +565,10 @@ class TinyLlamaIntegration:
         try:
             # Import supervisor components with comprehensive fallback handling
             try:
-                from voxsigil_supervisor.supervisor_engine import VoxSigilSupervisor
                 from Scaffolds.scaffold_router import ScaffoldRouter
                 from voxsigil_supervisor.evaluation_heuristics import ResponseEvaluator
                 from voxsigil_supervisor.retry_policy import RetryPolicy
+                from voxsigil_supervisor.supervisor_engine import VoxSigilSupervisor
             except ImportError as e:
                 logger.error(f"Failed to import supervisor components: {e}")
                 return None
@@ -640,7 +607,7 @@ class TinyLlamaIntegration:
 
         Returns:
             An implementation of BaseLlmInterface for TinyLlama.
-        """        # Import unified interface from Vanta
+        """  # Import unified interface from Vanta
         from Vanta.interfaces.base_interfaces import BaseLlmInterface
 
         class TinyLlamaInterface(BaseLlmInterface):
@@ -653,7 +620,7 @@ class TinyLlamaIntegration:
                     logger.warning("Invalid model tuple provided to TinyLlamaInterface")
                     self.model, self.tokenizer = None, None
                     self.model_name = "TinyLlama"
-                
+
                 logger.info(f"TinyLlamaInterface initialized with model: {self.model_name}")
 
             def generate_response(
@@ -661,30 +628,34 @@ class TinyLlamaIntegration:
             ):
                 """
                 Generate a response using TinyLlama model based on input messages.
-                
+
                 Args:
                     messages: List of message objects with 'role' and 'content'
                     system_prompt_override: Optional system prompt to override default
                     task_requirements: Optional requirements for the task
-                
+
                 Returns:
                     Tuple of (response_text, metadata, debug_info)
                 """
                 try:
                     if not self.model or not self.tokenizer:
                         return "TinyLlama model or tokenizer not available", {}, {}
-                    
+
                     # Format messages into prompt string
                     prompt = self._format_messages(messages, system_prompt_override)
-                    
+
                     # Set generation parameters
-                    max_new_tokens = task_requirements.get("max_tokens", 512) if task_requirements else 512
-                    temperature = task_requirements.get("temperature", 0.7) if task_requirements else 0.7
+                    max_new_tokens = (
+                        task_requirements.get("max_tokens", 512) if task_requirements else 512
+                    )
+                    temperature = (
+                        task_requirements.get("temperature", 0.7) if task_requirements else 0.7
+                    )
                     top_p = task_requirements.get("top_p", 0.9) if task_requirements else 0.9
-                    
+
                     # Tokenize the prompt
                     input_ids = self.tokenizer(prompt, return_tensors="pt").to(self.model.device)
-                    
+
                     # Generate response
                     with torch.no_grad():
                         output = self.model.generate(
@@ -693,13 +664,13 @@ class TinyLlamaIntegration:
                             temperature=temperature,
                             top_p=top_p,
                             do_sample=temperature > 0,
-                            pad_token_id=self.tokenizer.pad_token_id
+                            pad_token_id=self.tokenizer.pad_token_id,
                         )
-                    
+
                     # Decode the response
-                    response_ids = output[0][input_ids["input_ids"].shape[1]:]
+                    response_ids = output[0][input_ids["input_ids"].shape[1] :]
                     response_text = self.tokenizer.decode(response_ids, skip_special_tokens=True)
-                    
+
                     # Return the response with metadata
                     metadata = {
                         "model": self.model_name,
@@ -707,10 +678,10 @@ class TinyLlamaIntegration:
                         "generation_parameters": {
                             "temperature": temperature,
                             "top_p": top_p,
-                            "max_new_tokens": max_new_tokens
-                        }
+                            "max_new_tokens": max_new_tokens,
+                        },
                     }
-                    
+
                     return response_text, metadata, {}
                 except Exception as e:
                     logger.error(f"Error generating response with TinyLlama: {e}")
@@ -719,48 +690,54 @@ class TinyLlamaIntegration:
             def _format_messages(self, messages, system_prompt=None):
                 """
                 Format messages for TinyLlama in the expected chat format.
-                
+
                 Args:
                     messages: List of message objects with 'role' and 'content'
                     system_prompt: Optional system prompt to override
-                
+
                 Returns:
                     Formatted prompt string for TinyLlama
                 """
                 if not messages:
                     return ""
-                
+
                 formatted_messages = []
-                
+
                 # Add system prompt if provided, otherwise use the first system message if available
                 if system_prompt:
                     formatted_messages.append(f"<|system|>\n{system_prompt}</s>")
                 else:
                     # Look for system message in the provided messages
-                    system_messages = [msg for msg in messages if msg.get('role') == 'system']
+                    system_messages = [msg for msg in messages if msg.get("role") == "system"]
                     if system_messages:
-                        formatted_messages.append(f"<|system|>\n{system_messages[0]['content']}</s>")
-                
+                        formatted_messages.append(
+                            f"<|system|>\n{system_messages[0]['content']}</s>"
+                        )
+
                 # Process all messages (except system if we already handled it)
                 for message in messages:
-                    role = message.get('role', '').lower()
-                    content = message.get('content', '')
-                    
+                    role = message.get("role", "").lower()
+                    content = message.get("content", "")
+
                     # Skip system messages if we already added a system prompt
-                    if role == 'system' and formatted_messages and formatted_messages[0].startswith('<|system|>'):
+                    if (
+                        role == "system"
+                        and formatted_messages
+                        and formatted_messages[0].startswith("<|system|>")
+                    ):
                         continue
-                    
+
                     # Map roles to TinyLlama format
-                    if role == 'user':
+                    if role == "user":
                         formatted_messages.append(f"<|user|>\n{content}</s>")
-                    elif role == 'assistant':
+                    elif role == "assistant":
                         formatted_messages.append(f"<|assistant|>\n{content}</s>")
-                    elif role == 'system':
+                    elif role == "system":
                         formatted_messages.append(f"<|system|>\n{content}</s>")
-                
+
                 # Add final assistant prompt
                 formatted_messages.append("<|assistant|>")
-                
+
                 # Join all formatted messages
                 return "\n".join(formatted_messages)
 
@@ -820,9 +797,7 @@ class TinyLlamaIntegration:
                             sim = rag.blt_encoder.calculate_similarity(emb1, emb2)
                             if 0 <= sim <= 1:
                                 validation_results["calculate_similarity"] = True
-                                logger.info(
-                                    f"calculate_similarity test successful: {sim}"
-                                )
+                                logger.info(f"calculate_similarity test successful: {sim}")
                     except Exception as e:
                         logger.error(f"calculate_similarity test failed: {e}")
 

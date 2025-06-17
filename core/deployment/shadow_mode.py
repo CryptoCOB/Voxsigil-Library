@@ -13,19 +13,16 @@ HOLO-1.5 Enhanced Shadow Mode:
 - Cognitive load and performance profiling
 """
 
-import asyncio
 import json
 import time
 import logging
 from datetime import datetime, timezone
-from typing import Dict, List, Tuple, Optional, Any, Union
+from typing import Dict, List, Optional, Any
 from dataclasses import dataclass, field
 from pathlib import Path
-import threading
 from concurrent.futures import ThreadPoolExecutor, as_completed
 
-from core.ensemble_integration import ARCEnsembleOrchestrator, create_arc_ensemble
-from monitoring.exporter import get_metrics_collector
+from core.ensemble_integration import create_arc_ensemble
 
 logger = logging.getLogger(__name__)
 

@@ -6,29 +6,31 @@ This script provides a command-line interface for training and evaluating
 GRID-Former models on ARC tasks, with integration into the VoxSigil ecosystem.
 """
 
+import argparse
+import json
+import logging
 import os
 import sys
-import argparse
-import logging
-import json
-from pathlib import Path
 import time
-from typing import Dict, Any, Optional
+from pathlib import Path
+from typing import Any, Dict, Optional
+
+import numpy as np
+import torch
+
+from core.grid_former import GRID_Former
+from core.grid_sigil_handler import GridSigilHandler
+from core.vantacore_grid_connector import GridFormerConnector
+from training.gridformer_training import GridFormerTrainer
+
+# Import GRID-Former modules
+from .core.arc_data_processor import create_arc_dataloaders
 
 # Add project root to path for easier imports
 project_root = Path(__file__).resolve().parent.parent.parent
 if str(project_root) not in sys.path:
     sys.path.append(str(project_root))
 
-import torch
-import numpy as np
-
-# Import GRID-Former modules
-from Gridformer.core.grid_former import GRID_Former
-from Gridformer.training.grid_model_trainer import GridFormerTrainer
-from Gridformer.training.grid_sigil_handler import GridSigilHandler
-from Gridformer.core.vantacore_grid_connector import GridFormerConnector
-from ARC.core.arc_data_processor import create_arc_dataloaders
 
 # Configure logging
 logging.basicConfig(
@@ -42,9 +44,7 @@ logger = logging.getLogger("GRID-Former.Runner")
 
 
 def parse_arguments():
-    parser = argparse.ArgumentParser(
-        description="GRID-Former ARC Training and Evaluation"
-    )
+    parser = argparse.ArgumentParser(description="GRID-Former ARC Training and Evaluation")
 
     parser.add_argument(
         "--mode",
@@ -82,27 +82,17 @@ def parse_arguments():
         help="Directory for model storage",
     )
 
-    parser.add_argument(
-        "--load-model", type=str, help="Path to model checkpoint to load"
-    )
+    parser.add_argument("--load-model", type=str, help="Path to model checkpoint to load")
 
     parser.add_argument("--task-id", type=str, help="Specific ARC task ID to process")
 
-    parser.add_argument(
-        "--batch-size", type=int, default=32, help="Batch size for training"
-    )
+    parser.add_argument("--batch-size", type=int, default=32, help="Batch size for training")
 
-    parser.add_argument(
-        "--epochs", type=int, default=100, help="Number of epochs for training"
-    )
+    parser.add_argument("--epochs", type=int, default=100, help="Number of epochs for training")
 
-    parser.add_argument(
-        "--hidden-dim", type=int, default=256, help="Hidden dimension for model"
-    )
+    parser.add_argument("--hidden-dim", type=int, default=256, help="Hidden dimension for model")
 
-    parser.add_argument(
-        "--num-layers", type=int, default=6, help="Number of transformer layers"
-    )
+    parser.add_argument("--num-layers", type=int, default=6, help="Number of transformer layers")
 
     parser.add_argument(
         "--learning-rate", type=float, default=0.0005, help="Learning rate for training"
@@ -119,9 +109,7 @@ def parse_arguments():
         help="Device to use (cuda, cuda:0, cpu, etc.)",
     )
 
-    parser.add_argument(
-        "--output-sigil", type=str, help="Path to save output model sigil"
-    )
+    parser.add_argument("--output-sigil", type=str, help="Path to save output model sigil")
 
     parser.add_argument(
         "--input-grid",
@@ -129,9 +117,7 @@ def parse_arguments():
         help="Path to JSON file containing input grid for prediction",
     )
 
-    parser.add_argument(
-        "--output-grid", type=str, help="Path to save prediction output grid"
-    )
+    parser.add_argument("--output-grid", type=str, help="Path to save prediction output grid")
 
     return parser.parse_args()
 
@@ -166,9 +152,7 @@ def load_task_data(
     if task_id and task_id in challenges:
         filtered_challenges = {task_id: challenges[task_id]}
         filtered_solutions = (
-            {task_id: solutions[task_id]}
-            if solutions and task_id in solutions
-            else None
+            {task_id: solutions[task_id]} if solutions and task_id in solutions else None
         )
         return {
             "challenges": filtered_challenges,
@@ -204,9 +188,7 @@ def train_model(args):
         model = GRID_Former.load_from_file(args.load_model, device=str(device))
     else:
         logger.info("Creating new model")
-        model = GRID_Former(hidden_dim=args.hidden_dim, num_layers=args.num_layers).to(
-            device
-        )
+        model = GRID_Former(hidden_dim=args.hidden_dim, num_layers=args.num_layers).to(device)
 
     trainer = GridFormerTrainer(
         model=model,
@@ -237,25 +219,20 @@ def train_model(args):
         sigil_data = sigil_handler.save_model_to_sigil(
             model=model,
             training_info={
-                "train_loss": history["train_loss"][-1]
-                if history["train_loss"]
-                else None,
+                "train_loss": history["train_loss"][-1] if history["train_loss"] else None,
                 "val_loss": history["val_loss"][-1] if history["val_loss"] else None,
                 "train_accuracy": history["train_accuracy"][-1]
                 if history["train_accuracy"]
                 else None,
-                "val_accuracy": history["val_accuracy"][-1]
-                if history["val_accuracy"]
-                else None,
-                "epochs_trained": len(history["train_loss"])
-                if history["train_loss"]
-                else 0,
+                "val_accuracy": history["val_accuracy"][-1] if history["val_accuracy"] else None,
+                "epochs_trained": len(history["train_loss"]) if history["train_loss"] else 0,
             },
             metadata={"model_id": run_id},
             save_path=args.output_sigil,
         )
 
     logger.info("Training completed successfully")
+    logger.info("sigil_data: %s", sigil_data if 'sigil_data' in locals() else "No sigil created")
 
 
 def evaluate_model(args):
@@ -331,9 +308,7 @@ def evaluate_model(args):
 
         # Log task results
         task_accuracy = task_correct / task_total if task_total > 0 else 0
-        logger.info(
-            f"Task {task_id} accuracy: {task_accuracy:.4f} ({task_correct}/{task_total})"
-        )
+        logger.info(f"Task {task_id} accuracy: {task_accuracy:.4f} ({task_correct}/{task_total})")
 
         # Update global metrics
         if task_correct == task_total and task_total > 0:
@@ -342,9 +317,7 @@ def evaluate_model(args):
 
     # Log overall results
     overall_accuracy = correct_tasks / total_tasks if total_tasks > 0 else 0
-    logger.info(
-        f"Overall task accuracy: {overall_accuracy:.4f} ({correct_tasks}/{total_tasks})"
-    )
+    logger.info(f"Overall task accuracy: {overall_accuracy:.4f} ({correct_tasks}/{total_tasks})")
 
 
 def predict_with_model(args):

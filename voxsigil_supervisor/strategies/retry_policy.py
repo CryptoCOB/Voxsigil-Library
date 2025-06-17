@@ -6,7 +6,6 @@ when to switch strategies, and when to give up.
 """
 from typing import Dict, List, Any, Optional, Tuple
 import logging
-import time
 import random
 
 # Setup logger

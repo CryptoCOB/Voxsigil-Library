@@ -179,7 +179,7 @@ metadata:
   definition_status: active
   author_agent_id: Marc.⟠∆∇𓂀
   created_timestamp: '2025-05-10T09:00:00Z'
-  last_updated_timestamp: '2025-05-11T12:10:00Z'
+  last_updated_timestamp: '2025-06-13T05:40:40.617914Z'
   authorship_context:
     motivation: To provide a robust scaffold for cognitive evolution through structured
       conflict and synthesis. Useful in MRAP/TRIALOGOS sessions, fusion conflict tracing,
@@ -210,6 +210,11 @@ metadata:
     - How can an AI learn to autonomously initiate and navigate dialectical processes
       for self-improvement?
     - Can this scaffold be used to resolve conflicts between different AI agents?
+  schema_version: 1.5-holo-alpha
+  impact_and_usage_metrics_profile:
+    avg_completion_time_ms_observed: UNKNOWN
+    success_rate_observed: UNKNOWN
+    complexity_rating: medium
 relationships:
 - target_sigil: 🜁CHIMERA
   relationship_type: uses_method_from

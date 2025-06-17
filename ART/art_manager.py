@@ -11,7 +11,6 @@ Enhanced with HOLO-1.5 Recursive Symbolic Cognition Mesh pattern for advanced
 orchestration capabilities and VantaCore integration.
 """
 
-import asyncio
 import threading
 import time
 from typing import Any, Dict, List, Optional

@@ -8,8 +8,7 @@ and improving learning efficiency across domains.
 import logging
 import time
 import numpy as np
-from typing import Dict, Any, List, Optional, Tuple, AsyncIterator
-import asyncio
+from typing import Dict, Any, List, Optional, Tuple
 
 # Import Vanta Core for integration
 from Vanta.core.UnifiedVantaCore import UnifiedVantaCore

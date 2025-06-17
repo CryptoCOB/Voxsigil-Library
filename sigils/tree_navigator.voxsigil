@@ -204,7 +204,7 @@ metadata:
   definition_status: proposed
   author_agent_id: System_Architect_AI_Collab_Marc.pglyph
   created_timestamp: '2023-10-29T12:00:00Z'
-  last_updated_timestamp: '2023-10-29T12:00:00Z'
+  last_updated_timestamp: '2025-06-13T05:40:40.617914Z'
   authorship_context:
     motivation: To provide agents with explicit control and interaction capabilities
       for Tree of Thoughts structures, enabling more dynamic and reflective reasoning.
@@ -214,6 +214,11 @@ metadata:
   impact_metrics:
     estimated_cognitive_load: medium
     estimated_resource_cost: variable
+  schema_version: 1.5-holo-alpha
+  impact_and_usage_metrics_profile:
+    avg_completion_time_ms_observed: UNKNOWN
+    success_rate_observed: UNKNOWN
+    complexity_rating: medium
 advanced_cognitive_modeling:
   strategic_intent:
   - goal_id: IMPROVE_ToT_EFFICIENCY_AND_CONTROL

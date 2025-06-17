@@ -6,6 +6,7 @@ Includes robust error handling and fallback mechanisms per VANTA Integration Mas
 """
 
 import logging
+import os
 import sys
 import traceback
 from pathlib import Path
@@ -16,9 +17,9 @@ logging.basicConfig(
 )
 logger = logging.getLogger("VantaGUI")
 
-# Add Vanta to path - go up two levels to find Vanta
+# Add Vanta to path - Vanta is inside Voxsigil-Library
 current_dir = Path(__file__).resolve().parent
-project_root = current_dir.parent.parent
+project_root = current_dir.parent  # Voxsigil-Library
 vanta_path = project_root / "Vanta"
 
 # Add paths systematically
@@ -45,15 +46,22 @@ logger.info(f"Added {len(paths_to_add)} paths to sys.path")
 # Global variables for system state
 core = None
 vmb_handler = None
+training_engine = None
 vanta_available = False
+
+# Add environment variable check for clean mode
+ENHANCED_GUI_CLEAN_MODE = os.environ.get("VOXSIGIL_ENHANCED_CLEAN_MODE", "false").lower() == "true"
 
 
 def verify_vanta_accessibility():
     """Verify Vanta components are accessible without importing problematic modules"""
     global vanta_available
     try:
-        # Test basic Vanta imports first
-        from Vanta.async_training_engine import AsyncTrainingEngine
+        # Test basic Vanta imports first - use importlib to avoid unused import warning
+        import importlib.util
+
+        if importlib.util.find_spec("Vanta.async_training_engine"):
+            logger.info("✅ VantaCore training engine available")
 
         logger.info("✅ VantaCore basic components verified and accessible")
         vanta_available = True
@@ -113,14 +121,10 @@ def register_gui_agent(core_instance):
                     ],
                 },
             )
-            logger.info(
-                "✅ GUI launcher registered with UnifiedVantaCore via agent_registry"
-            )
+            logger.info("✅ GUI launcher registered with UnifiedVantaCore via agent_registry")
             return True
         else:
-            logger.info(
-                "⚠️ Agent registry not available, skipping GUI launcher registration"
-            )
+            logger.info("⚠️ Agent registry not available, skipping GUI launcher registration")
             return False
 
     except Exception as e:
@@ -175,22 +179,79 @@ def setup_vmb_integration(core_instance):
         return None
 
 
-def launch_gui_with_fallback():
-    """Launch the GUI using the PyQt5 interface."""
+def initialize_training_engine(core_instance):
+    """Initialize the async training engine and register it with the core system"""
+    global training_engine
+
+    if not core_instance or not vanta_available:
+        logger.info(
+            "⚠️ No core instance or Vanta not available - skipping training engine initialization"
+        )
+        return None
+
     try:
-        from gui.components import pyqt_main
+        from Vanta.async_training_engine import AsyncTrainingEngine
+
+        # Initialize the training engine
+        training_engine = AsyncTrainingEngine()
+
+        # Register with core if registry exists
+        if hasattr(core_instance, "registry"):
+            core_instance.registry.register(
+                "async_training_engine",
+                training_engine,
+                {
+                    "type": "training_engine",
+                    "status": "ready",
+                    "capabilities": [
+                        "async_training",
+                        "model_training",
+                        "training_monitoring",
+                        "training_orchestration",
+                    ],
+                },
+            )
+
+        # Connect to event bus if available
+        if hasattr(core_instance, "event_bus") and core_instance.event_bus:
+            # Subscribe to training-related events
+            core_instance.event_bus.subscribe(
+                "training_start", training_engine.handle_training_start
+            )
+            core_instance.event_bus.subscribe("training_stop", training_engine.handle_training_stop)
+            logger.info("✅ Training engine connected to event bus")
+
+        logger.info("✅ Async Training Engine initialized and registered with VantaCore")
+        return training_engine
+
+    except ImportError as import_err:
+        logger.warning(f"Training engine import failed: {import_err}")
+        return None
     except Exception as e:
-        logger.error(f"❌ Failed to import PyQt GUI: {e}")
+        logger.warning(f"Training engine initialization failed: {e}")
+        return None
+
+
+def launch_gui_with_fallback():
+    """Launch the GUI using the unified PyQt5 interface."""
+    try:
+        from components import pyqt_main
+    except Exception as e:
+        logger.error(f"❌ Failed to import unified PyQt GUI: {e}")
         raise
 
     try:
-        logger.info("🎨 Starting PyQt GUI main loop...")
+        logger.info("🎨 Starting unified PyQt GUI main loop...")
         registry = core.agent_registry if core else None
         event_bus = core.event_bus if core else None
         async_bus = core.async_bus if core else None
-        pyqt_main.launch(registry, event_bus, async_bus)
+
+        # Pass training engine to GUI if available
+        training_engine_instance = training_engine if training_engine else None
+
+        pyqt_main.launch(registry, event_bus, async_bus, training_engine_instance)
     except Exception as e:
-        logger.error(f"❌ Critical error launching PyQt GUI: {e}")
+        logger.error(f"❌ Critical error launching unified PyQt GUI: {e}")
         traceback.print_exc()
         raise
 
@@ -198,6 +259,12 @@ def launch_gui_with_fallback():
 def main():
     """Main launcher function with comprehensive system initialization"""
     try:
+        if ENHANCED_GUI_CLEAN_MODE:
+            logger.info("🎯 Running in Enhanced GUI Clean Mode - Skipping VantaCore initialization")
+            logger.info("🔍 Launching GUI directly with real-time data provider...")
+            launch_gui_with_fallback()
+            return
+
         # Step 1: Verify Vanta accessibility
         logger.info("🔍 Step 1: Verifying Vanta component accessibility...")
         verify_vanta_accessibility()
@@ -218,8 +285,12 @@ def main():
         logger.info("🔍 Step 5: Setting up VMB integration...")
         setup_vmb_integration(core_instance)
 
-        # Step 6: Launch GUI with fallback mechanisms
-        logger.info("🔍 Step 6: Launching GUI with comprehensive fallback...")
+        # Step 6: Initialize training engine
+        logger.info("🔍 Step 6: Initializing training engine...")
+        initialize_training_engine(core_instance)
+
+        # Step 7: Launch GUI with fallback mechanisms
+        logger.info("🔍 Step 7: Launching GUI with comprehensive fallback...")
         launch_gui_with_fallback()
 
     except KeyboardInterrupt:

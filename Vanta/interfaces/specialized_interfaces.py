@@ -8,11 +8,8 @@ specialized functionality.
 """
 
 from abc import ABC, abstractmethod
-from typing import Any, Dict, List, Optional, Union, Callable
+from typing import Any, Dict, List, Optional
 from .base_interfaces import (
-    BaseRagInterface, 
-    BaseLlmInterface, 
-    BaseMemoryInterface,
     BaseAgentInterface,
     BaseModelInterface
 )

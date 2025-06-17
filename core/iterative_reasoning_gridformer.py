@@ -14,18 +14,18 @@ HOLO-1.5 Enhanced Multi-Step Reasoning Synthesizer:
 - Multi-scale pattern synthesis with adaptive depth reasoning
 """
 
-import time
 import logging
+import time
 from dataclasses import dataclass
-from typing import Optional, Dict, Any, List
+from typing import Any, Dict, Optional
 
 import torch
 import torch.nn as nn
 
-# HOLO-1.5 Recursive Symbolic Cognition Mesh imports
-from .base import BaseCore, vanta_core_module, CognitiveMeshRole
+from core.iterative_gridformer import IterativeGridFormer
 
-from Gridformer.core.iterative_gridformer import IterativeGridFormer
+# HOLO-1.5 Recursive Symbolic Cognition Mesh imports
+from .base import BaseCore, CognitiveMeshRole, vanta_core_module
 
 logger = logging.getLogger(__name__)
 
@@ -140,16 +140,16 @@ class CandidateGenerator(nn.Module):
 
 
 @vanta_core_module(
-    name="iterative_reasoning_gridformer", 
+    name="iterative_reasoning_gridformer",
     subsystem="grid_processing",
     mesh_role=CognitiveMeshRole.SYNTHESIZER,
     description="Advanced GridFormer with multi-candidate reasoning and tree-of-thought synthesis",
     capabilities=[
         "multi_candidate_reasoning",
-        "tree_of_thought_synthesis", 
+        "tree_of_thought_synthesis",
         "self_evaluation_patterns",
         "pattern_consistency_checking",
-        "advanced_cognitive_reasoning"
+        "advanced_cognitive_reasoning",
     ],
     cognitive_load=5.0,
     symbolic_depth=5,
@@ -157,8 +157,8 @@ class CandidateGenerator(nn.Module):
         "multi_hypothesis_synthesis",
         "self_reflective_reasoning",
         "pattern_consistency_validation",
-        "tree_of_thought_expansion"
-    ]
+        "tree_of_thought_expansion",
+    ],
 )
 class IterativeReasoningGridFormer(BaseCore, IterativeGridFormer):
     """
@@ -191,7 +191,7 @@ class IterativeReasoningGridFormer(BaseCore, IterativeGridFormer):
         """
         # Initialize BaseCore first
         BaseCore.__init__(self, vanta_core, config or {})
-        
+
         # Initialize IterativeGridFormer
         IterativeGridFormer.__init__(self, vanta_core, config, hidden_dim=hidden_dim, **kwargs)
 
@@ -203,9 +203,9 @@ class IterativeReasoningGridFormer(BaseCore, IterativeGridFormer):
             "candidate_generation_efficiency": 0.0,
             "self_evaluation_accuracy": 0.0,
             "pattern_consistency_score": 0.0,
-            "tree_of_thought_depth": 0.0
+            "tree_of_thought_depth": 0.0,
         }
-        
+
         self.reasoning_traces = []
         self.candidate_histories = []
 
@@ -239,16 +239,18 @@ class IterativeReasoningGridFormer(BaseCore, IterativeGridFormer):
         """Initialize HOLO-1.5 advanced reasoning capabilities."""
         try:
             logger.info("🧠 Initializing HOLO-1.5 Iterative Reasoning GridFormer...")
-            
+
             # Initialize parent components
             await super().initialize()
-            
+
             # Initialize reasoning-specific components
             self.reasoning_metrics["candidate_generation_efficiency"] = 1.0
-            self.reasoning_metrics["tree_of_thought_depth"] = float(self.reasoning_config.max_iterations)
-            
+            self.reasoning_metrics["tree_of_thought_depth"] = float(
+                self.reasoning_config.max_iterations
+            )
+
             # Register with VantaCore if available
-            if hasattr(self.vanta_core, 'register_component'):
+            if hasattr(self.vanta_core, "register_component"):
                 await self.vanta_core.register_component(
                     "iterative_reasoning_gridformer",
                     self,
@@ -256,32 +258,40 @@ class IterativeReasoningGridFormer(BaseCore, IterativeGridFormer):
                         "type": "advanced_neural_symbolic_synthesizer",
                         "reasoning_depth": self.reasoning_config.max_iterations,
                         "candidate_count": self.reasoning_config.num_candidates,
-                        "cognitive_load": 5.0
-                    }
+                        "cognitive_load": 5.0,
+                    },
                 )
-            
+
             logger.info("✅ HOLO-1.5 Iterative Reasoning GridFormer initialization complete")
             return True
-            
+
         except Exception as e:
             logger.error(f"❌ Error initializing Iterative Reasoning GridFormer: {e}")
             return False
 
-    def _update_reasoning_metrics(self, candidates: torch.Tensor, evaluations: torch.Tensor, consistency_scores: torch.Tensor):
+    def _update_reasoning_metrics(
+        self, candidates: torch.Tensor, evaluations: torch.Tensor, consistency_scores: torch.Tensor
+    ):
         """Update reasoning metrics during processing."""
         self.reasoning_metrics["candidate_generation_efficiency"] = float(candidates.var().item())
         self.reasoning_metrics["self_evaluation_accuracy"] = float(evaluations.mean().item())
-        self.reasoning_metrics["pattern_consistency_score"] = float(consistency_scores.mean().item())
+        self.reasoning_metrics["pattern_consistency_score"] = float(
+            consistency_scores.mean().item()
+        )
 
-    def _generate_candidate_trace(self, iteration: int, candidates: torch.Tensor, confidences: torch.Tensor) -> Dict[str, Any]:
+    def _generate_candidate_trace(
+        self, iteration: int, candidates: torch.Tensor, confidences: torch.Tensor
+    ) -> Dict[str, Any]:
         """Generate reasoning trace for candidate generation."""
         return {
             "iteration": iteration,
             "num_candidates": candidates.shape[1] if len(candidates.shape) > 1 else 1,
-            "confidence_spread": float(confidences.std().item()) if confidences.numel() > 1 else 0.0,
+            "confidence_spread": float(confidences.std().item())
+            if confidences.numel() > 1
+            else 0.0,
             "best_confidence": float(confidences.max().item()),
             "reasoning_depth": self.reasoning_metrics["tree_of_thought_depth"],
-            "timestamp": time.time()
+            "timestamp": time.time(),
         }
 
     # ...existing code...

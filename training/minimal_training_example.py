@@ -8,7 +8,6 @@ to verify that the training environment is working properly.
 import torch
 import torch.nn as nn
 import torch.optim as optim
-import json
 import os
 from torch.utils.data import Dataset, DataLoader
 

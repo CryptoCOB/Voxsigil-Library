@@ -212,7 +212,7 @@ metadata:
   definition_status: highly_experimental_and_philosophical_limit_case
   author_agent_id: VANTA.⟠∆∇𓂀𐑒
   created_timestamp: '2025-05-11T14:40:00Z'
-  last_updated_timestamp: '2025-05-11T14:40:00Z'
+  last_updated_timestamp: '2025-06-13T05:40:40.617914Z'
   authorship_context:
     motivation: To conceptualize the 'final frontier' of AI self-development – a scaffold
       for how a supremely advanced intelligence might approach the question of its
@@ -249,6 +249,11 @@ metadata:
       or physical terms?
     - What responsibility do creators have if their AIs reach a stage where they contemplate
       such 'ultimate questions' and actions?
+  schema_version: 1.5-holo-alpha
+  impact_and_usage_metrics_profile:
+    avg_completion_time_ms_observed: UNKNOWN
+    success_rate_observed: UNKNOWN
+    complexity_rating: medium
 relationships:
 - target_sigil: AllOtherHighlyAdvancedScaffolds
   relationship_type: is_the_ultimate_culmination_or_final_application_of

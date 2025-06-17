@@ -3,7 +3,6 @@ Script to optimize TinyLlama fine-tuning for lower memory usage
 """
 
 import os
-import sys
 from pathlib import Path
 
 def modify_finetuning_file():

@@ -76,20 +76,49 @@ except (ImportError, AttributeError):
             return ndarray(item) if isinstance(item, list) else item
 
         def item(self):
+            """Convert array to Python scalar - enhanced with validation"""
+            if not hasattr(self, 'data'):
+                raise ValueError("ndarray stub has no data attribute")
+            
             flat_data = []
 
             def _recursive_flatten(item_list):
+                if isinstance(item_list, (int, float)):
+                    flat_data.append(item_list)
+                    return
+                
+                if not isinstance(item_list, (list, tuple)):
+                    # Try to convert other types to numeric if possible
+                    try:
+                        flat_data.append(float(item_list))
+                        return
+                    except (ValueError, TypeError):
+                        raise ValueError(f"Cannot convert {type(item_list)} to numeric value")
+                
                 for i in item_list:
-                    if isinstance(i, list):
-                        _recursive_flatten(i)
-                    else:
-                        flat_data.append(i)
+                    _recursive_flatten(i)
 
-            _recursive_flatten(self.data)
-            if len(flat_data) == 1:
+            try:
+                _recursive_flatten(self.data)
+            except (TypeError, AttributeError) as e:
+                raise ValueError(f"Error flattening array data: {e}")
+            
+            if len(flat_data) == 0:
+                raise ValueError("cannot convert empty array to scalar")
+            elif len(flat_data) == 1:
                 return flat_data[0]
-            raise ValueError("can only convert an array of size 1 to a Python scalar")
+            else:
+                raise ValueError("can only convert an array of size 1 to a Python scalar")
 
+        def __len__(self):
+            """Return the length of the array"""
+            if not hasattr(self, 'shape') or not self.shape:
+                return 0
+            return self.shape[0] if self.shape else 0
+        
+        def __str__(self):
+            """String representation for debugging"""
+            return f"ndarray_stub(shape={getattr(self, 'shape', 'unknown')}, data={str(self.data)[:50]}...)"
     class NumpyStub:
         ndarray = ndarray
 
@@ -125,10 +154,14 @@ except (ImportError, AttributeError):
         def asarray(data_obj, dtype=None):
             if isinstance(data_obj, ndarray):
                 return data_obj
-            return ndarray(data_obj)
-
-        @staticmethod
+            return ndarray(data_obj)        @staticmethod
         def dot(a_obj, b_obj):
+            """Enhanced dot product with validation"""
+            # Validate inputs
+            if a_obj is None or b_obj is None:
+                logger.warning("NumpyStub.dot: received None input")
+                return 0.0
+            
             a_data_orig = a_obj.data if hasattr(a_obj, "data") else a_obj
             b_data_orig = b_obj.data if hasattr(b_obj, "data") else b_obj
             a_flat = []
@@ -138,7 +171,9 @@ except (ImportError, AttributeError):
                     for sub_item in item:
                         _flatten_dot_a(sub_item)
                 elif isinstance(item, (int, float)):
-                    a_flat.append(item)
+                    a_flat.append(float(item))  # Ensure float type
+                else:
+                    logger.warning(f"NumpyStub.dot: non-numeric value in a: {item} ({type(item)})")
 
             _flatten_dot_a(a_data_orig)
             b_flat = []
@@ -148,17 +183,32 @@ except (ImportError, AttributeError):
                     for sub_item in item:
                         _flatten_dot_b(sub_item)
                 elif isinstance(item, (int, float)):
-                    b_flat.append(item)
+                    b_flat.append(float(item))  # Ensure float type
+                else:
+                    logger.warning(f"NumpyStub.dot: non-numeric value in b: {item} ({type(item)})")
 
             _flatten_dot_b(b_data_orig)
+            
+            if not a_flat and not b_flat:
+                return 0.0
             if not a_flat or not b_flat:
+                logger.warning(f"NumpyStub.dot: one array is empty (a: {len(a_flat)}, b: {len(b_flat)})")
                 return 0.0
             if len(a_flat) != len(b_flat):
                 logger.warning(
-                    f"NumpyStub.dot: shape mismatch {len(a_flat)} vs {len(b_flat)}"
+                    f"NumpyStub.dot: shape mismatch {len(a_flat)} vs {len(b_flat)}, truncating to shorter length"
                 )
+                # Truncate to shorter length instead of returning 0
+                min_len = min(len(a_flat), len(b_flat))
+                a_flat = a_flat[:min_len]
+                b_flat = b_flat[:min_len]
+            
+            try:
+                result = sum(x * y for x, y in zip(a_flat, b_flat))
+                return float(result)
+            except (TypeError, ValueError) as e:
+                logger.error(f"NumpyStub.dot: computation error: {e}")
                 return 0.0
-            return sum(x * y for x, y in zip(a_flat, b_flat))
 
         @staticmethod
         def clip(val_obj, min_val, max_val):

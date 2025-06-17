@@ -12,7 +12,7 @@ import sys
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "../../..")))
 
 # Import the test function
-from Voxsigil_Library.Gridformer.core.vantacore_grid_connector import (
+from core.vantacore_grid_connector import (
     test_grid_former_connector,
 )
 

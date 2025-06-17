@@ -145,7 +145,7 @@ metadata:
   definition_status: experimental
   author_agent_id: VANTA.⟠∆∇𓂀𐑒
   created_timestamp: '2025-05-11T10:15:00Z'
-  last_updated_timestamp: '2025-05-11T10:15:00Z'
+  last_updated_timestamp: '2025-06-13T05:40:40.617914Z'
   authorship_context:
     motivation: To tap into the deeper, holistic understanding that large models might
       develop, allowing for a form of 'machine intuition' or access to synthesized
@@ -173,6 +173,11 @@ metadata:
     - What are the ethical implications of relying on 'machine intuition' for significant
       decisions?
     - Can an AI develop genuine 'wisdom' in a human-comparable sense?
+  schema_version: 1.5-holo-alpha
+  impact_and_usage_metrics_profile:
+    avg_completion_time_ms_observed: UNKNOWN
+    success_rate_observed: UNKNOWN
+    complexity_rating: medium
 relationships:
 - target_sigil: 🌒DREAM_STATE
   relationship_type: synergizes_with

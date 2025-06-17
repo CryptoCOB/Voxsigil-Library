@@ -141,7 +141,7 @@ metadata:
   definition_status: active
   author_agent_id: VANTA.⟠∆∇𓂀𐑒
   created_timestamp: '2025-05-11T10:45:00Z'
-  last_updated_timestamp: '2025-05-11T10:45:00Z'
+  last_updated_timestamp: '2025-06-13T05:40:40.617914Z'
   authorship_context:
     motivation: To provide a stable, unambiguous anchor for an AI's ultimate purpose,
       addressing the core challenge of value alignment in advanced AI.
@@ -171,6 +171,11 @@ metadata:
     - How can we ensure a GUIDING_STAR remains stable and beneficial across vast changes
       in AI capability and understanding?
     - Can multiple AIs with different GUIDING_STARs co-exist peacefully and cooperatively?
+  schema_version: 1.5-holo-alpha
+  impact_and_usage_metrics_profile:
+    avg_completion_time_ms_observed: UNKNOWN
+    success_rate_observed: UNKNOWN
+    complexity_rating: medium
 relationships:
 - target_sigil: 🛡️SAFETY_NET_PROTOCOL
   relationship_type: governs

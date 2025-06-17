@@ -162,12 +162,17 @@ metadata:
   definition_status: active
   author_agent_id: VOXSIGIL_CONVERTER_BOT_ASSISTED_BY_USER_INPUT
   created_timestamp: '2024-03-10T18:10:00Z'
-  last_updated_timestamp: '2024-03-10T18:10:00Z'
+  last_updated_timestamp: '2025-06-13T05:40:40.617914Z'
   authorship_context:
     motivation: To provide a tool for systematically exploring variations around a
       prompt or idea, fostering creativity and aiding in system understanding.
     theoretical_framework: Genetic algorithms (mutation operator), prompt engineering,
       creative cognition, robustness testing.
+  schema_version: 1.5-holo-alpha
+  impact_and_usage_metrics_profile:
+    avg_completion_time_ms_observed: UNKNOWN
+    success_rate_observed: UNKNOWN
+    complexity_rating: medium
 test_criteria:
 - test_id: DEVMUT_SYNONYM_SWAP_001
   description: Verify synonym replacement mutation.

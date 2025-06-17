@@ -6,17 +6,17 @@ Provides a connector class that allows VantaCore to use GRID-Former models
 for ARC tasks, enabling meta-learning and knowledge transfer.
 """
 
+import json
 import logging
 import os
 import time
-import json
 from pathlib import Path
-from typing import Dict, List, Any, Optional, Tuple, Union
+from typing import Any, Dict, List, Optional, Tuple, Union
 
 # Attempt to import PyTorch and NumPy first, as they are crucial.
 try:
-    import torch
     import numpy as np
+    import torch
 except ImportError as e_dep:
     # Using print as logger might not be configured or logging module itself could have issues.
     print(
@@ -31,9 +31,12 @@ logger = logging.getLogger("VoxSigil.GRID-Former.Connector")
 # Attempt to import GRID-Former modules from Voxsigil_Library.
 # These are considered essential for the GridFormerConnector to function.
 try:
-    from Gridformer.core.grid_former import GRID_Former
-    from ARC.core.arc_data_processor import ARCGridDataProcessor, visualize_grid
-    from Gridformer.training.grid_model_trainer import GridFormerTrainer
+    from ARC.core.arc_data_processor import (  # visualize_grid for debugging/logging
+        ARCGridDataProcessor,
+        visualize_grid,
+    )
+    from core.grid_former import GRID_Former
+    from training.arc_grid_trainer import ARCGridTrainer as GridFormerTrainer
 
     logger.info(
         "Successfully imported GRID_Former, ARCGridDataProcessor, visualize_grid, "
@@ -45,13 +48,22 @@ except ImportError as e_grid:
         f"Failed to import essential GRID-Former components from Voxsigil_Library: {e_grid}. "
         "The GridFormerConnector will not be functional. "
         "Please ensure Voxsigil_Library is correctly installed and accessible in the Python path."
-    )
-    # Re-raise the error to prevent the module from being used in a broken state.
+    )  # Re-raise the error to prevent the module from being used in a broken state.
     # This makes it clear that the connector cannot operate without these components.
     raise ImportError(
-        "Essential GRID-Former components (GRID_Former, ARCGridDataProcessor, visualize_grid, GridFormerTrainer) "
+        "Essential GRID-Former components (GRID_Former, ARCGridDataProcessor, GridFormerTrainer) "
         f"could not be imported from Voxsigil_Library. Please check installation and anaconda_path. Original error: {e_grid}"
     ) from e_grid
+
+# Import async training engine for centralized training management
+try:
+    from Vanta.async_training_engine import VantaAsyncTrainingEngine, VantaTrainingConfig
+
+    HAVE_ASYNC_TRAINING = True
+    logger.info("Successfully imported VantaAsyncTrainingEngine")
+except ImportError as e_training:
+    logger.warning(f"Could not import async training engine: {e_training}")
+    HAVE_ASYNC_TRAINING = False
 
 # The GridFormerConnector class and other parts of the module will now use the
 # directly imported components. If the imports above failed, execution would have halted.
@@ -75,6 +87,7 @@ class GridFormerConnector:
         hidden_dim: int = 256,
         num_layers: int = 6,
         num_heads: int = 8,
+        async_training_engine: Optional["VantaAsyncTrainingEngine"] = None,
     ):
         """
         Initialize the connector.
@@ -87,6 +100,7 @@ class GridFormerConnector:
             hidden_dim: Hidden dimension for model architecture
             num_layers: Number of transformer layers
             num_heads: Number of attention heads
+            async_training_engine: Optional async training engine for centralized training
         """
         # Set device
         self.device = device or ("cuda" if torch.cuda.is_available() else "cpu")
@@ -105,12 +119,15 @@ class GridFormerConnector:
         self.max_grid_size = max_grid_size
         self.hidden_dim = hidden_dim
         self.num_layers = num_layers
-        self.num_heads = num_heads
+        self.num_heads = num_heads  # Create data processor
+        self.processor = ARCGridDataProcessor(max_grid_size=max_grid_size, augment_data=False)
 
-        # Create data processor
-        self.processor = ARCGridDataProcessor(
-            max_grid_size=max_grid_size, augment_data=False
-        )
+        # Initialize async training engine
+        self.async_training_engine = async_training_engine
+        if self.async_training_engine and HAVE_ASYNC_TRAINING:
+            logger.info("Using provided async training engine for centralized training")
+        else:
+            logger.info("No async training engine provided, falling back to direct training")
 
         # Load or create default model
         self._initialize_default_model(default_model_path)
@@ -181,9 +198,7 @@ class GridFormerConnector:
         # Ensure input grid fits in max size
         h, w = input_grid.shape[-2:]  # Get height and width
         if h > self.max_grid_size or w > self.max_grid_size:
-            raise ValueError(
-                f"Input grid size {h}x{w} exceeds maximum size {self.max_grid_size}"
-            )
+            raise ValueError(f"Input grid size {h}x{w} exceeds maximum size {self.max_grid_size}")
 
         # Pad input if needed
         if h < self.max_grid_size or w < self.max_grid_size:
@@ -206,9 +221,7 @@ class GridFormerConnector:
         with torch.no_grad():
             # Generate prediction
             output_logits = model(input_tensor, target_shape)
-            predictions = torch.argmax(output_logits, dim=3).squeeze(
-                0
-            )  # Remove batch dimension
+            predictions = torch.argmax(output_logits, dim=3).squeeze(0)  # Remove batch dimension
 
         # Convert to numpy
         output_grid = predictions.cpu().numpy()
@@ -296,9 +309,7 @@ class GridFormerConnector:
             # Generate prediction
             predicted_grid = self.predict(test_input, target_shape, model_id)
 
-            predictions.append(
-                {"input": test_input, "predicted_grid": predicted_grid.tolist()}
-            )
+            predictions.append({"input": test_input, "predicted_grid": predicted_grid.tolist()})
 
         # Prepare result
         result = {
@@ -327,13 +338,81 @@ class GridFormerConnector:
             num_epochs: Number of fine-tuning epochs
             learning_rate: Learning rate for fine-tuning
             weight_decay: Weight decay for optimizer
-        """
-        # Ensure model exists
+        """  # Ensure model exists
         if model_id not in self.models or model_id not in self.trainers:
             raise ValueError(f"Model {model_id} not found")
 
         model = self.models[model_id]
+
+        # Check if we should use the async training engine
+        if self.async_training_engine and HAVE_ASYNC_TRAINING:
+            logger.info(f"Using async training engine for fine-tuning model {model_id}")
+
+            # Prepare training configuration for the async engine
+            training_config = VantaTrainingConfig(
+                model_id=model_id,
+                num_epochs=num_epochs,
+                learning_rate=learning_rate,
+                weight_decay=weight_decay,
+                task_type="arc_gridformer_fine_tuning",
+                training_data=examples,  # Pass the examples as training data
+                device=str(self.device),
+                model_config={
+                    "max_grid_size": self.max_grid_size,
+                    "hidden_dim": self.hidden_dim,
+                    "num_layers": self.num_layers,
+                    "num_heads": self.num_heads,
+                },
+            )
+
+            # Submit the training job to the async engine
+            training_result = self.async_training_engine.submit_training_job(
+                model=model,
+                config=training_config,
+                priority="high",  # ARC fine-tuning gets high priority
+            )
+
+            logger.info(f"Submitted fine-tuning job to async training engine: {training_result}")
+            return  # Fallback to manual training if async engine is not available
+        logger.info(f"Using manual fine-tuning for model {model_id} (async engine not available)")
         trainer = self.trainers[model_id]
+
+        # Use the trainer's training capabilities instead of manual training
+        try:
+            # Prepare training data in the format expected by the trainer
+            training_data = []
+            for example in examples:
+                training_data.append({"input": example["input"], "output": example["output"]})
+
+            # Use the trainer's training method if available
+            if hasattr(trainer, "fine_tune"):
+                logger.info(f"Using trainer.fine_tune method for {len(examples)} examples")
+                trainer.fine_tune(
+                    training_data=training_data, num_epochs=num_epochs, learning_rate=learning_rate
+                )
+            elif hasattr(trainer, "train_on_examples"):
+                logger.info(f"Using trainer.train_on_examples method for {len(examples)} examples")
+                trainer.train_on_examples(
+                    examples=training_data, num_epochs=num_epochs, learning_rate=learning_rate
+                )
+            else:
+                # If trainer doesn't have appropriate methods, fall back to manual training
+                logger.info("Trainer doesn't have fine_tune methods, using manual training")
+                self._manual_fine_tune(examples, model, num_epochs, learning_rate, weight_decay)
+
+        except Exception as e:
+            logger.error(f"Error using trainer methods: {e}, falling back to manual training")
+            self._manual_fine_tune(examples, model, num_epochs, learning_rate, weight_decay)
+
+    def _manual_fine_tune(
+        self,
+        examples: List[Dict[str, List[List[int]]]],
+        model,
+        num_epochs: int,
+        learning_rate: float,
+        weight_decay: float,
+    ) -> None:
+        """Manual fine-tuning implementation as fallback."""
 
         # Prepare mini-dataset
         input_tensors = []
@@ -397,9 +476,7 @@ class GridFormerConnector:
             optimizer.step()
 
             if (epoch + 1) % 10 == 0:
-                logger.info(
-                    f"Fine-tuning epoch {epoch + 1}/{num_epochs}, loss: {loss.item():.6f}"
-                )
+                logger.info(f"Fine-tuning epoch {epoch + 1}/{num_epochs}, loss: {loss.item():.6f}")
 
         # Evaluate after fine-tuning
         model.eval()
@@ -422,9 +499,97 @@ class GridFormerConnector:
             f"Fine-tuning completed. Final loss: {loss.item():.6f}, accuracy: {accuracy:.4f}"
         )
 
-    def export_to_sigil(
-        self, model_id: str, path: Optional[str] = None
-    ) -> Dict[str, Any]:
+    def debug_visualize_grid(
+        self,
+        grid: Union[List[List[int]], np.ndarray, torch.Tensor],
+        title: str = "Grid Visualization",
+        save_path: Optional[str] = None,
+    ) -> None:
+        """
+        Debug method to visualize grids using the visualize_grid utility.
+
+        This method provides visualization capability for debugging grid transformations,
+        model predictions, and training data. It uses the imported visualize_grid function
+        to avoid unused import warnings.
+
+        Args:
+            grid: Grid data to visualize (list, numpy array, or tensor)
+            title: Title for the visualization
+            save_path: Optional path to save the visualization image
+        """
+        try:
+            # Convert grid to numpy array if needed
+            if isinstance(grid, torch.Tensor):
+                grid_np = grid.detach().cpu().numpy()
+            elif isinstance(grid, list):
+                grid_np = np.array(grid)
+            else:
+                grid_np = grid
+
+            # Remove batch dimension if present
+            if len(grid_np.shape) == 3 and grid_np.shape[0] == 1:
+                grid_np = grid_np[0]
+
+            # Use the imported visualize_grid function
+            visualize_grid(grid=grid_np, title=title, save_path=save_path)
+
+            logger.info(f"Grid visualization displayed: {title}")
+            if save_path:
+                logger.info(f"Grid visualization saved to: {save_path}")
+
+        except Exception as e:
+            logger.error(f"Error in debug_visualize_grid: {e}")
+
+    def visualize_prediction_comparison(
+        self,
+        input_grid: Union[List[List[int]], np.ndarray],
+        predicted_grid: Union[List[List[int]], np.ndarray],
+        target_grid: Optional[Union[List[List[int]], np.ndarray]] = None,
+        task_id: str = "unknown",
+        save_dir: Optional[str] = None,
+    ) -> None:
+        """
+        Visualize input, prediction, and optionally target grids for comparison.
+
+        This method provides a comprehensive visualization for debugging ARC task
+        predictions by showing input, predicted output, and expected output side by side.
+
+        Args:
+            input_grid: The input grid
+            predicted_grid: The model's predicted output
+            target_grid: The expected/target output (optional)
+            task_id: Identifier for the task
+            save_dir: Directory to save visualization images (optional)
+        """
+        try:
+            # Visualize input grid
+            self.debug_visualize_grid(
+                input_grid,
+                title=f"Task {task_id} - Input Grid",
+                save_path=f"{save_dir}/input_{task_id}.png" if save_dir else None,
+            )
+
+            # Visualize predicted grid
+            self.debug_visualize_grid(
+                predicted_grid,
+                title=f"Task {task_id} - Predicted Output",
+                save_path=f"{save_dir}/predicted_{task_id}.png" if save_dir else None,
+            )
+
+            # Visualize target grid if available
+            if target_grid is not None:
+                self.debug_visualize_grid(
+                    target_grid,
+                    title=f"Task {task_id} - Target Output",
+                    save_path=f"{save_dir}/target_{task_id}.png" if save_dir else None,
+                )
+
+            logger.info(f"Completed prediction comparison visualization for task {task_id}")
+
+        except Exception as e:
+            logger.error(f"Error in visualize_prediction_comparison: {e}")
+
+    def export_to_sigil(self, model_id: str, path: Optional[str] = None) -> Dict[str, Any]:
         """
         Export model as VoxSigil sigil format.
 
@@ -491,10 +656,7 @@ class GridFormerConnector:
             New GridFormerConnector instance
         """
         # Validate sigil
-        if (
-            "SigilType" not in sigil_data
-            or sigil_data["SigilType"] != "GRID-Former-Model"
-        ):
+        if "SigilType" not in sigil_data or sigil_data["SigilType"] != "GRID-Former-Model":
             raise ValueError("Invalid sigil: Not a GRID-Former model sigil")
 
         if "Content" not in sigil_data:

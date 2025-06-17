@@ -242,7 +242,7 @@ metadata:
   definition_status: active
   author_agent_id: VOXSIGIL_CONVERTER_BOT
   created_timestamp: '2024-03-10T12:05:00Z'
-  last_updated_timestamp: '2024-03-10T12:05:00Z'
+  last_updated_timestamp: '2025-06-13T05:40:40.617914Z'
   revision_history:
   - version_tag: 1.4.0
     timestamp: '2024-03-10T12:05:00Z'
@@ -271,6 +271,11 @@ metadata:
     - How can AI learn to formulate recursive solutions autonomously?
     - What are the cognitive limits of recursion in LLMs?
     - Can recursive symbolic reasoning bridge the gap to more human-like general intelligence?
+  schema_version: 1.5-holo-alpha
+  impact_and_usage_metrics_profile:
+    avg_completion_time_ms_observed: UNKNOWN
+    success_rate_observed: UNKNOWN
+    complexity_rating: medium
 test_criteria:
 - test_id: RECSYMB_FACTORIAL_001
   description: Test symbolic factorial calculation (e.g., Factorial(N) -> N * Factorial(N-1)).

@@ -7,10 +7,8 @@ for ARC tasks, enabling meta-learning and knowledge transfer.
 This enhanced version adds proper integration support and fixes connectivity issues.
 """
 
-import json
 import logging
 import os
-import time
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple, Union
 
@@ -18,7 +16,7 @@ import numpy as np
 import torch
 
 # HOLO-1.5 imports
-from .base import BaseCore, vanta_core_module, CognitiveMeshRole
+from .base import BaseCore, CognitiveMeshRole, vanta_core_module
 
 # Use standard path helper for imports
 try:
@@ -41,22 +39,25 @@ except ImportError:
 # Import GRID-Former modules
 try:
     # Try relative imports first (when imported as a module)
-    from ARC.core.arc_data_processor import (
-        ARCGridDataProcessor,
-        visualize_grid,
-    )
-    from Gridformer.training.grid_model_trainer import (
-        GridFormerTrainer,
-    )
+    import importlib.util as _util
+
+    # Test if the ARC data-processor is available before importing
+    if _util.find_spec("ARC.core.arc_data_processor") is not None:
+        from ARC.core.arc_data_processor import ARCGridDataProcessor  # type: ignore
+        try:  # visualize_grid is optional
+            from ARC.core.arc_data_processor import visualize_grid  # noqa: F401
+        except ImportError:
+            visualize_grid = None  # type: ignore
+    else:
+        raise ImportError("ARC.core.arc_data_processor module not found")
+    from training.gridformer_training import GridFormerTrainer
 
     from .grid_former import GRID_Former
 except ImportError:
     # Fall back to absolute imports (when run as a script)
     from ARC.core.arc_data_processor import ARCGridDataProcessor
-    from Gridformer.core.grid_former import GRID_Former
-    from Gridformer.training.grid_model_trainer import (
-        GridFormerTrainer,
-    )
+    from core.grid_former import GRID_Former
+    from training.gridformer_training import GridFormerTrainer
 
 logger = logging.getLogger("VoxSigil.GRID-Former.Connector")
 
@@ -66,10 +67,16 @@ logger = logging.getLogger("VoxSigil.GRID-Former.Connector")
     subsystem="grid_processing",
     mesh_role=CognitiveMeshRole.SYNTHESIZER,
     description="Enhanced GRID-Former connector for VantaCore integration with neural-symbolic grid processing",
-    capabilities=["grid_neural_synthesis", "vanta_grid_integration", "model_connector", "arc_task_processing", "hybrid_reasoning"],
+    capabilities=[
+        "grid_neural_synthesis",
+        "vanta_grid_integration",
+        "model_connector",
+        "arc_task_processing",
+        "hybrid_reasoning",
+    ],
     cognitive_load=4.0,
     symbolic_depth=3,
-    collaboration_patterns=["neural_symbolic_bridge", "model_integration", "grid_synthesis"]
+    collaboration_patterns=["neural_symbolic_bridge", "model_integration", "grid_synthesis"],
 )
 class EnhancedGridFormerConnector(BaseCore):
     """
@@ -111,7 +118,7 @@ class EnhancedGridFormerConnector(BaseCore):
         """
         # Initialize BaseCore
         super().__init__(vanta_core, config)
-        
+
         # Set device
         self.device = device or ("cuda" if torch.cuda.is_available() else "cpu")
         self.device = torch.device(self.device)
@@ -132,9 +139,7 @@ class EnhancedGridFormerConnector(BaseCore):
         self.num_heads = num_heads
 
         # Create data processor
-        self.processor = ARCGridDataProcessor(
-            max_grid_size=max_grid_size, augment_data=False
-        )
+        self.processor = ARCGridDataProcessor(max_grid_size=max_grid_size, augment_data=False)
 
         # Track active models
         self.models: Dict[str, GRID_Former] = {}
@@ -182,8 +187,8 @@ class EnhancedGridFormerConnector(BaseCore):
             model=self.models[self.default_model_id],
             output_dir=str(self.model_dir),
             device=self.device,
-        )    
-    
+        )
+
     async def initialize(self) -> bool:
         """
         Initialize the integration with VantaCore.
@@ -210,9 +215,7 @@ class EnhancedGridFormerConnector(BaseCore):
                         model_interface=self,
                         description=f"GRID-Former model for ARC tasks ({model_id})",
                     )
-                logger.info(
-                    f"Registered {len(self.models)} GRID-Former models with VantaCore"
-                )
+                logger.info(f"Registered {len(self.models)} GRID-Former models with VantaCore")
             else:
                 logger.warning("VantaCore does not support model registration")
 
@@ -321,9 +324,7 @@ class EnhancedGridFormerConnector(BaseCore):
         # Ensure input grid fits in max size
         h, w = input_grid.shape[-2:]  # Get height and width
         if h > self.max_grid_size or w > self.max_grid_size:
-            raise ValueError(
-                f"Input grid size {h}x{w} exceeds maximum size {self.max_grid_size}"
-            )
+            raise ValueError(f"Input grid size {h}x{w} exceeds maximum size {self.max_grid_size}")
 
         # Pad input if needed
         if h < self.max_grid_size or w < self.max_grid_size:
@@ -345,9 +346,7 @@ class EnhancedGridFormerConnector(BaseCore):
         with torch.no_grad():
             # Generate prediction
             output_logits = model(input_tensor, target_shape)
-            predictions = torch.argmax(output_logits, dim=3).squeeze(
-                0
-            )  # Remove batch dimension
+            predictions = torch.argmax(output_logits, dim=3).squeeze(0)  # Remove batch dimension
 
         # Convert to numpy
         output_grid = predictions.cpu().numpy()

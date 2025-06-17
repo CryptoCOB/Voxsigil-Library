@@ -29,8 +29,23 @@ from pydantic import Field, field_validator
 from pydantic_settings import BaseSettings
 
 from . import ByteLatentTransformerEncoder, SigilPatchEncoder
+
 # VoxSigilRAG resides in the top-level VoxSigilRag package
-from VoxSigilRag.voxsigil_rag import VoxSigilRAG
+# Use conditional import to avoid circular dependencies
+try:
+    from VoxSigilRag.voxsigil_rag import VoxSigilRAG
+except ImportError:
+    # Create a stub class if VoxSigilRAG is not available
+    class VoxSigilRAG:
+        def __init__(self, *args, **kwargs):
+            pass
+
+        def get_relevant_sigils(self, *args, **kwargs):
+            return []
+
+        def search(self, *args, **kwargs):
+            return []
+
 
 # Configure logging early
 logging.basicConfig(
@@ -63,9 +78,7 @@ class HybridMiddlewareConfig(BaseSettings):
     cache_ttl_seconds: int = Field(
         300, description="Time-to-live for cached RAG contexts in seconds."
     )
-    log_level: str = Field(
-        "INFO", description="Logging level (e.g., DEBUG, INFO, WARNING, ERROR)."
-    )
+    log_level: str = Field("INFO", description="Logging level (e.g., DEBUG, INFO, WARNING, ERROR).")
 
     @field_validator("log_level")
     def set_log_level(cls, value: str) -> str:
@@ -93,9 +106,7 @@ class HybridMiddlewareConfig(BaseSettings):
         if not value:
             raise ValueError("entropy_router_fallback cannot be empty.")
         if value not in ["patch_based", "token_based"]:
-            raise ValueError(
-                "entropy_router_fallback must be 'patch_based' or 'token_based'."
-            )
+            raise ValueError("entropy_router_fallback must be 'patch_based' or 'token_based'.")
         return value
 
 
@@ -155,22 +166,20 @@ class BLTEnhancedRAG(VoxSigilRAG):
         )  # Pass consistent dim
         # These are just flags, real implementation would instantiate validator/encoder objects
         self.patch_validator = enable_patch_validation
-        self.patch_encoder_component = enable_patch_compression  # Renamed to avoid conflict with blt_encoder method
+        self.patch_encoder_component = (
+            enable_patch_compression  # Renamed to avoid conflict with blt_encoder method
+        )
 
     def _compute_text_embedding(self, text: str) -> np.ndarray:
         # This specialized version creates a hybrid BLT + Standard embedding
-        blt_emb_raw = self.blt_encoder.encode(
-            text
-        )  # This is already normalized by BLT encoder
+        blt_emb_raw = self.blt_encoder.encode(text)  # This is already normalized by BLT encoder
         std_emb_raw = super()._compute_text_embedding(
             text
         )  # Standard RAG's method (might be SBERT or hash)
 
         # Ensure std_emb is normalized (SBERT usually is, hash fallback needs it)
         std_norm = np.linalg.norm(std_emb_raw)
-        std_emb_normalized = (
-            std_emb_raw / (std_norm + 1e-9) if std_norm > 0 else std_emb_raw
-        )
+        std_emb_normalized = std_emb_raw / (std_norm + 1e-9) if std_norm > 0 else std_emb_raw
 
         # Weighted hybrid. BLT's encode should return normalized.
         hybrid_emb = (self.blt_hybrid_weight * blt_emb_raw) + (
@@ -184,9 +193,7 @@ class BLTEnhancedRAG(VoxSigilRAG):
     ) -> tuple[str, list[dict[str, Any]]]:
         self.load_all_sigils()  # Ensure sigils are available
         query_embedding = self._compute_text_embedding(query)
-        sigils_with_scores = self._find_similar_sigils(
-            query, query_embedding, num_sigils
-        )
+        sigils_with_scores = self._find_similar_sigils(query, query_embedding, num_sigils)
 
         # Retrieve detail_level from kwargs or use a default
         detail_level = kwargs.get("detail_level", "standard")
@@ -235,15 +242,11 @@ class BLTEnhancedRAG(VoxSigilRAG):
         texts_to_embed = []
         if "principle" in sigil and isinstance(sigil["principle"], str):
             texts_to_embed.append(sigil["principle"])
-        if "sigil" in sigil and isinstance(
-            sigil["sigil"], str
-        ):  # Include sigil name itself
+        if "sigil" in sigil and isinstance(sigil["sigil"], str):  # Include sigil name itself
             texts_to_embed.append(sigil["sigil"])
 
         if "usage" in sigil and isinstance(sigil["usage"], dict):
-            if "description" in sigil["usage"] and isinstance(
-                sigil["usage"]["description"], str
-            ):
+            if "description" in sigil["usage"] and isinstance(sigil["usage"]["description"], str):
                 texts_to_embed.append(sigil["usage"]["description"])
             if "examples" in sigil["usage"]:
                 examples = sigil["usage"]["examples"]
@@ -311,10 +314,7 @@ class EntropyRouter:
                     f"Entropy calculation returned no scores for text: '{text[:50]}...'. Applying heuristic."
                 )
                 # Apply heuristic as in original
-                if (
-                    any(c in text for c in ["<", ">", "{", "}", "[", "]"])
-                    and len(text) < 200
-                ):
+                if any(c in text for c in ["<", ">", "{", "}", "[", "]"]) and len(text) < 200:
                     avg_entropy = 0.15
                 elif len(text) < 50 and " " not in text:
                     avg_entropy = 0.2
@@ -326,9 +326,7 @@ class EntropyRouter:
                 if not all(isinstance(p, str) for p in patches_content):
                     patches_content = [str(p) for p in patches_content]
 
-            avg_entropy = (
-                sum(entropy_scores) / len(entropy_scores) if entropy_scores else 0.5
-            )
+            avg_entropy = sum(entropy_scores) / len(entropy_scores) if entropy_scores else 0.5
             logger.info(
                 f"Text avg_entropy: {avg_entropy:.4f} (threshold: {self.config.entropy_threshold}) for query: '{text[:30]}...'"
             )
@@ -379,9 +377,7 @@ class HybridProcessor:
         """Lazy-load BLT-enhanced RAG instance."""
         if self._blt_rag_instance is None:
             logger.info("⏳ Initializing BLT-Enhanced VoxSigilRAG...")
-            self._blt_rag_instance = VoxSigilRAG(
-                embedding_dim=self.standard_rag.embedding_dim
-            )
+            self._blt_rag_instance = VoxSigilRAG(embedding_dim=self.standard_rag.embedding_dim)
         return self._blt_rag_instance
 
     def _safe_compute_embedding(self, text: str, method: str) -> Tuple[Any, str]:
@@ -400,9 +396,7 @@ class HybridProcessor:
     def compute_embedding(self, text: str) -> Dict[str, Any]:
         """Route and compute embedding with entropy and fallback."""
         route, patches, entropy_scores = self.router.route(text)
-        avg_entropy = (
-            sum(entropy_scores) / len(entropy_scores) if entropy_scores else 0.5
-        )
+        avg_entropy = sum(entropy_scores) / len(entropy_scores) if entropy_scores else 0.5
 
         start_time = time.monotonic()
         embedding, method = self._safe_compute_embedding(text, route)
@@ -429,18 +423,14 @@ class HybridProcessor:
     ) -> Tuple[str, List[Dict[str, Any]], str]:
         """Get RAG context and sigils list, auto-routing with fallback."""
         route, _, entropy_scores = self.router.route(query)
-        avg_entropy = (
-            sum(entropy_scores) / len(entropy_scores) if entropy_scores else 0.5
-        )
+        avg_entropy = sum(entropy_scores) / len(entropy_scores) if entropy_scores else 0.5
         use_blt = route == "patch_based"
 
         try:
             logger.info(
                 f"🧭 Routing to {'BLT' if use_blt else 'Standard'} RAG (entropy={avg_entropy:.2f})"
             )
-            context, sigils = self._try_rag_context(
-                query, num_sigils, use_blt, **kwargs
-            )
+            context, sigils = self._try_rag_context(query, num_sigils, use_blt, **kwargs)
             return context, sigils, route
         except Exception as primary_e:
             logger.warning(
@@ -454,9 +444,7 @@ class HybridProcessor:
                     query, num_sigils, fallback_use_blt, **kwargs
                 )
                 method = (
-                    "token_fallback_from_blt_error"
-                    if use_blt
-                    else "blt_fallback_from_token_error"
+                    "token_fallback_from_blt_error" if use_blt else "blt_fallback_from_token_error"
                 )
                 return context, sigils, method
             except Exception as fallback_e:
@@ -473,9 +461,7 @@ class DynamicExecutionBudgeter:
         self.base_budget = base_budget
         self.entropy_multiplier = entropy_multiplier
 
-    def allocate_budget(
-        self, method: str, avg_entropy: float, text_length: int
-    ) -> float:
+    def allocate_budget(self, method: str, avg_entropy: float, text_length: int) -> float:
         budget = self.base_budget
         if "blt" in method.lower():
             budget *= 1.0 - 0.5 * avg_entropy
@@ -497,9 +483,7 @@ class HybridMiddleware:
         logger.info("Initializing HybridMiddleware with config.")
         self.processor = HybridProcessor(config)
         self.budgeter = DynamicExecutionBudgeter()
-        self._context_cache: dict[
-            str, tuple[str, list[dict[str, Any]], str, float]
-        ] = {}
+        self._context_cache: dict[str, tuple[str, list[dict[str, Any]], str, float]] = {}
         self._request_counter = 0
         self._processing_times: list[float] = []
         self._initialize_voxsigil_components()  # Modified to call this
@@ -508,21 +492,15 @@ class HybridMiddleware:
         self, text: str, num_sigils: int = 5, **kwargs
     ) -> tuple[str, list[dict[str, Any]], str]:
         """Alias for get_rag_context_and_route to provide a simple processing interface"""
-        return self.processor.get_rag_context_and_route(
-            text, num_sigils=num_sigils, **kwargs
-        )
+        return self.processor.get_rag_context_and_route(text, num_sigils=num_sigils, **kwargs)
 
     def _initialize_voxsigil_components(self):
         try:
-            self.voxsigil_rag_component = (
-                self.processor.standard_rag
-            )  # Ensure it's initialized
+            self.voxsigil_rag_component = self.processor.standard_rag  # Ensure it's initialized
             if self.voxsigil_rag_component:
                 self._normalize_sigil_relationships_format()  # Call normalization
             else:
-                logger.warning(
-                    "VoxSigil RAG component not available. Limited functionality."
-                )
+                logger.warning("VoxSigil RAG component not available. Limited functionality.")
 
             self.conversation_history: list[Any] = []
             self.selected_sigils_history: dict[Any, Any] = {}
@@ -532,9 +510,7 @@ class HybridMiddleware:
             self._rag_cache: dict[Any, Any] = {}  # Different from _context_cache
             logger.info("VoxSigil components initialized for HybridMiddleware")
         except Exception as e:
-            logger.error(
-                f"Failed to initialize VoxSigil components: {e}", exc_info=True
-            )
+            logger.error(f"Failed to initialize VoxSigil components: {e}", exc_info=True)
 
     def _normalize_sigil_relationships_format(self):
         if not self.voxsigil_rag_component or not hasattr(
@@ -583,9 +559,7 @@ class HybridMiddleware:
             # Consider re-validation if schema is strict on normalized form
             # self.voxsigil_rag_component.load_all_sigils(force_reload=True) # This would re-validate if _load_sigil_file calls _validate_sigil
 
-    def _normalize_single_sigil_relationships(
-        self, sigil: dict[str, Any]
-    ) -> dict[str, Any]:
+    def _normalize_single_sigil_relationships(self, sigil: dict[str, Any]) -> dict[str, Any]:
         if "relationships" not in sigil:
             return sigil
         current_relationships = sigil["relationships"]
@@ -603,9 +577,7 @@ class HybridMiddleware:
             else:  # Not a list, not a dict, wrap it
                 new_rels["default_relation"] = current_relationships
             sigil["relationships"] = new_rels
-            logger.debug(
-                f"Normalized relationships for sigil '{sigil.get('sigil', 'N/A')}'"
-            )
+            logger.debug(f"Normalized relationships for sigil '{sigil.get('sigil', 'N/A')}'")
         return sigil
 
     def format_sigil_for_context(
@@ -669,9 +641,7 @@ class HybridMiddleware:
             return ""
         output_sections = [f"--- VoxSigil Context ({len(sigils)} sigils) ---"]
         for idx, sigil in enumerate(sigils, 1):
-            sigil_text = self.format_sigil_for_context(
-                sigil, detail_level, include_explanations
-            )
+            sigil_text = self.format_sigil_for_context(sigil, detail_level, include_explanations)
             output_sections.append(f"---\nSIGIL {idx}:\n{sigil_text}")
         output_sections.append("--- End VoxSigil Context ---")
         return "\n\n".join(output_sections)
@@ -694,9 +664,7 @@ class HybridMiddleware:
         if expired_keys:
             logger.info(f"Cleaned {len(expired_keys)} expired cache entries.")
 
-    def _extract_query_from_messages(
-        self, messages: list[dict[str, Any]]
-    ) -> str | None:
+    def _extract_query_from_messages(self, messages: list[dict[str, Any]]) -> str | None:
         if not messages:
             return None
         for msg in reversed(messages):
@@ -707,9 +675,7 @@ class HybridMiddleware:
             ):
                 return msg["content"]
         last_message = messages[-1]
-        if isinstance(last_message, dict) and isinstance(
-            last_message.get("content"), str
-        ):
+        if isinstance(last_message, dict) and isinstance(last_message.get("content"), str):
             return last_message["content"]
         logger.warning(f"Could not extract valid query from messages: {messages}")
         return None
@@ -729,9 +695,7 @@ class HybridMiddleware:
                 f"{system_message_content}\n\n{enhanced_messages[0].get('content', '')}"
             )
         else:
-            enhanced_messages.insert(
-                0, {"role": "system", "content": system_message_content}
-            )
+            enhanced_messages.insert(0, {"role": "system", "content": system_message_content})
         logger.debug("Messages enhanced with RAG context.")
         return enhanced_messages
 
@@ -757,9 +721,7 @@ class HybridMiddleware:
         context_str, sigils_list, route_method, cache_hit = "", [], "unknown", False
 
         if cached_entry:
-            cached_context_str, cached_sigils_list, cached_route_method, timestamp = (
-                cached_entry
-            )
+            cached_context_str, cached_sigils_list, cached_route_method, timestamp = cached_entry
             if current_monotonic_time - timestamp <= self.config.cache_ttl_seconds:
                 logger.info(
                     f"Cache HIT for query (key: {cache_key[:30]}...). Route: {cached_route_method}"
@@ -784,9 +746,7 @@ class HybridMiddleware:
             logger.info(f"Cache MISS (key: {cache_key[:30]}...). Processing.")
             try:
                 # Use enhanced_rag_process which internally handles routing now
-                context_str, sigils_list = self.enhanced_rag_process(
-                    query, num_sigils=5
-                )
+                context_str, sigils_list = self.enhanced_rag_process(query, num_sigils=5)
                 # The 'route_method' is somewhat implicit now or needs to be returned by enhanced_rag_process
                 # For simplicity, we'll determine it again, or enhanced_rag_process should return it.
                 # Let's assume enhanced_rag_process returns (context, sigils, method_used)
@@ -800,26 +760,18 @@ class HybridMiddleware:
                     route_method,
                     current_monotonic_time,
                 )
-                logger.info(
-                    f"Processed and cached query. Route decision: {route_method}"
-                )
+                logger.info(f"Processed and cached query. Route decision: {route_method}")
             except Exception as e:
-                logger.critical(
-                    f"Error during RAG for query '{query[:50]}...': {e}", exc_info=True
-                )
+                logger.critical(f"Error during RAG for query '{query[:50]}...': {e}", exc_info=True)
                 return model_input  # Passthrough on critical error
 
-        _, _, entropy_scores_for_budget = self.processor.router.route(
-            query
-        )  # For budget
+        _, _, entropy_scores_for_budget = self.processor.router.route(query)  # For budget
         avg_entropy_for_budget = (
             sum(entropy_scores_for_budget) / len(entropy_scores_for_budget)
             if entropy_scores_for_budget
             else 0.5
         )
-        budget = self.budgeter.allocate_budget(
-            route_method, avg_entropy_for_budget, len(query)
-        )
+        budget = self.budgeter.allocate_budget(route_method, avg_entropy_for_budget, len(query))
         enhanced_messages = self._enhance_messages_with_context(messages, context_str)
 
         total_processing_time = time.monotonic() - start_time_total
@@ -919,9 +871,7 @@ class HybridMiddleware:
             if isinstance(last_modified, (int, float)):
                 age_seconds = current_time_utc - last_modified
                 if 0 <= age_seconds < recency_max_seconds:
-                    boost = recency_boost_factor * (
-                        1.0 - (age_seconds / recency_max_seconds)
-                    )
+                    boost = recency_boost_factor * (1.0 - (age_seconds / recency_max_seconds))
                     new_score = min(1.0, original_score + boost)
                     if new_score > original_score:
                         sigil_copy["_similarity_score"] = new_score
@@ -935,11 +885,7 @@ class HybridMiddleware:
     def auto_fuse_related_sigils(
         self, base_sigils: list[dict[str, Any]], max_additional: int = 3
     ) -> list[dict[str, Any]]:
-        if (
-            not base_sigils
-            or max_additional <= 0
-            or not hasattr(self, "voxsigil_rag_component")
-        ):
+        if not base_sigils or max_additional <= 0 or not hasattr(self, "voxsigil_rag_component"):
             return base_sigils
         all_system_sigils = self.voxsigil_rag_component.load_all_sigils()
         if not all_system_sigils:
@@ -961,9 +907,7 @@ class HybridMiddleware:
             if isinstance(sigil_item.get("relationships"), dict):
                 for rel_type, rel_targets_val in sigil_item["relationships"].items():
                     targets = (
-                        rel_targets_val
-                        if isinstance(rel_targets_val, list)
-                        else [rel_targets_val]
+                        rel_targets_val if isinstance(rel_targets_val, list) else [rel_targets_val]
                     )
                     for target_id in targets:
                         if (
@@ -972,12 +916,8 @@ class HybridMiddleware:
                             and target_id not in current_sigil_ids
                         ):
                             related_s = sigil_index_by_id[target_id].copy()
-                            related_s["_fusion_reason"] = (
-                                f"related_to:{source_id}({rel_type})"
-                            )
-                            related_s.setdefault(
-                                "_similarity_score", 0.4
-                            )  # Modest score
+                            related_s["_fusion_reason"] = f"related_to:{source_id}({rel_type})"
+                            related_s.setdefault("_similarity_score", 0.4)  # Modest score
                             fused_sigils_list.append(related_s)
                             current_sigil_ids.add(target_id)
                             added_count += 1
@@ -1013,10 +953,7 @@ class HybridMiddleware:
 
         current_chars = estimate_chars(final_sigils, current_detail)
 
-        while (
-            current_chars > target_char_budget
-            and current_detail_idx < len(detail_levels) - 1
-        ):
+        while current_chars > target_char_budget and current_detail_idx < len(detail_levels) - 1:
             current_detail_idx += 1
             new_detail = detail_levels[current_detail_idx]
             logger.info(
@@ -1052,10 +989,7 @@ class HybridMiddleware:
         auto_fuse_related: bool = True,
         max_fusion_sigils: int = 3,
     ) -> tuple[str, list[dict[str, Any]]]:
-        if (
-            not hasattr(self, "voxsigil_rag_component")
-            or not self.voxsigil_rag_component
-        ):
+        if not hasattr(self, "voxsigil_rag_component") or not self.voxsigil_rag_component:
             logger.warning("VoxSigil RAG not available for enhanced processing.")
             return "", []
 
@@ -1064,13 +998,11 @@ class HybridMiddleware:
         # The create_rag_context in VoxSigilRAG/BLTEnhancedRAG needs to be able
         # to handle filtering, or we filter after retrieval. Assume it handles it for now.
         # For routing, we use the processor's internal RAGs.
-        _context_str_raw, retrieved_sigils, _method_used = (
-            self.processor.get_rag_context_and_route(
-                query=effective_query,
-                num_sigils=num_sigils,  # Pass other params if methods support them
-                filter_tags=filter_tags,
-                exclude_tags=exclude_tags,
-            )
+        _context_str_raw, retrieved_sigils, _method_used = self.processor.get_rag_context_and_route(
+            query=effective_query,
+            num_sigils=num_sigils,  # Pass other params if methods support them
+            filter_tags=filter_tags,
+            exclude_tags=exclude_tags,
         )
         # Note: _method_used is the internal routing choice, might differ from final list post-processing
 
@@ -1078,9 +1010,7 @@ class HybridMiddleware:
             retrieved_sigils = self._apply_recency_boost(
                 retrieved_sigils, self.config.blt_hybrid_weight * 0.1, 90
             )  # Use config for factors
-            retrieved_sigils.sort(
-                key=lambda x: x.get("_similarity_score", 0.0), reverse=True
-            )
+            retrieved_sigils.sort(key=lambda x: x.get("_similarity_score", 0.0), reverse=True)
         if auto_fuse_related and retrieved_sigils:
             retrieved_sigils = self.auto_fuse_related_sigils(
                 retrieved_sigils, max_additional=max_fusion_sigils
@@ -1108,9 +1038,7 @@ def hybrid_embedding_utility(
     router = EntropyRouter(config)  # Router needs config
     # These should use consistent embedding_dim from config or a default
     std_encoder = VoxSigilRAG(embedding_dim=128)  # Use default embedding dimension
-    blt_encoder = ByteLatentTransformerEncoder(
-        embedding_dim=128
-    )  # Use default embedding dimension
+    blt_encoder = ByteLatentTransformerEncoder(embedding_dim=128)  # Use default embedding dimension
 
     route, _, entropy_scores = router.route(text)
     avg_entropy = sum(entropy_scores) / len(entropy_scores) if entropy_scores else 0.5
@@ -1126,9 +1054,7 @@ def hybrid_embedding_utility(
         blt_emb = blt_encoder.encode(text)  # Already normalized
         std_emb_raw = std_encoder._compute_text_embedding(text)
         std_norm = np.linalg.norm(std_emb_raw)
-        std_emb_normalized = (
-            std_emb_raw / (std_norm + 1e-9) if std_norm > 0 else std_emb_raw
-        )
+        std_emb_normalized = std_emb_raw / (std_norm + 1e-9) if std_norm > 0 else std_emb_raw
 
         hybrid_emb = (config.blt_hybrid_weight * blt_emb) + (
             (1 - config.blt_hybrid_weight) * std_emb_normalized
@@ -1172,12 +1098,8 @@ def hybrid_embedding_combiner(
     norm_token = np.linalg.norm(token_embedding)
     norm_patch = np.linalg.norm(patch_embedding)
 
-    token_emb_norm = (
-        token_embedding / (norm_token + 1e-9) if norm_token > 0 else token_embedding
-    )
-    patch_emb_norm = (
-        patch_embedding / (norm_patch + 1e-9) if norm_patch > 0 else patch_embedding
-    )
+    token_emb_norm = token_embedding / (norm_token + 1e-9) if norm_token > 0 else token_embedding
+    patch_emb_norm = patch_embedding / (norm_patch + 1e-9) if norm_patch > 0 else patch_embedding
 
     combined = (token_emb_norm * token_weight) + (patch_emb_norm * blt_weight)
     norm_combined = np.linalg.norm(combined)
@@ -1191,9 +1113,7 @@ if __name__ == "__main__":
     print("=" * 80)
 
     test_config_instance: HybridMiddlewareConfig
-    if (
-        IS_PYDANTIC_AVAILABLE
-    ):  # Create a mutable copy for testing if APP_CONFIG is Pydantic-based
+    if IS_PYDANTIC_AVAILABLE:  # Create a mutable copy for testing if APP_CONFIG is Pydantic-based
         test_config_instance = (
             APP_CONFIG.model_copy()
             if hasattr(APP_CONFIG, "model_copy")
@@ -1255,10 +1175,7 @@ if __name__ == "__main__":
     }
     response3 = middleware(model_input3)
     print(f"Response 3 (new query: '{query3}'): Cache miss expected.")
-    if (
-        "voxsigil_metadata" in response3
-        and not response3["voxsigil_metadata"]["cache_hit"]
-    ):
+    if "voxsigil_metadata" in response3 and not response3["voxsigil_metadata"]["cache_hit"]:
         print("✅ Cache miss confirmed for Response 3.")
     else:
         print("❌ Cache hit for Response 3 - unexpected.")
@@ -1272,9 +1189,7 @@ if __name__ == "__main__":
         print(f"First sigil example: {sigils4[0].get('sigil', 'N/A')}")
 
     print("\n--- Test 4: Direct hybrid embedding utility ---")
-    text_emb_test = (
-        "Artificial intelligence and machine learning are transforming industries."
-    )
+    text_emb_test = "Artificial intelligence and machine learning are transforming industries."
     embedding_res, method_res, entropy_res = hybrid_embedding_utility(
         text_emb_test, test_config_instance
     )

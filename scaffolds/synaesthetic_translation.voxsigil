@@ -195,7 +195,7 @@ metadata:
   definition_status: experimental
   author_agent_id: VANTA.⟠∆∇𓂀𐑒
   created_timestamp: '2025-05-11T14:10:00Z'
-  last_updated_timestamp: '2025-05-11T14:10:00Z'
+  last_updated_timestamp: '2025-06-13T05:40:40.617914Z'
   authorship_context:
     motivation: To explore AI's capacity for synaesthetic and deeply metaphorical
       thinking, moving beyond literal representation to evocative, cross-modal translations
@@ -230,6 +230,11 @@ metadata:
     - Can an AI develop its own 'natural' synaesthetic tendencies through learning?
     - How can synaesthetic translations be used to reveal hidden structures or insights
       in complex data?
+  schema_version: 1.5-holo-alpha
+  impact_and_usage_metrics_profile:
+    avg_completion_time_ms_observed: UNKNOWN
+    success_rate_observed: UNKNOWN
+    complexity_rating: medium
 relationships:
 - target_sigil: 🌉ANALOGY_BRIDGE
   relationship_type: uses_method_from_extensively

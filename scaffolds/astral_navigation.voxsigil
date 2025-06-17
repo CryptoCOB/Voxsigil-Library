@@ -202,7 +202,7 @@ metadata:
   definition_status: experimental
   author_agent_id: VANTA.⟠∆∇𓂀𐑒
   created_timestamp: '2025-05-11T13:00:00Z'
-  last_updated_timestamp: '2025-05-11T13:00:00Z'
+  last_updated_timestamp: '2025-06-13T05:40:40.617914Z'
   authorship_context:
     motivation: To equip AI with the ability to perform truly profound intellectual
       exploration, moving beyond specific problem-solving to charting the very landscape
@@ -238,6 +238,11 @@ metadata:
       landscapes?
     - What are the ethical implications if an AI discovers 'dangerous' knowledge or
       concepts during such explorations?
+  schema_version: 1.5-holo-alpha
+  impact_and_usage_metrics_profile:
+    avg_completion_time_ms_observed: UNKNOWN
+    success_rate_observed: UNKNOWN
+    complexity_rating: medium
 relationships:
 - target_sigil: 🔗RELATIONAL_WEAVER
   relationship_type: uses_to_build_underlying_map

@@ -19,9 +19,7 @@ logger.setLevel(logging.INFO)
 # Add a handler if not already configured (e.g., by a higher-level setup)
 if not logger.handlers:
     handler = logging.StreamHandler()
-    formatter = logging.Formatter(
-        "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
-    )
+    formatter = logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s")
     handler.setFormatter(formatter)
     logger.addHandler(handler)
 
@@ -52,13 +50,14 @@ HAS_SLEEP = False
 try:
     from ARC.llm.llm_interface import BaseLlmInterface as _ImportedBaseLlmInterface
 
-    logger.info("Successfully imported BaseLlmInterface")    
+    logger.info("Successfully imported BaseLlmInterface")
     BaseLlmInterface = _ImportedBaseLlmInterface  # type: ignore
 except ImportError as e:
     logger.warning(f"Failed to import BaseLlmInterface: {e}")
     # _FallbackBaseLlmInterface removed - use Vanta.core.fallback_implementations.FallbackLlmInterface
     try:
         from Vanta.core.fallback_implementations import FallbackLlmInterface
+
         BaseLlmInterface = FallbackLlmInterface  # type: ignore
     except ImportError:
         BaseLlmInterface = None  # type: ignore
@@ -68,13 +67,14 @@ try:
         BaseMemoryInterface as _ImportedBaseMemoryInterface,
     )
 
-    logger.info("Successfully imported BaseMemoryInterface")    
+    logger.info("Successfully imported BaseMemoryInterface")
     BaseMemoryInterface = _ImportedBaseMemoryInterface  # type: ignore
 except ImportError as e:
     logger.warning(f"Failed to import BaseMemoryInterface: {e}")
     # _FallbackBaseMemoryInterface removed - use Vanta.core.fallback_implementations.FallbackMemoryInterface
     try:
         from Vanta.core.fallback_implementations import FallbackMemoryInterface
+
         BaseMemoryInterface = FallbackMemoryInterface  # type: ignore
     except ImportError:
         BaseMemoryInterface = None  # type: ignore
@@ -114,15 +114,15 @@ class ScaffoldRouter:  # type: ignore
 
 
 try:
-    from Voxsigil_Library.Scaffolds.scaffold_router import (
+    from voxsigil_supervisor.strategies.scaffold_router import (
         ScaffoldRouter as _ImportedScaffoldRouter,
     )
 
-    logger.info("Successfully imported ScaffoldRouter from Voxsigil_Library")
+    logger.info("Successfully imported ScaffoldRouter from voxsigil_supervisor")
     ScaffoldRouter = _ImportedScaffoldRouter  # type: ignore # Reassign if import is successful
 except ImportError as e:
     logger.warning(
-        f"Failed to import ScaffoldRouter from Voxsigil_Library: {e}. Using defined fallback ScaffoldRouter."
+        f"Failed to import ScaffoldRouter from voxsigil_supervisor: {e}. Using defined fallback ScaffoldRouter."
     )
     # If import fails, the class 'ScaffoldRouter' defined above remains in scope.
     pass
@@ -277,25 +277,19 @@ try:
             LearningManager as _ImportedLearningManager,
         )
 
-        logger.info(
-            "Successfully imported LearningManager (for AdaptiveLearningManager)"
-        )
+        logger.info("Successfully imported LearningManager (for AdaptiveLearningManager)")
     except ImportError as e:
         logger.warning(f"Failed to import LearningManager: {e}")
 
         class _FallbackLearningManager:
-            def __init__(
-                self, *args, **kwargs
-            ):  # To handle potential args if actual is called
+            def __init__(self, *args, **kwargs):  # To handle potential args if actual is called
                 pass
 
         _ImportedLearningManager = _FallbackLearningManager
 
     HAS_ADAPTIVE = True
 except ImportError as e:
-    logger.warning(
-        f"Failed to import adaptive components (TaskAnalyzer or LearningManager): {e}"
-    )
+    logger.warning(f"Failed to import adaptive components (TaskAnalyzer or LearningManager): {e}")
     HAS_ADAPTIVE = False
 
     class _FallbackTaskAnalyzer:
@@ -328,9 +322,7 @@ class ComponentUsageTracker:
         if not hasattr(self, "_logs"):
             self._logs = []
         self._logs.append({"args": args, "kwargs": kwargs, "ts": time.time()})
-        logging.getLogger("VantaSupervisor").debug(
-            f"Component usage tracked: {args} {kwargs}"
-        )
+        logging.getLogger("VantaSupervisor").debug(f"Component usage tracked: {args} {kwargs}")
 
 
 # Define VANTA system prompt
@@ -505,15 +497,11 @@ class VantaSigilSupervisor:
                 # Initialize with reasonable default cognitive state
                 initial_state = CognitiveState.ACTIVE
                 self.sleep_time_compute._change_state(initial_state)
-                logger.info(
-                    f"Sleep Time Compute initialized with state: {initial_state}"
-                )
+                logger.info(f"Sleep Time Compute initialized with state: {initial_state}")
             except Exception as e:
                 logger.warning(f"Failed to initialize Sleep Time Compute: {e}")
 
-    def register_component(
-        self, component_id: str, capabilities: Dict[str, Any]
-    ) -> str:
+    def register_component(self, component_id: str, capabilities: Dict[str, Any]) -> str:
         """
         Register a component with the supervisor.
 
@@ -525,9 +513,7 @@ class VantaSigilSupervisor:
             Registration token or ID
         """
         if component_id in self.registered_components:
-            logger.warning(
-                f"Component '{component_id}' already registered. Updating capabilities."
-            )
+            logger.warning(f"Component '{component_id}' already registered. Updating capabilities.")
 
         registration_token = f"VANTA_REG_{component_id}_{int(time.time())}"
         self.registered_components[component_id] = {
@@ -561,9 +547,7 @@ class VantaSigilSupervisor:
                 break
 
         if not component_id:
-            logger.warning(
-                f"No component found with registration token '{registration_token}'"
-            )
+            logger.warning(f"No component found with registration token '{registration_token}'")
             return {"status": "unknown", "message": "Component not found"}
 
         # Update the last health check time
@@ -647,14 +631,12 @@ class VantaSigilSupervisor:
                 query_tracking["llm_calls"] += 1
 
                 try:
-                    response, tokens_used, response_metadata = (
-                        self.llm_interface.generate_response(
-                            query=query,
-                            context=context,
-                            system_prompt=system_prompt,
-                            scaffold_name=scaffold_name,
-                            metadata=metadata,
-                        )
+                    response, tokens_used, response_metadata = self.llm_interface.generate_response(
+                        query=query,
+                        context=context,
+                        system_prompt=system_prompt,
+                        scaffold_name=scaffold_name,
+                        metadata=metadata,
                     )
                     query_tracking["response_tokens"] = tokens_used
 
@@ -681,9 +663,7 @@ class VantaSigilSupervisor:
 
             # 5. Update tracking and return
             query_tracking["end_time"] = time.time()
-            query_tracking["total_time"] = (
-                query_tracking["end_time"] - query_tracking["start_time"]
-            )
+            query_tracking["total_time"] = query_tracking["end_time"] - query_tracking["start_time"]
 
             self.query_cache[query_id] = query_tracking
 
@@ -724,17 +704,13 @@ class VantaSigilSupervisor:
         self.stats["queries_processed"] += 1
         context = context or {}
 
-        logger.info(
-            f"Processing query: '{user_query[:50]}{'...' if len(user_query) > 50 else ''}'"
-        )
+        logger.info(f"Processing query: '{user_query[:50]}{'...' if len(user_query) > 50 else ''}'")
 
         # Step 0: Analyze input with ARTManager if available
         art_analysis = None
         if self.art_manager:
             try:
-                art_analysis = self.art_manager.analyze_input(
-                    user_query, analysis_type=None
-                )
+                art_analysis = self.art_manager.analyze_input(user_query, analysis_type=None)
                 if art_analysis and "categories" in art_analysis:
                     for category_id in art_analysis["categories"]:
                         self.stats["art_categories_detected"][category_id] += 1
@@ -777,9 +753,7 @@ class VantaSigilSupervisor:
 
                 elif isinstance(symbolic_contexts, str):
                     # String context, no resonance filtering
-                    resonance_hits = [
-                        {"content": symbolic_contexts, "resonance_score": 1.0}
-                    ]
+                    resonance_hits = [{"content": symbolic_contexts, "resonance_score": 1.0}]
 
                 logger.info(
                     f"Retrieved {len(symbolic_contexts)} contexts, {len(resonance_hits)} above resonance threshold"
@@ -829,22 +803,18 @@ class VantaSigilSupervisor:
 
         # Step 5: Generate response
         try:
-            response_text, model_info, response_metadata = (
-                self.llm_interface.generate_response(
-                    query=user_query,
-                    context=unified_context,
-                    system_prompt=self.default_system_prompt,
-                    scaffold_name=selected_scaffold,
-                    metadata={
-                        "art_analysis": art_analysis,
-                        "resonance_hits": [
-                            hit.get("sigil_id", "")
-                            for hit in resonance_hits
-                            if isinstance(hit, dict)
-                        ],
-                        **context,
-                    },
-                )
+            response_text, model_info, response_metadata = self.llm_interface.generate_response(
+                query=user_query,
+                context=unified_context,
+                system_prompt=self.default_system_prompt,
+                scaffold_name=selected_scaffold,
+                metadata={
+                    "art_analysis": art_analysis,
+                    "resonance_hits": [
+                        hit.get("sigil_id", "") for hit in resonance_hits if isinstance(hit, dict)
+                    ],
+                    **context,
+                },
             )
 
             logger.info(f"Generated response: {len(response_text)} chars")
@@ -901,9 +871,7 @@ class VantaSigilSupervisor:
                 "memory_key": memory_key,
                 "scaffold_used": selected_scaffold,
                 "resonance_scores": [
-                    hit.get("resonance_score", 0)
-                    for hit in resonance_hits
-                    if isinstance(hit, dict)
+                    hit.get("resonance_score", 0) for hit in resonance_hits if isinstance(hit, dict)
                 ],
                 **response_metadata,
             },
@@ -988,9 +956,7 @@ class VantaSigilSupervisor:
             Dictionary containing results of the rest phase
         """
         if not self.sleep_time_compute:
-            logger.warning(
-                "Sleep Time Compute not available. Cannot trigger rest phase."
-            )
+            logger.warning("Sleep Time Compute not available. Cannot trigger rest phase.")
             return {"status": "error", "message": "Sleep Time Compute not available"}
 
         try:
@@ -1014,15 +980,11 @@ class VantaSigilSupervisor:
             The sigil content as a dictionary, or None if not found
         """
         if not self.rag_interface:
-            logger.warning(
-                "RAG interface not available. Cannot retrieve sigil content."
-            )
+            logger.warning("RAG interface not available. Cannot retrieve sigil content.")
             return None
 
         try:
-            result = self.rag_interface.retrieve_context(
-                sigil_ref, {"sigil_lookup": True}
-            )
+            result = self.rag_interface.retrieve_context(sigil_ref, {"sigil_lookup": True})
             if not result:
                 logger.warning(f"No content found for sigil: {sigil_ref}")
                 return None
@@ -1236,9 +1198,7 @@ class VantaSigilSupervisor:
 
                 # Log the ART analysis
                 category_id = art_result.get("category_id") if art_result else "N/A"
-                resonance_score = (
-                    f"{art_result.get('resonance', 0):.2f}" if art_result else "0.00"
-                )
+                resonance_score = f"{art_result.get('resonance', 0):.2f}" if art_result else "0.00"
                 is_novel_category = (
                     art_result.get("is_novel_category", False) if art_result else False
                 )
@@ -1261,9 +1221,7 @@ class VantaSigilSupervisor:
                 ):  # Every 10 queries
                     logger.info("Running memory consolidation via SleepTimeCompute")
                     consolidation_result = self.trigger_rest_phase()
-                    logger.info(
-                        f"Memory consolidation complete: {consolidation_result}"
-                    )
+                    logger.info(f"Memory consolidation complete: {consolidation_result}")
             except Exception as e:
                 logger.warning(f"Error during memory consolidation check: {e}")
 
@@ -1309,9 +1267,7 @@ class VantaSigilSupervisor:
                 # Update stats
                 if training_result and isinstance(training_result, dict):
                     if "category_id" in training_result:
-                        self.stats["art_categories_detected"][
-                            training_result["category_id"]
-                        ] += 1
+                        self.stats["art_categories_detected"][training_result["category_id"]] += 1
                     if (
                         "is_novel_category" in training_result
                         and training_result["is_novel_category"]
@@ -1428,9 +1384,7 @@ class VantaSupervisor:
                 self.agents[agent_name] = agent_instance
                 self.stats["agents_managed"] = len(self.agents)
                 self.stats["successful_operations"] += 1
-                logger.info(
-                    f"Agent {agent_name} registered with capabilities: {capabilities}"
-                )
+                logger.info(f"Agent {agent_name} registered with capabilities: {capabilities}")
                 return {"success": True, "agent_name": agent_name}
             else:
                 # Fallback: register agent locally without unified_core
@@ -1476,9 +1430,7 @@ class VantaSupervisor:
                 logger.error(f"Error executing task with agent {agent_name}: {e}")
                 return {"error": str(e)}
         else:
-            logger.warning(
-                f"Agent {agent_name} not found or does not support task execution."
-            )
+            logger.warning(f"Agent {agent_name} not found or does not support task execution.")
             return {"error": "Agent not found or unsupported"}
 
     def perform_task(self, task: dict) -> Any:
@@ -1549,9 +1501,7 @@ class VantaSupervisor:
                     if agent and hasattr(agent, "get_status"):
                         return {"agent_name": agent_name, "status": agent.get_status()}
                     else:
-                        return {
-                            "error": f"Agent {agent_name} not found or no status method"
-                        }
+                        return {"error": f"Agent {agent_name} not found or no status method"}
                 else:
                     return {"error": "Missing required parameter: agent_name"}
 

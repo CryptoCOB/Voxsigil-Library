@@ -22,7 +22,7 @@ import time
 import hashlib
 import numpy as np
 from pathlib import Path
-from typing import List, Dict, Any, Optional, Tuple, Union
+from typing import List, Dict, Any, Optional, Tuple
 
 # Third-party dependencies (ensure these are in your requirements.txt)
 # Example:
@@ -1089,7 +1089,6 @@ class HybridMiddleware:
         if not recency_boost_factor > 0:
             return sigils_with_scores
             
-        import time
         from datetime import datetime, timezone
         
         current_time_utc = datetime.now(timezone.utc).timestamp()

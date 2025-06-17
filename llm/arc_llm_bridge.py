@@ -5,26 +5,25 @@ scaffolds, and advanced memory systems (EchoMemory, MemoryBraid).
 """
 
 import logging
+from pathlib import Path  # For potential scaffold path configurations
 from typing import (
     Any,
     Dict,
     List,
     Optional,
     Tuple,
-    Union,
     TypedDict,
+    Union,
 )  # For type hinting classes
-from pathlib import Path  # For potential scaffold path configurations
 
 from ARC.core.arc_reasoner import ARCReasoner  # Production-grade ARCReasoner class
-from Voxsigil_Library.Scaffolds.scaffold_router import (
-    ScaffoldRouter as load_scaffold,
-)  # Production-grade scaffold loader
 
 # Import enhanced memory modules
 from Vanta.core.echo_memory import EchoMemory
 from Vanta.core.memory_braid import MemoryBraid
-
+from voxsigil_supervisor.strategies.scaffold_router import (
+    ScaffoldRouter as load_scaffold,
+)  # Production-grade scaffold loader
 
 # Logger for this module
 logger = logging.getLogger("ARCSupervisor.Bridge")
@@ -54,9 +53,7 @@ try:
         # Add any other relevant fields your ARCReasoner or Scaffolds might expect
         # e.g., metadata, constraints, target_output_shape (if known for specific variants)
 except ImportError:
-    logger.warning(
-        "Pydantic not found. ARCTaskInput type hints will be basic Dict[str, Any]."
-    )
+    logger.warning("Pydantic not found. ARCTaskInput type hints will be basic Dict[str, Any].")
     from typing import TypedDict
 
     class ARCTaskInput(TypedDict, total=False):
@@ -106,9 +103,7 @@ class ARCContextualReasonerBridge:
 
         if scaffold_object is not None:
             self.scaffold = scaffold_object
-            logger.info(
-                f"Using pre-loaded scaffold object: {type(self.scaffold).__name__}"
-            )
+            logger.info(f"Using pre-loaded scaffold object: {type(self.scaffold).__name__}")
         elif scaffold_name_or_path is not None:
             try:
                 # Convert string to Path if needed since ScaffoldRouter expects Optional[Path]
@@ -117,9 +112,7 @@ class ARCContextualReasonerBridge:
                     if isinstance(scaffold_name_or_path, str)
                     else scaffold_name_or_path
                 )
-                self.scaffold = load_scaffold(
-                    scaffold_path, **self._load_scaffold_kwargs
-                )
+                self.scaffold = load_scaffold(scaffold_path, **self._load_scaffold_kwargs)
                 logger.info(f"Successfully loaded scaffold: {scaffold_name_or_path}")
             except Exception as e:
                 logger.error(
@@ -138,12 +131,8 @@ class ARCContextualReasonerBridge:
             try:
                 # Convert string to Path since ScaffoldRouter expects Optional[Path]
                 scaffold_path = Path(self.DEFAULT_SCAFFOLD_NAME)
-                self.scaffold = load_scaffold(
-                    scaffold_path, **self._load_scaffold_kwargs
-                )
-                logger.info(
-                    f"Successfully loaded default scaffold: {self.DEFAULT_SCAFFOLD_NAME}"
-                )
+                self.scaffold = load_scaffold(scaffold_path, **self._load_scaffold_kwargs)
+                logger.info(f"Successfully loaded default scaffold: {self.DEFAULT_SCAFFOLD_NAME}")
             except Exception as e:
                 logger.error(
                     f"Failed to load default scaffold '{self.DEFAULT_SCAFFOLD_NAME}': {e}",
@@ -151,9 +140,7 @@ class ARCContextualReasonerBridge:
                 )
                 self.scaffold = None
 
-    def solve_task(
-        self, task: ARCTaskInput
-    ) -> Tuple[Optional[Dict[str, Any]], Optional[str]]:
+    def solve_task(self, task: ARCTaskInput) -> Tuple[Optional[Dict[str, Any]], Optional[str]]:
         """
         Runs ARC reasoning on the task, applying scaffold context and logging to EchoMemory.
 
@@ -233,8 +220,7 @@ class ARCContextualReasonerBridge:
 
             log_event_reasoner = {
                 "step": "reasoner_solved",
-                "solution_grid_preview": str(solution_details.get("grid", "N/A"))[:50]
-                + "...",
+                "solution_grid_preview": str(solution_details.get("grid", "N/A"))[:50] + "...",
                 "trace_summary": reasoner_trace[:3]
                 if isinstance(reasoner_trace, list)
                 else str(reasoner_trace)[:100],
@@ -250,9 +236,7 @@ class ARCContextualReasonerBridge:
                     f"ARCReasoner for task '{task_id}' returned non-dict solution: {type(solution_details)}. Wrapping."
                 )
                 # Attempt to create a standard structure if just a grid was returned.
-                if isinstance(
-                    solution_details, list
-                ):  # Assuming it might be just the grid
+                if isinstance(solution_details, list):  # Assuming it might be just the grid
                     solution_details = {
                         "solution_grid": solution_details,
                         "metadata": "Wrapped by bridge",
@@ -271,9 +255,7 @@ class ARCContextualReasonerBridge:
             ):
                 error_msg = f"Reasoner for task '{task_id}' produced invalid grid structure in solution: {type(final_grid)}"
                 logger.error(error_msg)
-                solution_details["solution_grid"] = [
-                    [-98]
-                ]  # Error code for invalid grid
+                solution_details["solution_grid"] = [[-98]]  # Error code for invalid grid
                 solution_details.setdefault("errors", []).append(error_msg)
                 return solution_details, error_msg
 
@@ -322,9 +304,7 @@ class HegelianDialecticARCBridge:
         self.reasoner = (
             arc_reasoner if arc_reasoner is not None else ARCReasoner()
         )  # Example: could have a specific HegelianReasoner
-        self.echo = (
-            echo_memory if echo_memory is not None else EchoMemory(max_log_size=5000)
-        )
+        self.echo = echo_memory if echo_memory is not None else EchoMemory(max_log_size=5000)
 
         braid_params = braid_config or {}
         self.braid = (
@@ -354,9 +334,7 @@ class HegelianDialecticARCBridge:
                     if isinstance(hegelian_scaffold_name_or_path, str)
                     else hegelian_scaffold_name_or_path
                 )
-                self.scaffold = load_scaffold(
-                    scaffold_path, **self._load_scaffold_kwargs
-                )
+                self.scaffold = load_scaffold(scaffold_path, **self._load_scaffold_kwargs)
                 logger.info(
                     f"Successfully loaded Hegelian scaffold: {hegelian_scaffold_name_or_path}"
                 )
@@ -373,21 +351,16 @@ class HegelianDialecticARCBridge:
             try:
                 # Convert string to Path since ScaffoldRouter expects Optional[Path]
                 scaffold_path = Path(self.DEFAULT_HEGELIAN_SCAFFOLD)
-                self.scaffold = load_scaffold(
-                    scaffold_path, **self._load_scaffold_kwargs
-                )
+                self.scaffold = load_scaffold(scaffold_path, **self._load_scaffold_kwargs)
                 logger.info(
                     f"Successfully loaded default Hegelian scaffold: {self.DEFAULT_HEGELIAN_SCAFFOLD}"
                 )
             except Exception as e:
-                logger.error(
-                    f"Failed to load default Hegelian scaffold: {e}", exc_info=True
-                )
+                logger.error(f"Failed to load default Hegelian scaffold: {e}", exc_info=True)
                 self.scaffold = None
 
         if self.scaffold and not (
-            hasattr(self.scaffold, "generate_antithesis")
-            and hasattr(self.scaffold, "synthesize")
+            hasattr(self.scaffold, "generate_antithesis") and hasattr(self.scaffold, "synthesize")
         ):
             logger.error(
                 f"Loaded scaffold '{getattr(self.scaffold, 'name', 'Unknown')}' does not support Hegelian methods (generate_antithesis, synthesize). Bridge may not function correctly."
@@ -420,7 +393,9 @@ class HegelianDialecticARCBridge:
         task_id = str(task_id) if task_id is not None else "unknown_task_id"
 
         if not self.scaffold:
-            err_msg = f"Hegelian scaffold not loaded for task '{task_id}'. Cannot perform dialectic pass."
+            err_msg = (
+                f"Hegelian scaffold not loaded for task '{task_id}'. Cannot perform dialectic pass."
+            )
             logger.error(err_msg)
             self.echo.log(
                 task_id,
@@ -540,9 +515,7 @@ if __name__ == "__main__":
             f"Contextual Bridge Solution for {mock_task_data_contextual['id']}: {str(solution_ctx)[:200]}..."
         )
 
-    logger.info(
-        f"EchoMemory log size after contextual run: {context_bridge.echo.get_log_size()}"
-    )
+    logger.info(f"EchoMemory log size after contextual run: {context_bridge.echo.get_log_size()}")
     if context_bridge.echo.get_log_size() > 0:
         logger.debug("Last 2 EchoMemory entries for contextual task:")
         for entry in context_bridge.echo.recall_by_task_id(
@@ -559,9 +532,7 @@ if __name__ == "__main__":
     }
     mock_arc_task_heg: ARCTaskInput = mock_task_data_hegelian  # type: ignore
 
-    hegelian_bridge = (
-        HegelianDialecticARCBridge()
-    )  # Will try to load default "🜮HEGELIAN_KERNEL_V2"
+    hegelian_bridge = HegelianDialecticARCBridge()  # Will try to load default "🜮HEGELIAN_KERNEL_V2"
     synthesis_heg, error_heg = hegelian_bridge.perform_dialectic_pass(
         mock_arc_task_heg, task_attempt_num=1
     )
@@ -573,9 +544,7 @@ if __name__ == "__main__":
             f"Hegelian Bridge Synthesis for {mock_task_data_hegelian['id']}: {str(synthesis_heg)[:200]}..."
         )
 
-    logger.info(
-        f"EchoMemory log size after Hegelian run: {hegelian_bridge.echo.get_log_size()}"
-    )
+    logger.info(f"EchoMemory log size after Hegelian run: {hegelian_bridge.echo.get_log_size()}")
     logger.info(
         f"MemoryBraid semantic size after Hegelian run: {hegelian_bridge.braid.get_semantic_memory_size()}"
     )  # Recall from braid
@@ -583,8 +552,6 @@ if __name__ == "__main__":
         f"{mock_task_data_hegelian['id']}_dialectic_synthesis_attempt_1"
     )
     if recalled_synthesis_info:
-        logger.info(
-            f"Recalled from MemoryBraid: {str(recalled_synthesis_info)[:100]}..."
-        )
+        logger.info(f"Recalled from MemoryBraid: {str(recalled_synthesis_info)[:100]}...")
 
     logger.info("\n--- ARC LLM Bridge Example Finished ---")

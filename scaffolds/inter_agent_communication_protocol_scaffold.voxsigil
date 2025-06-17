@@ -200,4 +200,11 @@ metadata:
     theoretical_framework: Speech Act Theory (Searle, Austin), Agent Communication
       Languages, Game Theory (Negotiation), Distributed Artificial Intelligence, Common
       Ground Theory (Clark).
+  created_timestamp: TBD
+  last_updated_timestamp: '2025-06-13T05:40:40.617914Z'
+  schema_version: 1.5-holo-alpha
+  impact_and_usage_metrics_profile:
+    avg_completion_time_ms_observed: UNKNOWN
+    success_rate_observed: UNKNOWN
+    complexity_rating: medium
 name: Inter Agent Communication Protocol Scaffold

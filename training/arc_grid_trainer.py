@@ -13,6 +13,7 @@ training pipeline that combines:
 
 import json
 import logging
+import os
 from typing import Any, Dict, Optional
 
 import torch
@@ -25,28 +26,27 @@ from Vanta.core.UnifiedVantaCore import UnifiedVantaCore as VantaCore
 # Import GRID-Former components
 try:
     # Import main GRID-Former model
-    from Voxsigil_Library.ARC.core.arc_data_processor import (
+    from ARC.arc_data_processor import (
         ARCGridDataProcessor,
-        create_arc_dataloaders,
     )
-    from Voxsigil_Library.Gridformer.core.grid_former import GRID_Former
-    from Voxsigil_Library.Gridformer.core.vantacore_grid_connector import (
-        GridFormerConnector,
-    )
-    from Voxsigil_Library.Gridformer.training.grid_model_trainer import (
+    from core.grid_former import GRID_Former
+    from handlers.grid_sigil_handler import GridSigilHandler
+    from training.gridformer_training import (
         GridFormerTrainer,
     )
-    from Voxsigil_Library.Gridformer.training.grid_sigil_handler import GridSigilHandler
+    # GridFormerConnector will be imported lazily to avoid circular imports
 
     logging.info("Successfully imported GRID-Former components")
 except ImportError as e:
     logging.warning(f"GRID-Former components not available: {e}")
     GRID_Former = None
     GridFormerTrainer = None
-    GridFormerConnector = None
     GridSigilHandler = None
     create_arc_dataloaders = None
     ARCGridDataProcessor = None
+
+# GridFormerConnector will be imported lazily
+GridFormerConnector = None
 
 # Set to False as MetaConsciousness is not available
 ARTController = None
@@ -79,9 +79,7 @@ class VantaGridFormerBridge(nn.Module):
         self.meta_feature_dim = config.get("meta_feature_dim", 128)
 
         # Create projection layers
-        self.grid_to_meta_projection = nn.Linear(
-            self.grid_feature_dim, self.meta_feature_dim
-        )
+        self.grid_to_meta_projection = nn.Linear(self.grid_feature_dim, self.meta_feature_dim)
 
         # Initialize weights
         nn.init.xavier_uniform_(self.grid_to_meta_projection.weight)
@@ -100,15 +98,11 @@ class VantaGridFormerBridge(nn.Module):
             with torch.no_grad():
                 # Safety check for grid_former
                 if self.grid_former is None:
-                    logger.warning(
-                        "grid_former is None in encode_grid_pattern - returning zeros"
-                    )
+                    logger.warning("grid_former is None in encode_grid_pattern - returning zeros")
                     dummy_features = torch.zeros(
                         grid_data.size(0) if grid_data.dim() > 1 else 1,
                         self.grid_feature_dim,
-                        device=grid_data.device
-                        if hasattr(grid_data, "device")
-                        else "cpu",
+                        device=grid_data.device if hasattr(grid_data, "device") else "cpu",
                     )
                     return self.grid_to_meta_projection(dummy_features)
 
@@ -121,9 +115,7 @@ class VantaGridFormerBridge(nn.Module):
                     dummy_features = torch.ones(
                         grid_data.size(0) if grid_data.dim() > 1 else 1,
                         self.grid_feature_dim,
-                        device=grid_data.device
-                        if hasattr(grid_data, "device")
-                        else "cpu",
+                        device=grid_data.device if hasattr(grid_data, "device") else "cpu",
                     )
                     return self.grid_to_meta_projection(dummy_features)
 
@@ -157,18 +149,14 @@ class VantaGridFormerBridge(nn.Module):
                         features = torch.ones(
                             grid_data.size(0) if grid_data.dim() > 1 else 1,
                             self.grid_feature_dim,
-                            device=grid_data.device
-                            if hasattr(grid_data, "device")
-                            else "cpu",
+                            device=grid_data.device if hasattr(grid_data, "device") else "cpu",
                         )
                 except Exception as e:
                     logger.error(f"Error extracting features: {e}")
                     features = torch.ones(
                         grid_data.size(0) if grid_data.dim() > 1 else 1,
                         self.grid_feature_dim,
-                        device=grid_data.device
-                        if hasattr(grid_data, "device")
-                        else "cpu",
+                        device=grid_data.device if hasattr(grid_data, "device") else "cpu",
                     )
 
             # Project to meta-learning space with error handling
@@ -241,9 +229,7 @@ class ARCGridTrainer:
         """
         self.config = config
         self.device = torch.device(
-            "cuda"
-            if torch.cuda.is_available() and config.get("use_cuda", True)
-            else "cpu"
+            "cuda" if torch.cuda.is_available() and config.get("use_cuda", True) else "cpu"
         )
 
         # Load or create VantaCore
@@ -412,13 +398,8 @@ class ARCGridTrainer:
                         )
 
             # Regular checkpoint
-            if (
-                checkpoint_dir
-                and (epoch + 1) % self.config.get("checkpoint_interval", 10) == 0
-            ):
-                self.save_checkpoint(
-                    os.path.join(checkpoint_dir, f"model_epoch_{epoch}.pt")
-                )
+            if checkpoint_dir and (epoch + 1) % self.config.get("checkpoint_interval", 10) == 0:
+                self.save_checkpoint(os.path.join(checkpoint_dir, f"model_epoch_{epoch}.pt"))
 
             # Update training history
             self.training_history.append(
@@ -525,9 +506,7 @@ class ARCGridTrainer:
 
         return {"loss": avg_loss, "accuracy": accuracy}
 
-    def _compute_loss(
-        self, outputs: torch.Tensor, targets: torch.Tensor
-    ) -> torch.Tensor:
+    def _compute_loss(self, outputs: torch.Tensor, targets: torch.Tensor) -> torch.Tensor:
         """Compute the loss with optional metaconsciousness integration."""
         # Base loss calculation
         criterion = nn.CrossEntropyLoss()
@@ -571,9 +550,7 @@ class ARCGridTrainer:
 
         checkpoint = {
             "epoch": self.current_epoch,
-            "grid_former_state_dict": self.grid_former.state_dict()
-            if self.grid_former
-            else None,
+            "grid_former_state_dict": self.grid_former.state_dict() if self.grid_former else None,
             "bridge_state_dict": self.bridge.state_dict(),
             "optimizer_state_dict": self.optimizer.state_dict(),
             "best_accuracy": self.best_accuracy,
@@ -632,18 +609,14 @@ def main():
         default="config/arc_training_config.json",
         help="Path to configuration file",
     )
-    parser.add_argument(
-        "--data_path", type=str, default="./arc_data", help="Path to ARC dataset"
-    )
+    parser.add_argument("--data_path", type=str, default="./arc_data", help="Path to ARC dataset")
     parser.add_argument(
         "--checkpoint_dir",
         type=str,
         default="./checkpoints",
         help="Directory to save checkpoints",
     )
-    parser.add_argument(
-        "--epochs", type=int, default=100, help="Number of training epochs"
-    )
+    parser.add_argument("--epochs", type=int, default=100, help="Number of training epochs")
     args = parser.parse_args()
 
     # Load configuration

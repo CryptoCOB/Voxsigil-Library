@@ -20,7 +20,6 @@ HOLO-1.5 Recursive Symbolic Cognition Mesh Integration:
 - Cognitive metrics: Adaptation efficiency, bridge coherence, translation accuracy
 """
 
-import importlib
 import logging
 import os
 import sys
@@ -28,7 +27,7 @@ import threading
 import time
 import asyncio
 import numpy as np
-from typing import Any, Dict, List, Optional, Union, Tuple, Callable
+from typing import Any, Dict, List, Optional, Callable
 from pathlib import Path
 
 # HOLO-1.5 Cognitive Mesh Integration
@@ -44,9 +43,10 @@ try:
         
 except ImportError:
     # Fallback for non-HOLO environments
-    def vanta_agent(role=None, cognitive_load=0, symbolic_depth=0, capabilities=None):
+    def vanta_agent(role=None, name=None, cognitive_load=0, symbolic_depth=0, capabilities=None, **kwargs):
         def decorator(cls):
             cls._holo_role = role
+            cls._vanta_name = name or cls.__name__
             cls._holo_cognitive_load = cognitive_load
             cls._holo_symbolic_depth = symbolic_depth
             cls._holo_capabilities = capabilities or []

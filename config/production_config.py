@@ -28,7 +28,7 @@ except ImportError:
     BLTEncoder = None
 
 try:
-    from BLT.hybrid_middleware import HybridMiddleware
+    from VoxSigilRag.hybrid_blt import HybridMiddleware
 
     HYBRID_MIDDLEWARE_AVAILABLE = True
 except ImportError:
@@ -392,11 +392,7 @@ class ProductionComponentFactory:
         """Create processing engine - production or stub."""
         # Use stub when production mode is off, the processing module is absent,
         # or the imported symbol resolved to None (import edge-case).
-        if (
-            not self.use_production
-            or not PROCESSING_AVAILABLE
-            or AsyncProcessingEngine is None
-        ):
+        if not self.use_production or not PROCESSING_AVAILABLE or AsyncProcessingEngine is None:
             logger.info("Using stub processing engine")
 
             # Return a simple stub
@@ -495,9 +491,7 @@ class ProductionComponentFactory:
             # Create a production memory braid
             braid_config = self.config.get("memory_braid_config", {})
             max_episodic_len = braid_config.get("max_episodic_len", 128)
-            default_semantic_ttl_seconds = braid_config.get(
-                "default_semantic_ttl_seconds", 3600
-            )
+            default_semantic_ttl_seconds = braid_config.get("default_semantic_ttl_seconds", 3600)
 
             memory_braid = MemoryBraid(
                 max_episodic_len=max_episodic_len,
@@ -513,11 +507,7 @@ class ProductionComponentFactory:
 
     def create_sleep_time_compute(self) -> Any:
         """Create sleep time compute - production or stub."""
-        if (
-            not self.use_production
-            or not SLEEP_TIME_COMPUTE_AVAILABLE
-            or SleepTimeCompute is None
-        ):
+        if not self.use_production or not SLEEP_TIME_COMPUTE_AVAILABLE or SleepTimeCompute is None:
             logger.info("Using stub sleep time compute")
 
             # Return a simple stub
@@ -634,9 +624,7 @@ class ProductionComponentFactory:
             )
             # We'll need the model_manager, try to get it from components first
             model_manager = (
-                self.components.get("model_manager")
-                if hasattr(self, "components")
-                else None
+                self.components.get("model_manager") if hasattr(self, "components") else None
             )
             # Type guard to ensure ProactiveIntelligence is available
             if ProactiveIntelligence is None:

@@ -3,7 +3,6 @@
 import json
 import re
 from pathlib import Path
-import traceback
 
 MANIFEST_FILE = Path("AGENTS.md")
 AGENT_DIR = Path("agents")

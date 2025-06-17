@@ -1,33 +1,31 @@
 # ARC/arc_reasoner.py
 import json
-import re
-import random
-from collections import Counter
-from typing import List, Dict, Any, Tuple, Optional, Set  # Added TypedDict, Set
 import logging
+import random
+import re
+from collections import Counter
 from dataclasses import dataclass, field
+from typing import Any, Dict, List, Optional, Set, Tuple  # Added TypedDict, Set
 
 import numpy as np  # For Feature 1
 
-logger = logging.getLogger(__name__)
-
 # --- Module Imports ---
 # Critical dependencies required for this module to function
-from ..llm.arc_voxsigil_loader import VoxSigilComponent
-from ..llm.arc_llm_handler import (
-    llm_chat_completion,
-    robust_parse_arc_grid_from_llm_text,
-)
-from ..llm.llm_api_compat import call_llm_api
-from ..arc_config import (
+from ARC.arc_config import (
     ARC_SOLVER_SIGIL_NAME,
     CATENGINE_SIGIL_NAME,
-    LLM_SYNTHESIZER_TEMPERATURE,
     DEFAULT_STRATEGY_PRIORITY,  # For Feature 2
-    SYNTHESIS_FAILURE_FALLBACK_STRATEGY,  # For Feature 9
     DETAILED_PROMPT_METADATA,  # For Feature 4
+    LLM_SYNTHESIZER_TEMPERATURE,
+    SYNTHESIS_FAILURE_FALLBACK_STRATEGY,  # For Feature 9
 )
-from ..llm.arc_utils import *
+from handlers.arc_llm_handler import (
+    robust_parse_arc_grid_from_llm_text,
+)
+from llm.arc_voxsigil_loader import VoxSigilComponent
+from llm.llm_api_compat import call_llm_api
+
+logger = logging.getLogger(__name__)
 
 
 # --- Feature 1: Typed Task Properties Object ---
@@ -71,15 +69,11 @@ def _validate_task_data_for_analysis(
     return True
 
 
-def analyze_task_properties(
-    task_id: str, task_data: Dict[str, Any]
-) -> ARCTaskProperties:
+def analyze_task_properties(task_id: str, task_data: Dict[str, Any]) -> ARCTaskProperties:
     """Analyzes ARC task data and returns a structured ARCTaskProperties object."""
     # Feature 6: Input Validation (basic example)
     if not _validate_task_data_for_analysis(task_data):
-        logger.warning(
-            f"Invalid task_data for {task_id} analysis. Returning default properties."
-        )
+        logger.warning(f"Invalid task_data for {task_id} analysis. Returning default properties.")
         return ARCTaskProperties(
             task_id=task_id,
             num_train_examples=0,
@@ -112,14 +106,8 @@ def analyze_task_properties(
                 heights_list.append(len(ex["input"]))
                 widths_list.append(len(ex["input"][0]) if ex["input"][0] else 0)
             # Output properties (only for training examples for color analysis here)
-            if (
-                ex_list is train_examples
-                and ex.get("output")
-                and isinstance(ex["output"], list)
-            ):
-                output_colors_overall.update(
-                    cell for row in ex["output"] for cell in row
-                )
+            if ex_list is train_examples and ex.get("output") and isinstance(ex["output"], list):
+                output_colors_overall.update(cell for row in ex["output"] for cell in row)
 
     # Categorization Heuristics
     high_color_diversity = (
@@ -127,9 +115,7 @@ def analyze_task_properties(
         and len(output_colors_overall) >= len(input_colors_overall) * 0.7
     )
 
-    def has_large_monochromatic_regions(
-        grid: List[List[int]], min_region_size=3
-    ) -> bool:
+    def has_large_monochromatic_regions(grid: List[List[int]], min_region_size=3) -> bool:
         if not grid or not grid[0]:
             return False
         rows, cols = len(grid), len(grid[0])
@@ -141,9 +127,7 @@ def analyze_task_properties(
                 for dr, dc in [(0, 1), (1, 0)]:  # Check horizontal and vertical runs
                     run_len, curr_r, curr_c = 0, r, c
                     while (
-                        0 <= curr_r < rows
-                        and 0 <= curr_c < cols
-                        and grid[curr_r][curr_c] == color
+                        0 <= curr_r < rows and 0 <= curr_c < cols and grid[curr_r][curr_c] == color
                     ):
                         run_len += 1
                         curr_r += dr
@@ -166,9 +150,7 @@ def analyze_task_properties(
             color_preservation = True
             break
 
-    needs_cat = (
-        sum([high_color_diversity, clustered_regions_present, color_preservation]) >= 2
-    )
+    needs_cat = sum([high_color_diversity, clustered_regions_present, color_preservation]) >= 2
 
     return ARCTaskProperties(
         task_id=task_id,
@@ -197,10 +179,7 @@ def _check_strategy_availability(
 ) -> Optional[VoxSigilComponent]:
     """Helper for Feature 7: Checks cache or finds component."""
     cache_key = (strategy_name, task_prop_fingerprint)
-    if (
-        cache_key in _strategy_availability_cache
-        and not _strategy_availability_cache[cache_key]
-    ):
+    if cache_key in _strategy_availability_cache and not _strategy_availability_cache[cache_key]:
         logger.debug(
             f"Strategy '{strategy_name}' previously determined unavailable for similar task props. Skipping."
         )
@@ -227,10 +206,7 @@ def select_reasoning_strategy(
     strategy_priority: List[str] = DEFAULT_STRATEGY_PRIORITY,  # Feature 2
 ) -> Tuple[Optional[str], Optional[VoxSigilComponent]]:
     # Feature 6: Input validation (basic example)
-    if (
-        not isinstance(task_props, ARCTaskProperties)
-        or not available_voxsigil_components
-    ):
+    if not isinstance(task_props, ARCTaskProperties) or not available_voxsigil_components:
         logger.error("Invalid input to select_reasoning_strategy.")
         return None, None
 
@@ -284,9 +260,7 @@ def select_reasoning_strategy(
                 CATENGINE_SIGIL_NAME,
             )
             if selected_component:
-                strategy_name_for_logging = (
-                    f"CATENGINE (props): {selected_component.sigil}"
-                )
+                strategy_name_for_logging = f"CATENGINE (props): {selected_component.sigil}"
                 break
 
         elif strategy_type == "ARC_SOLVER_EXACT":
@@ -297,16 +271,12 @@ def select_reasoning_strategy(
                 ARC_SOLVER_SIGIL_NAME,
             )
             if selected_component:
-                strategy_name_for_logging = (
-                    f"ARC_SOLVER (exact): {selected_component.sigil}"
-                )
+                strategy_name_for_logging = f"ARC_SOLVER (exact): {selected_component.sigil}"
                 break
 
         elif strategy_type == "TAGGED_ARC":
             # Feature 8: Advanced Tag-Based Strategy Filtering
-            candidates = [
-                c for c in available_voxsigil_components if c.prompt_template_content
-            ]
+            candidates = [c for c in available_voxsigil_components if c.prompt_template_content]
             if task_props.required_tags_for_strategy:
                 candidates = [
                     c
@@ -349,8 +319,7 @@ def select_reasoning_strategy(
                         t.lower() in ["reasoningstrategy", "problemsolving", "logic"]
                         for t in c.tags
                     )
-                    or c.execution_mode
-                    in ["simulation", "transformation", "generation"]
+                    or c.execution_mode in ["simulation", "transformation", "generation"]
                 )
             ]
             if candidates:
@@ -360,9 +329,7 @@ def select_reasoning_strategy(
                 )
                 break
 
-        if (
-            selected_component
-        ):  # Found a strategy based on current strategy_type in priority list
+        if selected_component:  # Found a strategy based on current strategy_type in priority list
             logger.info(f"🎯 Selected Strategy ({strategy_name_for_logging})")
             return (
                 selected_component.sigil,
@@ -385,9 +352,7 @@ def _resolve_dynamic_placeholders(
         for placeholder_name in component.expected_placeholders:
             # Example logic: try to find directly in task_props
             if hasattr(task_props, placeholder_name):
-                resolved_params[placeholder_name] = getattr(
-                    task_props, placeholder_name
-                )
+                resolved_params[placeholder_name] = getattr(task_props, placeholder_name)
             # Add more complex resolution logic here if needed
             # e.g., mapping component placeholder names to different task_prop names
             # or deriving values.
@@ -422,9 +387,7 @@ def build_arc_prompt(
 
     prompt_metadata: Dict[str, Any] = {  # Feature 4
         "sigil_used": selected_voxsigil_component.sigil,
-        "template_name_or_source": selected_voxsigil_component.prompt_template_content[
-            :50
-        ]
+        "template_name_or_source": selected_voxsigil_component.prompt_template_content[:50]
         + "...",  # Example
         "task_id": task_props.task_id,
         "execution_mode": selected_voxsigil_component.execution_mode,
@@ -439,9 +402,7 @@ def build_arc_prompt(
     if selected_voxsigil_component.parameterization_schema and isinstance(
         selected_voxsigil_component.parameterization_schema.get("parameters"), list
     ):
-        for param_def in selected_voxsigil_component.parameterization_schema[
-            "parameters"
-        ]:
+        for param_def in selected_voxsigil_component.parameterization_schema["parameters"]:
             param_name = param_def.get("name")
             # Use task_props attributes (which are now typed and structured)
             if hasattr(task_props, param_name):  # Check ARCTaskProperties object
@@ -462,9 +423,7 @@ def build_arc_prompt(
         logger.info(
             f"  Injecting Dynamic Placeholders for '{selected_voxsigil_component.sigil}': {dynamic_resolved_placeholders}"
         )
-        prompt_metadata["dynamic_placeholders_resolved"].update(
-            dynamic_resolved_placeholders
-        )
+        prompt_metadata["dynamic_placeholders_resolved"].update(dynamic_resolved_placeholders)
 
     def grid_to_compact_str(grid: List[List[int]]) -> str:
         if not grid:
@@ -556,18 +515,14 @@ def _calculate_synthesis_confidence(  # Helper for Feature 5
 
     if method_used == "majority_vote" or method_used == "unanimous_vote":
         grid_tuple = tuple(map(tuple, synthesized_grid))
-        return (
-            vote_counter[grid_tuple] / len(valid_grids) if len(valid_grids) > 0 else 0.0
-        )
+        return vote_counter[grid_tuple] / len(valid_grids) if len(valid_grids) > 0 else 0.0
     elif method_used == "llm_synthesis":
         # If LLM synthesized, it's harder to get a direct confidence.
         # One heuristic: how many of the original valid_grids match the LLM's synthesis?
         matches = sum(1 for vg in valid_grids if vg == synthesized_grid)
         # Base confidence for LLM could be lower, e.g., 0.6, boosted by agreement
         base_confidence = 0.6
-        agreement_boost = (
-            (matches / len(valid_grids)) * 0.3 if len(valid_grids) > 0 else 0
-        )
+        agreement_boost = (matches / len(valid_grids)) * 0.3 if len(valid_grids) > 0 else 0
         return min(1.0, base_confidence + agreement_boost)
     return 0.3  # Default low confidence for unknown method
 
@@ -588,9 +543,7 @@ def synthesize_llm_predictions(
         return [[0]], 0.0, "error_input_validation"
 
     valid_grids = [
-        grid
-        for grid in parsed_solver_predictions
-        if grid and isinstance(grid, list) and grid[0]
+        grid for grid in parsed_solver_predictions if grid and isinstance(grid, list) and grid[0]
     ]  # Ensure grid[0] exists (not empty row list)
     method_used = "no_valid_predictions"
     confidence = 0.0
@@ -680,9 +633,7 @@ Final Synthesized Output Grid:
 
     synth_messages = []
     if use_voxsigil_system_prompt_flag and voxsigil_system_prompt_text:
-        synth_messages.append(
-            {"role": "system", "content": voxsigil_system_prompt_text}
-        )
+        synth_messages.append({"role": "system", "content": voxsigil_system_prompt_text})
     synth_messages.append({"role": "user", "content": synthesizer_prompt_user_content})
 
     try:
@@ -694,9 +645,7 @@ Final Synthesized Output Grid:
                 synthesizer_response_text, synthesizer_cfg.get("service", "synthesizer")
             )
         else:
-            logger.warning(
-                f"LLM API response was not a string: {type(synthesizer_response_text)}"
-            )
+            logger.warning(f"LLM API response was not a string: {type(synthesizer_response_text)}")
             llm_synthesized_grid = None
     except Exception as e:
         logger.error(f"Error calling LLM API: {e}")
@@ -749,9 +698,7 @@ class ARCReasoner:
         self.config = config or {}
         self.logger = logging.getLogger("ARC.ARCReasoner")
 
-    def solve_with_trace(
-        self, task_data: Dict[str, Any]
-    ) -> Tuple[Dict[str, Any], list]:
+    def solve_with_trace(self, task_data: Dict[str, Any]) -> Tuple[Dict[str, Any], list]:
         """
         Main entry point for ARC LLM bridge: solves an ARC task and returns solution and trace.
         Args:
@@ -766,9 +713,7 @@ class ARCReasoner:
         task_props = analyze_task_properties(task_id, task_data)
         # Load available VoxSigil components (stub: user should provide or load as needed)
         try:
-            available_voxsigil_components = self.rag_interface.retrieve_scaffolds(
-                task_id
-            )
+            available_voxsigil_components = self.rag_interface.retrieve_scaffolds(task_id)
         except Exception:
             available_voxsigil_components = []
         # Select strategy (stub: can be extended)

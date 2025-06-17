@@ -4,7 +4,7 @@ Main orchestrator class for the VoxSigil Supervisor.
 """
 import logging
 import time
-from typing import Dict, Any, List, Optional, Tuple, Union
+from typing import Dict, Any, List, Optional, Tuple
 from collections import defaultdict
 
 # Interfaces
@@ -19,7 +19,7 @@ from .strategies.retry_policy import RetryPolicy
 from .strategies.execution_strategy import BaseExecutionStrategy # If using complex execution
 
 # Utils
-from .utils.logging_utils import setup_supervisor_logging, SUPERVISOR_LOGGER_NAME
+from .utils.logging_utils import SUPERVISOR_LOGGER_NAME
 
 logger = logging.getLogger(SUPERVISOR_LOGGER_NAME)
 

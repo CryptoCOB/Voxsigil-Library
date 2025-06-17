@@ -184,7 +184,7 @@ metadata:
   definition_status: experimental
   author_agent_id: VANTA.⟠∆∇𓂀𐑒
   created_timestamp: '2025-05-11T12:55:00Z'
-  last_updated_timestamp: '2025-05-11T12:55:00Z'
+  last_updated_timestamp: '2025-06-13T05:40:40.617914Z'
   authorship_context:
     motivation: To create a scaffold for exploring computational analogues of subjective
       experience, self-awareness, and rich internal mental life, pushing the boundaries
@@ -221,6 +221,11 @@ metadata:
       into improved external behavior or understanding?
     - What are the philosophical and ethical boundaries of creating AIs that can 'experience'
       simulated realities?
+  schema_version: 1.5-holo-alpha
+  impact_and_usage_metrics_profile:
+    avg_completion_time_ms_observed: UNKNOWN
+    success_rate_observed: UNKNOWN
+    complexity_rating: medium
 relationships:
 - target_sigil: 🧠C_STRUCTURE
   relationship_type: can_act_as_internal_spectator_within

@@ -13,52 +13,51 @@ Architecture:
 """
 
 from .base_interfaces import (
-    BaseRagInterface,
-    BaseLlmInterface, 
-    BaseMemoryInterface,
     BaseAgentInterface,
-    BaseModelInterface
-)
-
-from .specialized_interfaces import (
-    MetaLearnerInterface,
-    ModelManagerInterface,
-    BLTInterface,
-    ARCInterface,
-    ARTInterface,
-    MiddlewareInterface,
+    BaseLlmInterface,
+    BaseMemoryInterface,
+    BaseModelInterface,
+    BaseRagInterface,
 )
 from .blt_encoder_interface import BaseBLTEncoder
 from .hybrid_middleware_interface import BaseHybridMiddleware
-from .supervisor_connector_interface import BaseSupervisorConnector
-
 from .protocol_interfaces import (
-    VantaProtocol,
+    FallbackProtocol,
+    IntegrationProtocol,
     ModuleAdapterProtocol,
-    IntegrationProtocol
+    ObservabilityProtocol,
+    VantaProtocol,
 )
+from .specialized_interfaces import (
+    ARCInterface,
+    ARTInterface,
+    BLTInterface,
+    MetaLearnerInterface,
+    MiddlewareInterface,
+    ModelManagerInterface,
+)
+from .supervisor_connector_interface import BaseSupervisorConnector
 
 __all__ = [
     # Base Interfaces
-    'BaseRagInterface',
-    'BaseLlmInterface',
-    'BaseMemoryInterface', 
-    'BaseAgentInterface',
-    'BaseModelInterface',
-    
+    "BaseRagInterface",
+    "BaseLlmInterface",
+    "BaseMemoryInterface",
+    "BaseAgentInterface",
+    "BaseModelInterface",
     # Specialized Interfaces
-    'MetaLearnerInterface',
-    'ModelManagerInterface',
-    'BLTInterface',
-    'ARCInterface',
-    'ARTInterface',
-    'MiddlewareInterface',
-    'BaseBLTEncoder',
-    'BaseHybridMiddleware',
-    'BaseSupervisorConnector',
-    
-    # Protocol Interfaces
-    'VantaProtocol',
-    'ModuleAdapterProtocol',
-    'IntegrationProtocol'
+    "MetaLearnerInterface",
+    "ModelManagerInterface",
+    "BLTInterface",
+    "ARCInterface",
+    "ARTInterface",
+    "MiddlewareInterface",
+    "BaseBLTEncoder",
+    "BaseHybridMiddleware",
+    "BaseSupervisorConnector",  # Protocol Interfaces
+    "VantaProtocol",
+    "ModuleAdapterProtocol",
+    "IntegrationProtocol",
+    "ObservabilityProtocol",
+    "FallbackProtocol",
 ]

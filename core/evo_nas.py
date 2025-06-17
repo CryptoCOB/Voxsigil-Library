@@ -1,12 +1,11 @@
 # CONSOLIDATED - EvolutionaryOptimizer moved to evolutionary_optimizer.py
 # This file now contains only NeuralArchitectureSearch class
 
-import os
 import json
 import logging
 import random
 from pathlib import Path
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Any, Dict, Optional, Tuple
 import torch
 import torch.nn as nn
 from torch import amp

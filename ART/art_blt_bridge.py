@@ -19,48 +19,58 @@ Core functions:
 import asyncio
 import logging
 import time
-import threading
-from typing import Any, Dict, List, Optional, Union, Tuple
+from typing import Any, Dict, List, Optional, Tuple, Union
+
+from .art_logger import get_art_logger
 
 # Import ART components
 from .art_manager import ARTManager
-from .art_logger import get_art_logger
 
 # HOLO-1.5 Cognitive Mesh Integration
 try:
-    from ..agents.base import vanta_agent, CognitiveMeshRole, BaseAgent
+    from ..agents.base import BaseAgent, CognitiveMeshRole, vanta_agent
+
     HOLO_AVAILABLE = True
-    
+
     # Define VantaAgentCapability locally
     class VantaAgentCapability:
         ADAPTIVE_PROCESSING = "adaptive_processing"
         ENTROPY_ROUTING = "entropy_routing"
         SIGIL_ENCODING = "sigil_encoding"
         PATTERN_BRIDGING = "pattern_bridging"
-        
+
 except ImportError:
     # Fallback for non-HOLO environments
-    def vanta_agent(role=None, cognitive_load=0, symbolic_depth=0, capabilities=None):
+    def vanta_agent(
+        role=None,
+        name=None,
+        cognitive_load=0,
+        symbolic_depth=0,
+        capabilities=None,
+        **kwargs,
+    ):
         def decorator(cls):
             cls._holo_role = role
+            cls._vanta_name = name or cls.__name__
             cls._holo_cognitive_load = cognitive_load
             cls._holo_symbolic_depth = symbolic_depth
             cls._holo_capabilities = capabilities or []
             return cls
+
         return decorator
-    
+
     class CognitiveMeshRole:
         PROCESSOR = "PROCESSOR"
-    
+
     class VantaAgentCapability:
         ADAPTIVE_PROCESSING = "adaptive_processing"
         ENTROPY_ROUTING = "entropy_routing"
         SIGIL_ENCODING = "sigil_encoding"
         PATTERN_BRIDGING = "pattern_bridging"
-    
+
     class BaseAgent:
         pass
-    
+
     HOLO_AVAILABLE = False
 
 # Try to import BLT components - only importing what we need
@@ -79,7 +89,7 @@ except ImportError as e:
 
 @vanta_agent(
     name="ARTBLTBridge",
-    subsystem="art_blt_processing", 
+    subsystem="art_blt_processing",
     mesh_role=CognitiveMeshRole.PROCESSOR,
     capabilities=[
         VantaAgentCapability.ADAPTIVE_PROCESSING,
@@ -88,10 +98,10 @@ except ImportError as e:
         VantaAgentCapability.PATTERN_BRIDGING,
         "entropy_based_analysis",
         "sigil_patch_processing",
-        "adaptive_pattern_bridging"
+        "adaptive_pattern_bridging",
     ],
     cognitive_load=3.2,
-    symbolic_depth=4
+    symbolic_depth=4,
 )
 class ARTBLTBridge(BaseAgent if HOLO_AVAILABLE else object):
     """
@@ -100,16 +110,16 @@ class ARTBLTBridge(BaseAgent if HOLO_AVAILABLE else object):
     This class facilitates communication between the ART module's pattern recognition
     capabilities and the BLT middleware's symbolic reasoning engine with advanced
     entropy-based routing and cognitive mesh integration.
-    
+
     Enhanced with HOLO-1.5 Recursive Symbolic Cognition Mesh:
     - Entropy-based intelligent routing with cognitive load monitoring
     - Sigil patch processing with symbolic depth tracking
     - Adaptive pattern bridging coordination
     - Processing efficiency metrics for mesh optimization
-    
+
     Features:
     - Entropy-threshold based selective ART analysis
-    - Sigil patch encoding/decoding capabilities  
+    - Sigil patch encoding/decoding capabilities
     - Cognitive load balancing for BLT operations
     - Context-aware pattern bridging
     """
@@ -148,7 +158,7 @@ class ARTBLTBridge(BaseAgent if HOLO_AVAILABLE else object):
                 "encoding_success_rate": 0.0,
                 "pattern_bridging_quality": 0.0,
                 "blt_integration_health": 1.0,
-                "symbolic_depth": 4.0
+                "symbolic_depth": 4.0,
             }
             self._vanta_initialized = False
             self.monitoring_task = None
@@ -158,7 +168,6 @@ class ARTBLTBridge(BaseAgent if HOLO_AVAILABLE else object):
 
         # Initialize ARTManager
         self.art_manager = art_manager or ARTManager()
-        
         # Initialize BLT components if available
         self.blt_available = HAS_BLT
         if HAS_BLT:
@@ -168,9 +177,23 @@ class ARTBLTBridge(BaseAgent if HOLO_AVAILABLE else object):
                     patch_size=blt_patch_size,
                 )
                 self.logger.info("ARTBLTBridge initialized with BLT components")
+            except ImportError as e:
+                self.blt_available = False
+                self.logger.error(f"Failed to import BLT components: {e}")
+                self.logger.warning(
+                    "ARTBLTBridge will operate without BLT entropy analysis"
+                )
+            except TypeError as e:
+                self.blt_available = False
+                self.logger.error(f"Invalid BLT component configuration: {e}")
+                self.logger.warning(
+                    "ARTBLTBridge will operate without BLT entropy analysis"
+                )
             except Exception as e:
                 self.blt_available = False
-                self.logger.error(f"Failed to initialize BLT components: {e}")
+                self.logger.error(
+                    f"Unexpected error initializing BLT components: {e}", exc_info=True
+                )
                 self.logger.warning(
                     "ARTBLTBridge will operate without BLT entropy analysis"
                 )
@@ -195,7 +218,9 @@ class ARTBLTBridge(BaseAgent if HOLO_AVAILABLE else object):
     async def async_init(self):
         """Initialize HOLO-1.5 cognitive mesh integration."""
         if not HOLO_AVAILABLE:
-            self.logger.info("HOLO-1.5 not available, skipping cognitive mesh initialization")
+            self.logger.info(
+                "HOLO-1.5 not available, skipping cognitive mesh initialization"
+            )
             return
 
         try:
@@ -203,53 +228,70 @@ class ARTBLTBridge(BaseAgent if HOLO_AVAILABLE else object):
             await self.register_cognitive_capabilities()
             await self.start_cognitive_monitoring()
             self._vanta_initialized = True
-            self.logger.info("ARTBLTBridge HOLO-1.5 cognitive mesh initialization complete")
-            
+            self.logger.info(
+                "ARTBLTBridge HOLO-1.5 cognitive mesh initialization complete"
+            )
+
+        except AttributeError as e:
+            self.logger.warning(
+                f"HOLO-1.5 initialization failed - missing attribute: {e}"
+            )
+            self._vanta_initialized = False
+        except TypeError as e:
+            self.logger.warning(f"HOLO-1.5 initialization failed - type error: {e}")
+            self._vanta_initialized = False
         except Exception as e:
-            self.logger.warning(f"HOLO-1.5 initialization failed: {e}")
+            self.logger.error(
+                f"HOLO-1.5 initialization failed - unexpected error: {e}", exc_info=True
+            )
             self._vanta_initialized = False
 
     async def register_cognitive_capabilities(self):
         """Register cognitive capabilities with VantaCore."""
-        if not HOLO_AVAILABLE or not hasattr(self, 'vanta_core'):
+        if not HOLO_AVAILABLE or not hasattr(self, "vanta_core"):
             return
-            
+
         capabilities = {
             "entropy_based_analysis": {
                 "entropy_threshold": self.entropy_threshold,
                 "blt_availability": self.blt_available,
                 "adaptive_processing": True,
-                "selective_analysis": True
+                "selective_analysis": True,
             },
             "sigil_patch_processing": {
                 "encoding_capabilities": self.sigil_encoder is not None,
                 "patch_size": self.blt_patch_size,
                 "pattern_bridging": True,
-                "symbolic_representation": True
+                "symbolic_representation": True,
             },
             "adaptive_pattern_bridging": {
                 "art_manager_integration": self.art_manager is not None,
                 "cognitive_load_balancing": True,
                 "context_awareness": True,
-                "async_operations": True
-            }
+                "async_operations": True,
+            },
         }
-        
-        if hasattr(self, 'vanta_core') and self.vanta_core:
+
+        if hasattr(self, "vanta_core") and self.vanta_core:
             await self.vanta_core.register_capabilities("art_blt_bridge", capabilities)
 
     async def start_cognitive_monitoring(self):
         """Start background cognitive monitoring."""
         if not HOLO_AVAILABLE:
             return
-            
+
         monitoring_config = {
-            "metrics": ["processing_efficiency", "entropy_accuracy", "encoding_success_rate", "pattern_bridging_quality"],
+            "metrics": [
+                "processing_efficiency",
+                "entropy_accuracy",
+                "encoding_success_rate",
+                "pattern_bridging_quality",
+            ],
             "adaptive_thresholds": True,
-            "learning_rate": 0.1
+            "learning_rate": 0.1,
         }
-        
-        if hasattr(self, 'vanta_core') and self.vanta_core:
+
+        if hasattr(self, "vanta_core") and self.vanta_core:
             await self.vanta_core.start_monitoring("art_blt_bridge", monitoring_config)
 
     def process_input(
@@ -327,9 +369,22 @@ class ARTBLTBridge(BaseAgent if HOLO_AVAILABLE else object):
                         context["blt_entropy"] = entropy_score
                         result["encoding_performed"] = True
                         self.stats["encoding_operations"] += 1
-                        
+
+            except ValueError as e:
+                self.logger.warning(
+                    f"Invalid data format for BLT entropy calculation: {e}"
+                )
+                # Fallback to always analyzing if BLT fails
+                should_analyze = True
+            except AttributeError as e:
+                self.logger.warning(
+                    f"Missing BLT component method for entropy calculation: {e}"
+                )
+                should_analyze = True
             except Exception as e:
-                self.logger.warning(f"Error in BLT entropy calculation: {e}")
+                self.logger.error(
+                    f"Unexpected error in BLT entropy calculation: {e}", exc_info=True
+                )
                 # Fallback to always analyzing if BLT fails
                 should_analyze = True
         else:
@@ -364,10 +419,18 @@ class ARTBLTBridge(BaseAgent if HOLO_AVAILABLE else object):
                         "entropy": entropy_score,
                     }
                     self.stats["pattern_bridges_created"] += 1
-                    
+
+            except AttributeError as e:
+                self.logger.error(f"Missing ART manager method: {e}")
+                result["error"] = f"missing_method: {str(e)}"
+            except ValueError as e:
+                self.logger.error(f"Invalid input data for ART analysis: {e}")
+                result["error"] = f"invalid_data: {str(e)}"
             except Exception as e:
-                self.logger.error(f"Error in ART analysis: {e}")
-                result["error"] = str(e)
+                self.logger.error(
+                    f"Unexpected error in ART analysis: {e}", exc_info=True
+                )
+                result["error"] = f"unexpected_error: {str(e)}"
         else:
             self.logger.info(
                 f"Skipped ART analysis due to low entropy: {entropy_score:.4f}"
@@ -390,57 +453,64 @@ class ARTBLTBridge(BaseAgent if HOLO_AVAILABLE else object):
     ) -> Dict[str, Any]:
         """Async version of process_input with cognitive monitoring."""
         cognitive_start_time = time.time()
-        
+
         # Run sync processing in thread pool to avoid blocking
         result = await asyncio.get_event_loop().run_in_executor(
             None, self.process_input, input_data, context, force_analysis
         )
-        
+
         # Update cognitive metrics
         cognitive_processing_time = time.time() - cognitive_start_time
-        
+
         if HOLO_AVAILABLE and self._vanta_initialized:
             # Calculate processing efficiency (inverse of processing time, normalized)
             entropy_score = result.get("entropy_score", 0.0)
             analysis_performed = result.get("analysis_performed", False)
-            
+
             efficiency = min(1.0, 1.0 / max(cognitive_processing_time, 0.001))
             self.cognitive_metrics["processing_efficiency"] = (
                 self.cognitive_metrics["processing_efficiency"] * 0.9 + efficiency * 0.1
             )
-            
+
             # Calculate entropy accuracy (how well entropy threshold worked)
             if entropy_score is not None:
                 expected_analysis = entropy_score >= self.entropy_threshold
-                entropy_accuracy = 1.0 if (expected_analysis == analysis_performed) else 0.0
-                self.cognitive_metrics["entropy_accuracy"] = (
-                    self.cognitive_metrics["entropy_accuracy"] * 0.9 + entropy_accuracy * 0.1
+                entropy_accuracy = (
+                    1.0 if (expected_analysis == analysis_performed) else 0.0
                 )
-                
+                self.cognitive_metrics["entropy_accuracy"] = (
+                    self.cognitive_metrics["entropy_accuracy"] * 0.9
+                    + entropy_accuracy * 0.1
+                )
+
             # Update encoding success rate
             encoding_performed = result.get("encoding_performed", False)
-            encoding_success = 1.0 if encoding_performed and not result.get("error") else 0.5
-            self.cognitive_metrics["encoding_success_rate"] = (
-                self.cognitive_metrics["encoding_success_rate"] * 0.9 + encoding_success * 0.1
+            encoding_success = (
+                1.0 if encoding_performed and not result.get("error") else 0.5
             )
-            
+            self.cognitive_metrics["encoding_success_rate"] = (
+                self.cognitive_metrics["encoding_success_rate"] * 0.9
+                + encoding_success * 0.1
+            )
+
             # Update pattern bridging quality
             bridge_quality = 1.0 if result.get("novel_category_detected") else 0.8
             self.cognitive_metrics["pattern_bridging_quality"] = (
-                self.cognitive_metrics["pattern_bridging_quality"] * 0.9 + bridge_quality * 0.1
+                self.cognitive_metrics["pattern_bridging_quality"] * 0.9
+                + bridge_quality * 0.1
             )
-            
+
             # Generate cognitive trace
             result["cognitive_trace"] = self._generate_processing_trace(
                 input_data, result, cognitive_processing_time
             )
-        
+
         return result
 
     def encode_pattern(
         self,
         pattern_data: Union[str, Dict[str, Any]],
-        encoding_type: str = "sigil_patch"
+        encoding_type: str = "sigil_patch",
     ) -> Dict[str, Any]:
         """
         Encode pattern data using BLT sigil encoding.
@@ -456,7 +526,7 @@ class ARTBLTBridge(BaseAgent if HOLO_AVAILABLE else object):
             "encoded": False,
             "encoding_type": encoding_type,
             "patches": None,
-            "metadata": {}
+            "metadata": {},
         }
 
         if not self.blt_available or not self.sigil_encoder:
@@ -472,32 +542,39 @@ class ARTBLTBridge(BaseAgent if HOLO_AVAILABLE else object):
 
             # Create sigil patches
             patches = self.sigil_encoder.segment_into_patches(pattern_str)
-            
+
             if patches:
                 result["encoded"] = True
                 result["patches"] = patches
                 result["metadata"] = {
                     "patch_count": len(patches),
                     "total_length": len(pattern_str),
-                    "entropy": self.sigil_encoder.compute_average_entropy(pattern_str)
+                    "entropy": self.sigil_encoder.compute_average_entropy(pattern_str),
                 }
                 self.stats["encoding_operations"] += 1
-                
                 # Update cognitive metrics
                 if HOLO_AVAILABLE and self._vanta_initialized:
                     success_rate = self.cognitive_metrics["encoding_success_rate"]
-                    self.cognitive_metrics["encoding_success_rate"] = success_rate * 0.9 + 1.0 * 0.1
-                    
+                    self.cognitive_metrics["encoding_success_rate"] = (
+                        success_rate * 0.9 + 1.0 * 0.1
+                    )
+
+        except AttributeError as e:
+            result["error"] = f"Encoding failed - missing encoder method: {e}"
+            self.logger.error(f"Pattern encoding error - missing method: {e}")
+        except ValueError as e:
+            result["error"] = f"Encoding failed - invalid pattern data: {e}"
+            self.logger.error(f"Pattern encoding error - invalid data: {e}")
         except Exception as e:
-            result["error"] = f"Encoding failed: {e}"
-            self.logger.error(f"Pattern encoding error: {e}")
+            result["error"] = f"Encoding failed - unexpected error: {e}"
+            self.logger.error(
+                f"Pattern encoding error - unexpected: {e}", exc_info=True
+            )
 
         return result
 
     def decode_pattern(
-        self,
-        encoded_data: List[Any],
-        decoding_type: str = "sigil_patch"
+        self, encoded_data: List[Any], decoding_type: str = "sigil_patch"
     ) -> Dict[str, Any]:
         """
         Decode BLT-encoded pattern data.
@@ -513,7 +590,7 @@ class ARTBLTBridge(BaseAgent if HOLO_AVAILABLE else object):
             "decoded": False,
             "decoding_type": decoding_type,
             "pattern": None,
-            "metadata": {}
+            "metadata": {},
         }
 
         if not self.blt_available or not self.sigil_encoder:
@@ -522,21 +599,33 @@ class ARTBLTBridge(BaseAgent if HOLO_AVAILABLE else object):
 
         try:
             # Reconstruct pattern from patches
-            if encoded_data and hasattr(self.sigil_encoder, 'reconstruct_from_patches'):
-                reconstructed = self.sigil_encoder.reconstruct_from_patches(encoded_data)
+            if encoded_data and hasattr(self.sigil_encoder, "reconstruct_from_patches"):
+                reconstructed = self.sigil_encoder.reconstruct_from_patches(
+                    encoded_data
+                )
                 result["decoded"] = True
                 result["pattern"] = reconstructed
                 result["metadata"] = {
                     "patch_count": len(encoded_data),
-                    "reconstructed_length": len(str(reconstructed)) if reconstructed else 0
+                    "reconstructed_length": len(str(reconstructed))
+                    if reconstructed
+                    else 0,
                 }
                 self.stats["decoding_operations"] += 1
             else:
                 result["error"] = "Invalid encoded data or decoder not available"
-                
+
+        except AttributeError as e:
+            result["error"] = f"Decoding failed - missing decoder method: {e}"
+            self.logger.error(f"Pattern decoding error - missing method: {e}")
+        except ValueError as e:
+            result["error"] = f"Decoding failed - invalid encoded data: {e}"
+            self.logger.error(f"Pattern decoding error - invalid data: {e}")
         except Exception as e:
-            result["error"] = f"Decoding failed: {e}"
-            self.logger.error(f"Pattern decoding error: {e}")
+            result["error"] = f"Decoding failed - unexpected error: {e}"
+            self.logger.error(
+                f"Pattern decoding error - unexpected: {e}", exc_info=True
+            )
 
         return result
 
@@ -564,7 +653,7 @@ class ARTBLTBridge(BaseAgent if HOLO_AVAILABLE else object):
             for item in batch:
                 # Extract text for entropy calculation
                 if isinstance(item, tuple) and len(item) >= 1:
-                    text = str(item[0])  
+                    text = str(item[0])
                 elif isinstance(item, dict):
                     text = str(item)
                 else:
@@ -606,11 +695,12 @@ class ARTBLTBridge(BaseAgent if HOLO_AVAILABLE else object):
     def get_stats(self) -> Dict[str, Any]:
         """Get comprehensive bridge statistics."""
         stats = self.stats.copy()
-        
+
         # Calculate derived statistics
         if self.stats["total_inputs_processed"] > 0:
             stats["art_processing_ratio"] = (
-                self.stats["art_processed_inputs"] / self.stats["total_inputs_processed"]
+                self.stats["art_processed_inputs"]
+                / self.stats["total_inputs_processed"]
             )
             stats["encoding_ratio"] = (
                 self.stats["encoding_operations"] / self.stats["total_inputs_processed"]
@@ -618,9 +708,12 @@ class ARTBLTBridge(BaseAgent if HOLO_AVAILABLE else object):
         else:
             stats["art_processing_ratio"] = 0
             stats["encoding_ratio"] = 0
-        
+
         # Add ART stats
-        if hasattr(self.art_manager, "art_controller") and self.art_manager.art_controller:
+        if (
+            hasattr(self.art_manager, "art_controller")
+            and self.art_manager.art_controller
+        ):
             art_stats = self.art_manager.status()
             stats["art_stats"] = art_stats
 
@@ -637,7 +730,23 @@ class ARTBLTBridge(BaseAgent if HOLO_AVAILABLE else object):
 
         processing_time = time.time() - start_time
         entropy_score = result.get("entropy_score", 0.0)
-        
+
+        # Update processing efficiency based on timing
+        # Faster processing (< 1 second) is more efficient
+        efficiency = max(0.0, min(1.0, 2.0 - processing_time))
+        self.cognitive_metrics["processing_efficiency"] = (
+            self.cognitive_metrics["processing_efficiency"] * 0.9 + efficiency * 0.1
+        )
+
+        # Update entropy accuracy if we have a valid entropy score
+        if entropy_score > 0:
+            # Higher entropy scores indicate better pattern recognition
+            entropy_accuracy = min(1.0, entropy_score / 10.0)  # Normalize to 0-1 range
+            self.cognitive_metrics["entropy_accuracy"] = (
+                self.cognitive_metrics["entropy_accuracy"] * 0.9
+                + entropy_accuracy * 0.1
+            )
+
         # Update BLT integration health
         blt_health = 1.0 if self.blt_available and not result.get("error") else 0.5
         self.cognitive_metrics["blt_integration_health"] = (
@@ -645,10 +754,7 @@ class ARTBLTBridge(BaseAgent if HOLO_AVAILABLE else object):
         )
 
     def _generate_processing_trace(
-        self, 
-        input_data: Any, 
-        result: Dict[str, Any], 
-        processing_time: float
+        self, input_data: Any, result: Dict[str, Any], processing_time: float
     ) -> Dict[str, Any]:
         """Generate cognitive trace for mesh learning."""
         return {
@@ -659,30 +765,30 @@ class ARTBLTBridge(BaseAgent if HOLO_AVAILABLE else object):
             "encoding_performed": result.get("encoding_performed"),
             "pattern_bridging_success": not result.get("error", False),
             "symbolic_depth": self.cognitive_metrics.get("symbolic_depth", 4),
-            "mesh_role": "PROCESSOR"
+            "mesh_role": "PROCESSOR",
         }
 
     def calculate_cognitive_load(self) -> float:
         """Calculate current cognitive load based on processing metrics."""
         base_load = 3.2  # Base cognitive load
-        
+
         if not HOLO_AVAILABLE or not self._vanta_initialized:
             return base_load
 
         # Adjust based on processing efficiency and BLT health
         processing_efficiency = self.cognitive_metrics.get("processing_efficiency", 0.5)
         blt_health = self.cognitive_metrics.get("blt_integration_health", 1.0)
-        
+
         load_adjustment = 0
-        
+
         # Higher load if processing is inefficient
         if processing_efficiency < 0.5:
             load_adjustment += 0.5
-        
+
         # Lower load if BLT integration is healthy
         if blt_health > 0.8:
             load_adjustment -= 0.2
-            
+
         # Increase load based on operation counts
         if self.stats.get("encoding_operations", 0) > 50:
             load_adjustment += 0.3
@@ -692,14 +798,14 @@ class ARTBLTBridge(BaseAgent if HOLO_AVAILABLE else object):
     def calculate_symbolic_depth(self) -> int:
         """Calculate current symbolic depth based on pattern complexity."""
         base_depth = 4  # Base symbolic depth
-        
+
         if not HOLO_AVAILABLE or not self._vanta_initialized:
             return base_depth
 
         # Adjust based on encoding success and pattern bridging quality
         encoding_success = self.cognitive_metrics.get("encoding_success_rate", 0.0)
         bridging_quality = self.cognitive_metrics.get("pattern_bridging_quality", 0.0)
-        
+
         depth_adjustment = 0
         if encoding_success > 0.8:
             depth_adjustment += 1
@@ -717,28 +823,36 @@ class ARTBLTBridge(BaseAgent if HOLO_AVAILABLE else object):
                 "cognitive_load": 3.2,
                 "symbolic_depth": 4,
                 "mesh_role": "PROCESSOR",
-                "vanta_initialized": False
+                "vanta_initialized": False,
             }
 
         return {
             "cognitive_load": self.calculate_cognitive_load(),
             "symbolic_depth": self.calculate_symbolic_depth(),
-            "processing_efficiency": self.cognitive_metrics.get("processing_efficiency", 0.0),
+            "processing_efficiency": self.cognitive_metrics.get(
+                "processing_efficiency", 0.0
+            ),
             "entropy_accuracy": self.cognitive_metrics.get("entropy_accuracy", 0.0),
-            "encoding_success_rate": self.cognitive_metrics.get("encoding_success_rate", 0.0),
-            "pattern_bridging_quality": self.cognitive_metrics.get("pattern_bridging_quality", 0.0),
-            "blt_integration_health": self.cognitive_metrics.get("blt_integration_health", 1.0),
+            "encoding_success_rate": self.cognitive_metrics.get(
+                "encoding_success_rate", 0.0
+            ),
+            "pattern_bridging_quality": self.cognitive_metrics.get(
+                "pattern_bridging_quality", 0.0
+            ),
+            "blt_integration_health": self.cognitive_metrics.get(
+                "blt_integration_health", 1.0
+            ),
             "blt_availability": self.blt_available,
             "total_processed": self.stats.get("total_inputs_processed", 0),
             "mesh_role": "PROCESSOR",
-            "vanta_initialized": self._vanta_initialized
+            "vanta_initialized": self._vanta_initialized,
         }
 
     def shutdown(self):
         """Clean shutdown of the bridge and monitoring tasks."""
         if self.monitoring_task and not self.monitoring_task.done():
             self.monitoring_task.cancel()
-        
+
         self.logger.info("ARTBLTBridge shutdown complete")
 
 
@@ -794,7 +908,7 @@ if __name__ == "__main__":
     pattern_data = "Complex pattern with symbolic meaning"
     encode_result = bridge.encode_pattern(pattern_data)
     logger.info(f"Encoding result: {encode_result.get('encoded', False)}")
-    
+
     if encode_result.get("encoded"):
         # Test decoding
         patches = encode_result.get("patches")
@@ -813,7 +927,7 @@ if __name__ == "__main__":
         status = bridge.get_cognitive_status()
         logger.info(f"  Cognitive Load: {status.get('cognitive_load', 'N/A')}")
         logger.info(f"  Symbolic Depth: {status.get('symbolic_depth', 'N/A')}")
-    
+
     # Shutdown
     bridge.shutdown()
     logger.info("ARTBLTBridge example completed")

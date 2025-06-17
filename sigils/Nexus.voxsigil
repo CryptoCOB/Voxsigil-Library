@@ -161,7 +161,7 @@ metadata:
   definition_status: active
   author_agent_id: VANTA.⟠∆∇𓂀𐑒
   created_timestamp: '2025-05-11T10:05:00Z'
-  last_updated_timestamp: '2025-05-11T10:05:00Z'
+  last_updated_timestamp: '2025-06-13T05:40:40.617914Z'
   authorship_context:
     motivation: To enable agents to dynamically expand and refine their knowledge,
       moving beyond static datasets towards continuous learning.
@@ -187,6 +187,11 @@ metadata:
       of existing knowledge?
     - What are optimal strategies for resolving contradictions between internal and
       external knowledge?
+  schema_version: 1.5-holo-alpha
+  impact_and_usage_metrics_profile:
+    avg_completion_time_ms_observed: UNKNOWN
+    success_rate_observed: UNKNOWN
+    complexity_rating: medium
 relationships:
 - target_sigil: 🜁CHIMERA
   relationship_type: enables

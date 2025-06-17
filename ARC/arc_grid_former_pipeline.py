@@ -6,14 +6,24 @@ This script provides a complete pipeline for training, optimizing, and evaluatin
 GRID-Former models on ARC tasks, integrating all components of the system.
 """
 
-import sys
 import argparse
-import logging
 import json
+import logging
+import sys
 import time
 from pathlib import Path
 
 import torch
+
+from core.grid_distillation import DistillationTrainer
+from core.grid_former import GRID_Former
+from core.hyperparameter_search import HyperparameterSearch
+from core.vantacore_grid_connector import GridFormerConnector
+from handlers.grid_sigil_handler import GridSigilHandler
+from training.gridformer_training import GridFormerTrainer
+
+from .core.arc_data_processor import create_arc_dataloaders
+from .llm.arc_llm_interface import ARCAwareLLMInterface
 
 # Add project root to path for easier imports
 project_root = Path(__file__).resolve().parent.parent.parent
@@ -21,12 +31,6 @@ if str(project_root) not in sys.path:
     sys.path.append(str(project_root))
 
 # Import GRID-Former modules
-from Gridformer.training.grid_model_trainer import GridFormerTrainer
-from Gridformer.training.grid_sigil_handler import GridSigilHandler
-from Gridformer.core.grid_former import GRID_Former
-from Gridformer.core.hyperparameter_search import HyperparameterSearch
-from Gridformer.core.grid_distillation import DistillationTrainer
-from Gridformer.core.vantacore_grid_connector import GridFormerConnector
 
 
 # Define a placeholder if quantizer not available
@@ -38,12 +42,6 @@ class GridFormerQuantizer:
         logger.warning("quantize_and_evaluate not available")
         return None, {"accuracy": 0}
 
-
-from ARC.core.arc_data_processor import create_arc_dataloaders
-
-
-# Import ARC LLM handler for distillation
-from ARC.llm.arc_llm_interface import ARCAwareLLMInterface
 
 # Configure logging
 logging.basicConfig(
@@ -93,13 +91,9 @@ def parse_arguments():
         help="Directory for output storage",
     )
 
-    parser.add_argument(
-        "--batch-size", type=int, default=16, help="Batch size for training"
-    )
+    parser.add_argument("--batch-size", type=int, default=16, help="Batch size for training")
 
-    parser.add_argument(
-        "--epochs", type=int, default=100, help="Number of epochs for training"
-    )
+    parser.add_argument("--epochs", type=int, default=100, help="Number of epochs for training")
 
     parser.add_argument(
         "--hyperopt-trials",
@@ -126,9 +120,7 @@ def parse_arguments():
         help="Skip teacher-student distillation",
     )
 
-    parser.add_argument(
-        "--skip-quantization", action="store_true", help="Skip model quantization"
-    )
+    parser.add_argument("--skip-quantization", action="store_true", help="Skip model quantization")
 
     parser.add_argument(
         "--llm-name", type=str, default="mistral", help="LLM to use for distillation"
@@ -226,9 +218,7 @@ def main():
             }
             best_score = 0
 
-        logger.info(
-            f"Hyperparameter optimization complete. Best score: {best_score:.4f}"
-        )
+        logger.info(f"Hyperparameter optimization complete. Best score: {best_score:.4f}")
         logger.info(f"Best parameters: {best_params}")
     else:
         logger.info("Skipping hyperparameter optimization")
@@ -305,9 +295,10 @@ def main():
             solutions_path=args.solutions,
             batch_size=args.batch_size,
             num_epochs=args.epochs // 2,  # Fewer epochs for fine-tuning
-            lr=best_params.get("learning_rate", 0.0005)
-            / 5,  # Lower learning rate for fine-tuning
+            lr=best_params.get("learning_rate", 0.0005) / 5,  # Lower learning rate for fine-tuning
         )
+        logger.info("Distillation training complete")
+        logger.info(f"Distillation history: {distill_history}")
 
         # Update model reference to the distilled one
         model = distill_trainer.student_model
@@ -389,12 +380,8 @@ def main():
     training_summary = {
         "train_loss": history["train_loss"][-1] if history["train_loss"] else None,
         "val_loss": history["val_loss"][-1] if history["val_loss"] else None,
-        "train_accuracy": history["train_accuracy"][-1]
-        if history["train_accuracy"]
-        else None,
-        "val_accuracy": history["val_accuracy"][-1]
-        if history["val_accuracy"]
-        else None,
+        "train_accuracy": history["train_accuracy"][-1] if history["train_accuracy"] else None,
+        "val_accuracy": history["val_accuracy"][-1] if history["val_accuracy"] else None,
         "epochs_trained": len(history["train_loss"]) if history["train_loss"] else 0,
         "hyperparameters": best_params,
         "distillation_applied": not args.skip_distillation,
@@ -446,16 +433,12 @@ def main():
         sample_task = test_challenges[sample_task_id]
         # Predict solution
         prediction_results = connector.handle_arc_task(sample_task)
-        prediction = prediction_results.get("predictions", [{}])[0].get(
-            "predicted_grid", []
-        )
+        prediction = prediction_results.get("predictions", [{}])[0].get("predicted_grid", [])
 
         # Save prediction
         prediction_path = connector_dir / f"sample_prediction_{sample_task_id}.json"
         with open(prediction_path, "w") as f:
-            json.dump(
-                {"task_id": sample_task_id, "prediction": prediction}, f, indent=2
-            )
+            json.dump({"task_id": sample_task_id, "prediction": prediction}, f, indent=2)
         logger.info(f"Saved sample prediction to {prediction_path}")
 
         # Save connector configuration

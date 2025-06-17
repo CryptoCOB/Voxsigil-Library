@@ -17,15 +17,26 @@ Features:
 
 import json
 from pathlib import Path
-from typing import Optional, Dict, Any, List
+from typing import Any, Dict, List
+
+from PyQt5.QtCore import QEvent, QPoint, Qt, QTimer
+from PyQt5.QtGui import QColor, QFont, QPalette
 from PyQt5.QtWidgets import (
-    QApplication, QWidget, QLabel, QFrame, QHBoxLayout, QVBoxLayout, 
-    QPushButton, QToolTip, QScrollArea, QSplitter, QStatusBar,
-    QProgressBar, QSlider, QCheckBox, QRadioButton, QSpinBox,
-    QDoubleSpinBox, QDateEdit, QTimeEdit, QCalendarWidget
+    QApplication,
+    QCalendarWidget,
+    QCheckBox,
+    QFrame,
+    QHBoxLayout,
+    QLabel,
+    QProgressBar,
+    QPushButton,
+    QScrollArea,
+    QSlider,
+    QSplitter,
+    QStatusBar,
+    QVBoxLayout,
+    QWidget,
 )
-from PyQt5.QtCore import Qt, QEvent, QPoint, QTimer, pyqtSignal, QPropertyAnimation, QEasingCurve
-from PyQt5.QtGui import QFont, QPalette, QColor, QIcon, QPixmap, QPainter, QLinearGradient
 
 
 class AnimatedToolTip(QWidget):
@@ -38,15 +49,15 @@ class AnimatedToolTip(QWidget):
         self.delay = delay
         self.show_timer = QTimer()
         self.hide_timer = QTimer()
-        
+
         # Install event filter on the widget
         widget.installEventFilter(self)
-        
+
         # Set up tooltip widget
         self.setWindowFlags(Qt.ToolTip | Qt.FramelessWindowHint)
         self.setAttribute(Qt.WA_TranslucentBackground)
         self.setAttribute(Qt.WA_ShowWithoutActivating)
-        
+
         # Create tooltip label with enhanced styling
         self.label = QLabel(text)
         self.label.setStyleSheet(f"""
@@ -61,12 +72,12 @@ class AnimatedToolTip(QWidget):
                 font-weight: 500;
             }}
         """)
-        
+
         layout = QHBoxLayout()
         layout.setContentsMargins(0, 0, 0, 0)
         layout.addWidget(self.label)
         self.setLayout(layout)
-        
+
         # Setup timers
         self.show_timer.setSingleShot(True)
         self.show_timer.timeout.connect(self.show_tooltip)
@@ -90,17 +101,17 @@ class AnimatedToolTip(QWidget):
         """Show the tooltip with positioning"""
         if not self.text:
             return
-            
+
         widget_pos = self.widget.mapToGlobal(QPoint(0, 0))
         widget_size = self.widget.size()
-        
+
         # Position tooltip below the widget, centered
         self.adjustSize()
         tooltip_size = self.size()
-        
+
         x = widget_pos.x() + (widget_size.width() - tooltip_size.width()) // 2
         y = widget_pos.y() + widget_size.height() + 5
-        
+
         self.move(x, y)
         self.show()
         self.raise_()
@@ -188,9 +199,11 @@ class VoxSigilStyles:
             border-color: {cls.COLORS["border_inactive"]};
         }}
         """
-        
+
         if variant == "primary":
-            return base + f"""
+            return (
+                base
+                + f"""
             QPushButton {{
                 background-color: {cls.COLORS["accent_cyan"]};
                 color: {cls.COLORS["bg_primary"]};
@@ -204,8 +217,11 @@ class VoxSigilStyles:
                 background-color: #008fb0;
             }}
             """
+            )
         elif variant == "success":
-            return base + f"""
+            return (
+                base
+                + f"""
             QPushButton {{
                 background-color: {cls.COLORS["success"]};
                 color: {cls.COLORS["text_primary"]};
@@ -218,8 +234,11 @@ class VoxSigilStyles:
                 background-color: #047857;
             }}
             """
+            )
         elif variant == "danger":
-            return base + f"""
+            return (
+                base
+                + f"""
             QPushButton {{
                 background-color: {cls.COLORS["error"]};
                 color: {cls.COLORS["text_primary"]};
@@ -232,8 +251,11 @@ class VoxSigilStyles:
                 background-color: #b91c1c;
             }}
             """
+            )
         else:  # default
-            return base + f"""
+            return (
+                base
+                + f"""
             QPushButton {{
                 background-color: {cls.COLORS["bg_secondary"]};
                 color: {cls.COLORS["text_primary"]};
@@ -246,6 +268,7 @@ class VoxSigilStyles:
                 background-color: {cls.PRESSED_COLOR};
             }}
             """
+            )
 
     @classmethod
     def get_enhanced_input_stylesheet(cls):
@@ -595,8 +618,12 @@ class VoxSigilStyles:
         QTabBar::tab:hover:!selected {{
             background-color: #15a6c7;
             color: {cls.COLORS["text_primary"]};
-        }}
-        """
+        }}        """
+
+    @classmethod
+    def get_tab_stylesheet(cls):
+        """Alias for get_tab_widget_stylesheet for backward compatibility"""
+        return cls.get_tab_widget_stylesheet()
 
     @classmethod
     def get_label_stylesheet(cls, style_type="normal"):
@@ -638,8 +665,8 @@ class VoxSigilStyles:
     @classmethod
     def apply_dark_theme(cls, app: QApplication):
         """Apply dark theme to the entire application"""
-        app.setStyle('Fusion')
-        
+        app.setStyle("Fusion")
+
         palette = QPalette()
         palette.setColor(QPalette.Window, QColor(cls.COLORS["bg_primary"]))
         palette.setColor(QPalette.WindowText, QColor(cls.COLORS["text_primary"]))
@@ -654,7 +681,7 @@ class VoxSigilStyles:
         palette.setColor(QPalette.Link, QColor(cls.COLORS["accent_cyan"]))
         palette.setColor(QPalette.Highlight, QColor(cls.COLORS["accent_cyan"]))
         palette.setColor(QPalette.HighlightedText, QColor(cls.COLORS["bg_primary"]))
-        
+
         app.setPalette(palette)
 
     @classmethod
@@ -664,6 +691,7 @@ class VoxSigilStyles:
             icon_path = Path(__file__).parent / "voxsigil.ico"
             if icon_path.exists():
                 from PyQt5.QtGui import QIcon
+
                 window.setWindowIcon(QIcon(str(icon_path)))
         except Exception:
             pass
@@ -701,70 +729,70 @@ class VoxSigilStyles:
 
 class VoxSigilWidgetFactory:
     """Factory class for creating pre-styled VoxSigil widgets"""
-    
+
     @staticmethod
     def create_button(text: str, variant: str = "default", parent=None) -> QPushButton:
         """Create a styled button"""
         btn = QPushButton(text, parent)
         btn.setStyleSheet(VoxSigilStyles.get_enhanced_button_stylesheet(variant))
         return btn
-    
+
     @staticmethod
     def create_label(text: str, style_type: str = "normal", parent=None) -> QLabel:
         """Create a styled label"""
         label = QLabel(text, parent)
         label.setStyleSheet(VoxSigilStyles.get_label_stylesheet(style_type))
         return label
-    
+
     @staticmethod
     def create_frame(parent=None) -> QFrame:
         """Create a styled frame"""
         frame = QFrame(parent)
         frame.setStyleSheet(VoxSigilStyles.get_frame_stylesheet())
         return frame
-    
+
     @staticmethod
     def create_progress_bar(parent=None) -> QProgressBar:
         """Create a styled progress bar"""
         progress = QProgressBar(parent)
         progress.setStyleSheet(VoxSigilStyles.get_progress_bar_stylesheet())
         return progress
-    
+
     @staticmethod
     def create_slider(orientation=Qt.Horizontal, parent=None) -> QSlider:
         """Create a styled slider"""
         slider = QSlider(orientation, parent)
         slider.setStyleSheet(VoxSigilStyles.get_slider_stylesheet())
         return slider
-    
+
     @staticmethod
     def create_checkbox(text: str, parent=None) -> QCheckBox:
         """Create a styled checkbox"""
         checkbox = QCheckBox(text, parent)
         checkbox.setStyleSheet(VoxSigilStyles.get_checkbox_stylesheet())
         return checkbox
-    
+
     @staticmethod
     def create_status_bar(parent=None) -> QStatusBar:
         """Create a styled status bar"""
         status_bar = QStatusBar(parent)
         status_bar.setStyleSheet(VoxSigilStyles.get_status_bar_stylesheet())
         return status_bar
-    
+
     @staticmethod
     def create_scroll_area(parent=None) -> QScrollArea:
         """Create a styled scroll area"""
         scroll = QScrollArea(parent)
         scroll.setStyleSheet(VoxSigilStyles.get_scrollbar_stylesheet())
         return scroll
-    
+
     @staticmethod
     def create_splitter(orientation=Qt.Horizontal, parent=None) -> QSplitter:
         """Create a styled splitter"""
         splitter = QSplitter(orientation, parent)
         splitter.setStyleSheet(VoxSigilStyles.get_splitter_stylesheet())
         return splitter
-    
+
     @staticmethod
     def create_calendar(parent=None) -> QCalendarWidget:
         """Create a styled calendar widget"""
@@ -775,15 +803,15 @@ class VoxSigilWidgetFactory:
 
 class VoxSigilThemeManager:
     """Advanced theme management with dynamic switching capabilities"""
-    
+
     def __init__(self):
         self.current_theme = "dark"
         self.custom_themes = {}
-        
+
     def register_custom_theme(self, name: str, colors: Dict[str, str]):
         """Register a custom color theme"""
         self.custom_themes[name] = colors
-    
+
     def apply_theme(self, app: QApplication, theme_name: str = "dark"):
         """Apply a theme to the application"""
         if theme_name == "dark":
@@ -795,9 +823,9 @@ class VoxSigilThemeManager:
             VoxSigilStyles.apply_dark_theme(app)
             app.setStyleSheet(VoxSigilStyles.get_complete_stylesheet())
             VoxSigilStyles.COLORS = original_colors
-        
+
         self.current_theme = theme_name
-    
+
     def get_available_themes(self) -> List[str]:
         """Get list of available themes"""
         return ["dark"] + list(self.custom_themes.keys())
@@ -826,15 +854,15 @@ def bind_agent_buttons(parent_widget: QWidget, registry, meta_path: str = "agent
             padding: 5px;
         }}
     """)
-    
+
     layout = QHBoxLayout(frame)
     layout.setContentsMargins(10, 8, 10, 8)
     layout.setSpacing(8)
-    
+
     # Add enhanced "Agents" label
     agents_label = VoxSigilWidgetFactory.create_label("🤖 Agents", "section")
     layout.addWidget(agents_label)
-    
+
     # Add agent buttons with enhanced styling
     for agent_name, agent in registry.get_all_agents():
         if not hasattr(agent, "on_gui_call"):
@@ -846,47 +874,47 @@ def bind_agent_buttons(parent_widget: QWidget, registry, meta_path: str = "agent
 
         btn = VoxSigilWidgetFactory.create_button(label, "primary")
         btn.clicked.connect(lambda checked, a=agent: a.on_gui_call())
-        
+
         # Enhanced tooltip
         tooltip_text = f"Agent: {agent_name}\nClass: {meta_entry.get('class', 'Unknown')}\nTags: {', '.join(getattr(agent, 'tags', []))}"
         tooltip = AnimatedToolTip(btn, tooltip_text)
-        
+
         layout.addWidget(btn)
-    
+
     layout.addStretch()
-    
+
     # Add frame to parent widget's layout if it has one
-    if hasattr(parent_widget, 'layout') and parent_widget.layout():
+    if hasattr(parent_widget, "layout") and parent_widget.layout():
         parent_widget.layout().addWidget(frame)
 
 
 class VoxSigilGUIUtils:
     """Enhanced PyQt5 GUI utility functions for VoxSigil"""
-    
+
     @staticmethod
     def create_animated_tooltip(widget: QWidget, text: str, delay: int = 1000) -> AnimatedToolTip:
         """Create an animated tooltip for a widget"""
         return AnimatedToolTip(widget, text, delay)
-    
+
     @staticmethod
     def set_widget_tooltip(widget: QWidget, text: str):
         """Set a simple tooltip for a widget using PyQt5's built-in tooltip"""
         widget.setToolTip(text)
-    
+
     @staticmethod
     def create_notification_frame(parent=None, message: str = "", variant: str = "info") -> QFrame:
         """Create a notification frame with different variants"""
         frame = QFrame(parent)
-        
+
         color_map = {
             "info": VoxSigilStyles.COLORS["info"],
             "success": VoxSigilStyles.COLORS["success"],
             "warning": VoxSigilStyles.COLORS["warning"],
-            "error": VoxSigilStyles.COLORS["error"]
+            "error": VoxSigilStyles.COLORS["error"],
         }
-        
+
         bg_color = color_map.get(variant, VoxSigilStyles.COLORS["info"])
-        
+
         frame.setStyleSheet(f"""
             QFrame {{
                 background-color: {bg_color};
@@ -896,13 +924,13 @@ class VoxSigilGUIUtils:
                 font-weight: 500;
             }}
         """)
-        
+
         layout = QHBoxLayout(frame)
         label = QLabel(message)
         layout.addWidget(label)
-        
+
         return frame
-    
+
     @staticmethod
     def create_card_widget(parent=None, title: str = "", content: str = "") -> QFrame:
         """Create a card-style widget"""
@@ -915,34 +943,34 @@ class VoxSigilGUIUtils:
                 padding: 16px;
             }}
         """)
-        
+
         layout = QVBoxLayout(card)
-        
+
         if title:
             title_label = VoxSigilWidgetFactory.create_label(title, "section")
             layout.addWidget(title_label)
-        
+
         if content:
             content_label = VoxSigilWidgetFactory.create_label(content)
             layout.addWidget(content_label)
-        
+
         return card
-    
+
     @staticmethod
     def create_loading_widget(parent=None, text: str = "Loading...") -> QWidget:
         """Create a loading widget with progress bar"""
         widget = QWidget(parent)
         layout = QVBoxLayout(widget)
-        
+
         label = VoxSigilWidgetFactory.create_label(text, "info")
         progress = VoxSigilWidgetFactory.create_progress_bar()
         progress.setRange(0, 0)  # Indeterminate progress
-        
+
         layout.addWidget(label)
         layout.addWidget(progress)
-        
+
         return widget
-    
+
     @staticmethod
     def setup_window_properties(window: QWidget, title: str = "VoxSigil Application"):
         """Setup standard window properties"""
@@ -950,7 +978,7 @@ class VoxSigilGUIUtils:
         VoxSigilStyles.apply_icon(window)
         VoxSigilStyles.apply_theme(window)
         window.setMinimumSize(800, 600)
-    
+
     @staticmethod
     def create_action_toolbar(parent=None, actions: List[Dict[str, Any]] = None) -> QFrame:
         """Create an action toolbar with buttons"""
@@ -962,23 +990,22 @@ class VoxSigilGUIUtils:
                 padding: 8px;
             }}
         """)
-        
+
         layout = QHBoxLayout(toolbar)
         layout.setSpacing(8)
-        
+
         actions = actions or []
         for action in actions:
             btn = VoxSigilWidgetFactory.create_button(
-                action.get("text", "Action"),
-                action.get("variant", "default")
+                action.get("text", "Action"), action.get("variant", "default")
             )
             if action.get("callback"):
                 btn.clicked.connect(action["callback"])
             layout.addWidget(btn)
-        
+
         layout.addStretch()
         return toolbar
-    
+
     @staticmethod
     def create_info_panel(parent=None, info_items: List[Dict[str, str]] = None) -> QFrame:
         """Create an information panel with key-value pairs"""
@@ -991,48 +1018,51 @@ class VoxSigilGUIUtils:
                 padding: 12px;
             }}
         """)
-        
+
         layout = QVBoxLayout(panel)
-        
+
         info_items = info_items or []
         for item in info_items:
             key_label = VoxSigilWidgetFactory.create_label(f"{item.get('key', '')}:", "info")
-            value_label = VoxSigilWidgetFactory.create_label(item.get('value', ''))
-            
+            value_label = VoxSigilWidgetFactory.create_label(item.get("value", ""))
+
             row_layout = QHBoxLayout()
             row_layout.addWidget(key_label)
             row_layout.addWidget(value_label)
             row_layout.addStretch()
-            
+
             layout.addLayout(row_layout)
-        
+
         return panel
-    
+
     @staticmethod
     def apply_hover_effects(widget: QWidget):
         """Apply hover effects to a widget"""
         original_style = widget.styleSheet()
-        
+
         def on_enter():
-            widget.setStyleSheet(original_style + f"""
+            widget.setStyleSheet(
+                original_style
+                + f"""
                 QWidget {{
                     background-color: {VoxSigilStyles.HOVER_COLOR};
                     border-color: {VoxSigilStyles.COLORS["accent_cyan"]};
                 }}
-            """)
-        
+            """
+            )
+
         def on_leave():
             widget.setStyleSheet(original_style)
-        
+
         widget.enterEvent = lambda event: on_enter()
         widget.leaveEvent = lambda event: on_leave()
-    
+
     @staticmethod
     def create_responsive_layout(parent=None, min_column_width: int = 300) -> QWidget:
         """Create a responsive layout that adapts to window size"""
         container = QWidget(parent)
         layout = QHBoxLayout(container)
-        
+
         # This would need additional logic for true responsiveness
         # For now, it's a placeholder for future enhancement
         return container

@@ -11,8 +11,7 @@ Components:
 """
 
 import logging
-from typing import Dict, Any, List, Optional, Type
-from pathlib import Path
+from typing import Dict, Any, List, Type
 
 logger = logging.getLogger("Vanta.ServicesRegistration")
 

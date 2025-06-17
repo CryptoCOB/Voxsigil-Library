@@ -8,7 +8,7 @@ for centralized management and coordination.
 """
 
 import logging
-from typing import Dict, Any, List, Optional, Type
+from typing import Dict, Any, Type
 
 logger = logging.getLogger("Vanta.RAGRegistration")
 

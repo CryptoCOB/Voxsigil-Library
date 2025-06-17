@@ -6,7 +6,7 @@ import json
 import logging
 import math
 import base64
-from typing import Dict, Any, Tuple, Optional, Union, Literal
+from typing import Dict, Any, Tuple, Optional, Union
 
 # --- Constants ---
 MODE_ZLIB = "zlib"

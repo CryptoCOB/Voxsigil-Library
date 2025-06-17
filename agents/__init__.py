@@ -9,7 +9,6 @@ from pathlib import Path
 
 from .base import BaseAgent, NullAgent
 
-
 logger = logging.getLogger(__name__)
 _STATUS_FILE = Path(__file__).resolve().parent.parent / "agent_status.log"
 _status_lines: list[str] = []
@@ -17,13 +16,13 @@ _status_lines: list[str] = []
 
 def _import_agent(module_name: str, class_name: str) -> type[BaseAgent]:
     try:
-        module = import_module(f".{{module_name}}", __name__)
+        module = import_module(f".{module_name}", __name__)
         cls = getattr(module, class_name)
-        _status_lines.append(f"✅ Registered: {class_name}")
+        _status_lines.append(f"[OK] Registered: {class_name}")
         return cls
     except Exception as exc:  # pragma: no cover - optional agents
         logger.warning("Failed to import %s: %s", class_name, exc)
-        _status_lines.append(f"❌ Failed: {class_name}")
+        _status_lines.append(f"[FAIL] Failed: {class_name}")
         return type(class_name, (NullAgent,), {})
 
 
@@ -57,15 +56,13 @@ Wendy = _import_agent("wendy", "Wendy")
 
 VoxAgent = _import_agent("voxagent", "VoxAgent")
 SDKContext = _import_agent("sdkcontext", "SDKContext")
-HoloMesh = _import_agent("holo_mesh", "HoloMesh")
+HoloMesh = _import_agent("holomesh", "HoloMesh")
 
 # 🧠 Codex BugPatch - Vanta Phase @2025-06-09
 # SleepTimeCompute is an alias to SleepTimeComputeAgent. Having both exported
 # may lead to duplicate agent entries if not handled. Kept for manifest
 # compatibility.
-SleepTimeComputeAgent = _import_agent(
-    "sleep_time_compute_agent", "SleepTimeComputeAgent"
-)
+SleepTimeComputeAgent = _import_agent("sleep_time_compute_agent", "SleepTimeComputeAgent")
 SleepTimeCompute = _import_agent("sleep_time_compute_agent", "SleepTimeCompute")
 
 if os.getenv("VANTA_DND") == "1":
@@ -74,7 +71,7 @@ if os.getenv("VANTA_DND") == "1":
     RulesRefAgent = _import_agent("rules_ref_agent", "RulesRefAgent")
 
 try:
-    _STATUS_FILE.write_text("\n".join(_status_lines) + "\n")
+    _STATUS_FILE.write_text("\n".join(_status_lines) + "\n", encoding="utf-8")
 except Exception as exc:  # pragma: no cover - logging only
     logger.warning("Failed to write agent status: %s", exc)
 

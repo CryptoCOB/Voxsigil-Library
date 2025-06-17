@@ -11,7 +11,7 @@ import os
 import sys
 import logging
 from pathlib import Path
-from typing import List, Dict, Any, Optional, Tuple, Union
+from typing import List, Dict, Any, Optional
 
 import numpy as np
 
@@ -565,7 +565,6 @@ class TinyLlamaIntegration:
         try:
             # Import supervisor components
             from voxsigil_supervisor.supervisor_engine import VoxSigilSupervisor
-            from voxsigil_supervisor.interfaces.llm_interface import BaseLlmInterface
             from voxsigil_supervisor.strategies.scaffold_router import ScaffoldRouter
             from voxsigil_supervisor.strategies.evaluation_heuristics import ResponseEvaluator
             from voxsigil_supervisor.strategies.retry_policy import RetryPolicy
