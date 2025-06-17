@@ -263,6 +263,16 @@ class VoxSigilIntegrationManager:
             else:
                 self.unified_core = vanta["UnifiedVantaCore"]()
 
+            # Expose core reference and memory service for other components
+            self.vanta_core = self.unified_core
+            if hasattr(self.unified_core, "get_component"):
+                try:
+                    self.memory_service = self.unified_core.get_component("memory_service")
+                except Exception as core_err:
+                    self.logger.warning(f"Memory service not available: {core_err}")
+            else:
+                self.memory_service = None
+
             self.use_unified_core = True
 
             # Setup event subscriptions if events system is available

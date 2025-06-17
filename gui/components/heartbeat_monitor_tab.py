@@ -202,6 +202,7 @@ class SystemPulseWidget(QWidget):
                 "error_rate": random.randint(0, 8),
                 "timestamp": datetime.now().isoformat(),
             }
+            logger.info(f"[SYSTEM STATS] {stats}")
             return stats
 
         except ImportError:
