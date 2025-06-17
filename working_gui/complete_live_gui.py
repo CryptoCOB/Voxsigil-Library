@@ -8,6 +8,12 @@ import logging
 import sys
 import time  # Added for performance profiling
 import traceback
+from pathlib import Path
+
+# Ensure the repository root is on sys.path so 'Vanta' can be imported
+REPO_ROOT = Path(__file__).resolve().parents[1]
+if str(REPO_ROOT) not in sys.path:
+    sys.path.insert(0, str(REPO_ROOT))
 
 # --- VoxSigil Core Engine Imports (Patched for Real Components) ---
 from ARC.arc_integration import HybridARCSolver as ARCIntegration
