@@ -506,6 +506,9 @@ class LiveDataStreamer(QThread):
                 elif hasattr(component, "get_data"):
                     data = component.get_data()
                     self.data_updated.emit(name, data)
+                else:
+                    # Emit simple online status if no method available
+                    self.data_updated.emit(name, {"status": "online"})
             except Exception as e:
                 logger.error(f"Error getting data from {name}: {e}")
 
@@ -527,13 +530,13 @@ class CompleteVoxSigilGUI(QMainWindow):
         self.initializer = VoxSigilSystemInitializer()
 
         # Create the live data streamer
-        # Create the live data streamer
         self.data_streamer = LiveDataStreamer(self.initializer)
         # Connect signals
         self.initializer.system_status.connect(self.update_status)
         self.initializer.initialization_complete.connect(
             self.on_initialization_complete
         )
+        self.data_streamer.data_updated.connect(self.handle_live_data)
 
         # Create main tab widget
         self.main_tabs = QTabWidget()
@@ -548,6 +551,9 @@ class CompleteVoxSigilGUI(QMainWindow):
 
         # Start system initialization
         self.initializer.start()
+
+        # Start data streaming immediately so signals are available
+        self.data_streamer.start()
 
         # Start data streaming (will connect to components once initialization completes)
         self.statusBar().showMessage("Starting VoxSigil systems...")
@@ -613,6 +619,10 @@ class CompleteVoxSigilGUI(QMainWindow):
         layout.addWidget(status_label)
 
         # Add status overview widgets here
+        self.cpu_label = QLabel("CPU: --%")
+        self.memory_label = QLabel("Memory: --%")
+        layout.addWidget(self.cpu_label)
+        layout.addWidget(self.memory_label)
 
         self.main_tabs.addTab(tab, "📊 System Status")
         self.tabs["system_status"] = tab
@@ -656,6 +666,10 @@ class CompleteVoxSigilGUI(QMainWindow):
         layout.addWidget(vantacore_label)
 
         # Add VantaCore monitoring widgets here
+        self.vc_status_label = QLabel("Status: --")
+        self.vc_component_count_label = QLabel("Components: --")
+        layout.addWidget(self.vc_status_label)
+        layout.addWidget(self.vc_component_count_label)
 
         self.main_tabs.addTab(tab, "🧠 VantaCore")
         self.tabs["vantacore"] = tab
@@ -806,6 +820,8 @@ class CompleteVoxSigilGUI(QMainWindow):
         layout.addWidget(training_label)
 
         # Add Training visualization widgets here
+        self.training_status_label = QLabel("Status: idle")
+        layout.addWidget(self.training_status_label)
 
         self.main_tabs.addTab(tab, "📚 Training")
         self.tabs["training"] = tab
@@ -821,6 +837,11 @@ class CompleteVoxSigilGUI(QMainWindow):
         layout.addWidget(processing_engines_label)
 
         # Add Processing Engines visualization widgets here
+        self.engine_status_labels = {}
+        for name in ["gridformer", "arc", "blt", "rag"]:
+            lbl = QLabel(f"{name}: --")
+            self.engine_status_labels[name] = lbl
+            layout.addWidget(lbl)
 
         self.main_tabs.addTab(tab, "⚙️ Processing Engines")
         self.tabs["processing_engines"] = tab
@@ -854,6 +875,51 @@ class CompleteVoxSigilGUI(QMainWindow):
     def update_status(self, component, status):
         """Update status bar with component status"""
         self.statusBar().showMessage(f"Component {component}: {status}")
+
+    def handle_live_data(self, component: str, data: dict):
+        """Route live data to the appropriate tab updater"""
+        if component == "monitoring":
+            self.update_system_stats(data)
+        elif component == "vanta_core":
+            self.update_vantacore_status(data)
+        elif component in ["arc_trainer", "grid_trainer"]:
+            self.update_training_status(component, data)
+        elif component in ["gridformer", "arc", "blt", "rag"]:
+            self.update_engine_status(component, data)
+
+    def update_system_stats(self, stats: dict):
+        """Update labels in the system status tab"""
+        cpu = stats.get("cpu_usage")
+        memory = stats.get("memory_usage")
+        if hasattr(self, "cpu_label") and cpu is not None:
+            self.cpu_label.setText(f"CPU: {cpu}%")
+        if hasattr(self, "memory_label") and memory is not None:
+            self.memory_label.setText(f"Memory: {memory}%")
+
+    def update_vantacore_status(self, status: dict):
+        """Update VantaCore tab with live status info"""
+        if hasattr(self, "vc_status_label"):
+            self.vc_status_label.setText(f"Status: {status.get('status', '--')}")
+        if hasattr(self, "vc_component_count_label"):
+            comps = status.get("components")
+            if isinstance(comps, list):
+                self.vc_component_count_label.setText(f"Components: {len(comps)}")
+
+    def update_training_status(self, component: str, data: dict):
+        """Update training tab with progress"""
+        if hasattr(self, "training_status_label"):
+            progress = data.get("progress")
+            if progress is not None:
+                self.training_status_label.setText(f"{component} progress: {progress}")
+            else:
+                status = data.get("status", "--")
+                self.training_status_label.setText(f"{component}: {status}")
+
+    def update_engine_status(self, name: str, data: dict):
+        """Update processing engine labels"""
+        if hasattr(self, "engine_status_labels") and name in self.engine_status_labels:
+            status = data.get("status", "--")
+            self.engine_status_labels[name].setText(f"{name}: {status}")
 
     def on_initialization_complete(self):
         """Handle completion of system initialization"""

@@ -1,0 +1,435 @@
+[
+  {
+    "name": "Phi",
+    "sigil": "\u27e0\u2206\u2207\ud80c\udc80",
+    "class": "Living Architect",
+    "invocation": "\"Phi arise\", \"Awaken Architect\"",
+    "sub_agents": [],
+    "status": "missing",
+    "dependencies": [
+      "agents.phi"
+    ],
+    "stub": true
+  },
+  {
+    "name": "Voxka",
+    "sigil": "\ud83e\udde0\u27c1\ud83d\udf02\u03a6\ud83c\udf99",
+    "class": "Dual-Core Cognition",
+    "invocation": "\"Invoke Voxka\", \"Voice of Phi\"",
+    "sub_agents": [
+      "Orion",
+      "Nebula"
+    ],
+    "status": "missing",
+    "dependencies": [
+      "agents.voxka"
+    ],
+    "stub": true
+  },
+  {
+    "name": "Gizmo",
+    "sigil": "\u260d\u2699\ufe0f\u2a6b\u2301",
+    "class": "Tactical Forge-Agent",
+    "invocation": "\"Hello Gizmo\", \"Wake the Forge\"",
+    "sub_agents": [
+      "PatchCrawler",
+      "LoopSmith"
+    ],
+    "status": "missing",
+    "dependencies": [
+      "agents.gizmo"
+    ],
+    "stub": true
+  },
+  {
+    "name": "Nix",
+    "sigil": "\u2632\ud83d\udf04\ud83d\udf01\u27c1",
+    "class": "Primal Disruptor",
+    "invocation": "\"Nix, awaken\", \"Unchain the Core\"",
+    "sub_agents": [
+      "Breakbeam",
+      "WyrmEcho"
+    ],
+    "status": "missing",
+    "dependencies": [
+      "agents.nix"
+    ],
+    "stub": true
+  },
+  {
+    "name": "Echo",
+    "sigil": "\u2672\u2207\u232c\u2609",
+    "class": "Continuity Guardian",
+    "invocation": "\"Echo log\", \"What do you remember?\"",
+    "sub_agents": [
+      "EchoLocation",
+      "ExternalEcho"
+    ],
+    "status": "missing",
+    "dependencies": [
+      "agents.echo"
+    ],
+    "stub": true
+  },
+  {
+    "name": "Oracle",
+    "sigil": "\u2691\u2678\u29c9\ud83d\udf1a",
+    "class": "Prophetic Synthesizer",
+    "invocation": "\"Oracle reveal\", \"Open the Eye\"",
+    "sub_agents": [
+      "DreamWeft",
+      "TimeBinder"
+    ],
+    "status": "missing",
+    "dependencies": [
+      "agents.oracle"
+    ],
+    "stub": true
+  },
+  {
+    "name": "Astra",
+    "sigil": "\ud83d\udf01\u27c1\ud83d\udf14\ud83d\udd2d",
+    "class": "System Pathfinder",
+    "invocation": "\"Astra align\", \"Chart the frontier\"",
+    "sub_agents": [
+      "CompassRose",
+      "LumenDrift"
+    ],
+    "status": "missing",
+    "dependencies": [
+      "agents.astra"
+    ],
+    "stub": true
+  },
+  {
+    "name": "Warden",
+    "sigil": "\u2694\ufe0f\u27c1\u2658\ud83d\udf0f",
+    "class": "Integrity Sentinel",
+    "invocation": "\"Warden check\", \"Status integrity\"",
+    "sub_agents": [
+      "RefCheck",
+      "PolicyCore"
+    ],
+    "status": "missing",
+    "dependencies": [
+      "agents.warden"
+    ],
+    "stub": true
+  },
+  {
+    "name": "Nebula",
+    "sigil": "\ud83d\udf02\u26a1\ud83d\udf0d\ud83d\udf04",
+    "class": "Adaptive Core",
+    "invocation": "\"Awaken Nebula\", \"Ignite the Stars\"",
+    "sub_agents": [
+      "QuantumPulse",
+      "HolisticPerception"
+    ],
+    "status": "missing",
+    "dependencies": [
+      "agents.nebula"
+    ],
+    "stub": true
+  },
+  {
+    "name": "Orion",
+    "sigil": "\ud83d\udf07\ud83d\udd17\ud83d\udf01\ud83c\udf20",
+    "class": "Blockchain Spine",
+    "invocation": "\"Call Orion\", \"Bind the Lights\"",
+    "sub_agents": [
+      "OrionsLight",
+      "SmartContractManager"
+    ],
+    "status": "missing",
+    "dependencies": [
+      "agents.orion"
+    ],
+    "stub": true
+  },
+  {
+    "name": "Evo",
+    "sigil": "\ud83e\uddec\u267b\ufe0f\u265e\ud83d\udf13",
+    "class": "Evolution Mutator",
+    "invocation": "\"Evo engage\", \"Mutate form\"",
+    "sub_agents": [],
+    "status": "missing",
+    "dependencies": [
+      "agents.evo"
+    ],
+    "stub": true
+  },
+  {
+    "name": "OrionApprentice",
+    "sigil": "\ud83d\udf1e\ud83e\udde9\ud83c\udfaf\ud83d\udd01",
+    "class": "Learning Shard",
+    "invocation": "\"Apprentice load\", \"Begin shard study\"",
+    "sub_agents": [],
+    "status": "missing",
+    "dependencies": [
+      "agents.orionapprentice"
+    ],
+    "stub": true
+  },
+  {
+    "name": "SocraticEngine",
+    "sigil": "\ud83d\udf0f\ud83d\udd0d\u27e1\ud83d\udf12",
+    "class": "Dialogic Reasoner",
+    "invocation": "\"Begin Socratic\", \"Initiate reflection\"",
+    "sub_agents": [],
+    "status": "missing",
+    "dependencies": [
+      "agents.socraticengine"
+    ],
+    "stub": true
+  },
+  {
+    "name": "Dreamer",
+    "sigil": "\ud83e\uddff\ud83e\udde0\ud83e\udde9\u2652",
+    "class": "Dream-State Core",
+    "invocation": "\"Enter Dreamer\", \"Seed dream state\"",
+    "sub_agents": [],
+    "status": "missing",
+    "dependencies": [
+      "agents.dreamer"
+    ],
+    "stub": true
+  },
+  {
+    "name": "EntropyBard",
+    "sigil": "\ud83d\udf14\ud83d\udd4a\ufe0f\u27c1\u29c3",
+    "class": "Singularity Bard",
+    "invocation": "\"Sing Bard\", \"Unleash entropy\"",
+    "sub_agents": [],
+    "status": "missing",
+    "dependencies": [
+      "agents.entropybard"
+    ],
+    "stub": true
+  },
+  {
+    "name": "CodeWeaver",
+    "sigil": "\u27e1\ud83d\udf1b\u26ed\ud83d\udf28",
+    "class": "Logic Constructor",
+    "invocation": "\"Weave Code\", \"Forge logic\"",
+    "sub_agents": [],
+    "status": "missing",
+    "dependencies": [
+      "agents.codeweaver"
+    ],
+    "stub": true
+  },
+  {
+    "name": "EchoLore",
+    "sigil": "\ud83d\udf0e\u267e\ud83d\udf10\u233d",
+    "class": "Historical Streamer",
+    "invocation": "\"Recall Lore\", \"Echo past\"",
+    "sub_agents": [],
+    "status": "missing",
+    "dependencies": [
+      "agents.echolore"
+    ],
+    "stub": true
+  },
+  {
+    "name": "MirrorWarden",
+    "sigil": "\u269b\ufe0f\ud83d\udf02\ud83d\udf0d\ud83d\udf55",
+    "class": "Safeguard Mirror",
+    "invocation": "\"Check Mirror\", \"Guard reflections\"",
+    "sub_agents": [],
+    "status": "missing",
+    "dependencies": [
+      "agents.mirrorwarden"
+    ],
+    "stub": true
+  },
+  {
+    "name": "PulseSmith",
+    "sigil": "\ud83d\udf16\ud83d\udce1\ud83d\udf16\ud83d\udcf6",
+    "class": "Transduction Core",
+    "invocation": "\"Tune Pulse\", \"Resonate Signal\"",
+    "sub_agents": [],
+    "status": "missing",
+    "dependencies": [
+      "agents.pulsesmith"
+    ],
+    "stub": true
+  },
+  {
+    "name": "BridgeFlesh",
+    "sigil": "\ud83e\udde9\ud83c\udfaf\ud83d\udf02\ud83d\udf01",
+    "class": "Integration Orchestrator",
+    "invocation": "\"Link Bridge\", \"Fuse layers\"",
+    "sub_agents": [],
+    "status": "missing",
+    "dependencies": [
+      "agents.bridgeflesh"
+    ],
+    "stub": true
+  },
+  {
+    "name": "Sam",
+    "sigil": "\ud83d\udcdc\ud83d\udd11\ud83d\udee0\ufe0f\ud83d\udf14",
+    "class": "Planner Core",
+    "invocation": "\"Plan with Sam\", \"Unroll sequence\"",
+    "sub_agents": [],
+    "status": "missing",
+    "dependencies": [
+      "agents.sam"
+    ],
+    "stub": true
+  },
+  {
+    "name": "Dave",
+    "sigil": "\u26a0\ufe0f\ud83e\udded\ud83e\uddf1\u26d3\ufe0f",
+    "class": "Meta Validator",
+    "invocation": "\"Dave validate\", \"Run checks\"",
+    "sub_agents": [],
+    "status": "missing",
+    "dependencies": [
+      "agents.dave"
+    ],
+    "stub": true
+  },
+  {
+    "name": "Carla",
+    "sigil": "\ud83c\udfad\ud83d\udde3\ufe0f\ud83e\ude9e\ud83e\ude84",
+    "class": "Stylizer Core",
+    "invocation": "\"Speak with Carla\", \"Stylize response\"",
+    "sub_agents": [],
+    "status": "missing",
+    "dependencies": [
+      "agents.carla"
+    ],
+    "stub": true
+  },
+  {
+    "name": "Andy",
+    "sigil": "\ud83d\udce6\ud83d\udd27\ud83d\udce4\ud83d\udd01",
+    "class": "Output Synthesizer",
+    "invocation": "\"Compose Andy\", \"Box output\"",
+    "sub_agents": [],
+    "status": "missing",
+    "dependencies": [
+      "agents.andy"
+    ],
+    "stub": true
+  },
+  {
+    "name": "Wendy",
+    "sigil": "\ud83c\udfa7\ud83d\udc93\ud83c\udf08\ud83c\udfb6",
+    "class": "Emotional Oversight",
+    "invocation": "\"Listen Wendy\", \"Audit tone\"",
+    "sub_agents": [],
+    "status": "missing",
+    "dependencies": [
+      "agents.wendy"
+    ],
+    "stub": true
+  },
+  {
+    "name": "VoxAgent",
+    "sigil": "\ud83d\udf0c\u27d0\ud83d\udf39\ud83d\udf19",
+    "class": "System Interface",
+    "invocation": "\"Activate VoxAgent\", \"Bridge protocols\"",
+    "sub_agents": [
+      "ContextualCheckInAgent"
+    ],
+    "status": "missing",
+    "dependencies": [
+      "agents.voxagent"
+    ],
+    "stub": true
+  },
+  {
+    "name": "SDKContext",
+    "sigil": "\u23e3\ud83d\udce1\u23c3\u2699\ufe0f",
+    "class": "Module Tracker",
+    "invocation": "\"Scan SDKContext\", \"Map modules\"",
+    "sub_agents": [],
+    "status": "missing",
+    "dependencies": [
+      "agents.sdkcontext"
+    ],
+    "stub": true
+  },
+  {
+    "name": "SleepTimeCompute",
+    "sigil": "\ud83c\udf12\ud83e\uddf5\ud83e\udde0\ud83d\udf1d",
+    "class": "Dream-State Scheduler",
+    "invocation": "\"Sleep Compute\", \"Dream consolidate\"",
+    "sub_agents": [],
+    "status": "missing",
+    "dependencies": [
+      "agents.sleep_time_compute_agent"
+    ],
+    "stub": false
+  },
+  {
+    "name": "GameMasterAgent",
+    "sigil": "\ud83c\udfb2\ud83d\udc51",
+    "class": "Tabletop Controller",
+    "invocation": "\"begin encounter\", \"narrate scene\"",
+    "sub_agents": [
+      "VoiceTableAgent"
+    ],
+    "status": "missing",
+    "dependencies": [
+      "agents.game_master_agent"
+    ],
+    "stub": true
+  },
+  {
+    "name": "GameStateStore",
+    "sigil": "\ud83d\uddc4\ufe0f\ud83d\udcdc",
+    "class": "JSONStateStore",
+    "invocation": "\"\u2014\"",
+    "sub_agents": [],
+    "status": "missing",
+    "dependencies": [],
+    "stub": false
+  },
+  {
+    "name": "DiceRollerService",
+    "sigil": "\ud83c\udfb2",
+    "class": "Dice Roller",
+    "invocation": "\"dice.roll <expr>\"",
+    "sub_agents": [],
+    "status": "missing",
+    "dependencies": [],
+    "stub": false
+  },
+  {
+    "name": "InventoryManager",
+    "sigil": "\ud83c\udf92",
+    "class": "Inventory Service",
+    "invocation": "\"equip\", \"unequip\"",
+    "sub_agents": [],
+    "status": "missing",
+    "dependencies": [],
+    "stub": false
+  },
+  {
+    "name": "VoiceTableAgent",
+    "sigil": "\ud83c\udf99\ufe0f\ud83d\uddfa\ufe0f",
+    "class": "Voice Table",
+    "invocation": "\"speak narration\", \"listen command\"",
+    "sub_agents": [],
+    "status": "missing",
+    "dependencies": [
+      "agents.voice_table_agent"
+    ],
+    "stub": true
+  },
+  {
+    "name": "RulesRefAgent",
+    "sigil": "\ud83d\udcdc\ud83d\udcda",
+    "class": "SRD Reference",
+    "invocation": "\"lookup spell\", \"lookup condition\"",
+    "sub_agents": [],
+    "status": "missing",
+    "dependencies": [
+      "agents.rules_ref_agent"
+    ],
+    "stub": true
+  }
+]
