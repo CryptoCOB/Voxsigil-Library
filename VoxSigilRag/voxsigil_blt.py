@@ -4,15 +4,17 @@ import hashlib
 import logging
 import time
 from typing import Any, Callable, Dict, List, Optional, Tuple
-from VoxSigilRag.voxsigil_semantic_cache import SemanticCacheManager
+
 import numpy as np
+
+from VoxSigilRag.voxsigil_semantic_cache import SemanticCacheManager
+
 from .sigil_patch_encoder import SigilPatchEncoder
 
 # Configure logger
 logger = logging.getLogger(__name__)
 
 # Import semantic cache
-
 
 
 # Import hybrid middleware for improved version
@@ -32,12 +34,40 @@ try:
     _get_hybrid_middleware()
 except Exception:
     HAS_HYBRID_MIDDLEWARE = False
-    logger.warning("HybridMiddleware not available. Using legacy BLTEnhancedMiddleware.")
+    logger.warning(
+        "HybridMiddleware not available. Using legacy BLTEnhancedMiddleware."
+    )
 
 # Third-party dependencies
 try:
-    from pydantic import BaseModel, Field, validator
+    from pydantic import BaseModel, Field
     from pydantic_settings import BaseSettings
+
+    # Try to import field_validator for Pydantic v2
+    try:
+        from pydantic import field_validator as validator
+    except ImportError:
+        # Fallback to validator for older versions
+        from pydantic import validator
+except ImportError:
+    # Fallback classes if Pydantic is not available
+    class BaseModel:
+        pass
+
+    class BaseSettings:
+        pass
+
+    def Field(*args, **kwargs):
+        # Just return the default value if provided
+        if args:
+            return args[0]
+        return kwargs.get("default", None)
+
+    def validator(*args, **kwargs):
+        def decorator(func):
+            return func
+
+        return decorator
 except ImportError:
     print("Pydantic is not installed. Using basic config for BLTEnhancedMiddleware.")
 
@@ -71,7 +101,9 @@ class VoxSigilRAG:  # Placeholder for standard RAG
 
         self.embedding_model = MockEmb()
 
-    def create_rag_context(self, query: str, num_sigils: int = 5, **kw) -> Tuple[str, List[Dict]]:
+    def create_rag_context(
+        self, query: str, num_sigils: int = 5, **kw
+    ) -> Tuple[str, List[Dict]]:
         # Generate an embedding for the query so it can be reused later
         emb = self.embedding_model.encode(query)
 
@@ -81,9 +113,9 @@ class VoxSigilRAG:  # Placeholder for standard RAG
 
         s = [
             {
-            "id": f"std_doc_{i}",
-            "content": f"Std content {i} for '{query[:20]}'",
-            "score": rng.random(),  # score now depends (indirectly) on `emb`
+                "id": f"std_doc_{i}",
+                "content": f"Std content {i} for '{query[:20]}'",
+                "score": rng.random(),  # score now depends (indirectly) on `emb`
             }
             for i in range(num_sigils)
         ]
@@ -93,7 +125,9 @@ class VoxSigilRAG:  # Placeholder for standard RAG
         self, embedding: np.ndarray, query_text: str, num_sigils: int = 5, **kwargs
     ) -> Tuple[str, List[Dict]]:
         # Assumes RAG can use a precomputed embedding for retrieval
-        logger.debug(f"StandardRAG retrieving with precomputed embedding for '{query_text[:20]}'")
+        logger.debug(
+            f"StandardRAG retrieving with precomputed embedding for '{query_text[:20]}'"
+        )
         # Simulate retrieval; in reality, this would use the embedding against an index
         s = [
             {
@@ -133,11 +167,15 @@ class PatchAwareValidator:  # Stub
                 return False, [{"message": "Input must be a non-empty string"}]
 
             # Create a mock patch encoder for entropy calculation
-            encoder = SigilPatchEncoder(entropy_threshold=self.entropy_threshold, use_blt=True)
+            encoder = SigilPatchEncoder(
+                entropy_threshold=self.entropy_threshold, use_blt=True
+            )
             _, entropy_scores = encoder.analyze_entropy(text)
 
             # Calculate average entropy
-            avg_entropy = sum(entropy_scores) / len(entropy_scores) if entropy_scores else 0.5
+            avg_entropy = (
+                sum(entropy_scores) / len(entropy_scores) if entropy_scores else 0.5
+            )
 
             # Log for debugging
             logger.debug(
@@ -167,12 +205,15 @@ class PatchAwareCompressor:  # Stub
 
 # --- Configuration ---
 class BLTMiddlewareConfig(BaseSettings):
-    entropy_threshold: float = Field(0.35, description="Primary entropy threshold for routing.")
+    entropy_threshold: float = Field(
+        0.35, description="Primary entropy threshold for routing."
+    )
     blt_rag_weight: float = Field(
         0.7, description="Weight for BLT embedding in true hybrid scenarios."
     )  # Note: different name than blt_hybrid_weight from problem
     entropy_router_fallback: str = Field(
-        "standard_rag", description="Fallback RAG if entropy fails ('blt_rag' or 'standard_rag')."
+        "standard_rag",
+        description="Fallback RAG if entropy fails ('blt_rag' or 'standard_rag').",
     )
     cache_ttl_seconds: int = Field(360, description="TTL for RAG context cache.")
     log_level: str = Field("INFO", description="Logging level.")
@@ -189,7 +230,8 @@ class BLTMiddlewareConfig(BaseSettings):
 
     # Semantic caching parameters
     enable_semantic_cache: bool = Field(
-        True, description="Enable semantic cache for queries instead of exact string matching."
+        True,
+        description="Enable semantic cache for queries instead of exact string matching.",
     )
     semantic_similarity_threshold: float = Field(
         0.85, description="Similarity threshold for semantic cache hits."
@@ -202,9 +244,12 @@ class BLTMiddlewareConfig(BaseSettings):
     enable_recency_boost: bool = Field(
         True, description="Enable boosting of relevance scores based on sigil recency."
     )
-    recency_boost_factor: float = Field(0.2, description="Factor to boost recent sigils (0-1).")
+    recency_boost_factor: float = Field(
+        0.2, description="Factor to boost recent sigils (0-1)."
+    )
     recency_max_days: int = Field(
-        30, description="Number of days within which a sigil gets maximum recency boost."
+        30,
+        description="Number of days within which a sigil gets maximum recency boost.",
     )
 
     # Parent middleware standard params (can be inherited or overridden)
@@ -213,8 +258,8 @@ class BLTMiddlewareConfig(BaseSettings):
     # ... other standard VoxSigilMiddleware params
 
     # class Config:
-    #     env_prefix = "VOXSIGIL_BLT_"
-    @validator("log_level")
+    #     env_prefix = "VOXSIGIL_BLT_"    @validator("log_level")
+    @classmethod
     def set_log_level(cls, value):  # Same as previous script
         numeric_level = getattr(logging, value.upper(), None)
         if not isinstance(numeric_level, int):
@@ -238,7 +283,9 @@ class VoxSigilMiddleware:
         )
         self.num_sigils = num_sigils
         self.min_score_threshold = min_score_threshold
-        logger.info(f"Base VoxSigilMiddleware initialized. Num sigils: {self.num_sigils}")
+        logger.info(
+            f"Base VoxSigilMiddleware initialized. Num sigils: {self.num_sigils}"
+        )
 
     def preprocess_request(self, request: Dict[str, Any]) -> Dict[str, Any]:
         return request
@@ -256,7 +303,9 @@ class VoxSigilMiddleware:
             ):
                 return msg["content"]
         last_message = messages[-1]
-        if isinstance(last_message, dict) and isinstance(last_message.get("content"), str):
+        if isinstance(last_message, dict) and isinstance(
+            last_message.get("content"), str
+        ):
             return last_message["content"]
         return None
 
@@ -276,11 +325,15 @@ class VoxSigilMiddleware:
         for i, msg in enumerate(enhanced_messages):
             if msg.get("role") == "system":
                 original_content = msg.get("content", "")
-                enhanced_messages[i]["content"] = f"{system_message_content}\n\n{original_content}"
+                enhanced_messages[i]["content"] = (
+                    f"{system_message_content}\n\n{original_content}"
+                )
                 prepended = True
                 break
         if not prepended:
-            enhanced_messages.insert(0, {"role": "system", "content": system_message_content})
+            enhanced_messages.insert(
+                0, {"role": "system", "content": system_message_content}
+            )
         request["messages"] = enhanced_messages
         return request
 
@@ -318,19 +371,27 @@ class BLTEntropyRouter:  # Feature 1 & 2 & 8
 
         try:
             patches, entropy_scores = self.patch_encoder.analyze_entropy(text)
-            if not entropy_scores:  # Heuristic fallback if analyze_entropy gives no scores
+            if (
+                not entropy_scores
+            ):  # Heuristic fallback if analyze_entropy gives no scores
                 logger.warning(
                     f"No entropy scores from SigilPatchEncoder for: '{text[:30]}...'. Applying heuristic."
                 )
-                avg_entropy = 0.15 if any(c in text for c in ["<", ">", "{", "}"]) else 0.75
+                avg_entropy = (
+                    0.15 if any(c in text for c in ["<", ">", "{", "}"]) else 0.75
+                )
                 entropy_scores = [avg_entropy]
                 patches = patches or [text]
 
-            avg_entropy = sum(entropy_scores) / len(entropy_scores) if entropy_scores else 0.5
+            avg_entropy = (
+                sum(entropy_scores) / len(entropy_scores) if entropy_scores else 0.5
+            )
 
             # Enhanced logging for entropy routing
             route_decision = (
-                "blt_rag" if avg_entropy < self.config.entropy_threshold else "standard_rag"
+                "blt_rag"
+                if avg_entropy < self.config.entropy_threshold
+                else "standard_rag"
             )
             logger.info(
                 f"ENTROPY ROUTING: text='{text[:30]}...', avg_entropy={avg_entropy:.4f}, threshold={self.config.entropy_threshold:.4f}, route={route_decision}"
@@ -396,7 +457,9 @@ class BLTEnhancedMiddleware(VoxSigilMiddleware):  # Inherits from VoxSigilMiddle
         )
 
         # Feature 10: Configuration
-        self.config = config if config else BLTMiddlewareConfig(**kwargs)  # Load/use config
+        self.config = (
+            config if config else BLTMiddlewareConfig(**kwargs)
+        )  # Load/use config
 
         # Initialize parent with relevant config/params
         super().__init__(
@@ -404,7 +467,11 @@ class BLTEnhancedMiddleware(VoxSigilMiddleware):  # Inherits from VoxSigilMiddle
             num_sigils=self.config.num_sigils,
             min_score_threshold=self.config.min_score_threshold,
             # Pass other relevant parent params from self.config or kwargs
-            **{k: v for k, v in kwargs.items() if k not in BLTMiddlewareConfig.__fields__},
+            **{
+                k: v
+                for k, v in kwargs.items()
+                if k not in BLTMiddlewareConfig.__fields__
+            },
         )
 
         self.router = BLTEntropyRouter(self.config)
@@ -414,7 +481,9 @@ class BLTEnhancedMiddleware(VoxSigilMiddleware):  # Inherits from VoxSigilMiddle
         # For BLT RAG, we use SigilPatchEncoder for embeddings. The actual retrieval
         # might still use an underlying vector store, potentially shared or specialized.
         # We assume self.patch_encoder IS the core of the BLT embedding generation.
-        self._patch_encoder_instance: Optional[SigilPatchEncoder] = None  # For BLT embeddings
+        self._patch_encoder_instance: Optional[SigilPatchEncoder] = (
+            None  # For BLT embeddings
+        )
 
         # BLT-specific components from the original BLTEnhancedMiddleware
         self.patch_validator = PatchAwareValidator(
@@ -454,9 +523,13 @@ class BLTEnhancedMiddleware(VoxSigilMiddleware):  # Inherits from VoxSigilMiddle
             )
 
     @property
-    def blt_patch_encoder(self) -> SigilPatchEncoder:  # Lazy init for BLT encoder if it were heavy
+    def blt_patch_encoder(
+        self,
+    ) -> SigilPatchEncoder:  # Lazy init for BLT encoder if it were heavy
         if self._patch_encoder_instance is None:
-            logger.info("Lazy initializing SigilPatchEncoder for BLTEnhancedMiddleware...")
+            logger.info(
+                "Lazy initializing SigilPatchEncoder for BLTEnhancedMiddleware..."
+            )
             # Base model could come from standard RAG if needed for patch encoder init
             base_model_for_patch_encoder = (
                 self._standard_rag_instance.embedding_model
@@ -470,14 +543,18 @@ class BLTEnhancedMiddleware(VoxSigilMiddleware):  # Inherits from VoxSigilMiddle
 
             # Set up the embedding function for the semantic cache if enabled
             if self.config.enable_semantic_cache and self.semantic_cache:
-                self.semantic_cache.set_embedding_function(self._patch_encoder_instance.encode)
+                self.semantic_cache.set_embedding_function(
+                    self._patch_encoder_instance.encode
+                )
                 logger.info("Set up embedding function for semantic cache")
 
         return self._patch_encoder_instance
 
     def _get_cache_key(self, query: str) -> str:  # Identical to previous
         norm_q = " ".join(query.lower().strip().split())
-        return hashlib.sha256(norm_q.encode()).hexdigest() if len(norm_q) > 256 else norm_q
+        return (
+            hashlib.sha256(norm_q.encode()).hexdigest() if len(norm_q) > 256 else norm_q
+        )
 
     def _clean_expired_cache_entries(self):  # Identical to previous
         current_time = time.monotonic()
@@ -493,7 +570,9 @@ class BLTEnhancedMiddleware(VoxSigilMiddleware):  # Inherits from VoxSigilMiddle
                 f"Cleaned {len(expired)} expired RAG cache entries."
             )  # Feature 3 & 4: Differentiated RAG processing and Fallback
 
-    def _get_hybrid_rag_context(self, query: str) -> Tuple[str, List[Dict[str, Any]], str, float]:
+    def _get_hybrid_rag_context(
+        self, query: str
+    ) -> Tuple[str, List[Dict[str, Any]], str, float]:
         """Core hybrid RAG logic: route, retrieve, handle errors."""
         # First check semantic cache if enabled
         if self.config.enable_semantic_cache and self.semantic_cache:
@@ -516,10 +595,17 @@ class BLTEnhancedMiddleware(VoxSigilMiddleware):  # Inherits from VoxSigilMiddle
                             s.get("content", "") for s in sigils if s.get("content")
                         )
 
-                return context_str, sigils, f"{route_method}_semantic_cache", avg_entropy
+                return (
+                    context_str,
+                    sigils,
+                    f"{route_method}_semantic_cache",
+                    avg_entropy,
+                )
 
         route_decision, _, entropy_scores = self.router.route(query)
-        avg_entropy = sum(entropy_scores) / len(entropy_scores) if entropy_scores else 0.5
+        avg_entropy = (
+            sum(entropy_scores) / len(entropy_scores) if entropy_scores else 0.5
+        )
 
         context_str, sigils, actual_method_used = "", [], route_decision
 
@@ -536,8 +622,10 @@ class BLTEnhancedMiddleware(VoxSigilMiddleware):  # Inherits from VoxSigilMiddle
                 # Now, how does BLT RAG retrieve? Does it use the standard RAG's index with this embedding?
                 # Or a separate BLT-specific index/retrieval?
                 # Assuming it can use the standard RAG store with a different embedding type:
-                context_str, sigils = self._standard_rag_instance.retrieve_with_embedding(
-                    blt_embedding, query, num_sigils=self.config.num_sigils
+                context_str, sigils = (
+                    self._standard_rag_instance.retrieve_with_embedding(
+                        blt_embedding, query, num_sigils=self.config.num_sigils
+                    )
                 )  # Pass query for context in sigils
                 actual_method_used = "blt_rag_on_std_index"  # More descriptive method
 
@@ -549,7 +637,9 @@ class BLTEnhancedMiddleware(VoxSigilMiddleware):  # Inherits from VoxSigilMiddle
                     query, num_sigils=self.config.num_sigils
                 )
             else:  # Should not happen if router is correct
-                logger.error(f"Unknown RAG route: {route_decision}. Defaulting to standard.")
+                logger.error(
+                    f"Unknown RAG route: {route_decision}. Defaulting to standard."
+                )
                 context_str, sigils = self._standard_rag_instance.create_rag_context(
                     query, num_sigils=self.config.num_sigils
                 )
@@ -564,13 +654,16 @@ class BLTEnhancedMiddleware(VoxSigilMiddleware):  # Inherits from VoxSigilMiddle
             if actual_method_used.startswith("blt"):
                 logger.warning("BLT RAG failed. Attempting fallback to Standard RAG.")
                 try:
-                    context_str, sigils = self._standard_rag_instance.create_rag_context(
-                        query, num_sigils=self.config.num_sigils
+                    context_str, sigils = (
+                        self._standard_rag_instance.create_rag_context(
+                            query, num_sigils=self.config.num_sigils
+                        )
                     )
                     actual_method_used = "standard_rag_from_blt_failure"
                 except Exception as fallback_e:
                     logger.critical(
-                        f"Standard RAG fallback also failed: {fallback_e}", exc_info=True
+                        f"Standard RAG fallback also failed: {fallback_e}",
+                        exc_info=True,
                     )
                     context_str, sigils = "", []  # Critical failure
             else:  # Standard RAG failed
@@ -579,12 +672,16 @@ class BLTEnhancedMiddleware(VoxSigilMiddleware):  # Inherits from VoxSigilMiddle
                 )
                 try:
                     blt_embedding = self.blt_patch_encoder.encode(query)
-                    context_str, sigils = self._standard_rag_instance.retrieve_with_embedding(
-                        blt_embedding, query, num_sigils=self.config.num_sigils
+                    context_str, sigils = (
+                        self._standard_rag_instance.retrieve_with_embedding(
+                            blt_embedding, query, num_sigils=self.config.num_sigils
+                        )
                     )
                     actual_method_used = "blt_rag_from_std_failure"
                 except Exception as fallback_e:
-                    logger.critical(f"BLT RAG fallback also failed: {fallback_e}", exc_info=True)
+                    logger.critical(
+                        f"BLT RAG fallback also failed: {fallback_e}", exc_info=True
+                    )
                     context_str, sigils = "", []  # Critical failure
 
         # Apply recency boosting
@@ -594,7 +691,9 @@ class BLTEnhancedMiddleware(VoxSigilMiddleware):  # Inherits from VoxSigilMiddle
             # Update context string with boosted sigils
             # Simplified re-creation - in a real system, might need more logic
             if context_str and sigils:
-                context_str = "\n".join(s.get("content", "") for s in sigils if s.get("content"))
+                context_str = "\n".join(
+                    s.get("content", "") for s in sigils if s.get("content")
+                )
 
         # Store in semantic cache if enabled
         if (
@@ -620,8 +719,12 @@ class BLTEnhancedMiddleware(VoxSigilMiddleware):  # Inherits from VoxSigilMiddle
         if self.config.enable_patch_validation and sigils:
             valid_sigils = []
             for sigil in sigils:
-                content_to_validate = str(sigil.get("content", ""))  # Or more specific fields
-                is_valid, issues = self.patch_validator.validate_schema(content_to_validate)
+                content_to_validate = str(
+                    sigil.get("content", "")
+                )  # Or more specific fields
+                is_valid, issues = self.patch_validator.validate_schema(
+                    content_to_validate
+                )
                 if is_valid:
                     valid_sigils.append(sigil)
                 else:
@@ -629,8 +732,12 @@ class BLTEnhancedMiddleware(VoxSigilMiddleware):  # Inherits from VoxSigilMiddle
                         f"Sigil ID {sigil.get('id', 'N/A')} failed patch validation: {issues}"
                     )
 
-            if len(valid_sigils) != len(sigils):  # Rebuild context if some sigils were invalid
-                final_context = "\n".join(s["content"] for s in valid_sigils if s.get("content"))
+            if len(valid_sigils) != len(
+                sigils
+            ):  # Rebuild context if some sigils were invalid
+                final_context = "\n".join(
+                    s["content"] for s in valid_sigils if s.get("content")
+                )
                 logger.info(
                     f"Rebuilt context after patch validation: {len(valid_sigils)}/{len(sigils)} sigils valid."
                 )
@@ -649,7 +756,10 @@ class BLTEnhancedMiddleware(VoxSigilMiddleware):  # Inherits from VoxSigilMiddle
                     logger.debug(f"Compressing user query (ratio: {ratio:.2f})")
                     # Update query in messages
                     for msg in enhanced_request.get("messages", []):
-                        if msg.get("role") == "user" and msg.get("content") == user_query:
+                        if (
+                            msg.get("role") == "user"
+                            and msg.get("content") == user_query
+                        ):
                             msg["content"] = compressed_query
                             break
 
@@ -663,7 +773,9 @@ class BLTEnhancedMiddleware(VoxSigilMiddleware):  # Inherits from VoxSigilMiddle
 
         return enhanced_request, final_context
 
-    def _apply_recency_boost(self, sigils: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
+    def _apply_recency_boost(
+        self, sigils: List[Dict[str, Any]]
+    ) -> List[Dict[str, Any]]:
         """
         Apply recency boosting to sigil relevance scores.
 
@@ -703,7 +815,9 @@ class BLTEnhancedMiddleware(VoxSigilMiddleware):  # Inherits from VoxSigilMiddle
             # Convert timestamp to datetime if it's a string
             if isinstance(timestamp, str):
                 try:
-                    timestamp = datetime.datetime.fromisoformat(timestamp.replace("Z", "+00:00"))
+                    timestamp = datetime.datetime.fromisoformat(
+                        timestamp.replace("Z", "+00:00")
+                    )
                 except (ValueError, TypeError):
                     try:
                         # Try a few common formats if ISO format fails
@@ -723,7 +837,9 @@ class BLTEnhancedMiddleware(VoxSigilMiddleware):  # Inherits from VoxSigilMiddle
                 days_diff = (now - timestamp).days
 
                 # Apply recency boost
-                recency_ratio = max(0, 1 - (days_diff / max_days)) if days_diff <= max_days else 0
+                recency_ratio = (
+                    max(0, 1 - (days_diff / max_days)) if days_diff <= max_days else 0
+                )
                 original_score = boosted_sigil.get("score", 0.5)
 
                 # Boost formula: original_score + (1 - original_score) * boost_factor * recency_ratio
@@ -731,7 +847,9 @@ class BLTEnhancedMiddleware(VoxSigilMiddleware):  # Inherits from VoxSigilMiddle
                 # 1. Higher original scores still get relatively smaller boosts
                 # 2. More recent items get larger boosts
                 # 3. Score never exceeds 1.0
-                boosted_score = original_score + (1 - original_score) * boost_factor * recency_ratio
+                boosted_score = (
+                    original_score + (1 - original_score) * boost_factor * recency_ratio
+                )
                 boosted_sigil["score"] = min(1.0, boosted_score)
 
                 # Add metadata about boosting
@@ -757,7 +875,9 @@ class BLTEnhancedMiddleware(VoxSigilMiddleware):  # Inherits from VoxSigilMiddle
 
         query = self._extract_query_from_request(request)
         if not query:
-            logger.warning("No query extractable. Passing request to super or returning as is.")
+            logger.warning(
+                "No query extractable. Passing request to super or returning as is."
+            )
             return super().preprocess_request(request)  # Or just request
 
         # Clean cache periodically
@@ -824,7 +944,9 @@ class BLTEnhancedMiddleware(VoxSigilMiddleware):  # Inherits from VoxSigilMiddle
             logger.info(
                 f"All caches MISS for query: '{query[:30]}...' - Processing with Hybrid RAG."
             )
-            context_str, sigils, route_method, avg_entropy = self._get_hybrid_rag_context(query)
+            context_str, sigils, route_method, avg_entropy = (
+                self._get_hybrid_rag_context(query)
+            )
 
             # Store in exact match cache if we got results
             if context_str or sigils:
@@ -844,7 +966,9 @@ class BLTEnhancedMiddleware(VoxSigilMiddleware):  # Inherits from VoxSigilMiddle
         )
 
         # Inject context into the request (using parent's helper or similar)
-        cache_source = "Semantic" if semantic_cache_hit else "Exact" if cache_hit else "None"
+        cache_source = (
+            "Semantic" if semantic_cache_hit else "Exact" if cache_hit else "None"
+        )
         final_enhanced_request = self._enhance_request_with_context(
             enhanced_request,
             final_context_str,
@@ -860,7 +984,9 @@ class BLTEnhancedMiddleware(VoxSigilMiddleware):  # Inherits from VoxSigilMiddle
             "query_preview": query[:40] + "...",
             "route": route_method,
             "cache": cache_source,
-            "semantic_similarity": round(semantic_similarity, 4) if semantic_cache_hit else 0.0,
+            "semantic_similarity": round(semantic_similarity, 4)
+            if semantic_cache_hit
+            else 0.0,
             "ctx_len": len(final_context_str),
             "sigils": len(sigils),
             "budget": round(budget, 2),
@@ -1155,7 +1281,9 @@ class ByteLatentTransformerEncoder:
 
 # --- Main Example Usage ---
 if __name__ == "__main__":
-    print("=" * 80 + "\n🚀 VoxSigil BLT-Enhanced Hybrid Middleware Test 🚀\n" + "=" * 80)
+    print(
+        "=" * 80 + "\n🚀 VoxSigil BLT-Enhanced Hybrid Middleware Test 🚀\n" + "=" * 80
+    )
 
     # Test Config
     test_conf_obj = BLTMiddlewareConfig(
@@ -1175,7 +1303,9 @@ if __name__ == "__main__":
 
     test_requests_data = [
         {
-            "messages": [{"role": "user", "content": "Explain symbolic reasoning in AI."}]
+            "messages": [
+                {"role": "user", "content": "Explain symbolic reasoning in AI."}
+            ]
         },  # High entropy expected
         {
             "messages": [
@@ -1194,7 +1324,9 @@ if __name__ == "__main__":
             ]
         },  # Mixed
         {
-            "messages": [{"role": "user", "content": "Explain symbolic reasoning in AI."}]
+            "messages": [
+                {"role": "user", "content": "Explain symbolic reasoning in AI."}
+            ]
         },  # Test cache
         {
             "messages": [
@@ -1219,7 +1351,9 @@ if __name__ == "__main__":
         )  # Query might be compressed
         print(f"Final Query Preview (after BLT): '{final_query[:60]}...'")
         if processed_req["messages"][0].get("role") == "system":
-            print(f"System Context Preview: {processed_req['messages'][0]['content'][:150]}...")
+            print(
+                f"System Context Preview: {processed_req['messages'][0]['content'][:150]}..."
+            )
         metadata = processed_req.get("voxsigil_blt_metadata", {})
         print(
             f"Metadata: Route='{metadata.get('route')}', Cache='{metadata.get('cache')}', Time='{metadata.get('time_ms')}ms'"
@@ -1249,4 +1383,9 @@ if __name__ == "__main__":
     else:
         print("True Hybrid Embedding computation FAILED.")
 
-    print("\n" + "=" * 80 + "\n✅ BLT-Enhanced Hybrid Middleware Test Complete ✅\n" + "=" * 80)
+    print(
+        "\n"
+        + "=" * 80
+        + "\n✅ BLT-Enhanced Hybrid Middleware Test Complete ✅\n"
+        + "=" * 80
+    )

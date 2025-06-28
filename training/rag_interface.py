@@ -25,13 +25,13 @@ except ImportError:
 # Try to import VoxSigilRAG
 VOXSIGIL_RAG_AVAILABLE = False
 try:
-    # Try multiple import paths
+    # Try multiple import paths for enhanced BLT components
     try:
-        from BLT.voxsigil_rag import VoxSigilRAG as ImportedVoxSigilRAG
+        from BLT.hybrid_blt import BLTEnhancedRAG as ImportedVoxSigilRAG
 
         VOXSIGIL_RAG_AVAILABLE = True
         logger_rag_interface.info(
-            "Successfully imported VoxSigilRAG from Voxsigil_Library"
+            "Successfully imported BLTEnhancedRAG from hybrid_blt"
         )
     except ImportError:
         try:

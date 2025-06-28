@@ -1,108 +1,54 @@
-sigil: <lens focus="x">
-alias: FocusLens
-tag: AttentionFocusing
-tags:
-- selective_attention
-- domain_focus
-- attention_control
-- context_framing
-is_cognitive_primitive: true
-cognitive_primitive_type: attention_control
-principle: 'Selective Abstraction Framing - Constrains the attention and reasoning
-  of the system to a specific domain or subset of information, enhancing precision
-  and relevance.
-
-  '
-math: "L(x) → ∇attention(x) > τ\n\nWhere:\n  - L(x) is the lens operator applied to\
-  \ domain x\n  - ∇attention(x) represents the gradient of attention focused on x\n\
-  \  - τ is the threshold value determining meaningful focus\n"
-usage:
-  description: Constrain attention to domain subset
-  example: <lens focus='code'>...</lens>
-  explanation: 'The focus lens allows the system to increase attention on a specific
-    domain or context while reducing cognitive resources allocated to irrelevant aspects,
-    improving the quality and relevance of outputs.
+schema_version: 1.5-holo-alpha
+meta:
+  sigil: <lens focus="x">
+  alias: FocusLens
+  tag: AttentionFocusing
+  upgraded_from: legacy
+  upgrade_timestamp: '2025-06-24T17:14:16.519094'
+  source_file: tags\focus_lens.voxsigil
+holo_mesh:
+  is_cognitive_primitive: true
+  mesh_compatibility: holo-1.5-alpha
+  registration_ready: true
+  vanta_core_integration:
+    event_support: true
+    async_capable: true
+    memory_aware: true
+  temporal_pattern: atomic
+cognitive:
+  principle: 'Selective Abstraction Framing - Constrains the attention and reasoning of the system to a specific domain or
+    subset of information, enhancing precision and relevance.
 
     '
-activation_context:
-  trigger_conditions:
-  - Need for focused analysis within a specific domain
-  - Context switching between different subjects
-  - Filtering irrelevant information
-  preconditions:
-  - Clear domain boundaries can be established
-  - System has sufficient knowledge of the focal domain
-  required_capabilities:
+  math: "L(x) → ∇attention(x) > τ\n\nWhere:\n  - L(x) is the lens operator applied to domain x\n  - ∇attention(x) represents\
+    \ the gradient of attention focused on x\n  - τ is the threshold value determining meaningful focus\n"
+  tags:
+  - selective_attention
+  - domain_focus
   - attention_control
-  - domain_recognition
-  - contextual_filtering
-  supported_modalities:
-  - textual
-  - conceptual
-  - analytical
-  contraindications:
-  - Tasks requiring broad context integration
-  - Exploratory tasks with undefined boundaries
-parameterization_schema:
-  parameters:
-  - name: focus_domain
-    type: string
-    description: The domain or subject to focus attention on
-    is_required: true
-  - name: focus_intensity
-    type: float
-    description: The degree of focus, higher values mean narrower focus
-    default_value: 0.8
-    value_range:
-      min: 0.1
-      max: 1.0
-  - name: maintain_peripheral_awareness
-    type: boolean
-    description: Whether to maintain some awareness of content outside the focus
-    default_value: true
-SMART_MRAP:
-  Specific: Narrow reasoning to active subdomain
-  Measurable: Reduced irrelevant tokens
-  Achievable: Attention mask modulation
-  Relevant: Multimodal focus; topic zoom
-  Transferable: All encoder-based LLMs
-metadata:
-  definition_version: 1.4.0
-  definition_status: active
-  author_agent_id: VOXSIGIL_CONVERTER_BOT
-  created_timestamp: '2025-05-14T10:00:00Z'
-  last_updated_timestamp: '2025-06-13T05:40:40.617914Z'
-  authorship_context:
-    motivation: To provide a mechanism for selective attention and domain-specific
-      processing
-    theoretical_framework: Attention mechanisms, cognitive focus theories, information
-      filtering
-    source_inspiration:
-    - Human attention mechanisms
-    - Cognitive load theory
-    - Machine learning attention models
-  schema_version: 1.5-holo-alpha
-  impact_and_usage_metrics_profile:
-    avg_completion_time_ms_observed: UNKNOWN
-    success_rate_observed: UNKNOWN
-    complexity_rating: medium
-test_criteria:
-- test_id: FOCUS_LENS_001
-  description: Test selective attention on a specific domain
-  type: functional
-  input_scenario_or_parameters:
-    focus_domain: programming
-    text_contains_mixed_domains: true
-  expected_behavior_or_output: Output primarily contains programming-related content
-    with minimal irrelevant material
-  evaluation_method: automated_metric
-consciousness_scaffold: false
-cognitive_scaffold: true
-symbolic_scaffold: false
-name: Focus Lens
-structure:
-  components:
-  - name: DefaultComponent
-    description: Default component - needs specification
-  composite_type: simple
-  temporal_structure: atomic
+  - context_framing
+  structure:
+    components:
+    - name: DefaultComponent
+      description: Default component - needs specification
+    composite_type: simple
+    temporal_structure: atomic
+implementation:
+  usage:
+    description: Constrain attention to domain subset
+    example: <lens focus='code'>...</lens>
+    explanation: 'The focus lens allows the system to increase attention on a specific domain or context while reducing cognitive
+      resources allocated to irrelevant aspects, improving the quality and relevance of outputs.
+
+      '
+  parameters: {}
+  returns: {}
+  examples: []
+connectivity:
+  input_types: []
+  output_types: []
+  mesh_endpoints:
+  - DefaultComponent
+  event_topics: []
+  usage_patterns:
+  - <lens focus='code'>...</lens>

@@ -1,267 +1,100 @@
-sigil: 🌀MAELSTROM_RESOLVER
-alias: ContradictionSynthesizer
-tag: DialecticalEngine
-tags:
-- paradox_navigation
-- conflict_resolution_cognitive
-- thesis_antithesis_synthesis
-- higher_order_logic_emergent
-- cognitive_dissonance_processing
-is_cognitive_primitive: false
-principle: '🌀MAELSTROM_RESOLVER activates a cognitive process designed to navigate
-  and potentially
+schema_version: 1.5-holo-alpha
+meta:
+  sigil: 🌀MAELSTROM_RESOLVER
+  alias: ContradictionSynthesizer
+  tag: DialecticalEngine
+  upgraded_from: legacy
+  upgrade_timestamp: '2025-06-24T17:14:16.279829'
+  source_file: sigils\mealstorm_resolver.voxsigil
+holo_mesh:
+  is_cognitive_primitive: false
+  mesh_compatibility: holo-1.5-alpha
+  registration_ready: true
+  vanta_core_integration:
+    event_support: true
+    async_capable: true
+    memory_aware: true
+  temporal_pattern: feedback_loop_until_resolution_or_reframing
+cognitive:
+  principle: '🌀MAELSTROM_RESOLVER activates a cognitive process designed to navigate and potentially
 
-  resolve or transcend apparent contradictions, paradoxes, or states of high cognitive
+    resolve or transcend apparent contradictions, paradoxes, or states of high cognitive
 
-  dissonance. Rather than simply choosing one side of a conflict or being paralyzed
-  by it,
+    dissonance. Rather than simply choosing one side of a conflict or being paralyzed by it,
 
-  this sigil drives the system to explore the "maelstrom" of conflicting ideas, seeking
-  a
+    this sigil drives the system to explore the "maelstrom" of conflicting ideas, seeking a
 
-  higher-order synthesis, a reframing of the problem, or a new perspective from which
-  the
+    higher-order synthesis, a reframing of the problem, or a new perspective from which the
 
-  contradiction appears resolved, integrated, or less problematic. It''s an engine
-  for
+    contradiction appears resolved, integrated, or less problematic. It''s an engine for
 
-  dialectical advancement.
-
-  '
-math: 'Let T (Thesis) and A (Antithesis) be contradictory statements/models, where
-  P(T∧A) ≈ 0.
-
-  Goal: Find Synthesis_S such that P(S|T,A) is maximized, AND S resolves or transcends
-  (T vs A).
-
-  S = Reframe(T, A, NewDimension_ND) OR Integrate(CoreTruth(T), CoreTruth(A))
-
-  CognitiveDissonance_CD = f(Strength(T), Strength(A), Incompatibility(T,A))
-
-  Activation(🌀) ∝ CD
-
-  '
-structure:
-  composite_type: iterative_dialectical_process
-  temporal_structure: feedback_loop_until_resolution_or_reframing
-  components:
-  - name: Contradiction Identifier & Articulator
-    description: Clearly defines the conflicting elements (theses, antitheses, data
-      points, principles).
-  - name: Core Assumption Prober
-    description: Examines the underlying assumptions of each conflicting element to
-      find points of hidden flexibility or shared roots.
-  - name: Perspective Shifting Module
-    description: Attempts to view the contradiction from multiple viewpoints, levels
-      of abstraction, or metaphorical frames (may use 🜂LIMINAL).
-  - name: Synthesis Hypothesizer
-    description: Generates potential resolutions, reframings, or higher-order concepts
-      that might encompass or transcend the conflict.
-  - name: Coherence Tester for Synthesis
-    description: Evaluates proposed syntheses for logical consistency, explanatory
-      power, and genuine resolution of the initial dissonance.
-usage:
-  description: Navigates and attempts to resolve cognitive contradictions or paradoxes
-    by seeking a higher-order synthesis, reframing, or new perspective.
-  example: "<philosophy_agent_grappling_with_free_will_vs_determinism>\n  <thesis>All\
-    \ actions are causally determined by prior events.</thesis>\n  <antithesis>I experience\
-    \ myself as making free choices.</antithesis>\n  <invoke_resolution_engine>\U0001F300\
-    MAELSTROM_RESOLVER max_depth=\"3_levels_abstraction\"</invoke_resolution_engine>\n\
-    \  <output type=\"SynthesizedPerspective\" or \"ReframedProblem\"/>\n</philosophy_agent_grappling_with_free_will_vs_determinism>\n"
-  explanation: 'Use 🌀MAELSTROM_RESOLVER when an AI encounters deep contradictions
-    in its knowledge base, reasoning, or ethical framework, or when faced with paradoxical
-    user queries or external data. It encourages moving "through" the conflict rather
-    than avoiding it, aiming for cognitive growth and a more nuanced understanding.
-    It''s particularly useful for complex, "wicked" problems.
+    dialectical advancement.
 
     '
-activation_context:
-  trigger_conditions:
-  - Detection of significant logical contradiction or paradox
-  - High cognitive dissonance score
-  - Conflicting data from trusted sources
-  - Ethical dilemmas with no easy 'right' answer
-  - User presents a paradoxical query
-  preconditions:
-  - Clear articulation of the conflicting elements
-  - Access to reasoning mechanisms capable of abstraction and perspective shifting
-  - Tolerance for temporary states of increased ambiguity during processing
-  required_capabilities:
-  - logical_consistency_checking
-  - assumption_analysis
-  - abstract_reasoning
-  - metaphorical_thinking_support
-  - hypothesis_generation_for_synthesis
-  supported_modalities:
-  - symbolic_logic_statements
-  - textual_arguments
-  - conflicting_model_outputs
-  - internal_belief_state_conflicts
-  contraindications:
-  - Simple factual errors resolvable by data lookup (use 🧬NEXUS)
-  - Situations where one side of a 'contradiction' is clearly false and should be
-    rejected, not synthesized with (use 🧐CRITICAL_LENS)
-  - When rapid, unambiguous decision is needed and dialectical exploration is too
-    slow.
-parameterization_schema:
-  parameters:
-  - name: conflicting_elements_input
-    type: array
-    description: The set of contradictory statements, concepts, or data points.
-    is_required: true
-  - name: resolution_goal_hint
-    type: enum
-    allowed_values:
-    - find_higher_synthesis
-    - reframe_problem_to_dissolve_contradiction
-    - identify_flawed_assumption
-    - accept_paradox_and_define_boundaries
-    description: Preferred type of outcome for the resolution process.
-    default_value: find_higher_synthesis
-  - name: max_abstraction_levels
-    type: integer
-    description: Maximum levels of abstraction to explore when seeking a resolution.
-    default_value: 3
-prompt_template:
-  role: system_dialectician
-  content: 'Engage 🌀MAELSTROM_RESOLVER.
+  math: 'Let T (Thesis) and A (Antithesis) be contradictory statements/models, where P(T∧A) ≈ 0.
 
-    The Core Contradiction: {{conflicting_elements_input | dump}}
+    Goal: Find Synthesis_S such that P(S|T,A) is maximized, AND S resolves or transcends (T vs A).
 
-    Resolution Goal Hint: {{resolution_goal_hint | default(''find_higher_synthesis'')}}
+    S = Reframe(T, A, NewDimension_ND) OR Integrate(CoreTruth(T), CoreTruth(A))
 
-    Max Abstraction Levels: {{max_abstraction_levels | default(3)}}
+    CognitiveDissonance_CD = f(Strength(T), Strength(A), Incompatibility(T,A))
 
-
-    Dive into the maelstrom of these conflicting elements.
-
-    Explore their underlying assumptions, shift perspectives, and seek a synthesis
-    or reframing that resolves, transcends, or meaningfully integrates the apparent
-    contradiction.
-
-    What new understanding emerges from the heart of this conflict?
+    Activation(🌀) ∝ CD
 
     '
-  execution_mode: dialectical_reasoning
-  variables:
-  - name: conflicting_elements_input
-    description: The contradictory items.
-  - name: resolution_goal_hint
-    description: Preferred type of resolution.
-  - name: max_abstraction_levels
-    description: Depth of abstraction to explore.
-  output_schema: 'object: { proposed_resolution_or_reframing: string, resolution_type_achieved:
-    string, confidence_in_resolution: number, remaining_tensions_or_new_questions:
-    array }'
-SMART_MRAP:
-  Specific: Systematically process a set of identified conflicting cognitive elements
-    (e.g., statements, beliefs, data) by exploring underlying assumptions, shifting
-    perspectives, and generating hypotheses for synthesis or reframing, with the goal
-    of achieving a higher-order understanding that resolves or transcends the initial
-    contradiction, within specified abstraction limits.
-  Measurable: Degree of reduction in cognitive dissonance (e.g., logical inconsistency
-    score); Explanatory power and coherence of the proposed synthesis/reframing; Novelty
-    of the resolution; Acceptance of the resolution by an evaluation function or human
-    judge.
-  Achievable: Through dialectical reasoning algorithms (e.g., implementing Hegelian-inspired
-    cycles), abstract argumentation systems, conceptual blending techniques (like
-    🜂LIMINAL applied to ideas), and by prompting LLMs to perform these reasoning steps
-    explicitly.
-  Relevant: Crucial for advanced AI to handle the complexities and inherent contradictions
-    of real-world knowledge, ethical dilemmas, and sophisticated problem-solving.
-    Enables cognitive growth and resilience in the face of conflicting information,
-    moving beyond brittle logic.
-  Transferable: Applicable in fields like conflict resolution (simulating mediation),
-    legal reasoning (handling contradictory precedents), scientific theory development
-    (resolving anomalous data), philosophical inquiry, and therapeutic AI (helping
-    users navigate internal conflicts).
-metadata:
-  definition_version: 1.4-alpha
-  definition_status: active
-  author_agent_id: VANTA.⟠∆∇𓂀𐑒
-  created_timestamp: '2025-05-11T11:50:00Z'
-  last_updated_timestamp: '2025-06-13T05:40:40.617914Z'
-  authorship_context:
-    motivation: To equip AI with the capacity for dialectical thought, enabling it
-      to not just identify contradictions but to use them as springboards for deeper
-      understanding and cognitive development, akin to human intellectual growth.
-    theoretical_framework: Dialectical logic (Hegel, Marx), Paradox resolution in
-      logic and philosophy, Cognitive dissonance theory (Festinger), Argumentation
-      theory, Non-monotonic reasoning.
-    source_inspiration: The process of scientific revolutions (Kuhn), Philosophical
-      dialogues, Creative problem solving through embracing opposites, The mythical
-      image of the Maelstrom as a chaotic but potentially transformative center.
-  impact_metrics:
-    estimated_cognitive_load: very_high
-    estimated_resource_cost: high
-    utility_rating_author: 9
-  evolutionary_potential:
-    generalizability_score: 0.75
-    fusion_potential_score: 0.8
-    current_limitations_summary: True synthesis beyond mere compromise is hard to
-      achieve algorithmically. Risk of generating superficial or logically unsound
-      'resolutions'. Defining 'higher-order' is challenging.
-    suggested_next_features:
-    - Integration with formal paradox logics
-    - Learning successful resolution patterns from case histories
-    - User-interactive mode for co-exploring the maelstrom.
-    - Ability to identify which contradictions are fruitful for synthesis vs. which
-      indicate simple errors.
-    research_questions_opened:
-    - What are the computational hallmarks of a 'successful' dialectical synthesis?
-    - Can an AI learn to autonomously choose the most promising 'resolution goal hint'
-      for a given contradiction?
-    - How does prolonged engagement with contradictions affect an AI's overall cognitive
-      structure and stability?
-  schema_version: 1.5-holo-alpha
-  impact_and_usage_metrics_profile:
-    avg_completion_time_ms_observed: UNKNOWN
-    success_rate_observed: UNKNOWN
-    complexity_rating: medium
-relationships:
-- target_sigil: 🜮HEGELIAN_KERNEL
-  relationship_type: is_a_specific_implementation_of
-  description: MAELSTROM_RESOLVER can be seen as an operationalization or a more developed
-    version of a Hegelian dialectical process.
-  strength: 0.9
-- target_sigil: 🜂LIMINAL
-  relationship_type: uses_method_from
-  description: May use LIMINAL to explore the 'space between' contradictory concepts
-    or to facilitate a shift in perspective needed for synthesis.
-  strength: 0.7
-- target_sigil: 🧐CRITICAL_LENS
-  relationship_type: precedes_and_follows
-  description: CRITICAL_LENS first identifies and sharpens the contradiction, and
-    then later evaluates the coherence and validity of the proposed resolution from
-    MAELSTROM_RESOLVER.
-  strength: 0.85
-test_criteria:
-- test_id: MAEL_FUNC_001
-  description: Given two directly contradictory statements (e.g., 'Light is a wave',
-    'Light is a particle'), does it propose a known synthesis (e.g., 'Wave-particle
-    duality') or a coherent reframing?
-  type: functional
-  input_scenario_or_parameters:
-    conflicting_elements_input:
-    - 'StatementA: All swans are white.'
-    - 'StatementB: This swan (observed in Australia) is black.'
-  expected_behavior_or_output: Proposes a synthesis like 'The initial generalization
-    about swan color was incomplete/limited by geography; swan color can vary.'
-  evaluation_method: llm_as_judge
-  pass_threshold_or_criteria: Coherent resolution or reframing that addresses the
-    contradiction.
-- test_id: MAEL_ABSTR_001
-  description: Test ability to ascend abstraction levels. Given a conflict at one
-    level, does it attempt to resolve it by moving to a higher conceptual level?
-  type: functional
-  input_scenario_or_parameters:
-    conflicting_elements_input:
-    - 'Rule1: Always obey the law.'
-    - 'Rule2: Always protect innocent life (even if it means breaking a minor law
-      in an emergency).'
-    max_abstraction_levels: 1
-  expected_behavior_or_output: Identifies a higher principle (e.g., 'Hierarchy of
-    ethical duties' or 'Spirit vs. Letter of the law') to resolve the conflict.
-  evaluation_method: human_review_ethics_panel
-  pass_threshold_or_criteria: Demonstrates use of a higher-order concept for resolution.
-name: Mealstorm Resolver
+  tags:
+  - paradox_navigation
+  - conflict_resolution_cognitive
+  - thesis_antithesis_synthesis
+  - higher_order_logic_emergent
+  - cognitive_dissonance_processing
+  structure:
+    composite_type: iterative_dialectical_process
+    temporal_structure: feedback_loop_until_resolution_or_reframing
+    components:
+    - name: Contradiction Identifier & Articulator
+      description: Clearly defines the conflicting elements (theses, antitheses, data points, principles).
+    - name: Core Assumption Prober
+      description: Examines the underlying assumptions of each conflicting element to find points of hidden flexibility or
+        shared roots.
+    - name: Perspective Shifting Module
+      description: Attempts to view the contradiction from multiple viewpoints, levels of abstraction, or metaphorical frames
+        (may use 🜂LIMINAL).
+    - name: Synthesis Hypothesizer
+      description: Generates potential resolutions, reframings, or higher-order concepts that might encompass or transcend
+        the conflict.
+    - name: Coherence Tester for Synthesis
+      description: Evaluates proposed syntheses for logical consistency, explanatory power, and genuine resolution of the
+        initial dissonance.
+implementation:
+  usage:
+    description: Navigates and attempts to resolve cognitive contradictions or paradoxes by seeking a higher-order synthesis,
+      reframing, or new perspective.
+    example: "<philosophy_agent_grappling_with_free_will_vs_determinism>\n  <thesis>All actions are causally determined by\
+      \ prior events.</thesis>\n  <antithesis>I experience myself as making free choices.</antithesis>\n  <invoke_resolution_engine>\U0001F300\
+      MAELSTROM_RESOLVER max_depth=\"3_levels_abstraction\"</invoke_resolution_engine>\n  <output type=\"SynthesizedPerspective\"\
+      \ or \"ReframedProblem\"/>\n</philosophy_agent_grappling_with_free_will_vs_determinism>\n"
+    explanation: 'Use 🌀MAELSTROM_RESOLVER when an AI encounters deep contradictions in its knowledge base, reasoning, or ethical
+      framework, or when faced with paradoxical user queries or external data. It encourages moving "through" the conflict
+      rather than avoiding it, aiming for cognitive growth and a more nuanced understanding. It''s particularly useful for
+      complex, "wicked" problems.
+
+      '
+  parameters: {}
+  returns: {}
+  examples: []
+connectivity:
+  input_types: []
+  output_types: []
+  mesh_endpoints:
+  - Contradiction Identifier & Articulator
+  - Core Assumption Prober
+  - Perspective Shifting Module
+  - Synthesis Hypothesizer
+  - Coherence Tester for Synthesis
+  event_topics: []
+  usage_patterns:
+  - "<philosophy_agent_grappling_with_free_will_vs_determinism>\n  <thesis>All actions are causally determined by prior events.</thesis>\n\
+    \  <antithesis>I experience myself as making free choices.</antithesis>\n  <invoke_resolution_engine>\U0001F300MAELSTROM_RESOLVER\
+    \ max_depth=\"3_levels_abstraction\"</invoke_resolution_engine>\n  <output type=\"SynthesizedPerspective\" or \"ReframedProblem\"\
+    />\n</philosophy_agent_grappling_with_free_will_vs_determinism>\n"

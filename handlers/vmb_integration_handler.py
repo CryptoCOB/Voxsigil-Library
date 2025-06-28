@@ -14,7 +14,7 @@ from Vanta.core.UnifiedVantaCore import UnifiedVantaCore, get_vanta_core
 
 # Import VMB components with proper error handling
 try:
-    from Vanta.vmb.vmb_activation import CopilotSwarm
+    from vmb.vmb_activation import CopilotSwarm
 
     VMB_ACTIVATION_AVAILABLE = True
 except ImportError:
@@ -22,7 +22,7 @@ except ImportError:
     CopilotSwarm = None
 
 try:
-    from Vanta.vmb.vmb_production_final import ProductionTaskExecutor
+    from vmb.vmb_production_executor import ProductionTaskExecutor
 
     VMB_PRODUCTION_AVAILABLE = True
 except ImportError:

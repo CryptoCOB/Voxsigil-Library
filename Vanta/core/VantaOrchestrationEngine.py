@@ -20,6 +20,17 @@ from collections import defaultdict
 from datetime import datetime, timedelta
 from typing import Any, Callable, Dict, List, Optional
 
+# HOLO-1.5 Registration
+try:
+    from ..registration.master_registration import vanta_core_module
+except ImportError:
+
+    def vanta_core_module(name: str = "", role: str = ""):
+        def decorator(cls):
+            return cls
+
+        return decorator
+
 
 class ComponentRegistry:
     """Optimized component registry with lifecycle management and health monitoring."""
@@ -687,6 +698,7 @@ class ConfigManager:
             logging.info("Configuration change history cleared")
 
 
+@vanta_core_module()
 class VantaOrchestrationEngine:
     """
     VantaOrchestrationEngine - Simple component orchestration framework.

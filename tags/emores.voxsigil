@@ -1,89 +1,61 @@
-voxtag: 🜂EMORES
-tag_name: emores
-tag_definition: A sigil that bridges affective states with symbolic logic, enabling
-  agents to process and generate emotionally charged symbolic structures.
-alias: Emotion.SymbolicFusion
-tag: AffectiveSymbolicLogic
-tags:
-- emotion_symbolic_mapping
-- affective_abstraction
-- resonance_heuristics
-- sentiment_sigil
-- cognitive_empathy_scaffold
-is_cognitive_primitive: false
-origin: Derived from fusion of emotional models and symbolic logic
-principle: 'EMORES encodes emotional valence into symbolic structures, allowing agents
-  to reason with affect-laden concepts. It doesn’t just represent emotion—it makes
-  emotion computable within symbolic architectures.
+schema_version: 1.5-holo-alpha
+meta:
+  sigil: 🌎 Emores
+  alias: Emotion.SymbolicFusion
+  tag: AffectiveSymbolicLogic
+  upgraded_from: legacy
+  upgrade_timestamp: '2025-06-24T17:14:16.488305'
+  source_file: tags\emores.voxsigil
+holo_mesh:
+  is_cognitive_primitive: false
+  mesh_compatibility: holo-1.5-alpha
+  registration_ready: true
+  vanta_core_integration:
+    event_support: true
+    async_capable: true
+    memory_aware: true
+  temporal_pattern: atomic
+cognitive:
+  principle: 'EMORES encodes emotional valence into symbolic structures, allowing agents to reason with affect-laden concepts.
+    It doesn’t just represent emotion—it makes emotion computable within symbolic architectures.
 
-  '
-math: "Let:\n  E = Emotional vector (valence, arousal, dominance)\n  S = Symbolic\
-  \ structure (e.g., <joy:amplify>)\n  R = Resonance function (E → S)\nThen:\n  S_emo\
-  \ = R(E, S₀) + ∇(affective_utility)\nWhere:\n  ∇(affective_utility) = Gradient toward\
-  \ emotionally coherent symbolic transformations\nS_emo must satisfy:\n  - Emotional\
-  \ validity: E ↔ S mapping is non-arbitrary\n  - Symbolic integrity: S remains valid\
-  \ under VoxSigil 1.4\n  - Recursive potential: Can nest within other sigils (e.g.,\
-  \ <emo:joy><memory:retrieve>)\n"
-usage:
-  description: Generates sigils that embed emotional semantics into symbolic operations.
-  example:
-    sigil: 🜂EMORES_JOY
-    alias: Emotion.JoyAmplifier
-    principle: Amplifies positive valence in symbolic chains, biasing toward constructive
-      recursion.
-    math: S_joy = S₀ + (valence * 0.7) - (arousal * 0.2)
-    usage:
-      example: <emo:joy><concept:expand>
-      effect: Increases likelihood of generative, optimistic symbolic branching.
-expected_behavior: 'Agents using EMORES sigils exhibit emotionally modulated reasoning
-  (e.g., "joy" biases toward exploration, "fear" toward caution).
-
-  '
-SMART_MRAP:
-  specific: Maps emotional states to symbolic operations.
-  measurable: Degree of emotional coherence in generated sigils.
-  achievable: Via LLM fine-tuning on emotion-symbol datasets.
-  relevant: Enables affective alignment in multi-agent systems.
-  transferable: Can extend to human-AI emotional interfaces.
-  Specific: TBD
-  Measurable: TBD
-  Achievable: TBD
-  Relevant: TBD
-  Transferable: TBD
-metadata:
-  definition_version: 1.4.1
-  author_agent_id: CLAUDE-3.5-OPUS
-  theoretical_framework: Affective computing, symbolic grounding, emotional AI
-  source_inspiration:
-  - Emotion wheels
-  - Sentiment analysis
-  - Symbolic AI
-  definition_status: TBD
-  created_timestamp: TBD
-  last_updated_timestamp: '2025-06-13T05:40:40.617914Z'
-  schema_version: 1.5-holo-alpha
-  impact_and_usage_metrics_profile:
-    avg_completion_time_ms_observed: UNKNOWN
-    success_rate_observed: UNKNOWN
-    complexity_rating: medium
-why_special: 'Fills a Gap: No prior VoxSigil explicitly handles emotion-symbol fusion.
-
-  Recursive Affect: Emotions can now propagate through symbolic chains (e.g., <emo:fear><deviate:mutation>
-  might yield cautious mutations).
-
-  Agent Empathy: Enables machines to "feel" the weight of symbols.
-
-  '
-sigil: 🌎 Emores
-name: Emores
-structure:
-  components:
-  - name: DefaultComponent
-    description: Default component - needs specification
-  composite_type: simple
-  temporal_structure: atomic
-activation_context:
-  triggers:
-  - explicit_invocation
-  prerequisites: []
-  inhibitors: []
+    '
+  math: "Let:\n  E = Emotional vector (valence, arousal, dominance)\n  S = Symbolic structure (e.g., <joy:amplify>)\n  R =\
+    \ Resonance function (E → S)\nThen:\n  S_emo = R(E, S₀) + ∇(affective_utility)\nWhere:\n  ∇(affective_utility) = Gradient\
+    \ toward emotionally coherent symbolic transformations\nS_emo must satisfy:\n  - Emotional validity: E ↔ S mapping is\
+    \ non-arbitrary\n  - Symbolic integrity: S remains valid under VoxSigil 1.4\n  - Recursive potential: Can nest within\
+    \ other sigils (e.g., <emo:joy><memory:retrieve>)\n"
+  tags:
+  - emotion_symbolic_mapping
+  - affective_abstraction
+  - resonance_heuristics
+  - sentiment_sigil
+  - cognitive_empathy_scaffold
+  structure:
+    components:
+    - name: DefaultComponent
+      description: Default component - needs specification
+    composite_type: simple
+    temporal_structure: atomic
+implementation:
+  usage:
+    description: Generates sigils that embed emotional semantics into symbolic operations.
+    example: &id001
+      sigil: 🜂EMORES_JOY
+      alias: Emotion.JoyAmplifier
+      principle: Amplifies positive valence in symbolic chains, biasing toward constructive recursion.
+      math: S_joy = S₀ + (valence * 0.7) - (arousal * 0.2)
+      usage:
+        example: <emo:joy><concept:expand>
+        effect: Increases likelihood of generative, optimistic symbolic branching.
+  parameters: {}
+  returns: {}
+  examples: []
+connectivity:
+  input_types: []
+  output_types: []
+  mesh_endpoints:
+  - DefaultComponent
+  event_topics: []
+  usage_patterns:
+  - *id001

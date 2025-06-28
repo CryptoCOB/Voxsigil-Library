@@ -17,8 +17,11 @@ from typing import Any, Callable, Protocol, Union, runtime_checkable
 # Assuming vanta_core.py and vanta_cat_engine.py (for DefaultVantaMemoryBraid if used) are accessible
 from Vanta.core.UnifiedVantaCore import UnifiedVantaCore as VantaCore
 
+# Import unified MemoryBraidInterface
+from Vanta.interfaces.protocol_interfaces import MemoryBraidInterface
+
 # HOLO-1.5 Mesh Infrastructure
-from .base import BaseEngine, vanta_engine, CognitiveMeshRole
+from .base import BaseEngine, CognitiveMeshRole, vanta_engine
 
 # If ToTEngine needs its own default MemoryBraid, it could import the one from vanta_cat_engine or define its own.
 # For simplicity, we'll assume it might use a generic one or one provided by VantaCore.
@@ -115,10 +118,6 @@ class ContextProvider(Protocol):
         return self.__class__.__name__
 
 
-# Import unified MemoryBraidInterface
-from Vanta.interfaces.protocol_interfaces import MemoryBraidInterface
-
-
 # DefaultToTMemoryBraid removed - use proper MemoryBraid implementation
 
 
@@ -189,8 +188,8 @@ class VantaRegisteredContextProvider(ContextProvider):
             "error": f"Failed to retrieve context from {self.component_name}",
             "timestamp": time.time(),
             "_source_component": f"{self.component_name}_error",
-        }   
-         
+        }
+
     def get_provider_name(self) -> str:
         return self.component_name
 
@@ -200,7 +199,13 @@ class VantaRegisteredContextProvider(ContextProvider):
     subsystem="reasoning_and_learning",
     mesh_role=CognitiveMeshRole.PROCESSOR,
     description="Tree-of-Thought engine for structured multi-branch reasoning and decision making",
-    capabilities=["tree_of_thought", "branch_reasoning", "thought_seeding", "branch_evaluation", "meta_learning"]
+    capabilities=[
+        "tree_of_thought",
+        "branch_reasoning",
+        "thought_seeding",
+        "branch_evaluation",
+        "meta_learning",
+    ],
 )
 class ToTEngine(BaseEngine):
     COMPONENT_NAME = "tot_engine"
@@ -217,11 +222,23 @@ class ToTEngine(BaseEngine):
         result_callback: Callable[[Any], None] | None = None,
         memory_braid_instance: MemoryBraidInterface | None = None,
     ):
+        # Store the config object for later use
+        self.tot_config = config
+
         # Initialize BaseEngine with HOLO-1.5 mesh capabilities
-        super().__init__(vanta_core, config)
-        
+        # Convert config to dict for BaseEngine compatibility
+        config_dict = {
+            "interval_s": config.interval_s,
+            "log_level": config.log_level,
+            "auto_connect_checkin_manager": config.auto_connect_checkin_manager,
+            "checkin_manager_component_name": config.checkin_manager_component_name,
+            "auto_connect_external_inputs": config.auto_connect_external_inputs,
+            "external_inputs_component_name": config.external_inputs_component_name,
+        }
+        super().__init__(vanta_core, config_dict)
+
         logger.info(
-            f"ToTEngine initializing via VantaCore. Interval: {self.config.interval_s}s"
+            f"ToTEngine initializing via VantaCore. Interval: {self.tot_config.interval_s}s"
         )
 
         self.seeder = thought_seeder
@@ -246,18 +263,15 @@ class ToTEngine(BaseEngine):
         if not _braid:
             _braid = self.vanta_core.get_component(
                 "memory_braid"
-            )  # Standard name for VantaCore
-        self.memory_braid: MemoryBraidInterface = _braid or None  # Use proper MemoryBraid implementation
-
-        # Auto-connect to components from VantaCore registry to act as ContextProviders
-        if self.config.auto_connect_checkin_manager:
+            )  # Standard name for VantaCore        self.memory_braid: Optional[MemoryBraidInterface] = _braid  # Use proper MemoryBraid implementation# Auto-connect to components from VantaCore registry to act as ContextProviders
+        if self.tot_config.auto_connect_checkin_manager:
             self._try_add_registered_context_provider(
-                self.config.checkin_manager_component_name
+                self.tot_config.checkin_manager_component_name
             )
 
-        if self.config.auto_connect_external_inputs:
+        if self.tot_config.auto_connect_external_inputs:
             self._try_add_registered_context_provider(
-                self.config.external_inputs_component_name,
+                self.tot_config.external_inputs_component_name,
                 context_method_name="get_external_inputs",
             )
 
@@ -326,7 +340,7 @@ class ToTEngine(BaseEngine):
             logger.info("ToT Engine started its processing loop.")
             self.vanta_core.publish_event(
                 f"{self.COMPONENT_NAME}.started",
-                {"interval_s": self.config.interval_s},
+                {"interval_s": self.tot_config.interval_s},
                 source=self.COMPONENT_NAME,
             )
 
@@ -336,7 +350,7 @@ class ToTEngine(BaseEngine):
             self.running = False
             if self.thread and self.thread.is_alive():
                 try:
-                    self.thread.join(timeout=max(1.0, self.config.interval_s + 5))
+                    self.thread.join(timeout=max(1.0, self.tot_config.interval_s + 5))
                 except Exception as e:
                     logger.error(f"Error joining ToT Engine thread: {e}")
             if self.thread and self.thread.is_alive():
@@ -374,7 +388,7 @@ class ToTEngine(BaseEngine):
                         {"reason": "context_retrieval_failed"},
                         source=self.COMPONENT_NAME,
                     )
-                    time.sleep(self.config.interval_s)
+                    time.sleep(self.tot_config.interval_s)
                     continue
 
                 self.log_operation(
@@ -409,11 +423,12 @@ class ToTEngine(BaseEngine):
                     logger.info(
                         "Pruned all branches. Cycle ends."
                     )  # End cycle if all pruned
+
                 self.log_operation(
                     "branches_pruned", {"survived_count": len(surviving_branches)}
                 )
                 if not surviving_branches:
-                    time.sleep(self.config.interval_s)
+                    time.sleep(self.tot_config.interval_s)
                     continue  # Skip rest of cycle
 
                 self.current_phase = "Expand"
@@ -475,7 +490,7 @@ class ToTEngine(BaseEngine):
                     source=self.COMPONENT_NAME,
                 )
 
-                wait_time = max(0.1, self.config.interval_s - cycle_duration)
+                wait_time = max(0.1, self.tot_config.interval_s - cycle_duration)
                 if self.running:
                     time.sleep(wait_time)
         logger.info(f"{self.COMPONENT_NAME}._run_loop finished.")
@@ -562,7 +577,7 @@ class ToTEngine(BaseEngine):
             "engine_name": self.COMPONENT_NAME,
             "running": self.running,
             "current_phase": self.current_phase,
-            "interval_s": self.config.interval_s,
+            "interval_s": self.tot_config.interval_s,
             "last_error": self.last_error,
             "thread_alive": self.thread.is_alive() if self.thread else False,
             "context_providers_count": len(self.active_context_providers),

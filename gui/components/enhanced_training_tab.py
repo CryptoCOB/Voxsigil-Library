@@ -6,6 +6,7 @@ Comprehensive training interface with real UnifiedVantaCore integration.
 import logging
 import time
 
+from core.dev_config_manager import get_dev_config
 from PyQt5.QtCore import QThread, QTimer, pyqtSignal, pyqtSlot
 from PyQt5.QtWidgets import (
     QCheckBox,
@@ -22,7 +23,6 @@ from PyQt5.QtWidgets import (
     QWidget,
 )
 
-from core.dev_config_manager import get_dev_config
 from gui.components.dev_mode_panel import DevModeControlPanel
 from gui.components.real_time_data_provider import get_training_metrics
 
@@ -60,11 +60,15 @@ class TrainingWorker(QThread):
 
             if real_trainer:
                 # Use real training system
-                self.progress_updated.emit(10, "🚀 Connected to VantaCore training system")
+                self.progress_updated.emit(
+                    10, "🚀 Connected to VantaCore training system"
+                )
                 self._run_real_training(real_trainer, epochs)
             else:
                 # Intelligent simulation with realistic patterns
-                self.progress_updated.emit(10, "⚡ Running intelligent training simulation")
+                self.progress_updated.emit(
+                    10, "⚡ Running intelligent training simulation"
+                )
                 self._run_intelligent_simulation(epochs, batch_size, learning_rate)
 
             if not self.should_stop:
@@ -166,7 +170,8 @@ class TrainingWorker(QThread):
 
                 # Real training epoch
                 self.progress_updated.emit(
-                    int((epoch / epochs) * 90) + 10, f"🔥 Real training epoch {epoch + 1}/{epochs}"
+                    int((epoch / epochs) * 90) + 10,
+                    f"🔥 Real training epoch {epoch + 1}/{epochs}",
                 )
 
                 # Try to get real metrics from trainer
@@ -194,12 +199,18 @@ class TrainingWorker(QThread):
             # Fallback to simulation
             self._run_intelligent_simulation(epochs, 32, 0.001, start_epoch=0)
 
-    def _run_intelligent_simulation(self, epochs, batch_size, learning_rate, start_epoch=0):
+    def _run_intelligent_simulation(
+        self, epochs, batch_size, learning_rate, start_epoch=0
+    ):
         """Run intelligent training simulation with realistic patterns."""
         # Initialize with realistic starting values
         base_loss = 2.5
-        base_accuracy = 0.1
+        base_accuracy = 0.05  # realistic initial accuracy
 
+        # Warm-up: give the UI an immediate first update
+        self.progress_updated.emit(5, "🔧 Preparing intelligent simulation…")
+        self.epoch_completed.emit(start_epoch, base_loss, base_accuracy)
+        time.sleep(0.5)
         for epoch in range(start_epoch, epochs):
             if self.should_stop:
                 break
@@ -214,7 +225,9 @@ class TrainingWorker(QThread):
             accuracy = self._simulate_accuracy(epoch, epochs)
 
             self.epoch_completed.emit(epoch + 1, loss, accuracy)
-            time.sleep(1.5)  # Realistic timing    def _simulate_loss(self, epoch, epochs):
+            time.sleep(1.5)  # Realistic timing
+
+    def _simulate_loss(self, epoch, epochs):
         """Get real training loss from data provider."""
         try:
             training_metrics = get_training_metrics()
@@ -441,7 +454,9 @@ class EnhancedTrainingTab(QWidget):
                 self.vanta_status_label.setStyleSheet("color: orange;")
 
         except Exception as e:
-            self.vanta_status_label.setText(f"❌ VantaCore not available: {str(e)[:50]}...")
+            self.vanta_status_label.setText(
+                f"❌ VantaCore not available: {str(e)[:50]}..."
+            )
             self.vanta_status_label.setStyleSheet("color: red;")
 
     def _start_training(self):
@@ -498,4 +513,56 @@ class EnhancedTrainingTab(QWidget):
         self.epoch_label.setText(str(epoch))
         self.loss_label.setText(f"{loss:.4f}")
         self.accuracy_label.setText(f"{accuracy:.2%}")
-        self.training_log.append(f"📈 Epoch {epoch}: Loss={loss:.4f}, Accuracy={accuracy:.2%}")
+        self.training_log.append(
+            f"📈 Epoch {epoch}: Loss={loss:.4f}, Accuracy={accuracy:.2%}"
+        )
+
+    def update_progress(self, data: dict):
+        """Update progress from data streamer - interface for external updates"""
+        try:
+            # Handle progress percentage (0-100)
+            progress = data.get("progress", 0)
+            if isinstance(progress, (int, float)):
+                progress_percent = (
+                    int(progress * 100) if progress <= 1.0 else int(progress)
+                )
+                self.progress_bar.setValue(progress_percent)
+
+            # Handle epoch information
+            epoch = data.get("epoch", None)
+            if epoch is not None:
+                self.epoch_label.setText(f"Epoch: {epoch}")
+
+            # Handle loss and accuracy if provided
+            loss = data.get("loss", None)
+            accuracy = data.get("accuracy", None)
+
+            if loss is not None:
+                self.loss_label.setText(f"{loss:.4f}")
+            if accuracy is not None:
+                if isinstance(accuracy, str):
+                    self.accuracy_label.setText(accuracy)
+                else:
+                    self.accuracy_label.setText(f"{accuracy:.2%}")
+
+            # Update progress label with current status
+            status = data.get("status", f"Training progress: {progress_percent}%")
+            self.progress_label.setText(status)
+
+            # Log the update
+            log_msg = f"📊 Progress: {progress_percent}%"
+            if epoch is not None:
+                log_msg += f", Epoch: {epoch}"
+            if loss is not None:
+                log_msg += f", Loss: {loss:.4f}"
+            if accuracy is not None:
+                if isinstance(accuracy, (int, float)):
+                    log_msg += f", Accuracy: {accuracy:.2%}"
+                else:
+                    log_msg += f", Accuracy: {accuracy}"
+
+            self.training_log.append(log_msg)
+
+        except Exception as e:
+            logger.error(f"Error updating training progress: {e}")
+            self.training_log.append(f"❌ Progress update error: {e}")

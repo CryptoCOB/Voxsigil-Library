@@ -8,7 +8,10 @@ import logging
 from abc import ABC, abstractmethod
 from dataclasses import dataclass, field
 from enum import Enum
-from typing import Any, Dict, List, Optional
+from typing import TYPE_CHECKING, Any, Dict, List, Optional
+
+if TYPE_CHECKING:
+    from Vanta.core.UnifiedVantaCore import UnifiedVantaCore
 
 logger = logging.getLogger("Vanta.CoreBase")
 
@@ -230,7 +233,9 @@ class HOLO15CoreAdapter:
 class BaseCore(ABC):
     """Abstract base class for HOLO-1.5 enhanced core modules."""
 
-    def __init__(self, vanta_core, config: Optional[Dict[str, Any]] = None):
+    def __init__(
+        self, vanta_core: "UnifiedVantaCore", config: Optional[Dict[str, Any]] = None
+    ):
         self.vanta_core = vanta_core
         self.config = config or {}
         self.holo15_adapter: Optional[HOLO15CoreAdapter] = None

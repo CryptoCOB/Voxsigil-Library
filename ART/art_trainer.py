@@ -11,31 +11,42 @@ HOLO-1.5 Recursive Symbolic Cognition Mesh Integration:
 - Cognitive metrics: Training complexity, feature coherence, adaptation efficiency
 """
 
-import logging
-import numpy as np
-import time
+import asyncio
 import json
+import logging
+import os
 import pickle
 import threading
-import os
-import asyncio
-from typing import TYPE_CHECKING, Any, Optional, Union
+import time
 from collections import deque
+from typing import TYPE_CHECKING, Any, Optional, Union
+
+import numpy as np
+
+# Import ARTController to fix NameError
+from .art_controller import ARTController
 
 # HOLO-1.5 Cognitive Mesh Integration
 try:
-    from ..agents.base import vanta_agent, CognitiveMeshRole, BaseAgent
-    
+    from ..agents.base import BaseAgent, CognitiveMeshRole, vanta_agent
+
     # Define VantaAgentCapability locally as it's not in a centralized location
     class VantaAgentCapability:
         FEATURE_SYNTHESIS = "feature_synthesis"
         LEARNING_ORCHESTRATION = "learning_orchestration"
         PATTERN_ADAPTATION = "pattern_adaptation"
-        
+
     HOLO_AVAILABLE = True
 except ImportError:
     # Fallback for non-HOLO environments
-    def vanta_agent(role=None, name=None, cognitive_load=0, symbolic_depth=0, capabilities=None, **kwargs):
+    def vanta_agent(
+        role=None,
+        name=None,
+        cognitive_load=0,
+        symbolic_depth=0,
+        capabilities=None,
+        **kwargs,
+    ):
         def decorator(cls):
             cls._holo_role = role
             cls._vanta_name = name or cls.__name__
@@ -43,19 +54,20 @@ except ImportError:
             cls._holo_symbolic_depth = symbolic_depth
             cls._holo_capabilities = capabilities or []
             return cls
+
         return decorator
-    
+
     class CognitiveMeshRole:
         SYNTHESIZER = "SYNTHESIZER"
-    
+
     class VantaAgentCapability:
         FEATURE_SYNTHESIS = "feature_synthesis"
         LEARNING_ORCHESTRATION = "learning_orchestration"
         PATTERN_ADAPTATION = "pattern_adaptation"
-    
+
     class BaseAgent:
         pass
-    
+
     HOLO_AVAILABLE = False
 
 # Use TYPE_CHECKING to avoid circular imports
@@ -143,6 +155,7 @@ def _match_input_dim(vector, target_dim):
 
 # --- ARTTrainer Class ---
 
+
 @vanta_agent(
     role=CognitiveMeshRole.SYNTHESIZER,
     cognitive_load=3.5,
@@ -150,14 +163,14 @@ def _match_input_dim(vector, target_dim):
     capabilities=[
         VantaAgentCapability.FEATURE_SYNTHESIS,
         VantaAgentCapability.LEARNING_ORCHESTRATION,
-        VantaAgentCapability.PATTERN_ADAPTATION
-    ]
+        VantaAgentCapability.PATTERN_ADAPTATION,
+    ],
 )
 class ArtTrainer(BaseAgent if HOLO_AVAILABLE else object):
     """
     Trainer for integrating ART controller with agent activity, featuring
     enhanced feature extraction, configurable training logic, and state management.
-    
+
     HOLO-1.5 Integration:
     - Synthesizes features from multi-modal inputs
     - Orchestrates learning across cognitive domains
@@ -191,7 +204,7 @@ class ArtTrainer(BaseAgent if HOLO_AVAILABLE else object):
         # Initialize HOLO-1.5 base agent if available
         if HOLO_AVAILABLE:
             super().__init__()
-        
+
         self.logger = (
             logger_instance
             if logger_instance
@@ -205,13 +218,13 @@ class ArtTrainer(BaseAgent if HOLO_AVAILABLE else object):
             "feature_coherence": 1.0,
             "adaptation_efficiency": 0.0,
             "synthesis_depth": 0,
-            "orchestration_load": 0.0
+            "orchestration_load": 0.0,
         }
-        
+
         # Initialize async components if HOLO available
         if HOLO_AVAILABLE:
             asyncio.create_task(self._initialize_cognitive_mesh())
-        
+
         base_config = config or {}
         config_source_name = base_config.get(
             "config_source"
@@ -219,7 +232,16 @@ class ArtTrainer(BaseAgent if HOLO_AVAILABLE else object):
         self.config = self._load_trainer_config_internal(
             config_source_name
         )  # Use internal loader
-        self.config.update(base_config)  # Override loaded with passed config
+
+        # HOLO-1.5 Integration: Ensure input_dim is always set
+        if not self.config.get("input_dim"):
+            self.config["input_dim"] = 256  # Default for HOLO-1.5 compatibility
+            self.logger.warning(
+                "ART input_dim not configured, defaulting to 256 for HOLO-1.5 compatibility"
+            )
+
+        # Override loaded with passed config
+        self.config.update(base_config)
 
         if art_controller:
             self.art = art_controller
@@ -242,11 +264,11 @@ class ArtTrainer(BaseAgent if HOLO_AVAILABLE else object):
             # Pass logger to ARTController if it accepts it
             try:
                 # Check if ARTController has been enhanced with HOLO-1.5
-                if hasattr(art_c_config, '_holo_role'):
+                if hasattr(art_c_config, "_holo_role"):
                     # Pass cognitive mesh context
-                    art_c_config['cognitive_mesh_context'] = {
-                        'parent_role': 'SYNTHESIZER',
-                        'synthesis_target': 'pattern_learning'
+                    art_c_config["cognitive_mesh_context"] = {
+                        "parent_role": "SYNTHESIZER",
+                        "synthesis_target": "pattern_learning",
                     }
                 self.art = ARTController(
                     config=art_c_config, logger_instance=self.logger
@@ -285,102 +307,123 @@ class ArtTrainer(BaseAgent if HOLO_AVAILABLE else object):
             await self.register_capability(
                 VantaAgentCapability.FEATURE_SYNTHESIS,
                 {
-                    'synthesis_types': ['text', 'numeric', 'metadata'],
-                    'complexity_handling': True,
-                    'multi_modal_fusion': True
-                }
+                    "synthesis_types": ["text", "numeric", "metadata"],
+                    "complexity_handling": True,
+                    "multi_modal_fusion": True,
+                },
             )
-            
+
             # Register learning orchestration
             await self.register_capability(
                 VantaAgentCapability.LEARNING_ORCHESTRATION,
                 {
-                    'batch_processing': True,
-                    'adaptive_epochs': True,
-                    'anomaly_handling': True
-                }
+                    "batch_processing": True,
+                    "adaptive_epochs": True,
+                    "anomaly_handling": True,
+                },
             )
-            
+
             # Register pattern adaptation
             await self.register_capability(
                 VantaAgentCapability.PATTERN_ADAPTATION,
                 {
-                    'context_aware_weighting': True,
-                    'dynamic_feature_adjustment': True,
-                    'resonance_optimization': True
-                }            )
-            
-            self.logger.info("HOLO-1.5 cognitive mesh capabilities registered successfully")
-            
+                    "context_aware_weighting": True,
+                    "dynamic_feature_adjustment": True,
+                    "resonance_optimization": True,
+                },
+            )
+
+            self.logger.info(
+                "HOLO-1.5 cognitive mesh capabilities registered successfully"
+            )
+
         except Exception as e:
             self.logger.warning(f"HOLO-1.5 initialization partial: {e}")
-    
+
     async def register_capability(self, capability: str, metadata: dict) -> None:
         """Register a capability with the cognitive mesh"""
-        if hasattr(self, 'vanta_core') and self.vanta_core:
+        if hasattr(self, "vanta_core") and self.vanta_core:
             try:
                 await self.vanta_core.register_capability(capability, metadata)
             except Exception as e:
                 self.logger.warning(f"Failed to register capability {capability}: {e}")
         else:
-            self.logger.debug(f"VantaCore not available, capability {capability} registered locally")
-    
-    def _calculate_training_complexity(self, feature_vector: np.ndarray, metadata: dict) -> float:
+            self.logger.debug(
+                f"VantaCore not available, capability {capability} registered locally"
+            )
+
+    def _calculate_training_complexity(
+        self, feature_vector: np.ndarray, metadata: dict
+    ) -> float:
         """Calculate cognitive load for training complexity"""
         if feature_vector is None:
             return 0.0
-        
+
         # Base complexity from feature vector properties
         vector_entropy = -np.sum(feature_vector * np.log(feature_vector + 1e-10))
         vector_variance = np.var(feature_vector)
-        
+
         # Metadata complexity
         metadata_complexity = len(metadata) / 20.0 if metadata else 0.0
-        
+
         # Anomaly detection complexity
-        anomaly_weight = 2.0 if metadata and metadata.get('art_insights', {}).get('is_anomaly') else 1.0
-        
-        complexity = (vector_entropy * 0.4 + vector_variance * 0.3 + metadata_complexity * 0.3) * anomaly_weight
+        anomaly_weight = (
+            2.0
+            if metadata and metadata.get("art_insights", {}).get("is_anomaly")
+            else 1.0
+        )
+
+        complexity = (
+            vector_entropy * 0.4 + vector_variance * 0.3 + metadata_complexity * 0.3
+        ) * anomaly_weight
         return min(complexity, 5.0)  # Cap at 5.0
-    
+
     def _calculate_feature_coherence(self, feature_sources: list) -> float:
         """Calculate feature coherence across synthesis sources"""
         if not feature_sources:
             return 0.0
-        
+
         # Calculate coherence based on feature source diversity and weights
         total_weight = sum(weight for _, _, weight in feature_sources)
-        weight_balance = 1.0 - abs(total_weight - len(feature_sources)) / len(feature_sources)
-        
+        weight_balance = 1.0 - abs(total_weight - len(feature_sources)) / len(
+            feature_sources
+        )
+
         # Source diversity (having multiple types is good)
-        source_types = set(name.split('_')[0] for name, _, _ in feature_sources)
-        diversity_score = len(source_types) / 3.0  # Max 3 types: input, output, metadata
-        
-        return (weight_balance * 0.6 + diversity_score * 0.4)
-    
-    def _generate_synthesis_trace(self, operation: str, inputs: dict, outputs: dict) -> dict:
+        source_types = set(name.split("_")[0] for name, _, _ in feature_sources)
+        diversity_score = (
+            len(source_types) / 3.0
+        )  # Max 3 types: input, output, metadata
+
+        return weight_balance * 0.6 + diversity_score * 0.4
+
+    def _generate_synthesis_trace(
+        self, operation: str, inputs: dict, outputs: dict
+    ) -> dict:
         """Generate HOLO-1.5 synthesis trace for cognitive mesh learning"""
         return {
-            'timestamp': time.time(),
-            'operation': operation,
-            'role': 'SYNTHESIZER',
-            'cognitive_load': self._cognitive_metrics.get('training_complexity', 0.0),
-            'symbolic_depth': self._cognitive_metrics.get('synthesis_depth', 0),
-            'inputs': {
-                'input_type': inputs.get('input_type'),
-                'feature_sources': inputs.get('feature_sources', 0),
-                'metadata_keys': inputs.get('metadata_keys', [])
+            "timestamp": time.time(),
+            "operation": operation,
+            "role": "SYNTHESIZER",
+            "cognitive_load": self._cognitive_metrics.get("training_complexity", 0.0),
+            "symbolic_depth": self._cognitive_metrics.get("synthesis_depth", 0),
+            "inputs": {
+                "input_type": inputs.get("input_type"),
+                "feature_sources": inputs.get("feature_sources", 0),
+                "metadata_keys": inputs.get("metadata_keys", []),
             },
-            'outputs': {
-                'feature_vector_size': outputs.get('feature_vector_size', 0),
-                'training_epochs': outputs.get('training_epochs', 0),
-                'resonance': outputs.get('resonance', 0.0)
+            "outputs": {
+                "feature_vector_size": outputs.get("feature_vector_size", 0),
+                "training_epochs": outputs.get("training_epochs", 0),
+                "resonance": outputs.get("resonance", 0.0),
             },
-            'metrics': {
-                'synthesis_efficiency': outputs.get('resonance', 0.0),
-                'adaptation_success': outputs.get('training_success', False),
-                'complexity_handled': self._cognitive_metrics.get('training_complexity', 0.0)
-            }
+            "metrics": {
+                "synthesis_efficiency": outputs.get("resonance", 0.0),
+                "adaptation_success": outputs.get("training_success", False),
+                "complexity_handled": self._cognitive_metrics.get(
+                    "training_complexity", 0.0
+                ),
+            },
         }
 
     def _get_art_input_dim_internal(
@@ -407,14 +450,22 @@ class ArtTrainer(BaseAgent if HOLO_AVAILABLE else object):
     def _load_trainer_config_internal(self, name: Optional[str]) -> dict[str, Any]:
         """Loads trainer configuration from a simple JSON file if name is provided."""
         if not name:
-            return {}
+            # Try to load default configuration
+            name = "trainer_default_config"
+
         # Simplified path, assuming config files are stored in a known relative location or full path is given
         # For this refactor, let's assume it's just a name and we don't have a complex persistence layer yet.
         # This would typically involve a config directory.
         try:
-            # Placeholder: In a real scenario, you'd have a config path resolution.
-            # For now, let's assume 'name' could be a full path or just a file in current dir.
+            # Try current directory first
             file_path = f"{name}.json" if not name.endswith(".json") else name
+            # If not found, try in the ART module directory
+            if not os.path.exists(file_path):
+                art_dir = os.path.dirname(__file__)
+                file_path = os.path.join(
+                    art_dir, f"{name}.json" if not name.endswith(".json") else name
+                )
+
             if os.path.exists(file_path):  # os import needed
                 with open(file_path, "r", encoding="utf-8") as f:
                     config = json.load(f)
@@ -424,9 +475,38 @@ class ArtTrainer(BaseAgent if HOLO_AVAILABLE else object):
                 self.logger.warning(
                     f"Trainer config file {file_path} not found. Using defaults."
                 )
+                # Return basic defaults for HOLO-1.5 compatibility
+                return {
+                    "input_dim": 256,
+                    "vigilance": 0.75,
+                    "learning_rate": 0.1,
+                    "max_categories": 100,
+                    "anomaly_threshold": 0.3,
+                    "art_config": {
+                        "input_dim": 256,
+                        "vigilance": 0.75,
+                        "learning_rate": 0.1,
+                        "max_categories": 100,
+                        "anomaly_threshold": 0.3,
+                    },
+                }
         except Exception as e:
             self.logger.error(f"Error loading trainer config {name}: {e}")
-        return {}  # Return empty if not found or error
+            # Return basic defaults on error
+            return {
+                "input_dim": 256,
+                "vigilance": 0.75,
+                "learning_rate": 0.1,
+                "max_categories": 100,
+                "anomaly_threshold": 0.3,
+                "art_config": {
+                    "input_dim": 256,
+                    "vigilance": 0.75,
+                    "learning_rate": 0.1,
+                    "max_categories": 100,
+                    "anomaly_threshold": 0.3,
+                },
+            }
 
     def _save_trainer_config_internal(self, name: str) -> bool:
         """Saves current trainer configuration to a simple JSON file."""
@@ -461,8 +541,8 @@ class ArtTrainer(BaseAgent if HOLO_AVAILABLE else object):
             return True
         except Exception as e:
             self.logger.error(f"Error saving trainer config {name}: {e}")
-        return False    
-    
+        return False
+
     def _create_feature_vector(
         self,
         input_data: Any,
@@ -482,7 +562,7 @@ class ArtTrainer(BaseAgent if HOLO_AVAILABLE else object):
 
         # Track synthesis process
         synthesis_start = time.time()
-        
+
         input_weight = weights.get("input_features", 1.0)
         if isinstance(input_data, str):
             input_feats = self._extract_text_features(
@@ -521,8 +601,10 @@ class ArtTrainer(BaseAgent if HOLO_AVAILABLE else object):
         feature_sources.append(("metadata", meta_feats, metadata_weight))
 
         # Calculate cognitive metrics for synthesis
-        self._cognitive_metrics['feature_coherence'] = self._calculate_feature_coherence(feature_sources)
-        self._cognitive_metrics['synthesis_depth'] = len(feature_sources)
+        self._cognitive_metrics["feature_coherence"] = (
+            self._calculate_feature_coherence(feature_sources)
+        )
+        self._cognitive_metrics["synthesis_depth"] = len(feature_sources)
 
         strategy = self.feature_strategy
         final_features = []
@@ -553,30 +635,30 @@ class ArtTrainer(BaseAgent if HOLO_AVAILABLE else object):
                 f"Final feature vector dim {final_vector.shape[0]} != target {target_dim}."
             )
             return None
-        
+
         # Update cognitive metrics with synthesis results
         synthesis_time = time.time() - synthesis_start
-        self._cognitive_metrics['orchestration_load'] = min(synthesis_time * 10, 5.0)
-        
+        self._cognitive_metrics["orchestration_load"] = min(synthesis_time * 10, 5.0)
+
         # Generate synthesis trace for HOLO-1.5 learning
         if HOLO_AVAILABLE:
             trace = self._generate_synthesis_trace(
-                'feature_synthesis',
+                "feature_synthesis",
                 {
-                    'input_type': type(input_data).__name__,
-                    'feature_sources': len(feature_sources),
-                    'metadata_keys': list(metadata.keys()) if metadata else []
+                    "input_type": type(input_data).__name__,
+                    "feature_sources": len(feature_sources),
+                    "metadata_keys": list(metadata.keys()) if metadata else [],
                 },
                 {
-                    'feature_vector_size': len(final_vector),
-                    'synthesis_time': synthesis_time,
-                    'coherence': self._cognitive_metrics['feature_coherence']
-                }
+                    "feature_vector_size": len(final_vector),
+                    "synthesis_time": synthesis_time,
+                    "coherence": self._cognitive_metrics["feature_coherence"],
+                },
             )
             # Store trace for mesh learning
-            if hasattr(self, 'cognitive_traces'):
+            if hasattr(self, "cognitive_traces"):
                 self.cognitive_traces.append(trace)
-        
+
         return final_vector
 
     # Make EF helpers methods of the class or ensure they use self.logger if kept as static/module-level
@@ -686,7 +768,8 @@ class ArtTrainer(BaseAgent if HOLO_AVAILABLE else object):
             return False
         if expected_dim is not None and vector.shape[0] != expected_dim:
             self.logger.error(
-                f"Feature vector dim {vector.shape[0]} != expected {expected_dim}."            )
+                f"Feature vector dim {vector.shape[0]} != expected {expected_dim}."
+            )
             return False
         if not np.issubdtype(vector.dtype, np.floating):
             self.logger.warning(f"Feature vector dtype ({vector.dtype}) not float.")
@@ -714,7 +797,7 @@ class ArtTrainer(BaseAgent if HOLO_AVAILABLE else object):
         with self.lock:  # Thread safety
             # HOLO-1.5 cognitive event processing start
             event_start_time = time.time()
-            
+
             self.logger.debug(
                 f"HOLO-1.5 train_from_event called. Input type: {type(input_data)}"
             )
@@ -722,23 +805,33 @@ class ArtTrainer(BaseAgent if HOLO_AVAILABLE else object):
                 metadata = {}
 
             # Calculate initial cognitive metrics
-            self._cognitive_metrics['training_complexity'] = self._calculate_training_complexity(
-                getattr(input_data, 'shape', None) if hasattr(input_data, 'shape') else np.array([0]), 
-                metadata
+            self._cognitive_metrics["training_complexity"] = (
+                self._calculate_training_complexity(
+                    getattr(input_data, "shape", None)
+                    if hasattr(input_data, "shape")
+                    else np.array([0]),
+                    metadata,
+                )
             )
 
             # F7: Context-Aware Feature Weighting (HOLO-1.5 Enhanced)
-            current_feature_weights = self.feature_weights.copy()  # Start with base weights
+            current_feature_weights = (
+                self.feature_weights.copy()
+            )  # Start with base weights
             if self.config.get("context_aware_feature_weighting", False):
                 if metadata.get("high_priority_event"):  # Example context
-                    current_feature_weights["input_features"] *= 1.5  # Boost input importance
+                    current_feature_weights["input_features"] *= (
+                        1.5  # Boost input importance
+                    )
                     self.logger.info(
                         "Applied HOLO-1.5 context-aware weight adjustment for high_priority_event."
                     )
                 # Additional HOLO-1.5 cognitive adaptations
                 if metadata.get("anomaly_detected"):
                     current_feature_weights["metadata_features"] *= 2.0
-                    self.logger.info("Enhanced metadata weighting for anomaly processing")
+                    self.logger.info(
+                        "Enhanced metadata weighting for anomaly processing"
+                    )
 
             # EF3: Create feature vector using cognitive synthesis
             feature_vector = self._create_feature_vector(
@@ -754,16 +847,18 @@ class ArtTrainer(BaseAgent if HOLO_AVAILABLE else object):
                 return {
                     "status": "error",
                     "message": "Feature vector validation failed",
-                    "cognitive_metrics": self._cognitive_metrics.copy()
+                    "cognitive_metrics": self._cognitive_metrics.copy(),
                 }
 
             # EF13: Get epochs with cognitive load adjustment
             epochs = self._get_training_epochs(metadata)
-            
+
             # HOLO-1.5 cognitive load adjustment based on complexity
-            if self._cognitive_metrics['training_complexity'] > 3.0:
+            if self._cognitive_metrics["training_complexity"] > 3.0:
                 epochs = max(1, int(epochs * 0.8))  # Reduce epochs for high complexity
-                self.logger.info(f"Reduced training epochs to {epochs} due to high cognitive complexity")
+                self.logger.info(
+                    f"Reduced training epochs to {epochs} due to high cognitive complexity"
+                )
 
             # F3: Train ART with cognitive orchestration
             if feature_vector is None:
@@ -773,35 +868,38 @@ class ArtTrainer(BaseAgent if HOLO_AVAILABLE else object):
                 return {
                     "status": "error",
                     "message": "Feature vector is None",
-                    "cognitive_metrics": self._cognitive_metrics.copy()
+                    "cognitive_metrics": self._cognitive_metrics.copy(),
                 }
 
-            try:
-                # Enhanced training with cognitive context
+            try:  # Enhanced training with cognitive context
                 train_result = self.art.train(
-                    feature_vector, epochs=epochs
+                    feature_vector, epochs=epochs, timeout_seconds=5.0
                 )  # ARTController handles its own logging
-                
+
                 # Calculate adaptation efficiency
-                resonance = train_result.get('resonance', 0.0)
-                self._cognitive_metrics['adaptation_efficiency'] = min(
+                resonance = train_result.get("resonance", 0.0)
+                self._cognitive_metrics["adaptation_efficiency"] = min(
                     resonance * (1.0 + epochs / 10.0), 1.0
                 )
-                
-                self.logger.info(f"HOLO-1.5 ART training completed. Result: {train_result}")
-                
+
+                self.logger.info(
+                    f"HOLO-1.5 ART training completed. Result: {train_result}"
+                )
+
             except Exception as e:
-                self.logger.error(f"Exception during HOLO-1.5 ART training: {e}", exc_info=True)
+                self.logger.error(
+                    f"Exception during HOLO-1.5 ART training: {e}", exc_info=True
+                )
                 return {
-                    "status": "error", 
+                    "status": "error",
                     "message": f"ART training exception: {e}",
-                    "cognitive_metrics": self._cognitive_metrics.copy()
+                    "cognitive_metrics": self._cognitive_metrics.copy(),
                 }
 
             # F5: Enhanced training event logging with cognitive traces
             timestamp = time.time()
             event_duration = timestamp - event_start_time
-            
+
             history_entry = {
                 "timestamp": timestamp,
                 "input_type": str(type(input_data)),
@@ -816,9 +914,9 @@ class ArtTrainer(BaseAgent if HOLO_AVAILABLE else object):
                 "art_result": train_result,
                 "cognitive_metrics": self._cognitive_metrics.copy(),
                 "event_duration": event_duration,
-                "holo_version": "1.5"
+                "holo_version": "1.5",
             }
-            
+
             self.training_history.append(history_entry)
             self.training_stats["total_trained"] += 1
             self.training_stats["last_trained_ts"] = timestamp
@@ -826,22 +924,26 @@ class ArtTrainer(BaseAgent if HOLO_AVAILABLE else object):
             # Generate HOLO-1.5 cognitive trace for mesh learning
             if HOLO_AVAILABLE:
                 cognitive_trace = self._generate_synthesis_trace(
-                    'training_orchestration',
+                    "training_orchestration",
                     {
-                        'input_type': str(type(input_data)),
-                        'feature_sources': self._cognitive_metrics.get('synthesis_depth', 0),
-                        'metadata_keys': list(metadata.keys()) if metadata else []
+                        "input_type": str(type(input_data)),
+                        "feature_sources": self._cognitive_metrics.get(
+                            "synthesis_depth", 0
+                        ),
+                        "metadata_keys": list(metadata.keys()) if metadata else [],
                     },
                     {
-                        'feature_vector_size': len(feature_vector) if feature_vector is not None else 0,
-                        'training_epochs': epochs,
-                        'resonance': train_result.get('resonance', 0.0),
-                        'training_success': train_result.get('category_id', -1) >= 0
-                    }
+                        "feature_vector_size": len(feature_vector)
+                        if feature_vector is not None
+                        else 0,
+                        "training_epochs": epochs,
+                        "resonance": train_result.get("resonance", 0.0),
+                        "training_success": train_result.get("category_id", -1) >= 0,
+                    },
                 )
-                
+
                 # Store trace for cognitive mesh learning
-                if not hasattr(self, 'cognitive_traces'):
+                if not hasattr(self, "cognitive_traces"):
                     self.cognitive_traces = deque(maxlen=1000)
                 self.cognitive_traces.append(cognitive_trace)
 
@@ -849,10 +951,14 @@ class ArtTrainer(BaseAgent if HOLO_AVAILABLE else object):
             self.logger.info(
                 "HOLO-1.5 ART Training Event Completed",
                 extra={
-                    "event_type": "holo_train_from_event_success", 
+                    "event_type": "holo_train_from_event_success",
                     "data": history_entry,
-                    "cognitive_load": self._cognitive_metrics.get('training_complexity', 0.0),
-                    "adaptation_efficiency": self._cognitive_metrics.get('adaptation_efficiency', 0.0)
+                    "cognitive_load": self._cognitive_metrics.get(
+                        "training_complexity", 0.0
+                    ),
+                    "adaptation_efficiency": self._cognitive_metrics.get(
+                        "adaptation_efficiency", 0.0
+                    ),
                 },
             )
 
@@ -862,7 +968,7 @@ class ArtTrainer(BaseAgent if HOLO_AVAILABLE else object):
                 "feature_vector_preview": history_entry["feature_vector_preview"],
                 "cognitive_metrics": self._cognitive_metrics.copy(),
                 "event_duration": event_duration,
-                "holo_version": "1.5"
+                "holo_version": "1.5",
             }
             if metadata is None:
                 metadata = {}
@@ -919,7 +1025,7 @@ class ArtTrainer(BaseAgent if HOLO_AVAILABLE else object):
 
             try:
                 train_result = self.art.train(
-                    feature_vector, epochs=epochs
+                    feature_vector, epochs=epochs, timeout_seconds=5.0
                 )  # ARTController handles its own logging
                 self.logger.info(f"ART training completed. Result: {train_result}")
             except Exception as e:
@@ -1081,3 +1187,12 @@ class ArtTrainer(BaseAgent if HOLO_AVAILABLE else object):
             if hasattr(self.art, "get_config")
             else "N/A",
         }
+
+    def generate_enhanced_samples(self, task: dict, multiplier: int) -> list:
+        """Generate enhanced training samples based on task data."""
+        # Simple placeholder: replicate base samples multiplier times
+        base_samples = task.get("train", [])
+        enhanced = []
+        for _ in range(multiplier):
+            enhanced.extend(base_samples)
+        return enhanced

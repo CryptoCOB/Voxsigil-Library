@@ -9,7 +9,9 @@ from .base import BaseAgent, CognitiveMeshRole, vanta_agent
 logger = logging.getLogger(__name__)
 
 
-@vanta_agent(name="VoxAgent", subsystem="system_interface", mesh_role=CognitiveMeshRole.EVALUATOR)
+@vanta_agent(
+    name="VoxAgent", subsystem="system_interface", mesh_role=CognitiveMeshRole.EVALUATOR
+)
 class VoxAgent(BaseAgent):
     sigil = "🜌⟐🜹🜙"
     tags = ["Coordinator", "System Interface", "ContextualCheckInAgent"]
@@ -29,28 +31,40 @@ class VoxAgent(BaseAgent):
 
     def __init__(self, vanta_core=None):
         super().__init__(vanta_core)
-        self.outbox: list[str] = []    @compress_outbound
+        self.outbox: list[str] = []
+
+    @compress_outbound
     def send(self, message: str) -> None:
         """Send a message to the outbox with BLT compression."""
         self.outbox.append(message)
         if self.vanta_core:
-            if hasattr(self.vanta_core, "async_bus"):
-                msg = AsyncMessage(MessageType.USER_INTERACTION, self.__class__.__name__, message)
+            if (
+                hasattr(self.vanta_core, "async_bus")
+                and self.vanta_core.async_bus is not None
+            ):
+                msg = AsyncMessage(
+                    MessageType.USER_INTERACTION, self.__class__.__name__, message
+                )
                 # Create task with error handling
                 task = asyncio.create_task(self._safe_publish(msg))
                 # Store task reference to prevent garbage collection
-                if not hasattr(self, '_pending_tasks'):
+                if not hasattr(self, "_pending_tasks"):
                     self._pending_tasks = set()
                 self._pending_tasks.add(task)
                 task.add_done_callback(self._pending_tasks.discard)
-            if hasattr(self.vanta_core, "send_to_mesh"):
-                self.vanta_core.send_to_mesh(self.__class__.__name__, message)
-    
+                if hasattr(self.vanta_core, "send_to_mesh"):
+                    self.vanta_core.send_to_mesh(self.__class__.__name__, message)
+
     async def _safe_publish(self, msg: AsyncMessage):
         """Safely publish message with error handling."""
         try:
-            await self.vanta_core.async_bus.publish(msg)
-            logger.debug(f"✅ Published message to async bus: {msg.payload[:50]}...")
+            if self.vanta_core.async_bus is not None:
+                await self.vanta_core.async_bus.publish(msg)
+                logger.debug(
+                    f"✅ Published message to async bus: {msg.payload[:50]}..."
+                )
+            else:
+                logger.debug("Async bus not available, skipping message publish")
         except Exception as e:
             logger.error(f"❌ Failed to publish message to async bus: {e}")
             logger.debug(f"Publish error details: {e.__class__.__name__}: {e}")

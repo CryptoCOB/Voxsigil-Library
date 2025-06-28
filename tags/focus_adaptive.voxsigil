@@ -1,84 +1,67 @@
-sigil: 🜃FOCUS_ADAPTIVE
-alias: ContextualAttention.DynamicWeighter
-tag: Attention
-tags:
-- dynamic_focus
-- context_shifting
-- relevance_prioritization
-- information_filtering
-- attentional_heuristics
-- salience_management
-- resource_allocation
-is_cognitive_primitive: false
-principle: FOCUS_ADAPTIVE orchestrates the dynamic allocation of an agent's cognitive
-  resources by modulating attentional weights across vast information landscapes.
-  It ensures that processing effort is disproportionately applied to information deemed
-  most relevant to current goals, contextual shifts, or emergent salient cues, thereby
-  optimizing efficiency and responsiveness in highly dynamic environments.
-math: "Let I_t be the input information stream at time t.\nLet C_t be the current\
-  \ context and O_t be the current objectives.\nLet P_t-1 be the prior attentional\
-  \ state/vector.\n\nThen:\n  A_t = W(I_t, C_t, O_t, P_t-1)\n  I_processed = I_t ⋅\
-  \ A_t\n\nWhere:\n  A_t is the attention vector at time t, with weights w_i ∈ [0,1].\n\
-  \  W is the dynamic weighting function, designed to maximize(Utility(I_processed,\
-  \ O_t))."
-usage:
-  description: Used to dynamically adjust an agent's processing focus based on real-time
-    contextual changes or evolving task objectives.
-  example:
-    invocation_tag: <focus:adaptive mode="goal_driven" threshold="0.7">
-    scenario: An agent is monitoring a complex system's logs (high volume, varied
-      topics). Initially, its goal is 'anomaly detection'. Suddenly, a user query
-      arrives focusing on 'network performance metrics'. The agent must rapidly shift
-      its attention and processing filters.
-    expected_behavior: FOCUS_ADAPTIVE is invoked. The change in objective and context
-      (user query) triggers a re-evaluation of salience. The agent's attention weights
-      shift from general anomaly patterns to specific keywords and log entries related
-      to network performance, filtering out irrelevant information and prioritizing
-      deep processing for the newly relevant data stream segments.
-  explanation: Crucial for AI models operating in environments with fluctuating information
-    density and shifting user or system demands. It prevents cognitive overload and
-    ensures efficient resource utilization by intelligently pruning irrelevant data
-    and prioritizing deep dives.
-SMART_MRAP:
-  Specific: Dynamically re-prioritize and allocate cognitive processing resources
-    based on evolving context and goals.
-  Measurable: Efficiency gain in processing (e.g., reduced computation for irrelevant
-    data); accuracy of relevant information extraction.
-  Achievable: Through context-aware embedding spaces, reinforcement learning for attention
-    policies, and dynamic filtering mechanisms.
-  Relevant: Enables efficient operation in information-rich, real-time environments,
-    adapting to user needs or system states.
-  Transferable: Applicable to large language models, autonomous agents, data stream
-    processing, and multi-modal integration.
-metadata:
-  definition_version: 1.4.0
-  definition_status: active
-  author_agent_id: CLAUDE_3_5_SONNET
-  created_timestamp: '2024-07-30T10:30:00.000000'
-  last_updated_timestamp: '2025-06-13T05:40:40.617914Z'
-  authorship_context:
-    motivation: As an AI, I constantly manage vast amounts of data and shifting conversational
-      contexts. Effective attention management is key to my efficiency and relevance.
-    theoretical_framework: Attention mechanisms in neural networks, cognitive load
-      theory, relevance theory.
-    source_inspiration:
-    - human selective attention
-    - transformer architecture attention heads
-    - economic resource allocation models
-  schema_version: 1.5-holo-alpha
-  impact_and_usage_metrics_profile:
-    avg_completion_time_ms_observed: UNKNOWN
-    success_rate_observed: UNKNOWN
-    complexity_rating: medium
-name: Focus Adaptive
-structure:
-  components:
-  - name: DefaultComponent
-    description: Default component - needs specification
-  composite_type: simple
-  temporal_structure: atomic
-activation_context:
-  triggers:
-  - explicit_invocation
-  prerequisites: []
-  inhibitors: []
+schema_version: 1.5-holo-alpha
+meta:
+  sigil: 🜃FOCUS_ADAPTIVE
+  alias: ContextualAttention.DynamicWeighter
+  tag: Attention
+  upgraded_from: legacy
+  upgrade_timestamp: '2025-06-24T17:14:16.512571'
+  source_file: tags\focus_adaptive.voxsigil
+holo_mesh:
+  is_cognitive_primitive: false
+  mesh_compatibility: holo-1.5-alpha
+  registration_ready: true
+  vanta_core_integration:
+    event_support: true
+    async_capable: true
+    memory_aware: true
+  temporal_pattern: atomic
+cognitive:
+  principle: FOCUS_ADAPTIVE orchestrates the dynamic allocation of an agent's cognitive resources by modulating attentional
+    weights across vast information landscapes. It ensures that processing effort is disproportionately applied to information
+    deemed most relevant to current goals, contextual shifts, or emergent salient cues, thereby optimizing efficiency and
+    responsiveness in highly dynamic environments.
+  math: "Let I_t be the input information stream at time t.\nLet C_t be the current context and O_t be the current objectives.\n\
+    Let P_t-1 be the prior attentional state/vector.\n\nThen:\n  A_t = W(I_t, C_t, O_t, P_t-1)\n  I_processed = I_t ⋅ A_t\n\
+    \nWhere:\n  A_t is the attention vector at time t, with weights w_i ∈ [0,1].\n  W is the dynamic weighting function, designed\
+    \ to maximize(Utility(I_processed, O_t))."
+  tags:
+  - dynamic_focus
+  - context_shifting
+  - relevance_prioritization
+  - information_filtering
+  - attentional_heuristics
+  - salience_management
+  - resource_allocation
+  structure:
+    components:
+    - name: DefaultComponent
+      description: Default component - needs specification
+    composite_type: simple
+    temporal_structure: atomic
+implementation:
+  usage:
+    description: Used to dynamically adjust an agent's processing focus based on real-time contextual changes or evolving
+      task objectives.
+    example: &id001
+      invocation_tag: <focus:adaptive mode="goal_driven" threshold="0.7">
+      scenario: An agent is monitoring a complex system's logs (high volume, varied topics). Initially, its goal is 'anomaly
+        detection'. Suddenly, a user query arrives focusing on 'network performance metrics'. The agent must rapidly shift
+        its attention and processing filters.
+      expected_behavior: FOCUS_ADAPTIVE is invoked. The change in objective and context (user query) triggers a re-evaluation
+        of salience. The agent's attention weights shift from general anomaly patterns to specific keywords and log entries
+        related to network performance, filtering out irrelevant information and prioritizing deep processing for the newly
+        relevant data stream segments.
+    explanation: Crucial for AI models operating in environments with fluctuating information density and shifting user or
+      system demands. It prevents cognitive overload and ensures efficient resource utilization by intelligently pruning irrelevant
+      data and prioritizing deep dives.
+  parameters: {}
+  returns: {}
+  examples: []
+connectivity:
+  input_types: []
+  output_types: []
+  mesh_endpoints:
+  - DefaultComponent
+  event_topics: []
+  usage_patterns:
+  - *id001

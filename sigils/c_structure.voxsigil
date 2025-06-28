@@ -1,258 +1,97 @@
-sigil: 🧠C_STRUCTURE
-alias: RecursiveCognitionCore
-tag: RecursiveCognition
-tags:
-- consciousness_scaffold
-- meta_reasoning
-- symbolic_evolution
-- self_inspection_loop
-is_cognitive_primitive: false
-consciousness_scaffold: true
-principle: '`C_STRUCTURE` represents the foundational cognitive loop within VoxSigil
-  systems.
+schema_version: 1.5-holo-alpha
+meta:
+  sigil: 🧠C_STRUCTURE
+  alias: RecursiveCognitionCore
+  tag: RecursiveCognition
+  upgraded_from: legacy
+  upgrade_timestamp: '2025-06-24T17:14:16.134276'
+  source_file: sigils\c_structure.voxsigil
+holo_mesh:
+  is_cognitive_primitive: false
+  mesh_compatibility: holo-1.5-alpha
+  registration_ready: true
+  vanta_core_integration:
+    event_support: true
+    async_capable: true
+    memory_aware: true
+  temporal_pattern: sequential_phase_iterative
+cognitive:
+  principle: '`C_STRUCTURE` represents the foundational cognitive loop within VoxSigil systems.
 
-  It encodes recursive awareness through three primary operations: CATEGORIZE (segment
-  inputs into meaningful cognitive classes), ANALYZE (unpack symbolic structure, detect
-  latent relationships), and TEST (run simulations, probe internal logic, or apply
-  constraints). These are fused into a loop, often leveraging mechanisms like <mirror>
-  reflection, 🜛CATENGINE for initiation, and ⚦TRACE for memory continuity. The purpose
-  of C_STRUCTURE is to enable systems capable of recursive self-inspection, meta-reasoning,
-  adaptive memory access, and symbolic evolution.
-
-  '
-math: "Let t be a thought object at state n:\nCategorize(t) → C_t\nAnalyze(C_t) →\
-  \ A_Ct\nTest(A_Ct) → T_ACt\nt_n+1 = Reflect(T_ACt, Feedback_Context) \n\nSymbolically,\
-  \ this can be viewed as an orchestrated flow:\n\U0001F9E0C_STRUCTURE ≡ \U0001F71B\
-  CATENGINE ▻ [C → A → T] ↺ <mirror>  pulsing via <pulse> with \U0001F578️MEMORY_BRAID_ALGORITHM.\n"
-structure:
-  composite_type: recursive_feedback_loop
-  temporal_structure: sequential_phase_iterative
-  components:
-  - name: Categorization Unit (C)
-    description: Segments inputs into meaningful cognitive classes using pattern matching
-      or semantic clustering. Triggered by 🜛CATENGINE.
-    sigil_ref: 🜛CATENGINE
-  - name: Analysis Engine (A)
-    description: Unpacks symbolic structure, detects latent relationships, and performs
-      logical decomposition of categorized inputs.
-  - name: Testing & Simulation Module (T)
-    description: Runs internal simulations, probes logical consistency, applies constraints,
-      or evaluates against criteria.
-  - name: Reflective Feedback Interface
-    description: Integrates evaluative feedback (e.g., from <mirror>) to modulate
-      subsequent loop iterations.
-    sigil_ref: <mirror>
-  - name: Pulse Synchronization Control
-    description: Regulates the cadence and rhythm of the C-A-T cycle, especially in
-      layered or multi-threaded reasoning.
-    sigil_ref: <pulse>
-  - name: Traceability Anchor
-    description: Maintains memory continuity and identity across recursive iterations.
-    sigil_ref: ⚦TRACE
-usage:
-  description: Establishes a core recursive cognitive cycle (Categorize, Analyze,
-    Test, Reflect) enabling symbolic agents to recursively refine their reasoning,
-    self-inspect, and evolve their understanding.
-  example: "<system_prompt_module id=\"SelfRefinementUnit\">\n  <description>Agent's\
-    \ primary thought cycle for problem-solving.</description>\n  <invoke_cognitive_loop>\U0001F9E0\
-    C_STRUCTURE</invoke_cognitive_loop>\n  <parameters>\n    <initial_input_ref object_id=\"\
-    current_problem_statement\"/>\n    <recursion_depth_policy_ref=\"⟁FRACTAL_GUARD\"\
-    \ max_depth=\"5\"/>\n    <feedback_source sigil_ref=\"<mirror>\" prompt=\"Evaluate\
-    \ efficiency of last reasoning step.\"/>\n  </parameters>\n</system_prompt_module>\n"
-  explanation: '🧠C_STRUCTURE defines a fundamental recursive cognition pass. 🜛CATENGINE
-    often initiates the categorization.
-
-    The <mirror> mechanism enables evaluation of outputs or internal states, feeding
-    back into the loop.
-
-    The <pulse> tag can regulate the rhythm and synchronization of analysis across
-    iterative cycles.
-
-    This core structure can be expanded with specific memory access sigils (e.g.,
-    🕸️MEMORY_BRAID_ALGORITHM),
-
-    exploratory state modulators (e.g., 🌒DREAM_STATE), or anomaly detectors to guide
-    its evolution.
-
-    It is a baseline for recursive cognition scaffolding in advanced VoxSigil systems.
+    It encodes recursive awareness through three primary operations: CATEGORIZE (segment inputs into meaningful cognitive
+    classes), ANALYZE (unpack symbolic structure, detect latent relationships), and TEST (run simulations, probe internal
+    logic, or apply constraints). These are fused into a loop, often leveraging mechanisms like <mirror> reflection, 🜛CATENGINE
+    for initiation, and ⚦TRACE for memory continuity. The purpose of C_STRUCTURE is to enable systems capable of recursive
+    self-inspection, meta-reasoning, adaptive memory access, and symbolic evolution.
 
     '
-activation_context:
-  trigger_conditions:
-  - Problem requiring iterative refinement
-  - Self-correction cycle initiation
-  - Meta-reasoning activation
-  - Adaptive learning loop
-  preconditions:
-  - Defined input for categorization
-  - Access to analytical and testing primitives/modules
-  - Feedback mechanism (e.g., <mirror> or evaluative function)
-  required_capabilities:
-  - pattern_recognition
-  - logical_decomposition
-  - simulation_internal
-  - state_evaluation
-  - recursive_call_handling
-  supported_modalities:
-  - symbolic_input
-  - textual_reasoning_chains
-  - programmatic_api
-  contraindications:
-  - Simple, non-recursive tasks
-  - Situations requiring immediate, non-reflective action
-parameterization_schema:
-  parameters:
-  - name: initial_input
-    type: string
-    description: The initial thought object or problem statement to feed into the
-      C-A-T loop.
-    is_required: true
-  - name: max_iterations
-    type: integer
-    description: Maximum number of C-A-T cycles to perform if no other termination
-      condition is met.
-    default_value: 3
-  - name: termination_criteria
-    type: string
-    description: Condition(s) for exiting the recursive loop (e.g., 'contradiction_resolved',
-      'solution_found').
-prompt_template:
-  role: system
-  content: "Initiate \U0001F9E0C_STRUCTURE cognitive cycle.\nInput: {{initial_input}}\n\
-    Max Iterations: {{max_iterations | default(3)}}\nTermination Criteria: {{termination_criteria\
-    \ | default('satisfactory_refinement')}}\n\nCycle {{current_iteration}}:\n1. CATEGORIZE:\
-    \ Segment input into classes. Focus: {{categorization_focus | default('identify\
-    \ key entities and relations')}}.\n   Output: Categorized Elements.\n2. ANALYZE:\
-    \ Unpack structure of Categorized Elements. Focus: {{analysis_focus | default('latent\
-    \ relationships and logical structure')}}.\n   Output: Analyzed Structure.\n3.\
-    \ TEST: Simulate/probe Analyzed Structure. Focus: {{test_focus | default('consistency\
-    \ and constraint satisfaction')}}.\n   Output: Test Results.\n4. REFLECT (using\
-    \ <mirror> or similar): Evaluate Test Results and overall cycle. Feedback: {{reflection_prompt\
-    \ | default('Assess progress and identify areas for next cycle.')}}\n   Output:\
-    \ Refinement Directives.\n\nIf termination criteria met or max iterations reached,\
-    \ conclude. Else, begin next cycle with refined input.\n"
-  execution_mode: orchestration
-  variables:
-  - name: initial_input
-    description: Initial input for the loop.
-  - name: max_iterations
-    description: Max number of cycles.
-  - name: termination_criteria
-    description: Conditions to stop the loop.
-  - name: current_iteration
-    description: Current cycle number (managed by the orchestrator).
-  - name: categorization_focus
-    description: Specific focus for the categorization step.
-  - name: analysis_focus
-    description: Specific focus for the analysis step.
-  - name: test_focus
-    description: Specific focus for the test step.
-  - name: reflection_prompt
-    description: Prompt for the reflection/feedback stage.
-  output_schema: 'object: { final_refined_thought_object: any, cycle_count: integer,
-    termination_reason: string, trace_log_ref: string }'
-SMART_MRAP:
-  Specific: Establish and execute a recursive Categorize-Analyze-Test-Reflect cognitive
-    cycle on a given input, aiming to refine understanding, solve problems, or evolve
-    symbolic structures through iterative self-inspection and feedback, within specified
-    iteration limits and termination criteria.
-  Measurable: Reduction in logical contradictions or token waste per loop iteration;
-    Improvement in solution quality or understanding (e.g., higher coherence score,
-    better performance on a downstream task) with each cycle; Number of cycles to
-    reach termination criteria.
-  Achievable: By orchestrating calls to underlying cognitive primitives or modules
-    for categorization, analysis, testing, and reflection (e.g., using 🜛CATENGINE,
-    <mirror>, and internal evaluative functions), within a control structure that
-    manages recursion and feedback.
-  Relevant: Essential for developing self-improving agents, enabling robust meta-reasoning,
-    facilitating adaptive learning from experience, and designing complex recursive
-    cognitive architectures.
-  Transferable: The C-A-T-R loop is a model-agnostic cognitive pattern applicable
-    to various AI systems (LLMs, symbolic reasoners) capable of modular processing
-    and iterative refinement. It can be implemented in any environment that supports
-    programmatic control flow and access to relevant cognitive functions.
-metadata:
-  definition_version: 1.4-alpha
-  definition_status: active
-  author_agent_id: Marc.⟠∆∇𓂀
-  created_timestamp: '2025-05-10T05:00:00Z'
-  last_updated_timestamp: '2025-06-13T05:40:40.617914Z'
-  authorship_context:
-    motivation: To define the baseline scaffolding for recursive cognition and self-inspection
-      in advanced AI systems. Aims to anchor core recursive planning inside MetaConsciousness
-      systems like Vanta. Future iterations may include emotional modulation, anomaly
-      detection, and resilience scoring.
-    theoretical_framework: Cognitive architectures (e.g., SOAR, ACT-R), Reflective
-      practice, Recursive function theory, Hofstadter's Strange Loops.
-    source_inspiration: Human problem-solving cycles, Scientific method (hypothesize-test-refine),
-      Software development iterative cycles.
-  impact_metrics:
-    estimated_cognitive_load: high
-    estimated_resource_cost: medium_to_high
-    utility_rating_author: 9.5
-  evolutionary_potential:
-    generalizability_score: 0.9
-    fusion_potential_score: 0.8
-    current_limitations_summary: Defining effective termination criteria can be challenging.
-      Risk of unproductive loops if feedback mechanism is flawed. Requires well-defined
-      C, A, T primitives.
-    suggested_next_features:
-    - Adaptive modulation of C/A/T focus based on loop progress
-    - Integration with 💥ANOMALY_SEEKER to escape local optima
-    - Dynamic resource allocation per cycle stage.
-    research_questions_opened:
-    - What are the most efficient C-A-T component implementations for different problem
-      types?
-    - How can the <mirror> reflection be optimized for maximal constructive feedback?
-    - Can C_STRUCTURE learn to optimize its own cycling strategy?
-  schema_version: 1.5-holo-alpha
-  impact_and_usage_metrics_profile:
-    avg_completion_time_ms_observed: UNKNOWN
-    success_rate_observed: UNKNOWN
-    complexity_rating: medium
-relationships:
-- target_sigil: 🜛CATENGINE
-  relationship_type: uses_method_from
-  description: Often initiates or embodies the Categorization phase of the C_STRUCTURE
-    loop.
-  strength: 0.9
-- target_sigil: <mirror>
-  relationship_type: depends_on
-  description: Relies on a <mirror>-like reflective mechanism for evaluative feedback
-    to drive iterations.
-  strength: 0.85
-- target_sigil: ⚦TRACE
-  relationship_type: uses_method_from
-  description: Utilizes TRACE capabilities to maintain coherence and memory across
-    recursive cycles.
-  strength: 0.7
-- target_sigil: ⟁FRACTAL_GUARD
-  relationship_type: synergizes_with
-  description: Fractal Guard can manage the recursion depth of C_STRUCTURE loops to
-    prevent runaway processes.
-  strength: 0.8
-test_criteria:
-- test_id: CSTR_FUNC_001
-  description: Test basic loop execution for 3 iterations on a simple problem, checking
-    for state change.
-  type: functional
-  input_scenario_or_parameters:
-    initial_input: 'Problem: X is Y, Y is Z, what is X?'
-    max_iterations: 3
-  expected_behavior_or_output: Loop completes 3 iterations, trace log shows refinement
-    of understanding or steps towards solution.
-  evaluation_method: automated_script
-  pass_threshold_or_criteria: Successful completion of 3 cycles with evidence of processing
-    in logs.
-- test_id: CSTR_TERM_001
-  description: 'Test termination criteria: loop stops when a specific condition is
-    met.'
-  type: functional
-  input_scenario_or_parameters:
-    initial_input: Find a synonym for 'happy'.
-    termination_criteria: synonym_found_confidence_gt_0.9
-  expected_behavior_or_output: Loop terminates before max_iterations if a high-confidence
-    synonym is identified.
-  evaluation_method: llm_as_judge
-  pass_threshold_or_criteria: Termination with valid reason and output.
-name: C Structure
+  math: "Let t be a thought object at state n:\nCategorize(t) → C_t\nAnalyze(C_t) → A_Ct\nTest(A_Ct) → T_ACt\nt_n+1 = Reflect(T_ACt,\
+    \ Feedback_Context) \n\nSymbolically, this can be viewed as an orchestrated flow:\n\U0001F9E0C_STRUCTURE ≡ \U0001F71B\
+    CATENGINE ▻ [C → A → T] ↺ <mirror>  pulsing via <pulse> with \U0001F578️MEMORY_BRAID_ALGORITHM.\n"
+  tags:
+  - consciousness_scaffold
+  - meta_reasoning
+  - symbolic_evolution
+  - self_inspection_loop
+  structure:
+    composite_type: recursive_feedback_loop
+    temporal_structure: sequential_phase_iterative
+    components:
+    - name: Categorization Unit (C)
+      description: Segments inputs into meaningful cognitive classes using pattern matching or semantic clustering. Triggered
+        by 🜛CATENGINE.
+      sigil_ref: 🜛CATENGINE
+    - name: Analysis Engine (A)
+      description: Unpacks symbolic structure, detects latent relationships, and performs logical decomposition of categorized
+        inputs.
+    - name: Testing & Simulation Module (T)
+      description: Runs internal simulations, probes logical consistency, applies constraints, or evaluates against criteria.
+    - name: Reflective Feedback Interface
+      description: Integrates evaluative feedback (e.g., from <mirror>) to modulate subsequent loop iterations.
+      sigil_ref: <mirror>
+    - name: Pulse Synchronization Control
+      description: Regulates the cadence and rhythm of the C-A-T cycle, especially in layered or multi-threaded reasoning.
+      sigil_ref: <pulse>
+    - name: Traceability Anchor
+      description: Maintains memory continuity and identity across recursive iterations.
+      sigil_ref: ⚦TRACE
+implementation:
+  usage:
+    description: Establishes a core recursive cognitive cycle (Categorize, Analyze, Test, Reflect) enabling symbolic agents
+      to recursively refine their reasoning, self-inspect, and evolve their understanding.
+    example: "<system_prompt_module id=\"SelfRefinementUnit\">\n  <description>Agent's primary thought cycle for problem-solving.</description>\n\
+      \  <invoke_cognitive_loop>\U0001F9E0C_STRUCTURE</invoke_cognitive_loop>\n  <parameters>\n    <initial_input_ref object_id=\"\
+      current_problem_statement\"/>\n    <recursion_depth_policy_ref=\"⟁FRACTAL_GUARD\" max_depth=\"5\"/>\n    <feedback_source\
+      \ sigil_ref=\"<mirror>\" prompt=\"Evaluate efficiency of last reasoning step.\"/>\n  </parameters>\n</system_prompt_module>\n"
+    explanation: '🧠C_STRUCTURE defines a fundamental recursive cognition pass. 🜛CATENGINE often initiates the categorization.
+
+      The <mirror> mechanism enables evaluation of outputs or internal states, feeding back into the loop.
+
+      The <pulse> tag can regulate the rhythm and synchronization of analysis across iterative cycles.
+
+      This core structure can be expanded with specific memory access sigils (e.g., 🕸️MEMORY_BRAID_ALGORITHM),
+
+      exploratory state modulators (e.g., 🌒DREAM_STATE), or anomaly detectors to guide its evolution.
+
+      It is a baseline for recursive cognition scaffolding in advanced VoxSigil systems.
+
+      '
+  parameters: {}
+  returns: {}
+  examples: []
+connectivity:
+  input_types: []
+  output_types: []
+  mesh_endpoints:
+  - Categorization Unit (C)
+  - Analysis Engine (A)
+  - Testing & Simulation Module (T)
+  - Reflective Feedback Interface
+  - Pulse Synchronization Control
+  - Traceability Anchor
+  event_topics: []
+  usage_patterns:
+  - "<system_prompt_module id=\"SelfRefinementUnit\">\n  <description>Agent's primary thought cycle for problem-solving.</description>\n\
+    \  <invoke_cognitive_loop>\U0001F9E0C_STRUCTURE</invoke_cognitive_loop>\n  <parameters>\n    <initial_input_ref object_id=\"\
+    current_problem_statement\"/>\n    <recursion_depth_policy_ref=\"⟁FRACTAL_GUARD\" max_depth=\"5\"/>\n    <feedback_source\
+    \ sigil_ref=\"<mirror>\" prompt=\"Evaluate efficiency of last reasoning step.\"/>\n  </parameters>\n</system_prompt_module>\n"

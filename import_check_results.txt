@@ -1,4 +1,0 @@
-Attempting to import working_gui.complete_live_gui...
-Module imported successfully
-Module attributes: ['ARCGridTrainer', 'ARCIntegration', 'BLTEncoder', 'CompleteVoxSigilGUI', 'GridFormer', 'GridFormerTrainer', 'LiveDataStreamer', 'QApplication', 'QColor', 'QLabel', 'QMainWindow', 'QPalette', 'QStatusBar', 'QTabWidget', 'QThread', 'QTimer', 'QVBoxLayout', 'QWidget', 'Qt', 'RAGIntegration', 'UnifiedVantaCore', 'VoxSigilSystemInitializer', '__builtins__', '__cached__', '__doc__', '__file__', '__loader__', '__name__', '__package__', '__spec__', 'logger', 'logging', 'pyqtSignal', 'sys', 'time', 'traceback']
-CompleteVoxSigilGUI class found in module

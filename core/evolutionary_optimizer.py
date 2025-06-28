@@ -9,7 +9,7 @@ from torch.utils.tensorboard import SummaryWriter
 from torch.utils.data import DataLoader, TensorDataset
 from accelerate import Accelerator
 from multiprocessing import set_start_method
-
+from deap import creator, base, tools
 from typing import Dict, List, Optional, Tuple, Any
 import datetime
 
@@ -26,7 +26,7 @@ logger = logging.getLogger(__name__)
 # Set the environment variable for CUDA devices
 os.environ["CUDA_VISIBLE_DEVICES"] = "0,1,2,3,4"
 
-from deap import creator, base, tools
+
 
 # Define the creator for the DEAP evolutionary algorithm
 creator.create("FitnessMulti", base.Fitness, weights=(-1.0, 1.0))
@@ -177,7 +177,7 @@ def build_model_from_nas(self, nas_architecture: Optional[Dict]) -> nn.Module:
         elif layer_type == 'ReLU':
             # Add ReLU activation
             layers.append(nn.ReLU())
-            self.logger.debug(f"Added ReLU activation.")
+            self.logger.debug("Added ReLU activation.")
         
         elif layer_type == 'Dropout':
             # Add Dropout layer
@@ -203,7 +203,7 @@ def build_model_from_nas(self, nas_architecture: Optional[Dict]) -> nn.Module:
         elif layer_type == 'Flatten':
             # Add a Flatten layer if necessary
             layers.append(nn.Flatten())
-            self.logger.debug(f"Added Flatten layer.")
+            self.logger.debug("Added Flatten layer.")
 
         else:
             # Log a warning if the layer type is not supported
@@ -264,7 +264,7 @@ class EvolutionaryOptimizer(BaseCore):
                 # Handle 1D labels scenario, such as treating it as a single-class problem
                 if output_dim != 1:
                     self.logger.error(f"Expected output_dim of 1 for 1D labels, got {output_dim}")
-                    raise ValueError(f"Output dimension mismatch. Expected 1D labels for output_dim=1.")
+                    raise ValueError("Output dimension mismatch. Expected 1D labels for output_dim=1.")
             elif labels.shape[1] != output_dim:
                 self.logger.warning(f"Output dimension mismatch detected. Expected: {output_dim}, Got: {labels.shape[1]}. Attempting to transpose labels.")
                 # Attempt to transpose the labels
@@ -273,7 +273,7 @@ class EvolutionaryOptimizer(BaseCore):
                     self.logger.info("Successfully transposed labels to match the expected output dimension.")
                 else:
                     self.logger.error(f"Unable to resolve dimension mismatch. Expected: {output_dim}, Got after transpose: {labels.shape[1]}")
-                    raise ValueError(f"Output dimension mismatch. Check your data and configuration.")
+                    raise ValueError("Output dimension mismatch. Check your data and configuration.")
 
         if self.use_multiprocessing:
             self.num_processes = torch.cuda.device_count()
@@ -562,6 +562,8 @@ class GenerationHandler:
         # Evaluate the individuals with an invalid fitness
         invalid_ind = [ind for ind in offspring if not ind.fitness.valid]
         fitnesses = self.evolutionary_optimizer.evaluate_population(invalid_ind)
+        for ind, fit in zip(invalid_ind, fitnesses):
+            ind.fitness.values = fit
         self.logger.debug(f"Evaluated {len(invalid_ind)} invalid individuals")
 
         # Update population

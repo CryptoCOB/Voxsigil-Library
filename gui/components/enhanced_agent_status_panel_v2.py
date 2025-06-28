@@ -5,6 +5,7 @@ Comprehensive agent monitoring interface with configurable dev mode options.
 
 import logging
 
+from core.dev_config_manager import get_dev_config
 from PyQt5.QtCore import Qt, QTimer, pyqtSlot
 from PyQt5.QtGui import QColor, QFont
 from PyQt5.QtWidgets import (
@@ -26,7 +27,6 @@ from PyQt5.QtWidgets import (
     QWidget,
 )
 
-from core.dev_config_manager import get_dev_config
 from gui.components.dev_mode_panel import DevModeControlPanel
 
 logger = logging.getLogger("EnhancedAgentStatusPanel")
@@ -158,7 +158,9 @@ class EnhancedAgentStatusPanel(QWidget):
         history_layout = QVBoxLayout(history_tab)
 
         self.history_display = QTextEdit()
-        self.history_display.setPlaceholderText("Agent status history will appear here...")
+        self.history_display.setPlaceholderText(
+            "Agent status history will appear here..."
+        )
         self.history_display.setFont(QFont("Consolas", 9))
         self.history_display.setReadOnly(True)
         history_layout.addWidget(self.history_display)
@@ -265,7 +267,9 @@ class EnhancedAgentStatusPanel(QWidget):
                 # Update last activity
                 import time
 
-                self.agents_data[agent_name]["last_activity"] = time.strftime("%H:%M:%S")
+                self.agents_data[agent_name]["last_activity"] = time.strftime(
+                    "%H:%M:%S"
+                )
                 break
 
     @pyqtSlot()
@@ -277,7 +281,9 @@ class EnhancedAgentStatusPanel(QWidget):
         for agent_name, agent_data in self.agents_data.items():
             # Simulate status changes
             if random.random() < 0.1:  # 10% chance of status change
-                agent_data["status"] = random.choice(["online", "offline", "busy", "idle"])
+                agent_data["status"] = random.choice(
+                    ["online", "offline", "busy", "idle"]
+                )
 
             # Simulate metrics
             if agent_data["status"] == "online":
@@ -309,7 +315,10 @@ class EnhancedAgentStatusPanel(QWidget):
                 filtered_agents[name] = data
             elif filter_text == name:
                 filtered_agents[name] = data
-            elif not self.show_inactive_checkbox.isChecked() and data["status"] == "offline":
+            elif (
+                not self.show_inactive_checkbox.isChecked()
+                and data["status"] == "offline"
+            ):
                 continue
             else:
                 filtered_agents[name] = data
@@ -336,7 +345,9 @@ class EnhancedAgentStatusPanel(QWidget):
             self.agents_table.setItem(row, 2, QTableWidgetItem(voice_status))
 
             # Active tasks
-            self.agents_table.setItem(row, 3, QTableWidgetItem(str(data["active_tasks"])))
+            self.agents_table.setItem(
+                row, 3, QTableWidgetItem(str(data["active_tasks"]))
+            )
 
             # CPU usage
             cpu_item = QTableWidgetItem(f"{data['cpu_usage']:.1f}%")
@@ -352,7 +363,9 @@ class EnhancedAgentStatusPanel(QWidget):
     def _update_summary(self):
         """Update summary statistics."""
         total_agents = len(self.agents_data)
-        online_agents = sum(1 for data in self.agents_data.values() if data["status"] == "online")
+        online_agents = sum(
+            1 for data in self.agents_data.values() if data["status"] == "online"
+        )
         total_tasks = sum(data["active_tasks"] for data in self.agents_data.values())
 
         # Calculate average response time for online agents
@@ -362,7 +375,9 @@ class EnhancedAgentStatusPanel(QWidget):
             if data["status"] == "online"
         ]
         avg_response = (
-            sum(online_response_times) / len(online_response_times) if online_response_times else 0
+            sum(online_response_times) / len(online_response_times)
+            if online_response_times
+            else 0
         )
 
         self.total_agents_label.setText(f"Total: {total_agents}")
@@ -384,7 +399,10 @@ class EnhancedAgentStatusPanel(QWidget):
         import time
 
         file_path, _ = QFileDialog.getSaveFileName(
-            self, "Export Agent Data", "agent_data.json", "JSON Files (*.json);;All Files (*)"
+            self,
+            "Export Agent Data",
+            "agent_data.json",
+            "JSON Files (*.json);;All Files (*)",
         )
 
         if file_path:
@@ -408,7 +426,9 @@ class EnhancedAgentStatusPanel(QWidget):
         interval = self.update_interval_spin.value() * 1000  # Convert to milliseconds
         if self.status_timer.isActive():
             self.status_timer.setInterval(interval)
-        self.status_label.setText(f"Update interval: {self.update_interval_spin.value()}s")
+        self.status_label.setText(
+            f"Update interval: {self.update_interval_spin.value()}s"
+        )
 
     @pyqtSlot(bool)
     def _on_auto_refresh_toggled(self, checked: bool):
@@ -442,3 +462,64 @@ class EnhancedAgentStatusPanel(QWidget):
         """Timer callback to update agent status."""
         if self.auto_refresh_checkbox.isChecked():
             self._refresh_status()
+
+    def update_agents(self, data: dict):
+        """Update agents with streaming data - interface for data_streamer"""
+        agents = data.get("agents", {})
+
+        # Clear existing if empty
+        if not agents:
+            return
+
+        # Update agent data with streaming info
+        for name, status_info in agents.items():
+            if name not in self.agents_data:
+                # Initialize new agent
+                self.agents_data[name] = {
+                    "status": "offline",
+                    "voice_enabled": True,
+                    "active_tasks": 0,
+                    "cpu_usage": 0.0,
+                    "memory_usage": 0.0,
+                    "last_activity": "Never",
+                    "response_time": 0,
+                    "success_rate": 100.0,
+                }
+
+            # Update with new data
+            agent_data = self.agents_data[name]
+            if isinstance(status_info, dict):
+                agent_data["status"] = status_info.get(
+                    "state", status_info.get("status", "unknown")
+                )
+                agent_data["cpu_usage"] = status_info.get(
+                    "cpu_usage", agent_data["cpu_usage"]
+                )
+                agent_data["memory_usage"] = status_info.get(
+                    "memory_usage", agent_data["memory_usage"]
+                )
+                agent_data["active_tasks"] = status_info.get(
+                    "active_tasks", agent_data["active_tasks"]
+                )
+                agent_data["response_time"] = status_info.get(
+                    "response_time", agent_data["response_time"]
+                )
+            else:
+                # Simple status string
+                agent_data["status"] = str(status_info)
+
+            # Update last activity
+            import time
+
+            agent_data["last_activity"] = time.strftime("%H:%M:%S")
+
+        # Refresh the UI
+        self._update_agents_table()
+        self._update_summary()
+
+        # Add to status history
+        agent_count = len(agents)
+        online_count = sum(
+            1 for a in self.agents_data.values() if a["status"] in ["online", "active"]
+        )
+        self.add_status(f"Agent update: {agent_count} agents, {online_count} online")

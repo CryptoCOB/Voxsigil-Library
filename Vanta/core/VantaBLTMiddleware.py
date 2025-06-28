@@ -6,6 +6,18 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple, Union
 
+# HOLO-1.5 Registration
+try:
+    from ..registration.master_registration import vanta_core_module
+except ImportError:
+
+    def vanta_core_module(name: str = "", role: str = ""):
+        def decorator(cls):
+            return cls
+
+        return decorator
+
+
 # --- Setup Logging ---
 logger = logging.getLogger("VantaMiddleware")
 logger.setLevel(logging.INFO)
@@ -260,7 +272,6 @@ class EntropyRouter:
                 exc_info=True,
             )
             return self.config.entropy_router_fallback, None, [0.5]
-
 
 
 class HybridProcessor:  # Placeholder
@@ -1662,6 +1673,7 @@ class MessageContextEnhancementMiddleware:
 
 
 # --- Unified Access Point: VantaMiddlewareSuite ---
+@vanta_core_module(name="VantaMiddlewareSuite", role="blt_middleware_suite")
 class VantaMiddlewareSuite:
     def __init__(
         self,

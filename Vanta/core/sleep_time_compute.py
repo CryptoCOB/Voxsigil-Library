@@ -5,6 +5,15 @@ Sleep Time Computation for Vanta Core
 Provides utilities for computing sleep and backoff times for various operations.
 """
 
+# HOLO-1.5 Registration System
+try:
+    from Voxsigil_Library.core.vanta_registration import vanta_core_module
+except ImportError:
+    # Fallback registration decorator for development
+    def vanta_core_module(cls):
+        return cls
+
+
 import logging
 import random
 import time
@@ -13,6 +22,7 @@ from typing import Any, Dict, Optional
 logger = logging.getLogger(__name__)
 
 
+@vanta_core_module
 class SleepTimeComputer:
     """Computes appropriate sleep times for operations"""
 

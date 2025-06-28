@@ -24,27 +24,31 @@ from .art_logger import get_art_logger  # Use the new logger
 
 # HOLO-1.5 Cognitive Mesh Integration
 try:
-    from ..agents.base import vanta_agent, CognitiveMeshRole, BaseAgent
+    from ..agents.base import BaseAgent, CognitiveMeshRole, vanta_agent
     from ..core.base_agent import VantaAgentCapability
+
     HOLO_AVAILABLE = True
 except ImportError:
     HOLO_AVAILABLE = False
+
     # Fallback decorators and classes
     def vanta_agent(**kwargs):
         def decorator(cls):
             return cls
+
         return decorator
-    
+
     class CognitiveMeshRole:
         PROCESSOR = "processor"
-    
+
     class BaseAgent:
         pass
-    
+
     class VantaAgentCapability:
         PATTERN_RECOGNITION = "pattern_recognition"
         ADAPTIVE_LEARNING = "adaptive_learning"
         CATEGORY_FORMATION = "category_formation"
+
 
 # Use TYPE_CHECKING to avoid circular imports
 if TYPE_CHECKING:
@@ -134,6 +138,44 @@ def _cosine_similarity(vec1: np.ndarray, vec2: np.ndarray) -> float:
     vec2_norm = vec2 / norm2
     similarity = np.dot(vec1_norm, vec2_norm)
     return max(0.0, float(similarity))  # Ensure non-negative, return float
+
+
+# EF5b: Vectorized Cosine Similarity for Multiple Categories (Performance Optimization)
+def _vectorized_cosine_similarity(
+    input_pattern: np.ndarray, category_weights: np.ndarray
+) -> np.ndarray:
+    """
+    Efficiently calculates cosine similarity between input pattern and all categories.
+    Uses vectorized operations for significant performance improvement.
+    """
+    if category_weights.shape[0] == 0:
+        return np.array([])
+
+    # Calculate norms
+    input_norm = np.linalg.norm(input_pattern)
+    if input_norm < 1e-9:
+        return np.zeros(category_weights.shape[0])
+
+    category_norms = np.linalg.norm(category_weights, axis=1)
+
+    # Handle zero norm categories
+    valid_categories = category_norms >= 1e-9
+    similarities = np.zeros(category_weights.shape[0])
+
+    if np.any(valid_categories):
+        # Vectorized computation for valid categories
+        valid_weights = category_weights[valid_categories]
+        valid_norms = category_norms[valid_categories]
+
+        # Normalize input and category weights
+        input_normalized = input_pattern / input_norm
+        weights_normalized = valid_weights / valid_norms[:, np.newaxis]
+
+        # Compute all similarities at once
+        valid_similarities = np.dot(weights_normalized, input_normalized)
+        similarities[valid_categories] = np.maximum(0.0, valid_similarities)
+
+    return similarities
 
 
 # EF6: Category Pruning Criteria (Example: Low Count)
@@ -361,6 +403,7 @@ def _apply_bounds(value: float, min_val: float = 0.0, max_val: float = 1.0) -> f
 
 # --- ARTController Class ---
 
+
 @vanta_agent(
     name="ARTController",
     subsystem="art_pattern_recognition",
@@ -371,10 +414,10 @@ def _apply_bounds(value: float, min_val: float = 0.0, max_val: float = 1.0) -> f
         VantaAgentCapability.CATEGORY_FORMATION,
         "resonance_processing",
         "vigilance_control",
-        "anomaly_detection"
+        "anomaly_detection",
     ],
     cognitive_load=2.8,
-    symbolic_depth=3
+    symbolic_depth=3,
 )
 class ARTController(BaseAgent if HOLO_AVAILABLE else object):
     """
@@ -383,10 +426,10 @@ class ARTController(BaseAgent if HOLO_AVAILABLE else object):
     Implements ART-1 style learning with features like anomaly detection,
     category pruning, adaptive vigilance (placeholder hook), state persistence,
     and detailed statistics.
-    
+
     Enhanced with HOLO-1.5 Recursive Symbolic Cognition Mesh:
     - Cognitive load monitoring for pattern recognition tasks
-    - Symbolic depth tracking for category hierarchies  
+    - Symbolic depth tracking for category hierarchies
     - Async initialization with VantaCore integration
     - Resonance trace generation for cognitive analysis
     """
@@ -496,27 +539,29 @@ class ARTController(BaseAgent if HOLO_AVAILABLE else object):
         else:
             self.anomaly_threshold = float(
                 _apply_bounds(self.config.get("anomaly_threshold", 0.3), 0.0, 1.0)
-            )
-
-        # F1: Dynamic Input Dimension Handling
+            )  # F1: Dynamic Input Dimension Handling
         if isinstance(self.config.get("input_dim"), dict):
             config_input_dim = self.config.get("input_dim")
             if isinstance(config_input_dim, dict) and "value" in config_input_dim:
-                self.input_dim = (
-                    int(config_input_dim.get("value", input_dim))
-                    if input_dim is not None
-                    else None
-                )
+                self.input_dim = int(config_input_dim.get("value", 256))
             else:
                 self.input_dim = input_dim
         else:
             self.input_dim = self.config.get("input_dim", input_dim)
 
+        # Always ensure input_dim is set to a valid value
         if self.input_dim is not None:
             self.input_dim = int(self.input_dim)
+        else:
+            # HOLO-1.5 Integration: Default input_dim for compatibility
+            self.input_dim = 256
+            self.logger.warning(
+                "input_dim not provided, defaulting to 256 for HOLO-1.5 compatibility"
+            )
+
         if self.input_dim is not None and self.input_dim <= 0:
-            self.logger.warning("input_dim must be positive, setting to default 128")
-            self.input_dim = 128  # Set to a reasonable default instead of raising error
+            self.logger.warning("input_dim must be positive, setting to default 256")
+            self.input_dim = 256  # Set to a reasonable default instead of raising error
 
         self.dynamic_input_dim = self.config.get(
             "dynamic_input_dim", self.input_dim is None
@@ -634,7 +679,7 @@ class ARTController(BaseAgent if HOLO_AVAILABLE else object):
         _validate_art_parameters(self)  # EF14 (will use self.logger)
 
         self.logger.info(f"ART controller initialized. Config: {self.get_config()}")
-        
+
         # HOLO-1.5 Cognitive Mesh Integration
         if HOLO_AVAILABLE:
             # Initialize parent BaseAgent
@@ -647,14 +692,14 @@ class ARTController(BaseAgent if HOLO_AVAILABLE else object):
                 self._vanta_initialized = False
         else:
             self._vanta_initialized = False
-            
+
         # Cognitive metrics for HOLO-1.5
         self.cognitive_metrics = {
             "pattern_recognition_load": 0.0,
             "category_formation_depth": 0,
             "resonance_coherence": 1.0,
             "vigilance_adaptation_count": 0,
-            "symbolic_processing_complexity": 1
+            "symbolic_processing_complexity": 1,
         }
 
     async def async_init(self):
@@ -663,34 +708,36 @@ class ARTController(BaseAgent if HOLO_AVAILABLE else object):
         """
         if not HOLO_AVAILABLE:
             return
-            
+
         try:
             # Initialize cognitive mesh connection
             await self.initialize_vanta_core()
-            
+
             # Register with pattern recognition subsystem
             await self.register_cognitive_capabilities()
-            
+
             # Initialize symbolic depth tracking
             self.cognitive_metrics["symbolic_processing_complexity"] = min(
                 len(self.category_counts) // 5 + 1, 5
             )
-            
+
             # Start cognitive load monitoring
             await self.start_cognitive_monitoring()
-            
+
             self._vanta_initialized = True
-            self.logger.info("ARTController HOLO-1.5 cognitive mesh initialization complete")
-            
+            self.logger.info(
+                "ARTController HOLO-1.5 cognitive mesh initialization complete"
+            )
+
         except Exception as e:
             self.logger.warning(f"HOLO-1.5 initialization failed: {e}")
             self._vanta_initialized = False
 
     async def initialize_vanta_core(self):
         """Initialize VantaCore connection for cognitive mesh"""
-        if hasattr(super(), 'initialize_vanta_core'):
+        if hasattr(super(), "initialize_vanta_core"):
             await super().initialize_vanta_core()
-        
+
     async def register_cognitive_capabilities(self):
         """Register ART capabilities with cognitive mesh"""
         capabilities = {
@@ -698,26 +745,26 @@ class ARTController(BaseAgent if HOLO_AVAILABLE else object):
                 "input_dimensions": self.input_dim,
                 "max_categories": self.max_categories,
                 "vigilance_range": (0.0, 1.0),
-                "learning_rate": self.learning_rate
+                "learning_rate": self.learning_rate,
             },
             "adaptive_learning": {
                 "category_pruning": self.enable_pruning,
                 "dynamic_dimension": self.dynamic_input_dim,
-                "anomaly_detection": True
+                "anomaly_detection": True,
             },
             "resonance_processing": {
-                "avg_resonance": getattr(self, 'avg_resonance', 0.0),
+                "avg_resonance": getattr(self, "avg_resonance", 0.0),
                 "recent_resonance_size": 20,
-                "vigilance_threshold": self.vigilance
-            }
+                "vigilance_threshold": self.vigilance,
+            },
         }
-        
-        if hasattr(self, 'register_capabilities'):
+
+        if hasattr(self, "register_capabilities"):
             await self.register_capabilities(capabilities)
-            
+
     async def start_cognitive_monitoring(self):
         """Start monitoring cognitive load and performance"""
-        if hasattr(self, 'start_monitoring'):
+        if hasattr(self, "start_monitoring"):
             await self.start_monitoring()
 
     def _init_empty_weights(self, dim: Optional[int]) -> None:
@@ -746,9 +793,19 @@ class ARTController(BaseAgent if HOLO_AVAILABLE else object):
         self.recent_resonance.clear()  # Clear recent resonance history EF12
 
     def train(
-        self, input_pattern: Union[list[float], np.ndarray], epochs: int = 1
+        self,
+        input_pattern: Union[list[float], np.ndarray],
+        epochs: int = 1,
+        timeout_seconds: float = 30.0,
     ) -> dict[str, Any]:
-        """Train the network on a single input pattern."""
+        """
+        Train the network on a single input pattern with timeout protection.
+
+        Args:
+            input_pattern: Input pattern to train on
+            epochs: Number of training epochs
+            timeout_seconds: Maximum time allowed for training (default 30 seconds)
+        """
         start_time = time.monotonic()
         processed_input = self._prepare_input(input_pattern)  # F1 Helper
         if processed_input is None:
@@ -758,15 +815,31 @@ class ARTController(BaseAgent if HOLO_AVAILABLE else object):
         best_matching_result = None
         category_updates = set()
 
-        for _ in range(epochs):
-            result = self.process(processed_input, training=True)  # Use processed input
-            if result.get("category_id") is not None:
-                category_updates.add(result["category_id"])
-            # Keep track of the best resonance achieved during epochs
-            if best_matching_result is None or result.get(
-                "resonance", 0
-            ) > best_matching_result.get("resonance", 0):
-                best_matching_result = result
+        # Training loop with timeout protection
+        for epoch in range(epochs):
+            # Check for timeout
+            elapsed = time.monotonic() - start_time
+            if elapsed > timeout_seconds:
+                self.logger.warning(
+                    f"ART training timeout after {elapsed:.2f}s (limit: {timeout_seconds}s) at epoch {epoch}/{epochs}"
+                )
+                break
+
+            try:
+                result = self.process(
+                    processed_input, training=True
+                )  # Use processed input
+                if result.get("category_id") is not None:
+                    category_updates.add(result["category_id"])
+                # Keep track of the best resonance achieved during epochs
+                if best_matching_result is None or result.get(
+                    "resonance", 0
+                ) > best_matching_result.get("resonance", 0):
+                    best_matching_result = result
+
+            except Exception as e:
+                self.logger.error(f"ART training error at epoch {epoch}: {e}")
+                break
 
         # --- Update statistics (thread-safe) ---
         duration = time.monotonic() - start_time
@@ -798,14 +871,14 @@ class ARTController(BaseAgent if HOLO_AVAILABLE else object):
         self.logger.info(
             "ART train pattern", extra=final_result
         )  # Use extra for structured logging
-        
+
         # HOLO-1.5 Cognitive Trace Generation
-        if HOLO_AVAILABLE and hasattr(self, 'generate_cognitive_trace'):
+        if HOLO_AVAILABLE and hasattr(self, "generate_cognitive_trace"):
             trace_data = self._generate_training_trace(
                 processed_input, final_result, duration, epochs
             )
             self.generate_cognitive_trace(trace_data)
-            
+
         return final_result
 
     def process(
@@ -985,20 +1058,16 @@ class ARTController(BaseAgent if HOLO_AVAILABLE else object):
             input_vector = _match_input_dim(input_vector, self.input_dim)
         elif self.input_dim is None and not self.dynamic_input_dim:
             self.logger.error("ART input_dim not set and dynamic_input_dim is False.")
-            return None
-
-        # Normalize (EF1)
+            return None  # Normalize (EF1)
         normalized_vector = _normalize_vector(input_vector)
         return normalized_vector
 
     def _calculate_match_scores(
         self, input_pattern: np.ndarray, category_weights: np.ndarray
     ) -> np.ndarray:
-        """Calculate match scores (cosine similarity)."""
-        # EF5 Use cosine similarity helper
-        return np.array(
-            [_cosine_similarity(input_pattern, weight) for weight in category_weights]
-        )
+        """Calculate match scores (cosine similarity) using vectorized operations for performance."""
+        # Use vectorized cosine similarity for much better performance
+        return _vectorized_cosine_similarity(input_pattern, category_weights)
 
     # F7 Lock for state modification methods
     def _create_new_category(self, input_pattern: np.ndarray) -> int:
@@ -1341,7 +1410,7 @@ class ARTController(BaseAgent if HOLO_AVAILABLE else object):
         if len(self.category_counts) != num_cats:
             self.category_counts = [1] * num_cats
         if len(self.category_created) != num_cats:
-            self.category_created = [time.time()] * num_cats        
+            self.category_created = [time.time()] * num_cats
             if len(self.category_updated) != num_cats:
                 self.category_updated = [time.time()] * num_cats
         if len(self.category_resonance) != num_cats:
@@ -1357,65 +1426,67 @@ class ARTController(BaseAgent if HOLO_AVAILABLE else object):
             "cognitive_load": self._calculate_cognitive_load(),
             "symbolic_depth": self._calculate_symbolic_depth(),
             "pattern_metrics": {
-                "input_dimension": len(input_pattern) if hasattr(input_pattern, '__len__') else 0,
+                "input_dimension": len(input_pattern)
+                if hasattr(input_pattern, "__len__")
+                else 0,
                 "resonance_achieved": result.get("resonance", 0.0),
                 "category_id": result.get("category_id"),
                 "is_novel_category": result.get("is_novel_category", False),
                 "vigilance_threshold": self.vigilance,
-                "duration_ms": duration * 1000
+                "duration_ms": duration * 1000,
             },
             "network_state": {
                 "total_categories": self.weights.shape[0],
                 "avg_resonance": self.stats.get("avg_resonance", 0.0),
                 "learning_rate": self.learning_rate,
-                "epochs_processed": epochs
+                "epochs_processed": epochs,
             },
-            "cognitive_metrics": self.cognitive_metrics.copy()
+            "cognitive_metrics": self.cognitive_metrics.copy(),
         }
-    
+
     def _calculate_cognitive_load(self):
         """Calculate current cognitive processing load"""
         base_load = 2.8  # Base cognitive load for ART processing
-        
+
         # Increase load based on number of categories
         category_load = min(len(self.category_counts) * 0.1, 1.0)
-        
+
         # Increase load if vigilance is high (more discriminative)
         vigilance_load = self.vigilance * 0.5
-        
+
         # Recent resonance variance affects load
         if len(self.recent_resonance) > 1:
             resonance_variance = np.var(list(self.recent_resonance))
             variance_load = resonance_variance * 0.3
         else:
             variance_load = 0.0
-            
+
         total_load = base_load + category_load + vigilance_load + variance_load
         self.cognitive_metrics["pattern_recognition_load"] = total_load
-        
+
         return min(total_load, 5.0)  # Cap at maximum cognitive load
-    
+
     def _calculate_symbolic_depth(self):
         """Calculate symbolic processing depth"""
         # Base depth from category hierarchies
         base_depth = 3
-        
+
         # Depth increases with category complexity
         if self.weights.shape[0] > 0:
             category_depth = min(self.weights.shape[0] // 10, 3)
         else:
             category_depth = 0
-            
+
         # Input dimension contributes to symbolic complexity
         if self.input_dim:
             dim_depth = min(self.input_dim // 50, 2)
         else:
             dim_depth = 0
-            
+
         total_depth = base_depth + category_depth + dim_depth
         self.cognitive_metrics["category_formation_depth"] = len(self.category_counts)
         self.cognitive_metrics["symbolic_processing_complexity"] = total_depth
-        
+
         return min(total_depth, 8)  # Cap at maximum symbolic depth
 
     @property

@@ -1,211 +1,85 @@
-sigil: 🧬NEXUS
-alias: KnowledgeIntegrator
-tag: KnowledgeManagement
-tags:
-- information_grafting
-- semantic_linking
-- knowledge_base_interface
-- data_assimilation
-- context_enrichment
-is_cognitive_primitive: false
-principle: 'This sigil represents a dynamic interface for grafting, integrating, and
-  contextualizing
+schema_version: 1.5-holo-alpha
+meta:
+  sigil: 🧬NEXUS
+  alias: KnowledgeIntegrator
+  tag: KnowledgeManagement
+  upgraded_from: legacy
+  upgrade_timestamp: '2025-06-24T17:14:16.314130'
+  source_file: sigils\Nexus.voxsigil
+holo_mesh:
+  is_cognitive_primitive: false
+  mesh_compatibility: holo-1.5-alpha
+  registration_ready: true
+  vanta_core_integration:
+    event_support: true
+    async_capable: true
+    memory_aware: true
+  temporal_pattern: event_triggered_sequence
+cognitive:
+  principle: 'This sigil represents a dynamic interface for grafting, integrating, and contextualizing
 
-  external knowledge into an agent''s cognitive workspace. It is not merely a data
-  lookup,
+    external knowledge into an agent''s cognitive workspace. It is not merely a data lookup,
 
-  but a process of actively weaving new information into existing understanding,
+    but a process of actively weaving new information into existing understanding,
 
-  establishing meaningful semantic links, and updating internal models. It''s the
-  point
+    establishing meaningful semantic links, and updating internal models. It''s the point
 
-  of assimilation where raw data becomes actionable knowledge.
+    of assimilation where raw data becomes actionable knowledge.
 
-  '
-math: 'Knowledge_State_New = Assimilate(Knowledge_State_Old, External_Data_Packet,
-  Context_Relevance_Map)
+    '
+  math: 'Knowledge_State_New = Assimilate(Knowledge_State_Old, External_Data_Packet, Context_Relevance_Map)
 
-  Link_Strength(Internal_Node, Grafted_Node) ∝ Semantic_Similarity(Internal_Node,
-  Grafted_Node) * Trust(External_Source)
+    Link_Strength(Internal_Node, Grafted_Node) ∝ Semantic_Similarity(Internal_Node, Grafted_Node) * Trust(External_Source)
 
-  '
-structure:
-  composite_type: sequential
-  temporal_structure: event_triggered_sequence
-  components:
-  - name: Query Formulator
-    description: Translates an information need into an optimal query for external
-      sources.
-  - name: Source Selector & Retriever
-    description: Identifies and accesses relevant knowledge bases or data streams.
-  - name: Semantic Parser & Validator
-    description: Extracts meaning and assesses the coherence/validity of retrieved
-      information.
-  - name: Linkage Engine
-    description: Identifies and creates connections between new info and existing
-      knowledge.
-  - name: Model Updater
-    description: Modifies internal cognitive models based on integrated knowledge.
-usage:
-  description: Integrates external knowledge into the agent's current understanding,
-    enriching context and enabling informed reasoning.
-  example: "<reasoning_task>\n  <current_hypothesis>X leads to Y</current_hypothesis>\n\
-    \  <invoke_knowledge_graft>\U0001F9ECNEXUS source=\"ScientificJournals\" query=\"\
-    Counterevidence for X leads to Y\"</invoke_knowledge_graft>\n  <assess_impact\
+    '
+  tags:
+  - information_grafting
+  - semantic_linking
+  - knowledge_base_interface
+  - data_assimilation
+  - context_enrichment
+  structure:
+    composite_type: sequential
+    temporal_structure: event_triggered_sequence
+    components:
+    - name: Query Formulator
+      description: Translates an information need into an optimal query for external sources.
+    - name: Source Selector & Retriever
+      description: Identifies and accesses relevant knowledge bases or data streams.
+    - name: Semantic Parser & Validator
+      description: Extracts meaning and assesses the coherence/validity of retrieved information.
+    - name: Linkage Engine
+      description: Identifies and creates connections between new info and existing knowledge.
+    - name: Model Updater
+      description: Modifies internal cognitive models based on integrated knowledge.
+implementation:
+  usage:
+    description: Integrates external knowledge into the agent's current understanding, enriching context and enabling informed
+      reasoning.
+    example: "<reasoning_task>\n  <current_hypothesis>X leads to Y</current_hypothesis>\n  <invoke_knowledge_graft>\U0001F9EC\
+      NEXUS source=\"ScientificJournals\" query=\"Counterevidence for X leads to Y\"</invoke_knowledge_graft>\n  <assess_impact\
+      \ on=\"current_hypothesis\"/>\n</reasoning_task>\n"
+    explanation: 'Use 🧬NEXUS whenever an agent needs to incorporate new information from external sources
+
+      to perform a task, validate a hypothesis, or deepen its understanding. It manages the
+
+      full lifecycle from identifying an information need to integrating the answer.
+
+      '
+  parameters: {}
+  returns: {}
+  examples: []
+connectivity:
+  input_types: []
+  output_types: []
+  mesh_endpoints:
+  - Query Formulator
+  - Source Selector & Retriever
+  - Semantic Parser & Validator
+  - Linkage Engine
+  - Model Updater
+  event_topics: []
+  usage_patterns:
+  - "<reasoning_task>\n  <current_hypothesis>X leads to Y</current_hypothesis>\n  <invoke_knowledge_graft>\U0001F9ECNEXUS\
+    \ source=\"ScientificJournals\" query=\"Counterevidence for X leads to Y\"</invoke_knowledge_graft>\n  <assess_impact\
     \ on=\"current_hypothesis\"/>\n</reasoning_task>\n"
-  explanation: 'Use 🧬NEXUS whenever an agent needs to incorporate new information
-    from external sources
-
-    to perform a task, validate a hypothesis, or deepen its understanding. It manages
-    the
-
-    full lifecycle from identifying an information need to integrating the answer.
-
-    '
-activation_context:
-  trigger_conditions:
-  - Information gap identified
-  - Hypothesis requires external validation
-  - Contextual enrichment needed for a task
-  - Learning new concepts or domains
-  preconditions:
-  - Access to specified external knowledge sources
-  - Sufficient internal representational capacity for new knowledge
-  required_capabilities:
-  - query_generation
-  - information_retrieval
-  - semantic_parsing
-  - knowledge_graph_manipulation
-  - belief_updating
-  supported_modalities:
-  - programmatic_api
-  - textual_query
-  - structured_data_input
-  contraindications:
-  - When operating in a closed knowledge environment by design
-  - Tasks requiring purely internal deduction without new data
-parameterization_schema:
-  parameters:
-  - name: source_identifier
-    type: string
-    description: Name or URI of the external knowledge source (e.g., 'Wikipedia',
-      'ArXiv', 'InternalKB_ProjectX').
-    is_required: true
-  - name: query_string
-    type: string
-    description: The specific query or topic to retrieve information about.
-    is_required: true
-  - name: integration_depth
-    type: enum
-    allowed_values:
-    - surface_link
-    - summary_assimilation
-    - deep_model_update
-    description: Level of integration for the new knowledge.
-    default_value: summary_assimilation
-  - name: trust_level_override
-    type: number
-    description: Manually set trust level for this specific source/query (0.0 to 1.0).
-    value_range:
-      min: 0.0
-      max: 1.0
-prompt_template:
-  role: system
-  content: 'Engage 🧬NEXUS knowledge integration protocol.
-
-    Source: {{source_identifier}}
-
-    Query: {{query_string}}
-
-    Integration Depth: {{integration_depth | default(''summary_assimilation'')}}
-
-    {{#if trust_level_override}}Trust Override: {{trust_level_override}}{{/if}}
-
-    Retrieve, parse, validate, and integrate relevant information. Report on key findings,
-
-    established links to existing knowledge, and any conflicts or necessary updates
-    to internal models.
-
-    '
-  execution_mode: tool_use
-  variables:
-  - name: source_identifier
-    description: Knowledge source ID.
-    required_for_llm: true
-  - name: query_string
-    description: Query for the knowledge source.
-    required_for_llm: true
-  - name: integration_depth
-    description: Desired level of knowledge integration.
-  - name: trust_level_override
-    description: Optional trust override for the source.
-  output_schema: 'object: { retrieved_info_summary: string, integration_report: string,
-    new_links_created: array, model_updates_applied: array, confidence_score: number
-    }'
-SMART_MRAP:
-  Specific: Retrieve targeted information from a specified external source, parse
-    it semantically, validate it, and integrate it into the agent's existing knowledge
-    structures at a defined depth, updating internal models and creating relevant
-    links.
-  Measurable: Successful retrieval of relevant information; Number of meaningful semantic
-    links created; Improvement in task performance post-integration; Consistency of
-    integrated knowledge with existing trusted knowledge.
-  Achievable: Through APIs to knowledge bases, web scraping (with appropriate parsing),
-    semantic analysis modules, and knowledge graph update mechanisms.
-  Relevant: Fundamental for any AI that needs to learn, adapt to new information,
-    stay current, or operate with knowledge beyond its initial training set.
-  Transferable: Applicable to chatbots, research assistants, decision support systems,
-    and any AI requiring dynamic knowledge acquisition.
-metadata:
-  definition_version: 1.4-alpha
-  definition_status: active
-  author_agent_id: VANTA.⟠∆∇𓂀𐑒
-  created_timestamp: '2025-05-11T10:05:00Z'
-  last_updated_timestamp: '2025-06-13T05:40:40.617914Z'
-  authorship_context:
-    motivation: To enable agents to dynamically expand and refine their knowledge,
-      moving beyond static datasets towards continuous learning.
-    theoretical_framework: Knowledge representation and reasoning, Information retrieval,
-      Belief revision, Semantic Web technologies.
-    source_inspiration: The process of research and learning, API integrations, biological
-      cell nutrient uptake.
-  impact_metrics:
-    estimated_cognitive_load: medium
-    estimated_resource_cost: variable
-    utility_rating_author: 9
-  evolutionary_potential:
-    generalizability_score: 0.9
-    fusion_potential_score: 0.7
-    current_limitations_summary: Reliability of external sources; Semantic drift in
-      source meaning over time; Scalability of deep model updates.
-    suggested_next_features:
-    - Automated source credibility assessment
-    - Proactive knowledge seeking based on uncertainty detection
-    - Multi-source triangulation and conflict resolution.
-    research_questions_opened:
-    - How can an agent best balance exploration of new knowledge with exploitation
-      of existing knowledge?
-    - What are optimal strategies for resolving contradictions between internal and
-      external knowledge?
-  schema_version: 1.5-holo-alpha
-  impact_and_usage_metrics_profile:
-    avg_completion_time_ms_observed: UNKNOWN
-    success_rate_observed: UNKNOWN
-    complexity_rating: medium
-relationships:
-- target_sigil: 🜁CHIMERA
-  relationship_type: enables
-  description: Provides one of the key input streams (external knowledge) that CHIMERA
-    can fuse.
-  strength: 0.8
-- target_sigil: 🧐CRITICAL_LENS
-  relationship_type: synergizes_with
-  description: CRITICAL_LENS can be used to evaluate the credibility and relevance
-    of information retrieved via NEXUS before full integration.
-  strength: 0.7
-- target_sigil: 🌍SEMANTIC_ALIGNMENT
-  relationship_type: depends_on
-  description: Successful integration of knowledge from diverse sources requires robust
-    semantic alignment capabilities.
-  strength: 0.85
-name: Nexus

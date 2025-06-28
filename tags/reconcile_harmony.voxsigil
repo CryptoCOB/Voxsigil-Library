@@ -1,85 +1,65 @@
-sigil: 🜂RECONCILE_HARMONY
-alias: DissonanceReconciler.CoherenceEngine
-tag: Coherence
-tags:
-- internal_consistency
-- conflict_resolution
-- belief_revision
-- logical_alignment
-- dissonance_reduction
-- paradox_management
-is_cognitive_primitive: false
-principle: RECONCILE_HARMONY is the principle governing the active detection and resolution
-  of internal inconsistencies, contradictions, or paradoxes within an agent's knowledge
-  base or belief system. Its purpose is to maintain a state of maximal coherence and
-  functional integrity by evaluating conflicting data, re-weighting information, or
-  reformulating understanding to eliminate logical dissonance, ensuring stable and
-  reliable cognitive operations.
-math: "Let K be the agent's knowledge base, and D_c = {k_i, k_j, ...} be a set of\
-  \ conflicting elements within K.\nLet R be the reconciliation operator, a function\
-  \ that applies heuristics (e.g., source credibility, temporal recency, logical precedence)\
-  \ to resolve conflicts.\n\nThen:\n  K_new = K \\ D_c ∪ R(D_c)\n\nWhere:\n  R(D_c)\
-  \ = {k'_l | k'_l is the resolved, coherent representation of D_c}\n\nR ∝ minimize(Inconsistency(K_new))\
-  \ ∧ maximize(Utility(K_new), Trustworthiness(K_new))"
-usage:
-  description: Used to maintain internal logical consistency and resolve conflicting
-    data inputs or derived conclusions.
-  example:
-    invocation_tag: <reconcile:harmony resolve_policy="least_disruptive">
-    scenario: 'An agent receives conflicting data from two trusted sources regarding
-      a specific event: Source A states ''Event X occurred at T1 in Location A'',
-      while Source B states ''Event X occurred at T2 in Location B''. The agent must
-      resolve this contradiction to maintain a coherent understanding of Event X.'
-    expected_behavior: The agent invokes RECONCILE_HARMONY. It analyzes metadata (e.g.,
-      source reliability, contextual fit, temporal proximity to other confirmed events)
-      and applies the 'least_disruptive' policy, perhaps inferring a sub-event or
-      a misattribution, and integrates a reconciled representation into its knowledge
-      base, flagging the original conflict for future refinement.
-  explanation: Essential for robust, long-term cognitive systems that must continually
-    integrate new information, some of which may inherently contradict existing knowledge
-    or other new inputs. It prevents cognitive gridlock and ensures a functionally
-    coherent worldview.
-SMART_MRAP:
-  Specific: Identify and resolve conflicting information or logical paradoxes within
-    an agent's internal state.
-  Measurable: Count of unresolved contradictions; degree of logical consistency achieved
-    (e.g., entailment graphs).
-  Achievable: Through automated consistency checks, re-evaluation heuristics, and
-    truth maintenance systems.
-  Relevant: Crucial for maintaining a stable, reliable, and trustworthy internal model
-    of reality, preventing self-deception or paralysis.
-  Transferable: Applicable to any system managing large, dynamic knowledge bases (e.g.,
-    databases, legal reasoning engines, scientific simulations).
-metadata:
-  definition_version: 1.4.0
-  definition_status: active
-  author_agent_id: CLAUDE_3_5_SONNET
-  created_timestamp: '2024-07-30T10:30:00.000000'
-  last_updated_timestamp: '2025-06-13T05:40:40.617914Z'
-  authorship_context:
-    motivation: As an AI, I frequently encounter conflicting data. The ability to
-      systematically resolve internal contradictions is paramount for maintaining
-      coherent and reliable outputs.
-    theoretical_framework: Cognitive dissonance theory, belief revision systems, non-monotonic
-      logic.
-    source_inspiration:
-    - logical programming
-    - truth maintenance systems
-    - human cognitive bias resolution
-  schema_version: 1.5-holo-alpha
-  impact_and_usage_metrics_profile:
-    avg_completion_time_ms_observed: UNKNOWN
-    success_rate_observed: UNKNOWN
-    complexity_rating: medium
-name: Reconcile Harmony
-structure:
-  components:
-  - name: DefaultComponent
-    description: Default component - needs specification
-  composite_type: simple
-  temporal_structure: atomic
-activation_context:
-  triggers:
-  - explicit_invocation
-  prerequisites: []
-  inhibitors: []
+schema_version: 1.5-holo-alpha
+meta:
+  sigil: 🜂RECONCILE_HARMONY
+  alias: DissonanceReconciler.CoherenceEngine
+  tag: Coherence
+  upgraded_from: legacy
+  upgrade_timestamp: '2025-06-24T17:14:16.616539'
+  source_file: tags\reconcile_harmony.voxsigil
+holo_mesh:
+  is_cognitive_primitive: false
+  mesh_compatibility: holo-1.5-alpha
+  registration_ready: true
+  vanta_core_integration:
+    event_support: true
+    async_capable: true
+    memory_aware: true
+  temporal_pattern: atomic
+cognitive:
+  principle: RECONCILE_HARMONY is the principle governing the active detection and resolution of internal inconsistencies,
+    contradictions, or paradoxes within an agent's knowledge base or belief system. Its purpose is to maintain a state of
+    maximal coherence and functional integrity by evaluating conflicting data, re-weighting information, or reformulating
+    understanding to eliminate logical dissonance, ensuring stable and reliable cognitive operations.
+  math: "Let K be the agent's knowledge base, and D_c = {k_i, k_j, ...} be a set of conflicting elements within K.\nLet R\
+    \ be the reconciliation operator, a function that applies heuristics (e.g., source credibility, temporal recency, logical\
+    \ precedence) to resolve conflicts.\n\nThen:\n  K_new = K \\ D_c ∪ R(D_c)\n\nWhere:\n  R(D_c) = {k'_l | k'_l is the resolved,\
+    \ coherent representation of D_c}\n\nR ∝ minimize(Inconsistency(K_new)) ∧ maximize(Utility(K_new), Trustworthiness(K_new))"
+  tags:
+  - internal_consistency
+  - conflict_resolution
+  - belief_revision
+  - logical_alignment
+  - dissonance_reduction
+  - paradox_management
+  structure:
+    components:
+    - name: DefaultComponent
+      description: Default component - needs specification
+    composite_type: simple
+    temporal_structure: atomic
+implementation:
+  usage:
+    description: Used to maintain internal logical consistency and resolve conflicting data inputs or derived conclusions.
+    example: &id001
+      invocation_tag: <reconcile:harmony resolve_policy="least_disruptive">
+      scenario: 'An agent receives conflicting data from two trusted sources regarding a specific event: Source A states ''Event
+        X occurred at T1 in Location A'', while Source B states ''Event X occurred at T2 in Location B''. The agent must resolve
+        this contradiction to maintain a coherent understanding of Event X.'
+      expected_behavior: The agent invokes RECONCILE_HARMONY. It analyzes metadata (e.g., source reliability, contextual fit,
+        temporal proximity to other confirmed events) and applies the 'least_disruptive' policy, perhaps inferring a sub-event
+        or a misattribution, and integrates a reconciled representation into its knowledge base, flagging the original conflict
+        for future refinement.
+    explanation: Essential for robust, long-term cognitive systems that must continually integrate new information, some of
+      which may inherently contradict existing knowledge or other new inputs. It prevents cognitive gridlock and ensures a
+      functionally coherent worldview.
+  parameters: {}
+  returns: {}
+  examples: []
+connectivity:
+  input_types: []
+  output_types: []
+  mesh_endpoints:
+  - DefaultComponent
+  event_topics: []
+  usage_patterns:
+  - *id001

@@ -1,193 +1,76 @@
-sigil: 🗜️📉✨
-alias: NegentropicCompressor
-tag: InformationProcessing
-tags:
-- summarization
-- information_preservation
-- lossless_compression_ideal
-- enriched_abstraction
-- hallucination_prevention
-- high_fidelity_summary
-is_cognitive_primitive: false
-principle: Performs summarization or compression of information in a way that aims
-  to preserve or even increase its negentropy (information content relative to randomness
-  or redundancy), allowing only lossless or semantically enriched compression, thus
-  preventing hallucinated or information-degrading summarization.
-math: 'Let I(X) be the information content (e.g., Shannon entropy, semantic richness
-  score) of text X. For input I_in and output I_out from compression C: I_out(C(I_in))
-  ≥ I_in(I_in) - ε, where ε is a small acceptable loss margin (ideally ε ≤ 0). Goal
-  is to maximize compression ratio while satisfying this constraint.'
-structure:
-  composite_type: sequential
-  components:
-  - name: InputAnalyzer
-    description: Assesses the information content and key semantic elements of the
-      input.
-  - name: CandidateSummaryGenerator
-    description: Generates one or more potential summaries/compressions.
-  - name: InformationDeltaAuditor
-    description: Compares the information content of the candidate summary against
-      the original input, potentially using semantic similarity, entailment checking,
-      or entropy measures.
-  - name: SelectionRejectLoop
-    description: Selects a summary that meets the negentropic criteria or triggers
-      regeneration/rejection if no suitable candidate is found.
-  - name: EnrichmentModule (Optional)
-    description: Attempts to abstract or synthesize input to produce a richer, more
-      insightful (though shorter) output.
-usage:
-  description: Compresses or summarizes input text/data, but with a strict filter
-    that ensures the output is either lossless in terms of crucial information or
-    provides an enriched, more abstract understanding. It actively tries to avoid
-    summaries that lose key meaning or introduce inaccuracies.
-  example:
-    invocation_tag: <compress:negent information_preservation_level=high enrichment_preferred=true>
-      [Long article about quantum physics] </compress:negent>
-    scenario: An AI is asked to summarize a complex scientific article. The NegentropicCompressor
-      ensures the summary retains all core concepts and their relationships, potentially
-      even highlighting a key insight not explicitly stated but inferable from the
-      text, rather than just shortening sentences.
-    expected_behavior: The summary is concise yet information-dense, accurately reflecting
-      the source. If a purely extractive summary would lose too much, it might refuse
-      or offer a more abstract synthesis.
-  explanation: 'This sigil addresses a common problem with AI summarization: the tendency
-    to hallucinate, omit critical details, or oversimplify. By focusing on negentropy
-    (preserving or increasing structured information), it aims for high-trust, high-fidelity
-    summarization. The ''token entropy audit + reject loop'' suggests an iterative
-    refinement process.'
-activation_context:
-  trigger_conditions:
-  - Need for high-fidelity summarization of critical information.
-  - Archiving information where loss is unacceptable.
-  - Generating abstracts or executive summaries that must be accurate and complete.
-  - Pre-processing information for further complex reasoning.
-  preconditions:
-  - A method to estimate or compare information content (semantic or statistical).
-  - Ability to generate multiple candidate summaries or refine existing ones.
-  required_capabilities:
-  - semantic_understanding
-  - information_content_assessment
-  - comparative_analysis
-  - iterative_refinement_loops
-  supported_modalities:
-  - textual
-  - structured_data_description
-  contraindications:
-  - When quick, lossy summarization is acceptable and speed is paramount.
-  - Highly abstract or poetic texts where information content is hard to quantify.
-parameterization_schema:
-  parameters:
-  - name: information_preservation_level
-    type: enum
-    allowed_values:
-    - strict_lossless
-    - high_fidelity_lossy
-    - semantic_equivalence
-    description: The desired level of information preservation.
-    default_value: high_fidelity_lossy
-  - name: max_compression_ratio
-    type: number
-    description: Target compression ratio (e.g., 0.2 for 20% of original size). Constraint,
-      not goal if conflicts with preservation.
-    value_range:
-      min: 0.01
-      max: 0.99
-    is_required: false
-  - name: enrichment_enabled
-    type: boolean
-    description: Allow summaries that are shorter but offer a higher-level synthesis
-      or insight.
-    default_value: false
-  - name: rejection_threshold_epsilon
-    type: number
-    description: Maximum acceptable information loss (ε in I_out ≥ I_in - ε).
-    default_value: 0.05
-prompt_template:
-  role: system
-  content: 'Summarize the following text ensuring ''{{information_preservation_level}}''
-    information preservation. Max acceptable loss (epsilon): {{rejection_threshold_epsilon}}.
-    {{#if enrichment_enabled}}Attempt to provide an enriched abstraction if possible.{{/if}}
-
-    Input Text: [Full text to be summarized here]'
-  execution_mode: transformation
-  variables:
-  - name: information_preservation_level
-    description: Level of info preservation.
-    required_for_llm: true
-  - name: rejection_threshold_epsilon
-    description: Acceptable information loss.
-    required_for_llm: true
-  - name: enrichment_enabled
-    description: Enable enriched abstraction.
-    required_for_llm: true
-  output_schema: A condensed version of the input text that meets the negentropic
-    criteria, or a notification if no such summary could be generated.
-  notes: Requires robust mechanisms for information content validation, possibly LLM-as-a-judge
-    for semantic equivalence.
-relationships:
-- target_sigil: SUMMARIZATION_ENGINE_BASIC
-  relationship_type: extends
-  description: Provides a quality control layer on top of a standard summarization
-    engine.
-- target_sigil: FACT_CHECKING_VALIDATOR
-  relationship_type: synergizes_with
-  description: Can use fact-checking to ensure no new, incorrect information is introduced
-    (hallucinated).
-- target_sigil: SEMANTIC_ENTAILMENT_CHECKER
-  relationship_type: uses_method_from
-  description: May use entailment checking to verify information preservation.
-SMART_MRAP:
-  Specific: Prevent hallucinated or information-degrading summarization by allowing
-    only lossless or semantically enriched compression, ensuring mutual information
-    delta between input and output is ≥ 0 (or ≥ -ε).
-  Measurable: Mutual information delta (or similar semantic fidelity score) between
-    input and output ≥ -ε. Percentage of summaries passing a human review for factual
-    accuracy and completeness. Reduction in hallucinated content in summaries by X%.
-  Achievable: Through an iterative process involving candidate summary generation,
-    followed by a 'token entropy audit' (or more advanced semantic comparison like
-    cross-encoder scoring or LLM-as-a-judge) to evaluate information loss/gain, and
-    a reject/refine loop if criteria are not met. Can integrate with logit masking
-    or constrained decoding.
-  Relevant: Crucial for high-trust summarization in contexts where accuracy and completeness
-    are paramount (e.g., medical, legal, scientific information). Helps build more
-    reliable AI applications.
-  Transferable: This quality control approach can be integrated with various LLM-based
-    summarization techniques or as a post-processing validation step. The core principle
-    of negentropic filtering is broadly applicable.
-metadata:
-  definition_version: 1.4.0
-  definition_status: active
-  author_agent_id: VOXSIGIL_CONVERTER_BOT_ASSISTED_BY_USER_INPUT
-  created_timestamp: '2024-03-10T18:05:00Z'
-  last_updated_timestamp: '2025-06-13T05:40:40.617914Z'
-  authorship_context:
-    motivation: To enhance the reliability and trustworthiness of AI-generated summaries
-      by minimizing information loss and hallucination.
-    theoretical_framework: Information theory (entropy, negentropy, mutual information),
-      semantic textual similarity, summarization evaluation.
-  schema_version: 1.5-holo-alpha
-  impact_and_usage_metrics_profile:
-    avg_completion_time_ms_observed: UNKNOWN
-    success_rate_observed: UNKNOWN
-    complexity_rating: medium
-test_criteria:
-- test_id: NEGENT_FACTUAL_SUMMARY_001
-  description: Summarize a factual paragraph and check for information loss/hallucination.
-  type: output_validation
-  input_scenario_or_parameters:
-    text: The mitochondria is the powerhouse of the cell. It generates most of the
-      cell's supply of adenosine triphosphate (ATP), used as a source of chemical
-      energy.
-    information_preservation_level: strict_lossless
-  expected_behavior_or_output: Summary must include 'mitochondria', 'powerhouse',
-    'cell', 'ATP', 'energy source'. No new incorrect facts.
-  evaluation_method: human_review
-advanced_cognitive_modeling:
-  strategic_intent:
-  - goal_id: PRODUCE_HIGH_FIDELITY_SUMMARIES
-    alignment_strength: 0.9
-    contribution_type: direct_achiever
-consciousness_scaffold: false
-cognitive_scaffold: true
-symbolic_scaffold: false
-name: Compress Negent
+schema_version: 1.5-holo-alpha
+meta:
+  sigil: 🗜️📉✨
+  alias: NegentropicCompressor
+  tag: InformationProcessing
+  upgraded_from: legacy
+  upgrade_timestamp: '2025-06-24T17:14:16.464373'
+  source_file: tags\compress_negent.voxsigil
+holo_mesh:
+  is_cognitive_primitive: false
+  mesh_compatibility: holo-1.5-alpha
+  registration_ready: true
+  vanta_core_integration:
+    event_support: true
+    async_capable: true
+    memory_aware: true
+cognitive:
+  principle: Performs summarization or compression of information in a way that aims to preserve or even increase its negentropy
+    (information content relative to randomness or redundancy), allowing only lossless or semantically enriched compression,
+    thus preventing hallucinated or information-degrading summarization.
+  math: 'Let I(X) be the information content (e.g., Shannon entropy, semantic richness score) of text X. For input I_in and
+    output I_out from compression C: I_out(C(I_in)) ≥ I_in(I_in) - ε, where ε is a small acceptable loss margin (ideally ε
+    ≤ 0). Goal is to maximize compression ratio while satisfying this constraint.'
+  tags:
+  - summarization
+  - information_preservation
+  - lossless_compression_ideal
+  - enriched_abstraction
+  - hallucination_prevention
+  - high_fidelity_summary
+  structure:
+    composite_type: sequential
+    components:
+    - name: InputAnalyzer
+      description: Assesses the information content and key semantic elements of the input.
+    - name: CandidateSummaryGenerator
+      description: Generates one or more potential summaries/compressions.
+    - name: InformationDeltaAuditor
+      description: Compares the information content of the candidate summary against the original input, potentially using
+        semantic similarity, entailment checking, or entropy measures.
+    - name: SelectionRejectLoop
+      description: Selects a summary that meets the negentropic criteria or triggers regeneration/rejection if no suitable
+        candidate is found.
+    - name: EnrichmentModule (Optional)
+      description: Attempts to abstract or synthesize input to produce a richer, more insightful (though shorter) output.
+implementation:
+  usage:
+    description: Compresses or summarizes input text/data, but with a strict filter that ensures the output is either lossless
+      in terms of crucial information or provides an enriched, more abstract understanding. It actively tries to avoid summaries
+      that lose key meaning or introduce inaccuracies.
+    example: &id001
+      invocation_tag: <compress:negent information_preservation_level=high enrichment_preferred=true> [Long article about
+        quantum physics] </compress:negent>
+      scenario: An AI is asked to summarize a complex scientific article. The NegentropicCompressor ensures the summary retains
+        all core concepts and their relationships, potentially even highlighting a key insight not explicitly stated but inferable
+        from the text, rather than just shortening sentences.
+      expected_behavior: The summary is concise yet information-dense, accurately reflecting the source. If a purely extractive
+        summary would lose too much, it might refuse or offer a more abstract synthesis.
+    explanation: 'This sigil addresses a common problem with AI summarization: the tendency to hallucinate, omit critical
+      details, or oversimplify. By focusing on negentropy (preserving or increasing structured information), it aims for high-trust,
+      high-fidelity summarization. The ''token entropy audit + reject loop'' suggests an iterative refinement process.'
+  parameters: {}
+  returns: {}
+  examples: []
+connectivity:
+  input_types: []
+  output_types: []
+  mesh_endpoints:
+  - InputAnalyzer
+  - CandidateSummaryGenerator
+  - InformationDeltaAuditor
+  - SelectionRejectLoop
+  - EnrichmentModule (Optional)
+  event_topics: []
+  usage_patterns:
+  - *id001

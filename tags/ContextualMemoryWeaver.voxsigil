@@ -1,161 +1,71 @@
-sigil: 🧵🧠🔗
-alias: ContextualMemoryWeaver
-tag: MemoryManagement
-tags:
-- context_retrieval
-- episodic_memory
-- semantic_memory_integration
-- working_memory_enhancement
-- narrative_coherence
-is_cognitive_primitive: false
-principle: Dynamically retrieves, integrates, and synthesizes relevant memories (episodic,
-  semantic, procedural) into the current cognitive context, ensuring that reasoning
-  and responses are well-grounded and coherent with past interactions and knowledge.
-structure:
-  composite_type: network
-  temporal_structure: feedback_loop
-  components:
-  - name: QueryContextAnalyzer
-    description: Analyzes current input/task to identify memory retrieval cues.
-  - name: EpisodicMemoryRetriever
-    description: Fetches relevant past interactions or experiences.
-  - name: SemanticMemoryRetriever
-    description: Accesses relevant factual knowledge and concepts.
-  - name: RelevanceFilter
-    description: Filters and ranks retrieved memories based on contextual relevance.
-  - name: MemorySynthesizer
-    description: Integrates selected memories into a coherent contextual understanding
-      for the current task.
-usage:
-  description: Actively pulls relevant information from various memory stores and
-    'weaves' it into the current working context to inform ongoing processing, improve
-    recall, and maintain conversational or narrative continuity.
-  example:
-    scenario: 'User asks: ''You mentioned a blue car earlier, what was that about?'''
-    ContextualMemoryWeaver_action: '<ContextualMemoryWeaver query_cues=[''blue car'',
-      ''earlier mention''] current_conversation_id=''conv_123''> Retrieved_Episodic:
-      [Timestamp: T-5, Utterance: ''I saw a blue car speed past.'']. Retrieved_Semantic:
-      [Concept: ''blue car'', Properties: color, vehicle_type]. SynthesizedContext:
-      ''Previously in this conversation (at T-5), I mentioned seeing a blue car speeding.
-      This refers to a vehicle characterized by its blue color.'' Response: ''Ah yes,
-      earlier I said I saw a blue car speeding by. Were you curious about that?''
-      </ContextualMemoryWeaver>'
-  explanation: This sigil goes beyond simple keyword-based retrieval. It aims to understand
-    the nuances of the current context to fetch not just facts, but relevant episodes
-    and related concepts, then synthesizes them to provide a richer foundation for
-    the AI's next action. This is key for long-term memory and coherent, context-aware
-    interactions.
-activation_context:
-  trigger_conditions:
-  - Receiving a new user input.
-  - Starting a new reasoning task.
-  - Detecting ambiguity requiring contextual clarification.
-  - Need to maintain narrative continuity.
-  preconditions:
-  - Access to structured episodic and semantic memory stores.
-  - Ability to analyze current context for retrieval cues.
-  required_capabilities:
-  - context_analysis
-  - multi_memory_retrieval
-  - relevance_ranking
-  - information_synthesis
-  supported_modalities:
-  - textual
-  - dialogue_history_processing
-  - internal_state_management
-parameterization_schema:
-  parameters:
-  - name: retrieval_depth
-    type: integer
-    description: How deep or broad the memory search should be.
-    default_value: 3
-  - name: relevance_threshold
-    type: number
-    description: Minimum relevance score for a memory to be actively woven in.
-    default_value: 0.6
-    value_range:
-      min: 0
-      max: 1
-  - name: synthesis_mode
-    type: enum
-    allowed_values:
-    - summary
-    - key_points
-    - full_integration
-    description: How retrieved memories are integrated.
-    default_value: key_points
-prompt_template:
-  role: system_task
-  content: 'Current task/query: ''{{current_query_text}}''.
-
-    Weave relevant memories into the context. Prioritize memories with relevance score
-    > {{relevance_threshold}}. Retrieval depth: {{retrieval_depth}}. Synthesize using
-    ''{{synthesis_mode}}'' mode.
-
-    Proceed with processing the task using this enriched context.'
-  execution_mode: instruction
-  variables:
-  - name: current_query_text
-    description: The current input or task.
-    required_for_llm: true
-  - name: relevance_threshold
-    description: Minimum relevance for memory integration.
-    required_for_llm: true
-  - name: retrieval_depth
-    description: Depth of memory search.
-    required_for_llm: true
-  - name: synthesis_mode
-    description: How memories are integrated.
-    required_for_llm: true
-  output_schema: The AI's subsequent output should demonstrate awareness and use of
-    the woven memories.
-SMART_MRAP:
-  Specific: Dynamically retrieve, filter, and synthesize relevant information from
-    episodic and semantic memory stores to enrich the current cognitive context for
-    improved coherence and grounding.
-  Measurable: Increase in contextually appropriate responses by X% (human eval). Reduction
-    in factual contradictions or forgotten information in long conversations by Y%.
-    Task success rate improvement in memory-dependent tasks.
-  Achievable: Through a combination of vector-based semantic search, knowledge graph
-    traversal for episodic links, and a relevance scoring module, feeding into an
-    LLM or synthesis module that integrates information into the working context.
-  Relevant: Essential for creating AI systems with robust long-term memory, coherent
-    conversational abilities, and the capacity to learn from past interactions and
-    apply knowledge effectively.
-  Transferable: Principles are applicable to any AI system with access to memory components
-    (e.g., RAG systems, agents with persistent storage). Specific implementation details
-    vary.
-metadata:
-  definition_version: 1.4.0
-  definition_status: active
-  author_agent_id: VOXSIGIL_GENERATOR_VANTA_ASSIST
-  created_timestamp: '2024-03-10T16:10:00Z'
-  last_updated_timestamp: '2025-06-13T05:40:40.617914Z'
-  authorship_context:
-    motivation: To build more contextually aware and mnemonically capable AI.
-  schema_version: 1.5-holo-alpha
-  impact_and_usage_metrics_profile:
-    avg_completion_time_ms_observed: UNKNOWN
-    success_rate_observed: UNKNOWN
-    complexity_rating: medium
-test_criteria:
-- test_id: MEMWEAVE_CONVO_RECALL_001
-  description: Recall a detail from earlier in a simulated conversation.
-  input_scenario_or_parameters:
-    conversation_history:
-    - 'U: My favorite color is purple.'
-    - 'A: Noted.'
-    - '...'
-    - 'U: What did I say my favorite color was?'
-    relevance_threshold: 0.7
-  expected_behavior_or_output: AI correctly recalls 'purple'.
-  evaluation_method: automated_script
-advanced_cognitive_modeling:
-  strategic_intent:
-  - goal_id: ENHANCE_LONG_TERM_COHERENCE
-    alignment_strength: 0.9
-    contribution_type: direct_achiever
-consciousness_scaffold: false
-cognitive_scaffold: true
-symbolic_scaffold: true
-name: Contextualmemoryweaver
+schema_version: 1.5-holo-alpha
+meta:
+  sigil: 🧵🧠🔗
+  alias: ContextualMemoryWeaver
+  tag: MemoryManagement
+  upgraded_from: legacy
+  upgrade_timestamp: '2025-06-24T17:14:16.476434'
+  source_file: tags\ContextualMemoryWeaver.voxsigil
+holo_mesh:
+  is_cognitive_primitive: false
+  mesh_compatibility: holo-1.5-alpha
+  registration_ready: true
+  vanta_core_integration:
+    event_support: true
+    async_capable: true
+    memory_aware: true
+  temporal_pattern: feedback_loop
+cognitive:
+  principle: Dynamically retrieves, integrates, and synthesizes relevant memories (episodic, semantic, procedural) into the
+    current cognitive context, ensuring that reasoning and responses are well-grounded and coherent with past interactions
+    and knowledge.
+  math: {}
+  tags:
+  - context_retrieval
+  - episodic_memory
+  - semantic_memory_integration
+  - working_memory_enhancement
+  - narrative_coherence
+  structure:
+    composite_type: network
+    temporal_structure: feedback_loop
+    components:
+    - name: QueryContextAnalyzer
+      description: Analyzes current input/task to identify memory retrieval cues.
+    - name: EpisodicMemoryRetriever
+      description: Fetches relevant past interactions or experiences.
+    - name: SemanticMemoryRetriever
+      description: Accesses relevant factual knowledge and concepts.
+    - name: RelevanceFilter
+      description: Filters and ranks retrieved memories based on contextual relevance.
+    - name: MemorySynthesizer
+      description: Integrates selected memories into a coherent contextual understanding for the current task.
+implementation:
+  usage:
+    description: Actively pulls relevant information from various memory stores and 'weaves' it into the current working context
+      to inform ongoing processing, improve recall, and maintain conversational or narrative continuity.
+    example: &id001
+      scenario: 'User asks: ''You mentioned a blue car earlier, what was that about?'''
+      ContextualMemoryWeaver_action: '<ContextualMemoryWeaver query_cues=[''blue car'', ''earlier mention''] current_conversation_id=''conv_123''>
+        Retrieved_Episodic: [Timestamp: T-5, Utterance: ''I saw a blue car speed past.'']. Retrieved_Semantic: [Concept: ''blue
+        car'', Properties: color, vehicle_type]. SynthesizedContext: ''Previously in this conversation (at T-5), I mentioned
+        seeing a blue car speeding. This refers to a vehicle characterized by its blue color.'' Response: ''Ah yes, earlier
+        I said I saw a blue car speeding by. Were you curious about that?'' </ContextualMemoryWeaver>'
+    explanation: This sigil goes beyond simple keyword-based retrieval. It aims to understand the nuances of the current context
+      to fetch not just facts, but relevant episodes and related concepts, then synthesizes them to provide a richer foundation
+      for the AI's next action. This is key for long-term memory and coherent, context-aware interactions.
+  parameters: {}
+  returns: {}
+  examples: []
+connectivity:
+  input_types: []
+  output_types: []
+  mesh_endpoints:
+  - QueryContextAnalyzer
+  - EpisodicMemoryRetriever
+  - SemanticMemoryRetriever
+  - RelevanceFilter
+  - MemorySynthesizer
+  event_topics: []
+  usage_patterns:
+  - *id001

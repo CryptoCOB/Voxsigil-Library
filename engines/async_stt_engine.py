@@ -20,18 +20,16 @@ import logging
 import os
 import sys
 import time
-from dataclasses import field  # Keep for Pydantic if needed, else remove.
 from pathlib import Path
 from typing import Any, AsyncIterator, Dict, List, Optional, Union
 
 import vosk
-
 from Vanta.core.UnifiedAsyncBus import (
     MessageType,  # Import MessageType for async bus integration
 )
 
 # HOLO-1.5 Mesh Infrastructure
-from .base import BaseEngine, vanta_engine, CognitiveMeshRole
+from .base import BaseEngine, CognitiveMeshRole, vanta_engine
 
 # Configure logger first
 logger = logging.getLogger("Vanta.AsyncSTT")
@@ -112,7 +110,10 @@ except ImportError:
         pass
 
     def Field(*args, **kwargs):  # Mock Field
-        return field(*args, **kwargs)
+        # Just return the default value if provided
+        if args:
+            return args[0]
+        return kwargs.get("default", None)
 
     def validator(*args, **kwargs):  # Mock validator
         def decorator(func):
@@ -156,22 +157,20 @@ DEFAULT_MODEL_DOWNLOAD_BASE_URL = "https://alphacephei.com/vosk/models"  # Examp
 
 
 class STTConfig(BaseModel):
-    sample_rate: int = Field(16000, gt=0, description="Audio sample rate in Hz.")
-    channels: int = Field(1, ge=1, le=2, description="Number of audio channels.")
+    sample_rate: int = Field(16000, description="Audio sample rate in Hz.")
+    channels: int = Field(1, description="Number of audio channels.")
     default_duration: int = Field(
-        7, gt=0, description="Default recording duration in seconds if not specified."
+        7, description="Default recording duration in seconds if not specified."
     )
     silence_threshold_vad: float = Field(
         0.01,
-        ge=0.0,
-        lt=1.0,
         description="Energy threshold for VAD (0.0-1.0). Lower is more sensitive.",
     )
     vad_buffer_before_ms: int = Field(
-        200, ge=0, description="Milliseconds of audio to keep before VAD triggers."
+        200, description="Milliseconds of audio to keep before VAD triggers."
     )
     vad_buffer_after_ms: int = Field(
-        500, ge=0, description="Milliseconds of audio to keep after VAD stops."
+        500, description="Milliseconds of audio to keep after VAD stops."
     )
     language: str = Field(
         "en-us",
@@ -218,7 +217,13 @@ class STTConfig(BaseModel):
     subsystem="speech_processing",
     mesh_role=CognitiveMeshRole.PROCESSOR,
     description="Async Speech-to-Text engine using Vosk for offline speech recognition with VAD",
-    capabilities=["speech_to_text", "voice_activity_detection", "async_transcription", "offline_recognition", "partial_results"]
+    capabilities=[
+        "speech_to_text",
+        "voice_activity_detection",
+        "async_transcription",
+        "offline_recognition",
+        "partial_results",
+    ],
 )
 class AsyncSTTEngine(BaseEngine):
     """Async Speech-to-Text Engine using Vosk with enhancements"""
@@ -228,7 +233,7 @@ class AsyncSTTEngine(BaseEngine):
     def __init__(self, vanta_core: Any, config: STTConfig):
         # Initialize BaseEngine with HOLO-1.5 mesh capabilities
         super().__init__(vanta_core, config)
-        
+
         self.vanta_core = vanta_core
         if not isinstance(config, STTConfig):
             logger.warning(
@@ -407,7 +412,7 @@ class AsyncSTTEngine(BaseEngine):
                 logger.info(
                     f"Attempting to download model for language '{self.config.language}' from {model_url}..."
                 )
-                self.vanta_core.publish_event(
+                self._publish_event_compat(
                     "stt.model.download.start",
                     {"language": self.config.language, "url": model_url},
                     source="AsyncSTTEngine",
@@ -1075,6 +1080,20 @@ class AsyncSTTEngine(BaseEngine):
             "model_loaded": self.model is not None,
             "language": getattr(self.config, "language", None),
         }
+
+    def _publish_event_compat(self, event_name: str, payload: dict, source: str = None):
+        """Compatibility method for event publishing that works with UnifiedVantaCore."""
+        try:
+            if hasattr(self.vanta_core, "emit_event"):
+                self.vanta_core.emit_event(event_name, payload)
+            elif hasattr(self.vanta_core, "event_bus") and hasattr(
+                self.vanta_core.event_bus, "emit"
+            ):
+                self.vanta_core.event_bus.emit(event_name, payload)
+            else:
+                logger.debug(f"Event publishing not available: {event_name}")
+        except Exception as e:
+            logger.debug(f"Failed to publish event {event_name}: {e}")
 
 
 # --- VantaCore mock for example usage if not imported ---

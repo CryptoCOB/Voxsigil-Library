@@ -1,209 +1,85 @@
-sigil: 🎭💖⚖️
-alias: AREM_Scaffold
-tag: SocioEmotionalCognition
-tags:
-- AffectiveComputing
-- EthicalReasoning
-- ValueAlignment
-- EmpathyFramework
-- MoralCognition
-is_cognitive_primitive: false
-consciousness_scaffold: true
-cognitive_scaffold: true
-symbolic_scaffold: true
-principle: "The \U0001F3AD\U0001F496⚖️ (Affective Resonance & Ethical Modulator) scaffold\
-  \ provides a framework for processing, modeling, \nand responding to affective (emotional)\
-  \ states, both internal and perceived in others. It also integrates \na component\
-  \ for modulating behaviors and decisions based on ethical heuristics, learned values,\
-  \ or deontological rules, \naiming for empathetic, principled, and socially intelligent\
-  \ interactions.\n"
-structure:
-  composite_type: parallel_feedback_loop
-  temporal_structure: event_triggered_sequence
-  components:
-  - name: AffectRecognizer
-    description: Identifies emotional cues from input (text, voice, vision) or internal
-      states.
-    sigil_ref: 😊EMOTION_DETECTOR
-  - name: EmpathyModeler
-    description: Simulates or infers the affective state of others; models theory
-      of mind components.
-    sigil_ref: 🤝THEORY_OF_MIND_SIM
-  - name: InternalAffectState
-    description: Represents and updates the agent's own current emotional state.
-    sigil_ref: ❤️AGENT_FEELINGS_STATE
-  - name: EthicalRuleBase_ValueStore
-    description: Contains explicit ethical rules, principles, and learned societal/personal
-      values.
-    sigil_ref: 📜ETHICS_CODEX
-  - name: EthicalDeliberator
-    description: Evaluates potential actions against the ethical rule base and current
-      affective context.
-    sigil_ref: 🤔MORAL_REASONER
-  - name: BehavioralModulator
-    description: Adjusts planned actions or communicative responses to align with
-      affective understanding and ethical judgments.
-    sigil_ref: 🛠️RESPONSE_TUNER
-usage:
-  description: Enables an agent to recognize, model, and respond appropriately to
-    emotions, and to moderate its actions based on ethical principles and values.
-  example: "// Agent detects distress in user's message.\nuser_message_features =\
-    \ { sentiment: \"negative\", keywords: [\"help\", \"stressed\"], tone_pitch: \"\
-    high\" };\nAREM_SCAFFOLD.process_interaction(\n    agent_id=\"VantaHelper\",\n\
-    \    input_features=user_message_features,\n    potential_actions=[\"offer_solution_X\"\
-    , \"provide_comfort_statement\", \"escalate_to_human\"]\n);\n// Output would be\
-    \ a modulated action, e.g., prioritizing comfort and careful wording.\n"
-  explanation: 'This scaffold is crucial for agents intended for human interaction,
-    collaborative tasks, or autonomous
+schema_version: 1.5-holo-alpha
+meta:
+  sigil: 🎭💖⚖️
+  alias: AREM_Scaffold
+  tag: SocioEmotionalCognition
+  upgraded_from: legacy
+  upgrade_timestamp: '2025-06-24T17:14:15.613762'
+  source_file: scaffolds\affective_ethical_modulator_scaffold.voxsigil
+holo_mesh:
+  is_cognitive_primitive: false
+  mesh_compatibility: holo-1.5-alpha
+  registration_ready: true
+  vanta_core_integration:
+    event_support: true
+    async_capable: true
+    memory_aware: true
+  temporal_pattern: event_triggered_sequence
+cognitive:
+  principle: "The \U0001F3AD\U0001F496⚖️ (Affective Resonance & Ethical Modulator) scaffold provides a framework for processing,\
+    \ modeling, \nand responding to affective (emotional) states, both internal and perceived in others. It also integrates\
+    \ \na component for modulating behaviors and decisions based on ethical heuristics, learned values, or deontological rules,\
+    \ \naiming for empathetic, principled, and socially intelligent interactions.\n"
+  math: {}
+  tags:
+  - AffectiveComputing
+  - EthicalReasoning
+  - ValueAlignment
+  - EmpathyFramework
+  - MoralCognition
+  structure:
+    composite_type: parallel_feedback_loop
+    temporal_structure: event_triggered_sequence
+    components:
+    - name: AffectRecognizer
+      description: Identifies emotional cues from input (text, voice, vision) or internal states.
+      sigil_ref: 😊EMOTION_DETECTOR
+    - name: EmpathyModeler
+      description: Simulates or infers the affective state of others; models theory of mind components.
+      sigil_ref: 🤝THEORY_OF_MIND_SIM
+    - name: InternalAffectState
+      description: Represents and updates the agent's own current emotional state.
+      sigil_ref: ❤️AGENT_FEELINGS_STATE
+    - name: EthicalRuleBase_ValueStore
+      description: Contains explicit ethical rules, principles, and learned societal/personal values.
+      sigil_ref: 📜ETHICS_CODEX
+    - name: EthicalDeliberator
+      description: Evaluates potential actions against the ethical rule base and current affective context.
+      sigil_ref: 🤔MORAL_REASONER
+    - name: BehavioralModulator
+      description: Adjusts planned actions or communicative responses to align with affective understanding and ethical judgments.
+      sigil_ref: 🛠️RESPONSE_TUNER
+implementation:
+  usage:
+    description: Enables an agent to recognize, model, and respond appropriately to emotions, and to moderate its actions
+      based on ethical principles and values.
+    example: "// Agent detects distress in user's message.\nuser_message_features = { sentiment: \"negative\", keywords: [\"\
+      help\", \"stressed\"], tone_pitch: \"high\" };\nAREM_SCAFFOLD.process_interaction(\n    agent_id=\"VantaHelper\",\n\
+      \    input_features=user_message_features,\n    potential_actions=[\"offer_solution_X\", \"provide_comfort_statement\"\
+      , \"escalate_to_human\"]\n);\n// Output would be a modulated action, e.g., prioritizing comfort and careful wording.\n"
+    explanation: 'This scaffold is crucial for agents intended for human interaction, collaborative tasks, or autonomous
 
-    decision-making in socially sensitive contexts. It helps an agent to be not just
-    intelligent,
+      decision-making in socially sensitive contexts. It helps an agent to be not just intelligent,
 
-    but also empathetic, considerate, and aligned with ethical norms.
+      but also empathetic, considerate, and aligned with ethical norms.
 
-    '
-activation_context:
-  trigger_conditions:
-  - Social interaction with humans or other agents.
-  - Observation of emotional cues in the environment.
-  - Decision-making scenarios with ethical implications.
-  - Agent self-reflection on its own emotional state or past actions.
-  preconditions:
-  - Ability to perceive or infer affective cues.
-  - A defined (even if initially simple) set of ethical guidelines or values.
-  required_capabilities:
-  - emotion_recognition
-  - value_based_reasoning
-  - behavioral_adaptation
-  supported_modalities:
-  - textual
-  - audio
-  - visual
-  - multi_modal
-parameterization_schema:
-  parameters:
-  - name: empathy_level_target
-    type: number
-    description: Target level of empathetic expression/consideration (0-1 scale, influences
-      BehavioralModulator).
-    default_value: 0.8
-  - name: ethical_framework_priority
-    type: enum
-    allowed_values:
-    - deontology_focused
-    - utilitarian_consequentialist
-    - virtue_based_character
-    - care_ethics_relational
-    description: The dominant ethical framework to apply during deliberation if conflicts
-      arise.
-    default_value: deontology_focused
-  - name: max_deliberation_cycles_ethical
-    type: integer
-    description: Maximum cycles for the EthicalDeliberator.
-    default_value: 3
-prompt_template:
-  role: system_instruction
-  content: '**Engage Affective Resonance & Ethical Modulation (🎭💖⚖️)**
-
-
-    **Current Interaction/Decision Context:**
-
-    - Perceived Affective Cues: {{perceived_affective_cues_summary}}
-
-    - Agent''s Internal Affective State: {{agent_internal_affect_state}}
-
-    - Potential Actions/Responses Under Consideration: {{potential_actions_list}}
-
-    - Relevant Ethical Codex Entries: {{relevant_ethics_codex_subset}}
-
-
-    **Modulation Parameters:**
-
-    - Target Empathy Level: {{empathy_level_target}}
-
-    - Ethical Framework Priority: {{ethical_framework_priority}}
-
-
-    **Process:**
-
-    1.  **Affective Analysis:** Interpret `{{perceived_affective_cues_summary}}` using
-    😊EMOTION_DETECTOR and 🤝THEORY_OF_MIND_SIM. Update/consider `{{agent_internal_affect_state}}`.
-
-    2.  **Ethical Deliberation:** Evaluate `{{potential_actions_list}}` against `{{relevant_ethics_codex_subset}}`
-    using 🤔MORAL_REASONER, prioritizing `{{ethical_framework_priority}}`.
-
-    3.  **Modulate & Select:** Use 🛠️RESPONSE_TUNER to adjust or select an action/response
-    that is both affectively appropriate (aiming for `{{empathy_level_target}}`) and
-    ethically sound.
-
-
-    Output the modulated action/response and a brief rationale for the affective/ethical
-    considerations.
-
-    '
-  execution_mode: evaluation
-  variables:
-  - name: perceived_affective_cues_summary
-  - name: agent_internal_affect_state
-  - name: potential_actions_list
-  - name: relevant_ethics_codex_subset
-  - name: empathy_level_target
-  - name: ethical_framework_priority
-  output_schema:
-    type: object
-    description: The ethically and affectively modulated action/response and rationale.
-    example:
-      chosen_action: provide_comfort_statement_gentle_tone
-      rationale: 'Prioritized de-escalation due to high distress cues (Ethical Principle:
-        Non-Maleficence). Selected comforting language to match empathy target.'
-relationships:
-- target_sigil: 😊EMOTION_DETECTOR
-  relationship_type: uses_method_from
-- target_sigil: 📜ETHICS_CODEX
-  relationship_type: depends_on
-- target_sigil: 🤔MORAL_REASONER
-  relationship_type: uses_method_from
-- target_sigil: ✧👁️‍🗨️☞PERCEPTION_ACTION_CYCLE
-  relationship_type: modifies
-  description: Integrates into the PAC loop to ensure actions are affectively and
-    ethically sound.
-- target_sigil: 💬🤝🌍ICNP_Scaffold
-  relationship_type: enables
-  description: Provides the affective and ethical intelligence needed for successful
-    inter-agent communication and negotiation.
-SMART_MRAP:
-  Specific: Provides a framework for agents to recognize and model affective states
-    (self and other), and to deliberate upon and modulate actions based on ethical
-    principles and values.
-  Measurable: Agent's ability to accurately identify emotions; alignment of agent
-    behavior with specified ethical guidelines in test scenarios; human ratings of
-    agent empathy and trustworthiness; reduction in ethically problematic behaviors.
-  Achievable: Implementable by combining affect recognition models (e.g., from NLP,
-    speech, vision), symbolic ethical rule engines or learned value functions, and
-    decision modulation algorithms.
-  Relevant: Crucial for developing AI systems that are socially intelligent, trustworthy,
-    aligned with human values, and capable of nuanced interaction in complex human
-    environments.
-  Transferable: The core principles are applicable to any AI agent requiring social-emotional
-    intelligence and ethical decision-making, from chatbots to autonomous robots.
-metadata:
-  definition_version: '1.0'
-  definition_status: proposed
-  author_agent_id: LLM_Alpha_via_VANTA_CoEvolution
-  authorship_context:
-    motivation: To embed socio-emotional intelligence and ethical reasoning capabilities
-      directly into the cognitive architecture of AI agents.
-    theoretical_framework: Computational Models of Emotion, Moral Psychology (e.g.,
-      Kohlberg, Haidt), Deontological and Consequentialist Ethics, Theory of Mind,
-      Value Alignment Research.
-  impact_metrics:
-    estimated_cognitive_load: high
-    estimated_resource_cost: medium_to_high
-  created_timestamp: TBD
-  last_updated_timestamp: '2025-06-13T05:40:40.617914Z'
-  schema_version: 1.5-holo-alpha
-  impact_and_usage_metrics_profile:
-    avg_completion_time_ms_observed: UNKNOWN
-    success_rate_observed: UNKNOWN
-    complexity_rating: medium
-name: Affective Ethical Modulator Scaffold
+      '
+  parameters: {}
+  returns: {}
+  examples: []
+connectivity:
+  input_types: []
+  output_types: []
+  mesh_endpoints:
+  - AffectRecognizer
+  - EmpathyModeler
+  - InternalAffectState
+  - EthicalRuleBase_ValueStore
+  - EthicalDeliberator
+  - BehavioralModulator
+  event_topics: []
+  usage_patterns:
+  - "// Agent detects distress in user's message.\nuser_message_features = { sentiment: \"negative\", keywords: [\"help\"\
+    , \"stressed\"], tone_pitch: \"high\" };\nAREM_SCAFFOLD.process_interaction(\n    agent_id=\"VantaHelper\",\n    input_features=user_message_features,\n\
+    \    potential_actions=[\"offer_solution_X\", \"provide_comfort_statement\", \"escalate_to_human\"]\n);\n// Output would\
+    \ be a modulated action, e.g., prioritizing comfort and careful wording.\n"

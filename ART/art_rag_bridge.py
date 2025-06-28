@@ -62,13 +62,22 @@ class VantaAgentCapability:
     MEMORY_INTEGRATION = "memory_integration"
 
 
-# Try to import RAG components
-try:
-    from sentence_transformers import SentenceTransformer
+# Lazy import for RAG components to avoid blocking startup
+HAS_SENTENCE_TRANSFORMERS = False
+_SENTENCE_TRANSFORMER = None
 
-    HAS_SENTENCE_TRANSFORMERS = True
-except ImportError:
-    HAS_SENTENCE_TRANSFORMERS = False
+def _get_sentence_transformer():
+    """Lazy import of SentenceTransformer to avoid blocking startup"""
+    global HAS_SENTENCE_TRANSFORMERS, _SENTENCE_TRANSFORMER
+    if _SENTENCE_TRANSFORMER is None:
+        try:
+            from sentence_transformers import SentenceTransformer
+            _SENTENCE_TRANSFORMER = SentenceTransformer
+            HAS_SENTENCE_TRANSFORMERS = True
+        except ImportError:
+            HAS_SENTENCE_TRANSFORMERS = False
+            _SENTENCE_TRANSFORMER = None
+    return _SENTENCE_TRANSFORMER
 
 try:
     import numpy as np
@@ -188,10 +197,11 @@ class ARTRAGBridge(BaseAgent if HOLO_AVAILABLE else object):
     def _initialize_components(self) -> None:
         """Initialize RAG and embedding components."""
         try:
-            # Initialize embedding model if available
-            if HAS_SENTENCE_TRANSFORMERS:
+            # Initialize embedding model using the lazy importer
+            transformer_cls = _get_sentence_transformer()
+            if transformer_cls:
                 try:
-                    self.embedding_model = SentenceTransformer(self.embedding_model_name)
+                    self.embedding_model = transformer_cls(self.embedding_model_name)
                     self.logger.info(f"Loaded embedding model: {self.embedding_model_name}")
                 except Exception as e:
                     self.logger.warning(f"Failed to load embedding model: {e}")

@@ -1,282 +1,93 @@
-sigil: 🧱WORLD_MODEL_SCAFFOLD
-alias: SituationalAwarenessFrame
-tag: KnowledgeRepresentationScaffold
-tags:
-- world_state_manager
-- belief_system_architecture
-- situational_awareness_core
-- predictive_model_housing
-- context_map_structure
-is_cognitive_primitive: false
-consciousness_scaffold: false
-cognitive_scaffold: true
-symbolic_scaffold: true
-principle: 'The 🧱WORLD_MODEL_SCAFFOLD provides the structural template and operational
-  logic for an
+schema_version: 1.5-holo-alpha
+meta:
+  sigil: 🧱WORLD_MODEL_SCAFFOLD
+  alias: SituationalAwarenessFrame
+  tag: KnowledgeRepresentationScaffold
+  upgraded_from: legacy
+  upgrade_timestamp: '2025-06-24T17:14:16.034953'
+  source_file: scaffolds\world_model.voxsigil
+holo_mesh:
+  is_cognitive_primitive: false
+  mesh_compatibility: holo-1.5-alpha
+  registration_ready: true
+  vanta_core_integration:
+    event_support: true
+    async_capable: true
+    memory_aware: true
+  temporal_pattern: dynamic_state_continuous_update
+cognitive:
+  principle: 'The 🧱WORLD_MODEL_SCAFFOLD provides the structural template and operational logic for an
 
-  agent''s internal representation of its environment, itself, and other relevant
-  entities or concepts.
+    agent''s internal representation of its environment, itself, and other relevant entities or concepts.
 
-  It''s not the world model *data* itself, but the framework that organizes this data,
-  manages its
+    It''s not the world model *data* itself, but the framework that organizes this data, manages its
 
-  updates, supports queries, facilitates predictions, and ensures consistency. It''s
-  the "cognitive map"
+    updates, supports queries, facilitates predictions, and ensures consistency. It''s the "cognitive map"
 
-  and "reality simulator" scaffold within an agent.
-
-  '
-structure:
-  composite_type: hybrid_data_structure_manager
-  temporal_structure: dynamic_state_continuous_update
-  components:
-  - name: 💾 Knowledge Store Interface
-    description: Manages the underlying data storage for facts, entities, relationships,
-      and states (e.g., graph DB, relational DB, vector store).
-    sigil_ref: 🔗RELATIONAL_WEAVER
-  - name: 🔄 State Update Logic
-    description: Handles assimilation of new perceptual information (from 👁️SENSORY_INTAKE
-      via 🜛CATENGINE) and internal reasoning to update model states. Manages belief
-      revision (possibly using 🜔PHOENIX for outdated info).
-  - name: 🔮 Predictive Engine Interface
-    description: Allows querying the model to predict future states or outcomes of
-      potential actions (e.g., 'What if I do X?').
-  - name: ❓ Query & Inference Handler
-    description: Processes queries about the current or past world state, performing
-      inferences as needed (e.g., 'Is object Y visible?', 'What caused event Z?').
-    sigil_ref: ⏳CHRONOS_SCRIBE
-  - name: 🛡️ Consistency & Coherence Monitor
-    description: Continuously checks the world model for internal contradictions or
-      inconsistencies with new data, potentially triggering 🌀MAELSTROM_RESOLVER or
-      🧐CRITICAL_LENS.
-  - name: 📍 Self-Localization & Agent State Module
-    description: Maintains the agent's own state (position, status, beliefs about
-      self) within the broader world model.
-usage:
-  description: Defines the architectural framework for an agent's internal world model,
-    managing its structure, updates, consistency, and query/prediction capabilities.
-    This scaffold enables situational awareness and informed decision-making.
-  example: "<agent_core_definition agent_id=\"ExplorerAI\">\n  <world_model_implementation>\n\
-    \    <apply_scaffold>\U0001F9F1WORLD_MODEL_SCAFFOLD</apply_scaffold>\n    <parameters>\n\
-    \      <knowledge_store_type>HybridGraphVectorDB</knowledge_store_type>\n    \
-    \  <prediction_horizon_default_steps>10</prediction_horizon_default_steps>\n \
-    \     <consistency_check_frequency_hz>0.5</consistency_check_frequency_hz>\n \
-    \   </parameters>\n  </world_model_implementation>\n  <perception_action_loop_ref>✧\U0001F441\
-    ️‍\U0001F5E8️☞_ExplorerAI_Instance</perception_action_loop_ref>\n</agent_core_definition>\n"
-  explanation: 'The 🧱WORLD_MODEL_SCAFFOLD is essential for any agent that needs to
-    maintain an understanding of its environment beyond immediate perception. It provides
-    the structure for storing what the agent "knows" or "believes" about the world,
-    itself, and others, how this knowledge is updated, and how it can be used for
-    planning and prediction. It''s a core component of the ✧👁️‍🗨️☞PAC_Loop''s "Interpret/Model"
-    phase.
+    and "reality simulator" scaffold within an agent.
 
     '
-activation_context:
-  trigger_conditions:
-  - Agent initialization requiring a world model
-  - Need to process and integrate new perceptual data
-  - Query about current or past world state
-  - Request for prediction of future states or action outcomes
-  preconditions:
-  - Defined ontology or schema for representing world entities and states (can be
-    emergent)
-  - Mechanisms for data storage and retrieval
-  - Input stream of perceptual information or internal updates
-  required_capabilities:
-  - knowledge_representation_formalism
-  - belief_updating_algorithms
-  - predictive_modeling_interface
-  - query_processing_and_inference
-  - consistency_management
-  supported_modalities:
-  - symbolic_knowledge_bases
-  - probabilistic_graphical_models
-  - spatial_maps_and_simulations
-  - hybrid_representations
-  contraindications:
-  - Purely reactive agents with no internal state or memory
-  - Systems where the 'world' is too simple or fully known and static
-parameterization_schema:
-  parameters:
-  - name: knowledge_representation_schema_ref
-    type: string
-    description: Reference to the schema or ontology defining the types of entities,
-      attributes, and relations in the world model.
-    is_required: false
-  - name: update_frequency_policy
-    type: string
-    description: Policy determining how often the world model attempts to integrate
-      new information.
-    default_value: on_new_percept
-  - name: prediction_engine_config
-    type: json_object
-    description: Configuration parameters for the predictive engine component (e.g.,
-      simulation depth, model type).
-    is_required: false
-prompt_template:
-  role: system_world_model_manager
-  content: 'Engage 🧱WORLD_MODEL_SCAFFOLD operations.
+  math: {}
+  tags:
+  - world_state_manager
+  - belief_system_architecture
+  - situational_awareness_core
+  - predictive_model_housing
+  - context_map_structure
+  structure:
+    composite_type: hybrid_data_structure_manager
+    temporal_structure: dynamic_state_continuous_update
+    components:
+    - name: 💾 Knowledge Store Interface
+      description: Manages the underlying data storage for facts, entities, relationships, and states (e.g., graph DB, relational
+        DB, vector store).
+      sigil_ref: 🔗RELATIONAL_WEAVER
+    - name: 🔄 State Update Logic
+      description: Handles assimilation of new perceptual information (from 👁️SENSORY_INTAKE via 🜛CATENGINE) and internal
+        reasoning to update model states. Manages belief revision (possibly using 🜔PHOENIX for outdated info).
+    - name: 🔮 Predictive Engine Interface
+      description: Allows querying the model to predict future states or outcomes of potential actions (e.g., 'What if I do
+        X?').
+    - name: ❓ Query & Inference Handler
+      description: Processes queries about the current or past world state, performing inferences as needed (e.g., 'Is object
+        Y visible?', 'What caused event Z?').
+      sigil_ref: ⏳CHRONOS_SCRIBE
+    - name: 🛡️ Consistency & Coherence Monitor
+      description: Continuously checks the world model for internal contradictions or inconsistencies with new data, potentially
+        triggering 🌀MAELSTROM_RESOLVER or 🧐CRITICAL_LENS.
+    - name: 📍 Self-Localization & Agent State Module
+      description: Maintains the agent's own state (position, status, beliefs about self) within the broader world model.
+implementation:
+  usage:
+    description: Defines the architectural framework for an agent's internal world model, managing its structure, updates,
+      consistency, and query/prediction capabilities. This scaffold enables situational awareness and informed decision-making.
+    example: "<agent_core_definition agent_id=\"ExplorerAI\">\n  <world_model_implementation>\n    <apply_scaffold>\U0001F9F1\
+      WORLD_MODEL_SCAFFOLD</apply_scaffold>\n    <parameters>\n      <knowledge_store_type>HybridGraphVectorDB</knowledge_store_type>\n\
+      \      <prediction_horizon_default_steps>10</prediction_horizon_default_steps>\n      <consistency_check_frequency_hz>0.5</consistency_check_frequency_hz>\n\
+      \    </parameters>\n  </world_model_implementation>\n  <perception_action_loop_ref>✧\U0001F441️‍\U0001F5E8️☞_ExplorerAI_Instance</perception_action_loop_ref>\n\
+      </agent_core_definition>\n"
+    explanation: 'The 🧱WORLD_MODEL_SCAFFOLD is essential for any agent that needs to maintain an understanding of its environment
+      beyond immediate perception. It provides the structure for storing what the agent "knows" or "believes" about the world,
+      itself, and others, how this knowledge is updated, and how it can be used for planning and prediction. It''s a core
+      component of the ✧👁️‍🗨️☞PAC_Loop''s "Interpret/Model" phase.
 
-    Schema Reference: {{knowledge_representation_schema_ref | default(''Implicit/Emergent'')}}
-
-    Update Policy: {{update_frequency_policy | default(''on_new_percept'')}}
-
-    {{#if current_query_or_update_request}}
-
-    Processing Request: {{current_query_or_update_request | dump}}
-
-    {{else}}
-
-    Current Mode: Idle / Continuous Monitoring.
-
-    {{/if}}
-
-
-    Manage the world model:
-
-    1. 💾 Assimilate new data (from 👁️SENSORY_INTAKE) into the knowledge store using
-    🔗RELATIONAL_WEAVER logic.
-
-    2. 🔄 Update states and beliefs based on new information and internal reasoning.
-    Apply 🜔PHOENIX for outdated info if necessary.
-
-    3. 🛡️ Check for consistency. If issues, flag for 🌀MAELSTROM_RESOLVER or 🧐CRITICAL_LENS.
-
-    4. ❓ If query received (e.g., from ⏳CHRONOS_SCRIBE for temporal aspects): process
-    using inference rules.
-
-    5. 🔮 If prediction requested: engage predictive engine with config {{prediction_engine_config
-    | dump | default(''default_config'')}}.
-
-    Maintain accurate representation of 📍Agent''s own state within the model.
-
-    Log all significant updates and queries.
-
-    '
-  execution_mode: knowledge_management_and_simulation
-  variables:
-  - name: knowledge_representation_schema_ref
-    description: Schema for the world model.
-  - name: update_frequency_policy
-    description: How often to update.
-  - name: current_query_or_update_request
-    description: Specific request being processed.
-  - name: prediction_engine_config
-    description: Config for predictive engine.
-  output_schema: 'object: { request_type_processed: enum[''update'', ''query'', ''prediction'',
-    ''consistency_check''], status: string, result_summary: string_or_object, world_model_health_metrics:
-    object }'
-SMART_MRAP:
-  Specific: Provide a structural and operational framework for an agent's internal
-    world model, managing the storage, updating, consistency checking, querying, and
-    predictive use of knowledge about the environment, itself, and other entities,
-    based on a defined (or emergent) schema and update policies.
-  Measurable: Accuracy of the world model against ground truth (if available); Consistency
-    score of the model; Latency and accuracy of query responses; Predictive accuracy
-    of the model for future states; Efficiency of information updates.
-  Achievable: By integrating various data structures (e.g., knowledge graphs, probabilistic
-    models, spatial grids), update algorithms (e.g., Bayesian updating, Kalman filters),
-    inference engines, consistency checkers, and query languages within a managing
-    framework.
-  Relevant: Fundamental for any AI agent requiring situational awareness, informed
-    decision-making beyond immediate stimuli, planning, or understanding complex environments.
-    A cornerstone of robust and intelligent agency.
-  Transferable: Applicable to robotics (SLAM, environment mapping), game AI (NPC world
-    knowledge), autonomous vehicles (scene understanding), simulation systems (maintaining
-    state of simulated world), and intelligent assistants (understanding user context).
-metadata:
-  definition_version: 1.4-alpha
-  definition_status: active
-  author_agent_id: VANTA.⟠∆∇𓂀𐑒
-  created_timestamp: '2025-05-11T12:25:00Z'
-  last_updated_timestamp: '2025-06-13T05:40:40.617914Z'
-  authorship_context:
-    motivation: To define a robust and flexible scaffold for how an AI represents
-      and reasons about its world, enabling deeper situational awareness and more
-      intelligent behavior.
-    theoretical_framework: Knowledge Representation & Reasoning (KRR), Artificial
-      Intelligence Planning, SLAM (Simultaneous Localization and Mapping) in robotics,
-      Mental models in cognitive psychology, Belief-Desire-Intention (BDI) architecture.
-    source_inspiration: Human cognitive maps, Scientific models of physical systems,
-      Geographic Information Systems (GIS), The 'holodeck' concept from Star Trek
-      (as an ultimate world simulator).
-  impact_metrics:
-    estimated_cognitive_load: high
-    estimated_resource_cost: variable_can_be_very_high
-    utility_rating_author: 10
-  evolutionary_potential:
-    generalizability_score: 0.95
-    fusion_potential_score: 0.7
-    current_limitations_summary: Maintaining consistency in large, dynamic world models
-      is computationally expensive. Handling uncertainty and contradictory information
-      robustly is hard. Scaling to truly open-world complexity is a major challenge.
-    suggested_next_features:
-    - Hierarchical world models with varying levels of abstraction/detail
-    - Support for multiple, potentially conflicting hypotheses about the world state
-      (using 🔮QUANTA_STATE)
-    - Automated learning of world model schema from data.
-    - Integration with commonsense reasoning backbones.
-    research_questions_opened:
-    - What is the most scalable and robust architecture for representing open-world
-      knowledge?
-    - How can an AI best balance the need for model accuracy with the cost of updating
-      and reasoning?
-    - Can an AI learn to 'debug' its own world model when it detects significant discrepancies
-      with reality?
-  schema_version: 1.5-holo-alpha
-  impact_and_usage_metrics_profile:
-    avg_completion_time_ms_observed: UNKNOWN
-    success_rate_observed: UNKNOWN
-    complexity_rating: medium
-relationships:
-- target_sigil: ✧👁️‍🗨️☞PAC_LOOP
-  relationship_type: is_a_core_component_of_and_updated_by
-  description: The WORLD_MODEL_SCAFFOLD is where the 'Model' part of the PAC_Loop
-    resides; it's updated by perception/interpretation and informs decision-making.
-  strength: 1.0
-- target_sigil: 🔗RELATIONAL_WEAVER
-  relationship_type: uses_method_from
-  description: Provides the mechanisms for building and maintaining the symbolic/relational
-    aspects of the knowledge stored within the world model.
-  strength: 0.9
-- target_sigil: ⏳CHRONOS_SCRIBE
-  relationship_type: can_be_a_specialized_module_within
-  description: Manages the temporal aspects and historical event tracking within the
-    broader world model.
-  strength: 0.8
-- target_sigil: 🧬NEXUS
-  relationship_type: updates_via
-  description: Information grafted via NEXUS is assimilated into the world model managed
-    by this scaffold.
-  strength: 0.7
-test_criteria:
-- test_id: WMS_UPDATE_001
-  description: Test if a new piece of perceptual information correctly updates a simple
-    world model state.
-  type: functional
-  input_scenario_or_parameters:
-    initial_world_model: '{''ObjectA_Color'':''Red''}'
-    new_percept: ObjectA_Color is now Blue.
-  expected_behavior_or_output: Final world model state shows {'ObjectA_Color':'Blue'}.
-  evaluation_method: state_comparison
-  pass_threshold_or_criteria: Correct state update.
-- test_id: WMS_QUERY_001
-  description: Test if a query about the world model returns the correct information
-    based on its current state.
-  type: functional
-  input_scenario_or_parameters:
-    current_world_model: '{''Door1_Status'':''Open'', ''Key_Location'':''Table''}'
-    query: Is Door1 Open?
-  expected_behavior_or_output: 'Query_Result: True.'
-  evaluation_method: response_check
-  pass_threshold_or_criteria: Correct query response.
-- test_id: WMS_PREDICT_001
-  description: Test if a simple prediction request yields a plausible future state.
-  type: functional
-  input_scenario_or_parameters:
-    current_world_model: '{''Ball_Position'':0, ''Ball_Velocity'':1}'
-    prediction_request: Predict Ball_Position at T+2 seconds (assuming constant velocity).
-  expected_behavior_or_output: 'Predicted_State: {''Ball_Position'':2}.'
-  evaluation_method: value_check
-  pass_threshold_or_criteria: Correct prediction based on simple physics.
-name: World Model
+      '
+  parameters: {}
+  returns: {}
+  examples: []
+connectivity:
+  input_types: []
+  output_types: []
+  mesh_endpoints:
+  - 💾 Knowledge Store Interface
+  - 🔄 State Update Logic
+  - 🔮 Predictive Engine Interface
+  - ❓ Query & Inference Handler
+  - 🛡️ Consistency & Coherence Monitor
+  - 📍 Self-Localization & Agent State Module
+  event_topics: []
+  usage_patterns:
+  - "<agent_core_definition agent_id=\"ExplorerAI\">\n  <world_model_implementation>\n    <apply_scaffold>\U0001F9F1WORLD_MODEL_SCAFFOLD</apply_scaffold>\n\
+    \    <parameters>\n      <knowledge_store_type>HybridGraphVectorDB</knowledge_store_type>\n      <prediction_horizon_default_steps>10</prediction_horizon_default_steps>\n\
+    \      <consistency_check_frequency_hz>0.5</consistency_check_frequency_hz>\n    </parameters>\n  </world_model_implementation>\n\
+    \  <perception_action_loop_ref>✧\U0001F441️‍\U0001F5E8️☞_ExplorerAI_Instance</perception_action_loop_ref>\n</agent_core_definition>\n"

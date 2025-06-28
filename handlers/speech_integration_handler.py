@@ -16,7 +16,7 @@ from Vanta.core.UnifiedVantaCore import UnifiedVantaCore, get_vanta_core
 
 # Import TTS/STT engines
 try:
-    from Vanta.async_tts_engine import (
+    from engines.async_tts_engine import (
         AsyncTTSEngine,
         TTSConfig,
         create_async_tts_engine,
@@ -30,7 +30,7 @@ except ImportError:
     create_async_tts_engine = None
 
 try:
-    from Vanta.async_stt_engine import AsyncSTTEngine, STTConfig
+    from engines.async_stt_engine import AsyncSTTEngine, STTConfig
 
     STT_AVAILABLE = True
 except ImportError:
@@ -165,9 +165,7 @@ class SpeechIntegrationHandler:
             logger.info(f"Using existing STT engine: {type(existing_engine).__name__}")
             self.stt_engine = existing_engine
             self._stt_initialized = True
-            return True
-
-        # Check if STT is available
+            return True  # Check if STT is available
         if not STT_AVAILABLE or AsyncSTTEngine is None:
             logger.warning("STT engine not available")
             self._stt_initialized = False
@@ -178,6 +176,9 @@ class SpeechIntegrationHandler:
             engine_config = None
             if stt_config and STTConfig is not None:
                 engine_config = STTConfig(**stt_config)
+            elif STTConfig is not None:
+                # Use default config if none provided
+                engine_config = STTConfig()
 
             # Create and initialize the STT engine
             self.stt_engine = AsyncSTTEngine(self.vanta_core, engine_config)

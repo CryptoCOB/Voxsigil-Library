@@ -1,62 +1,44 @@
-primary: Cognitive Enhancement
-chain:
-- Attention
-- Memory
-- Learning
-- Cognitive Enhancement
-relationships:
-  Attention:
-    leads_to: Memory
-    relationship_type: cognitive_sequence
-    strength: 0.8
-  Memory:
-    leads_to: Learning
-    relationship_type: cognitive_sequence
-    strength: 0.9
-  Learning:
-    leads_to: Cognitive Enhancement
-    relationship_type: cognitive_sequence
-    strength: 0.85
-chain_type: cognitive_enhancement
-created: 1747209734.3376863
-schema_version: '1.4'
-_metadata:
-  generated_by: test_cognitive_generator
-  generated_at: '2025-05-14 04:02:14'
-sigil: 🧿 Testcognitivechain
-name: Testcognitivechain
-tags:
-- auto_fixed
-- voxsigil
-principle: TBD
-usage:
-  example: UNKNOWN
-  description: TBD
-SMART_MRAP:
-  Specific: TBD
-  Measurable: TBD
-  Achievable: TBD
-  Relevant: TBD
-  Transferable: TBD
-metadata:
-  definition_version: TBD
-  definition_status: TBD
-  author_agent_id: TBD
-  created_timestamp: TBD
-  last_updated_timestamp: '2025-06-13T05:40:40.617914Z'
-  schema_version: 1.5-holo-alpha
-  impact_and_usage_metrics_profile:
-    avg_completion_time_ms_observed: UNKNOWN
-    success_rate_observed: UNKNOWN
-    complexity_rating: medium
-structure:
-  components:
-  - name: DefaultComponent
-    description: Default component - needs specification
-  composite_type: simple
-  temporal_structure: atomic
-activation_context:
-  triggers:
-  - explicit_invocation
-  prerequisites: []
-  inhibitors: []
+schema_version: 1.5-holo-alpha
+meta:
+  sigil: 🧿 Testcognitivechain
+  alias: UnknownSigil
+  tag: UnknownCategory
+  upgraded_from: legacy
+  upgrade_timestamp: '2025-06-24T17:14:16.665861'
+  source_file: tags\TestCognitiveChain.voxsigil
+holo_mesh:
+  is_cognitive_primitive: false
+  mesh_compatibility: holo-1.5-alpha
+  registration_ready: true
+  vanta_core_integration:
+    event_support: true
+    async_capable: true
+    memory_aware: true
+  temporal_pattern: atomic
+cognitive:
+  principle: TBD
+  math: {}
+  tags:
+  - auto_fixed
+  - voxsigil
+  structure:
+    components:
+    - name: DefaultComponent
+      description: Default component - needs specification
+    composite_type: simple
+    temporal_structure: atomic
+implementation:
+  usage:
+    example: UNKNOWN
+    description: TBD
+  parameters: {}
+  returns: {}
+  examples: []
+connectivity:
+  input_types: []
+  output_types: []
+  mesh_endpoints:
+  - DefaultComponent
+  event_topics: []
+  usage_patterns:
+  - UNKNOWN

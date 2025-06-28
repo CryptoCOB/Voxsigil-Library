@@ -2,7 +2,19 @@ import logging
 import threading
 from typing import Any, Dict, List, Optional, Tuple
 
+# HOLO-1.5 Registration
+try:
+    from ..registration.master_registration import vanta_core_module
+except ImportError:
 
+    def vanta_core_module(name: str = "", role: str = ""):
+        def decorator(cls):
+            return cls
+
+        return decorator
+
+
+@vanta_core_module(name="UnifiedAgentRegistry", role="agent_registry")
 class UnifiedAgentRegistry:
     """Registry for managing agents in the UnifiedVantaCore."""
 

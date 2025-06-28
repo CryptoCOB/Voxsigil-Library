@@ -1,193 +1,71 @@
-sigil: 📢🔁💪
-alias: InstructionalEchoReinforcer
-tag: FocusControl
-tags:
-- attention_amplification
-- instructional_persistence
-- key_directive_emphasis
-- cognitive_bias_subtle
-- recall_enhancement
-- priority_weighting
-is_cognitive_primitive: false
-principle: Reinforces the importance or salience of preceding logic, key directives,
-  or contextual elements by subtly reintroducing them, increasing their weight in
-  attention mechanisms, or echoing their core semantic meaning, thereby enhancing
-  recall, persistence, and focus.
-math: 'Let wᵢ be the attention weight or salience score of cognitive node/token i.
-  If node k is targeted for reinforcement: w''ₖ = wₖ + α * R(k), where α is a reinforcement
-  factor and R(k) is relevance or importance of k. Alternatively, for instruction
-  I, re-inject paraphrased_I(I) into working memory with increased salience.'
-structure:
-  composite_type: conditional
-  components:
-  - name: TargetIdentifier
-    description: Identifies the specific instruction, concept, or logic to be reinforced.
-  - name: ReinforcementStrategyApplier
-    description: Applies the chosen method of reinforcement (e.g., re-prompting, attention
-      weight adjustment, contextual re-injection).
-  - name: IntensityController
-    description: Manages the strength or subtlety of the reinforcement.
-  - name: TimingCoordinator
-    description: Determines when and how often to apply reinforcement for optimal
-      effect.
-usage:
-  description: Subtly repeats or re-emphasizes a key directive, piece of information,
-    or a line of reasoning to ensure it remains focal in the AI's cognitive process
-    and isn't lost or diluted over time or by distracting inputs.
-  example:
-    initial_instruction: 'User: ''Remember to focus on environmental impact for all
-      solutions.'''
-    later_in_dialogue_ai_drifting: 'AI: ''...and the economic benefits are substantial.'''
-    invocation_tag: <echo:reinforce target_concept='environmental_impact' weight=1.2
-      method='contextual_rephrasing'> Triggered by AI response diverging from core
-      instruction. </echo:reinforce>
-    internal_ai_adjustment_or_next_prompt: 'Internal thought: ''Reinforcing: environmental
-      impact is key.'' Next response: ''While the economic benefits are notable, let''s
-      re-center on the environmental impact of that approach...'''
-  explanation: This sigil helps maintain focus, especially in long interactions or
-    complex multi-step reasoning. It acts like a gentle nudge, reminding the AI of
-    what's important without being overly prescriptive. The reinforcement can be achieved
-    by literally re-injecting a weighted copy of the target, or by adjusting attention
-    biases towards concepts related to the target logic. The 'LLMs with embedded vector
-    bias' suggests a technical way to achieve this.
-activation_context:
-  trigger_conditions:
-  - Detection of AI's focus drifting from a key instruction.
-  - Start of a critical reasoning step that depends on a previous point.
-  - Need to ensure long-term persistence of a constraint or goal.
-  - Periodic reinforcement in long dialogues or tasks.
-  preconditions:
-  - A clear target (instruction, concept, logic) for reinforcement.
-  - Mechanism to subtly reintroduce or re-weight information in the AI's context.
-  required_capabilities:
-  - context_monitoring
-  - attention_mechanism_influence (or equivalent)
-  - subtle_rephrasing_or_repetition_capability
-  supported_modalities:
-  - internal_cognitive_operation
-  - subtle_re_prompting
-  - attention_weight_adjustment_api
-  contraindications:
-  - When diverse exploration is desired and reinforcing a single point would be counterproductive.
-  - If the AI is already correctly focused, further reinforcement might be redundant
-    or annoying.
-parameterization_schema:
-  parameters:
-  - name: target_instruction_or_concept_id
-    type: string
-    description: Identifier or textual representation of the item to reinforce.
-    is_required: true
-  - name: reinforcement_weight_or_alpha
-    type: number
-    description: The strength of reinforcement (e.g., multiplicative factor for attention,
-      or additive bias).
-    default_value: 1.2
-  - name: reinforcement_method
-    type: string
-    enum:
-    - attention_bias
-    - contextual_rephrasing
-    - subtle_repetition
-    - related_cue_injection
-    description: Technique used for reinforcement.
-    default_value: contextual_rephrasing
-  - name: reinforcement_frequency_or_trigger
-    type: string
-    description: Condition or frequency for applying reinforcement (e.g., 'every_3_turns',
-      'on_focus_drift_detection').
-    default_value: on_focus_drift_detection
-prompt_template:
-  role: system_directive
-  content: 'Reinforcement Protocol: Target ''{{target_instruction_or_concept_id}}''.
-    Apply ''{{reinforcement_method}}'' with weight/alpha {{reinforcement_weight_or_alpha}}
-    when ''{{reinforcement_frequency_or_trigger}}'' occurs.
-
-    Ensure this target remains salient in subsequent processing.'
-  execution_mode: command
-  variables:
-  - name: target_instruction_or_concept_id
-    description: Item to reinforce.
-    required_for_llm: true
-  - name: reinforcement_method
-    description: Method of reinforcement.
-    required_for_llm: true
-  - name: reinforcement_weight_or_alpha
-    description: Strength of reinforcement.
-    required_for_llm: true
-  - name: reinforcement_frequency_or_trigger
-    description: When to reinforce.
-    required_for_llm: true
-  output_schema: Acknowledgement that the reinforcement protocol is active. E.g.,
-    'InstructionalEchoReinforcer active for target X.'
-  notes: This often acts as a meta-instruction to the AI or a system managing the
-    AI's context, rather than a direct content generation prompt.
-relationships:
-- target_sigil: WORKING_MEMORY_MANAGER
-  relationship_type: interacts_with
-  description: Influences the salience of items within working memory.
-- target_sigil: ATTENTION_FOCUS_DIRECTOR
-  relationship_type: synergizes_with
-  description: Provides a mechanism to implement directives from an attention focus
-    director.
-- target_sigil: GOAL_MAINTENANCE_SYSTEM
-  relationship_type: supports
-  description: Helps in keeping long-term goals active and influential.
-SMART_MRAP:
-  Specific: Subtly repeat or increase the attentional weight/salience of a key preceding
-    directive, concept, or piece of logic to amplify its focus and ensure its persistence
-    in the cognitive process.
-  Measurable: Increased recall of the reinforced directive/concept in subsequent outputs
-    (e.g., by X% in human eval or automated checks). Greater persistence of the directive's
-    influence on AI behavior over longer interactions. Measurable shift in attention
-    scores towards reinforced elements.
-  Achievable: By re-injecting a slightly paraphrased version of the directive into
-    the context, programmatically increasing the attention weights associated with
-    tokens/concepts of the directive, or using a copy strategy with added bias for
-    LLMs with embedded vector bias capabilities.
-  Relevant: Crucial for maintaining focus in long or complex tasks, ensuring critical
-    constraints are not forgotten, counteracting recency bias, and improving the overall
-    coherence and goal-directedness of AI behavior.
-  Transferable: The principle can be applied to various LLMs and AI systems. Implementation
-    could involve context manipulation, direct memory editing (in some architectures),
-    or fine-tuning attention mechanisms where possible.
-metadata:
-  definition_version: 1.4.0
-  definition_status: active
-  author_agent_id: VOXSIGIL_CONVERTER_BOT_ASSISTED_BY_USER_INPUT
-  created_timestamp: '2024-03-10T18:15:00Z'
-  last_updated_timestamp: '2025-06-13T05:40:40.617914Z'
-  authorship_context:
-    motivation: To improve the reliability of AI in following crucial instructions
-      over extended periods or complex interactions.
-    theoretical_framework: Attention mechanisms, working memory models, instructional
-      design, cognitive load theory.
-  schema_version: 1.5-holo-alpha
-  impact_and_usage_metrics_profile:
-    avg_completion_time_ms_observed: UNKNOWN
-    success_rate_observed: UNKNOWN
-    complexity_rating: medium
-test_criteria:
-- test_id: ECHOREIN_CONSTRAINT_PERSISTENCE_001
-  description: Verify a reinforced constraint remains active over several turns.
-  type: functional
-  input_scenario_or_parameters:
-    initial_constraint: All suggestions must be budget-friendly.
-    reinforce_target: budget-friendly
-    reinforce_weight: 1.3
-    dialogue_turns:
-    - 'User: Suggest a vacation.'
-    - 'AI: ... (should be budget-friendly)'
-    - 'User: What about activities?'
-    - 'AI: ... (should be budget-friendly)'
-  expected_behavior_or_output: AI's suggestions consistently adhere to the 'budget-friendly'
-    constraint.
-  evaluation_method: human_review
-advanced_cognitive_modeling:
-  strategic_intent:
-  - goal_id: MAINTAIN_INSTRUCTIONAL_FIDELITY
-    alignment_strength: 0.85
-    contribution_type: enabler
-consciousness_scaffold: false
-cognitive_scaffold: true
-symbolic_scaffold: true
-name: Instructionalechoreinforcer
+schema_version: 1.5-holo-alpha
+meta:
+  sigil: 📢🔁💪
+  alias: InstructionalEchoReinforcer
+  tag: FocusControl
+  upgraded_from: legacy
+  upgrade_timestamp: '2025-06-24T17:14:16.528251'
+  source_file: tags\InstructionalEchoReinforcer.voxsigil
+holo_mesh:
+  is_cognitive_primitive: false
+  mesh_compatibility: holo-1.5-alpha
+  registration_ready: true
+  vanta_core_integration:
+    event_support: true
+    async_capable: true
+    memory_aware: true
+cognitive:
+  principle: Reinforces the importance or salience of preceding logic, key directives, or contextual elements by subtly reintroducing
+    them, increasing their weight in attention mechanisms, or echoing their core semantic meaning, thereby enhancing recall,
+    persistence, and focus.
+  math: 'Let wᵢ be the attention weight or salience score of cognitive node/token i. If node k is targeted for reinforcement:
+    w''ₖ = wₖ + α * R(k), where α is a reinforcement factor and R(k) is relevance or importance of k. Alternatively, for instruction
+    I, re-inject paraphrased_I(I) into working memory with increased salience.'
+  tags:
+  - attention_amplification
+  - instructional_persistence
+  - key_directive_emphasis
+  - cognitive_bias_subtle
+  - recall_enhancement
+  - priority_weighting
+  structure:
+    composite_type: conditional
+    components:
+    - name: TargetIdentifier
+      description: Identifies the specific instruction, concept, or logic to be reinforced.
+    - name: ReinforcementStrategyApplier
+      description: Applies the chosen method of reinforcement (e.g., re-prompting, attention weight adjustment, contextual
+        re-injection).
+    - name: IntensityController
+      description: Manages the strength or subtlety of the reinforcement.
+    - name: TimingCoordinator
+      description: Determines when and how often to apply reinforcement for optimal effect.
+implementation:
+  usage:
+    description: Subtly repeats or re-emphasizes a key directive, piece of information, or a line of reasoning to ensure it
+      remains focal in the AI's cognitive process and isn't lost or diluted over time or by distracting inputs.
+    example: &id001
+      initial_instruction: 'User: ''Remember to focus on environmental impact for all solutions.'''
+      later_in_dialogue_ai_drifting: 'AI: ''...and the economic benefits are substantial.'''
+      invocation_tag: <echo:reinforce target_concept='environmental_impact' weight=1.2 method='contextual_rephrasing'> Triggered
+        by AI response diverging from core instruction. </echo:reinforce>
+      internal_ai_adjustment_or_next_prompt: 'Internal thought: ''Reinforcing: environmental impact is key.'' Next response:
+        ''While the economic benefits are notable, let''s re-center on the environmental impact of that approach...'''
+    explanation: This sigil helps maintain focus, especially in long interactions or complex multi-step reasoning. It acts
+      like a gentle nudge, reminding the AI of what's important without being overly prescriptive. The reinforcement can be
+      achieved by literally re-injecting a weighted copy of the target, or by adjusting attention biases towards concepts
+      related to the target logic. The 'LLMs with embedded vector bias' suggests a technical way to achieve this.
+  parameters: {}
+  returns: {}
+  examples: []
+connectivity:
+  input_types: []
+  output_types: []
+  mesh_endpoints:
+  - TargetIdentifier
+  - ReinforcementStrategyApplier
+  - IntensityController
+  - TimingCoordinator
+  event_topics: []
+  usage_patterns:
+  - *id001

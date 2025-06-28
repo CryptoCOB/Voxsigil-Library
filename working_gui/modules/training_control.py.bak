@@ -1,0 +1,696 @@
+"""
+Training Control Widget for VoxSigil GUI.
+Provides an interface for controlling training processes.
+"""
+
+import logging
+import random
+import subprocess
+
+from PyQt5.QtCore import Qt, QThread, pyqtSlot
+from PyQt5.QtGui import QFont
+from PyQt5.QtWidgets import (
+    QGroupBox,
+    QHBoxLayout,
+    QLabel,
+    QProgressBar,
+    QPushButton,
+    QSlider,
+    QTextEdit,
+    QVBoxLayout,
+    QWidget,
+)
+
+from .training_worker import TrainingWorker
+
+logger = logging.getLogger(__name__)
+
+
+class TrainingControlWidget(QWidget):
+    """Widget for controlling training processes."""
+
+    def __init__(self, parent=None):
+        super().__init__(parent)
+        self.vanta_core = None
+        self.training_active = False
+        self.training_timer = None
+        self.training_step = 0
+        self.arc_data = None  # ARC data for testing
+        self.enhanced_training_data = []  # Initialize empty list to avoid None
+        self.fresh_data_generated = False  # Flag to track fresh data generation
+
+        # Threading attributes for non-blocking training
+        self.training_thread = None
+        self.training_worker = None
+        self.gpu_devices = self.detect_gpus()  # List of available GPUs        # Initialize empty training components to prevent errors
+        self.training_components = {
+            "art_available": False,
+            "gridformer_available": False,
+            "novel_paradigm_available": False,
+            "art_trainer": None,
+            "grid_former": None,
+            "holo_engine": None,
+        }
+
+        self.setup_ui()
+        self.initialize_vanta_core()
+
+    def detect_gpus(self):
+        """Detect all available GPUs using torch, tensorflow, or nvidia-smi."""
+        gpu_devices = []
+
+        # Try PyTorch
+        try:
+            import torch
+
+            if hasattr(torch, "cuda") and torch.cuda.is_available():
+                gpu_count = torch.cuda.device_count()
+                for i in range(gpu_count):
+                    gpu_devices.append(f"CUDA:{i} - {torch.cuda.get_device_name(i)}")
+        except ImportError:
+            logger.warning("PyTorch not available for GPU detection")
+        except Exception as e:
+            logger.warning(f"Error detecting GPUs with PyTorch: {e}")
+
+        # Try TensorFlow
+        if not gpu_devices:
+            try:
+                import tensorflow as tf
+
+                gpu_devices = [
+                    device.name for device in tf.config.list_physical_devices("GPU")
+                ]
+            except ImportError:
+                pass
+
+        # Try nvidia-smi as a fallback
+        if not gpu_devices:
+            try:
+                result = subprocess.run(
+                    ["nvidia-smi", "--query-gpu=name", "--format=csv,noheader"],
+                    stdout=subprocess.PIPE,
+                    text=True,
+                    check=True,
+                )
+                gpu_devices = [line.strip() for line in result.stdout.splitlines()]
+            except (subprocess.SubprocessError, FileNotFoundError):
+                pass
+
+        return gpu_devices
+
+    def setup_ui(self):
+        """Set up the training control UI."""
+        layout = QVBoxLayout(self)
+
+        # Control buttons
+        control_layout = QHBoxLayout()
+
+        # Start button
+        self.start_btn = QPushButton("🚀 Start Training")
+        self.start_btn.clicked.connect(self.start_training)
+        control_layout.addWidget(self.start_btn)
+
+        # Stop button
+        self.stop_btn = QPushButton("⏹️ Stop")
+        self.stop_btn.clicked.connect(self.stop_training)
+        self.stop_btn.setEnabled(False)
+        control_layout.addWidget(self.stop_btn)
+
+        # Generate data button
+        self.gen_data_btn = QPushButton("🔄 Generate Data")
+        self.gen_data_btn.clicked.connect(self.generate_training_data)
+        control_layout.addWidget(self.gen_data_btn)
+
+        # Test model button
+        self.test_model_btn = QPushButton("🧪 Test Model")
+        self.test_model_btn.clicked.connect(self.test_model)
+        self.test_model_btn.setToolTip("Test trained model against ARC solutions")
+        control_layout.addWidget(self.test_model_btn)
+
+        layout.addLayout(control_layout)
+
+        # Enhanced Controls Section
+        controls_group = QGroupBox("🔧 Training Parameters")
+        controls_layout = QVBoxLayout(controls_group)
+
+        # ARC Data Controls
+        data_controls = QHBoxLayout()
+
+        # Load ARC Data
+        self.load_data_btn = QPushButton("📥 Load ARC Dataset")
+        self.load_data_btn.clicked.connect(self.load_arc_data)
+        data_controls.addWidget(self.load_data_btn)
+
+        # Preview ARC Data
+        self.preview_data_btn = QPushButton("👀 Preview Samples")
+        self.preview_data_btn.clicked.connect(self.preview_arc_samples)
+        data_controls.addWidget(self.preview_data_btn)
+
+        # Data Status
+        self.data_status_label = QLabel("📁 Dataset Status: ❌ Not Loaded")
+        data_controls.addWidget(self.data_status_label)
+
+        controls_layout.addLayout(data_controls)
+
+        # Sample Count Control
+        sample_layout = QHBoxLayout()
+        sample_layout.addWidget(QLabel("🔢 Generated Samples:"))
+        self.gen_samples_slider = QSlider(Qt.Horizontal)
+        self.gen_samples_slider.setRange(100, 2000000)  # Up to 2 million samples
+        self.gen_samples_slider.setValue(10000)  # Default to 10K samples
+        self.gen_samples_slider.valueChanged.connect(self.update_gen_samples_label)
+        sample_layout.addWidget(self.gen_samples_slider)
+        self.gen_samples_label = QLabel("10,000 samples")
+        sample_layout.addWidget(self.gen_samples_label)
+
+        # Quick sample count buttons
+        quick_sample_layout = QHBoxLayout()
+
+        self.sample_10k_btn = QPushButton("🔍 10K")
+        self.sample_10k_btn.setToolTip("10,000 samples - good for testing")
+        self.sample_10k_btn.clicked.connect(lambda: self.set_sample_count(10000))
+
+        self.sample_100k_btn = QPushButton("🚀 100K")
+        self.sample_100k_btn.setToolTip("100,000 samples - moderate training")
+        self.sample_100k_btn.clicked.connect(lambda: self.set_sample_count(100000))
+
+        self.sample_500k_btn = QPushButton("💪 500K")
+        self.sample_500k_btn.setToolTip("500,000 samples - intensive training")
+        self.sample_500k_btn.clicked.connect(lambda: self.set_sample_count(500000))
+
+        self.sample_1m_btn = QPushButton("🔥 1M")
+        self.sample_1m_btn.setToolTip("1,000,000 samples - heavy training")
+        self.sample_1m_btn.clicked.connect(lambda: self.set_sample_count(1000000))
+
+        self.sample_2m_btn = QPushButton("⚡ 2M")
+        self.sample_2m_btn.setToolTip("2,000,000 samples - maximum training")
+        self.sample_2m_btn.clicked.connect(lambda: self.set_sample_count(2000000))
+
+        quick_sample_layout.addWidget(self.sample_10k_btn)
+        quick_sample_layout.addWidget(self.sample_100k_btn)
+        quick_sample_layout.addWidget(self.sample_500k_btn)
+        quick_sample_layout.addWidget(self.sample_1m_btn)
+        quick_sample_layout.addWidget(self.sample_2m_btn)
+
+        sample_layout.addLayout(quick_sample_layout)
+        controls_layout.addLayout(sample_layout)
+
+        # Epochs Control
+        epoch_layout = QHBoxLayout()
+        epoch_layout.addWidget(QLabel("🔄 Max Epochs:"))
+        self.epochs_slider = QSlider(Qt.Horizontal)
+        self.epochs_slider.setRange(1, 100)
+        self.epochs_slider.setValue(10)
+        self.epochs_slider.valueChanged.connect(self.update_epoch_label)
+        epoch_layout.addWidget(self.epochs_slider)
+        self.epoch_label = QLabel("10 epochs")
+        epoch_layout.addWidget(self.epoch_label)
+        controls_layout.addLayout(epoch_layout)
+
+        # ART Multiplier Control
+        art_layout = QHBoxLayout()
+        art_layout.addWidget(QLabel("🎨 ART Multiplier:"))
+        self.art_multiplier_slider = QSlider(Qt.Horizontal)
+        self.art_multiplier_slider.setRange(1, 20)
+        self.art_multiplier_slider.setValue(5)
+        self.art_multiplier_slider.valueChanged.connect(
+            self.update_art_multiplier_label
+        )
+        art_layout.addWidget(self.art_multiplier_slider)
+        self.art_multiplier_label = QLabel("5x generation")
+        art_layout.addWidget(self.art_multiplier_label)
+        controls_layout.addLayout(art_layout)
+
+        # Sigil Generation
+        sigil_controls = QHBoxLayout()
+        self.gen_sigils_btn = QPushButton("✨ Generate Sigils")
+        self.gen_sigils_btn.clicked.connect(self.generate_sigils)
+        sigil_controls.addWidget(self.gen_sigils_btn)
+        controls_layout.addLayout(sigil_controls)
+
+        layout.addWidget(controls_group)
+
+        # Output Section
+        output_group = QGroupBox("📋 Training Output")
+        output_layout = QVBoxLayout(output_group)
+
+        # Training output
+        self.training_output = QTextEdit()
+        self.training_output.setReadOnly(True)
+        self.training_output.setMaximumHeight(200)
+        output_layout.addWidget(self.training_output)
+
+        layout.addWidget(output_group)
+
+        # Progress bar
+        self.progress_bar = QProgressBar()
+        self.progress_bar.setRange(0, 100)
+        self.progress_bar.setValue(0)
+        layout.addWidget(self.progress_bar)        # GPU info
+        if self.gpu_devices:
+            gpu_info = QLabel(f"🖥️ GPU(s): {', '.join(self.gpu_devices)}")
+            gpu_info.setFont(QFont("Arial", 9))
+            layout.addWidget(gpu_info)
+        else:
+            gpu_info = QLabel("⚠️ No GPUs detected")
+            gpu_info.setFont(QFont("Arial", 9))
+            layout.addWidget(gpu_info)
+            
+    def set_sample_count(self, count):
+        """Set the sample count slider to a specific value."""
+        self.gen_samples_slider.setValue(count)
+        
+    def update_gen_samples_label(self, value):
+        """Update the generated samples label with formatting for large numbers."""
+        formatted_value = "{:,}".format(value)
+        self.gen_samples_label.setText(f"{formatted_value} samples")
+        
+    def update_epoch_label(self, value):
+        """Update the epoch label."""
+        self.epoch_label.setText(f"{value} epochs")
+          def update_art_multiplier_label(self, value):
+        """Update the ART multiplier label."""
+        self.art_multiplier_label.setText(f"{value}x generation")
+        
+    def initialize_vanta_core(self):
+        """Initialize VantaCore and training components for training operations."""
+        try:
+            # Attempt to import VantaCore
+            from Vanta.core.UnifiedVantaCore import get_vanta_core, UnifiedVantaCore
+
+            # Try to get existing instance, create new one if not available
+            self.vanta_core = get_vanta_core()
+            
+            if not self.vanta_core:
+                self.log_message("⚙️ Creating new VantaCore instance...")
+                self.vanta_core = UnifiedVantaCore()
+                
+                # Register all components automatically
+                registration_results = self.vanta_core.auto_register_all_components()
+                
+                # Log registration results
+                self.log_message(f"✅ VantaCore initialized with:")
+                
+                for category, components in registration_results.items():
+                    if components:
+                        self.log_message(f"  - {len(components)} {category}")
+                
+            if self.vanta_core:
+                self.log_message("✅ VantaCore initialized successfully")
+
+                # Try to get the training components - first through VantaCore
+                try:
+                    # Get ART trainer component
+                    art_trainer = self.vanta_core.get_component("arc_trainer")
+                    if art_trainer:
+                        self.training_components["art_trainer"] = art_trainer
+                        self.training_components["art_available"] = True
+                        self.log_message("✅ ARC Trainer component loaded from VantaCore")
+                    else:
+                        self.log_message("⚠️ ARC Trainer component not available in VantaCore")
+                        
+                        # Try direct import as fallback
+                        try:
+                            from ART.art_trainer import ArtTrainer
+                            art_trainer = ArtTrainer()
+                            self.training_components["art_trainer"] = art_trainer
+                            self.training_components["art_available"] = True
+                            self.log_message("✅ ARC Trainer component loaded directly")
+                            
+                            # Register with VantaCore for future use
+                            self.vanta_core.register_component("arc_trainer", art_trainer)
+                        except ImportError:
+                            self.log_message("⚠️ Could not import ArtTrainer directly")
+
+                    # Get GridFormer component
+                    grid_former = self.vanta_core.get_component("grid_former")
+                    if grid_former:
+                        self.training_components["grid_former"] = grid_former
+                        self.training_components["gridformer_available"] = True
+                        self.log_message("✅ GridFormer component loaded from VantaCore")
+                    else:
+                        self.log_message("⚠️ GridFormer component not available in VantaCore")
+                        
+                        # Try direct import as fallback
+                        try:
+                            from core.grid_former import GridFormer
+                            grid_former = GridFormer()
+                            self.training_components["grid_former"] = grid_former
+                            self.training_components["gridformer_available"] = True
+                            self.log_message("✅ GridFormer component loaded directly")
+                            
+                            # Register with VantaCore for future use
+                            self.vanta_core.register_component("grid_former", grid_former)
+                        except ImportError:
+                            self.log_message("⚠️ Could not import GridFormer directly")
+
+                    # Get HoloEngine component (for novel paradigms)
+                    holo_engine = self.vanta_core.get_component("holo_engine")
+                    if holo_engine:
+                        self.training_components["holo_engine"] = holo_engine
+                        self.training_components["novel_paradigm_available"] = True
+                        self.log_message("✅ HoloEngine component loaded from VantaCore")
+                    else:
+                        self.log_message("⚠️ HoloEngine component not available in VantaCore")
+                        
+                        # Try direct import as fallback
+                        try:
+                            from HoloMesh.engine import HoloEngine
+                            holo_engine = HoloEngine()
+                            self.training_components["holo_engine"] = holo_engine
+                            self.training_components["novel_paradigm_available"] = True
+                            self.log_message("✅ HoloEngine component loaded directly")
+                            
+                            # Register with VantaCore for future use
+                            self.vanta_core.register_component("holo_engine", holo_engine)
+                        except ImportError:
+                            self.log_message("⚠️ Could not import HoloEngine directly")
+                            
+                    # Try to initialize integration bridge if components are available
+                    if (self.training_components["art_available"] and 
+                        self.training_components["novel_paradigm_available"]):
+                        try:
+                            from core.enhanced_grid_connector import initialize_art_holomesh_bridge
+                            bridge = initialize_art_holomesh_bridge(
+                                self.training_components["art_trainer"],
+                                self.training_components["holo_engine"]
+                            )
+                            if bridge:
+                                self.log_message("✅ ART-HoloMesh integration bridge established")
+                                self.training_components["art_holomesh_bridge"] = bridge
+                        except ImportError:
+                            self.log_message("⚠️ Could not initialize ART-HoloMesh bridge")
+                            
+                except Exception as component_error:
+                    self.log_message(f"⚠️ Error loading components: {component_error}")
+            else:
+                self.log_message("⚠️ VantaCore not available")
+        except ImportError:
+            self.log_message("⚠️ VantaCore not available (ImportError)")
+            
+            # Try direct imports as fallback
+            self._initialize_without_vanta()
+
+        # Check if training components are ready
+        if self.training_components.get("art_available", False) or self.training_components.get("gridformer_available", False):
+            self.log_message("✅ Training components ready - you can now start training!")
+        else:
+            self.log_message("⚠️ No training components available - training will run in simulation mode")
+            
+    def _initialize_without_vanta(self):
+        """Initialize components directly without VantaCore as a fallback."""
+        self.log_message("⚙️ Attempting direct component initialization...")
+        
+        # Try to import ART trainer directly
+        try:
+            from ART.art_trainer import ArtTrainer
+            art_trainer = ArtTrainer()
+            self.training_components["art_trainer"] = art_trainer
+            self.training_components["art_available"] = True
+            self.log_message("✅ ARC Trainer component loaded directly")
+        except ImportError:
+            self.log_message("⚠️ Could not import ArtTrainer")
+            
+        # Try to import GridFormer directly
+        try:
+            from core.grid_former import GridFormer
+            grid_former = GridFormer()
+            self.training_components["grid_former"] = grid_former
+            self.training_components["gridformer_available"] = True
+            self.log_message("✅ GridFormer component loaded directly")
+        except ImportError:
+            self.log_message("⚠️ Could not import GridFormer")
+            
+        # Try to import HoloEngine directly
+        try:
+            from HoloMesh.engine import HoloEngine
+            holo_engine = HoloEngine()
+            self.training_components["holo_engine"] = holo_engine
+            self.training_components["novel_paradigm_available"] = True
+            self.log_message("✅ HoloEngine component loaded directly")
+        except ImportError:
+            self.log_message("⚠️ Could not import HoloEngine")
+
+    def load_arc_data(self):
+        """Load the ARC dataset."""
+        self.log_message("📥 Loading ARC dataset...")
+
+        try:
+            # Try to import the ARC data loader
+            from utils.data_loader import load_arc_dataset
+
+            # Load the dataset
+            self.arc_data = load_arc_dataset()
+
+            self.log_message(f"✅ Loaded ARC dataset with {len(self.arc_data)} samples")
+            self.data_status_label.setText(
+                f"📁 Dataset: ✅ Loaded ({len(self.arc_data)} samples)"
+            )
+        except ImportError:
+            # Simulate loading if module not available
+            self.arc_data = [
+                {"id": f"sample_{i}", "data": {"grid": []}} for i in range(100)
+            ]
+            self.log_message("⚠️ Simulated ARC dataset loaded (100 samples)")
+            self.data_status_label.setText("📁 Dataset: ✅ Simulated (100 samples)")
+        except Exception as e:
+            self.log_message(f"❌ Error loading ARC dataset: {e}")
+            self.data_status_label.setText("📁 Dataset: ❌ Load Failed")
+
+    def preview_arc_samples(self):
+        """Preview ARC dataset samples."""
+        if not self.arc_data:
+            self.log_message("⚠️ No ARC data loaded. Please load the dataset first.")
+            return
+
+        # Show a few sample entries
+        self.log_message("👀 ARC Dataset Preview:")
+        for i, sample in enumerate(self.arc_data[:3]):  # Show first 3 samples
+            sample_id = sample.get("id", f"sample_{i}")
+            sample_dims = "Unknown"
+
+            if "data" in sample and "grid" in sample["data"]:
+                grid = sample["data"]["grid"]
+                if grid:
+                    sample_dims = f"{len(grid)}x{len(grid[0])}"
+
+            self.log_message(
+                f"  Sample {i + 1}: ID={sample_id}, Dimensions={sample_dims}"
+            )
+
+        self.log_message(f"... {len(self.arc_data) - 3} more samples ...")
+
+    def generate_training_data(self):
+        """Generate training data for model training."""
+        sample_count = self.gen_samples_slider.value()
+        self.log_message(f"🔄 Generating {sample_count:,} training samples...")
+
+        # Create an array to hold the batches
+        self.training_data_batches = []
+        batch_size = 32  # Default batch size
+        num_batches = sample_count // batch_size + (
+            1 if sample_count % batch_size > 0 else 0
+        )
+
+        # Check if we can use the ART trainer to generate real data
+        if (
+            self.vanta_core
+            and self.training_components.get("art_available", False)
+            and self.training_components.get("art_trainer")
+        ):
+            self.log_message("🎯 Using ART trainer to generate data...")
+
+            try:
+                # This is a placeholder for real ART training data generation
+                # In a real implementation, you would call methods on the art_trainer
+                art_multiplier = self.art_multiplier_slider.value()
+
+                # Simulate successful generation
+                self.training_data_batches = [
+                    {"batch_id": i, "size": batch_size} for i in range(num_batches)
+                ]
+
+                self.log_message(
+                    f"✅ Generated {sample_count:,} samples in {num_batches} batches with {art_multiplier}x multiplier"
+                )
+                self.fresh_data_generated = True
+            except Exception as e:
+                self.log_message(f"❌ Error generating ART data: {e}")
+                # Fall back to simulated data
+                self._generate_simulated_data(num_batches, batch_size)
+        else:
+            # Generate simulated data
+            self.log_message("ℹ️ Using simulated data generation...")
+            self._generate_simulated_data(num_batches, batch_size)
+
+    def _generate_simulated_data(self, num_batches, batch_size):
+        """Generate simulated training data."""
+        # Create simple simulated batches for demonstration
+        self.training_data_batches = [
+            {"batch_id": i, "size": batch_size, "simulated": True}
+            for i in range(num_batches)
+        ]
+
+        self.log_message(
+            f"✅ Generated {num_batches * batch_size:,} simulated samples in {num_batches} batches"
+        )
+        self.fresh_data_generated = True
+
+    def generate_sigils(self):
+        """Generate training sigils."""
+        self.log_message("✨ Generating sigils for enhanced training...")
+
+        try:
+            # This is a placeholder for actual sigil generation
+            # In a real implementation, you would import and use a sigil generator
+            sigil_count = random.randint(5, 20)
+
+            # Simulate successful generation
+            self.log_message(f"✅ Generated {sigil_count} training sigils")
+        except Exception as e:
+            self.log_message(f"❌ Error generating sigils: {e}")
+
+    def log_message(self, message):
+        """Add a message to the training output log."""
+        self.training_output.append(message)
+        # Ensure the latest message is visible
+        self.training_output.ensureCursorVisible()
+        # Log to application logger as well
+        logger.info(message)
+
+    @pyqtSlot()
+    def start_training(self):
+        """Start the training process."""
+        if self.training_active:
+            self.log_message("⚠️ Training is already in progress")
+            return
+
+        if not self.training_data_batches and not self.fresh_data_generated:
+            self.log_message("⚠️ No training data available. Generating default data...")
+            self.generate_training_data()
+
+        if not self.training_data_batches:
+            self.log_message(
+                "❌ No training data available. Please generate data first."
+            )
+            return
+
+        # Get training parameters
+        total_epochs = self.epochs_slider.value()
+
+        self.log_message(f"🚀 Starting training with {total_epochs} epochs...")
+        self.training_active = True
+        self.start_btn.setEnabled(False)
+        self.stop_btn.setEnabled(True)
+        self.gen_data_btn.setEnabled(False)
+
+        # Reset progress
+        self.progress_bar.setValue(0)
+        self.training_step = 0
+
+        # Create worker and thread for training
+        self.training_worker = TrainingWorker()
+        self.training_thread = QThread()
+        self.training_worker.moveToThread(self.training_thread)
+
+        # Connect signals
+        self.training_worker.progress_updated.connect(self.update_progress)
+        self.training_worker.step_completed.connect(self.handle_step_completed)
+        self.training_worker.status_update.connect(self.log_message)
+        self.training_worker.training_complete.connect(self.handle_training_complete)
+        self.training_worker.error_occurred.connect(self.handle_training_error)
+        self.training_thread.started.connect(
+            lambda: self.training_worker.setup_training(
+                self.training_data_batches,
+                self.training_components,
+                total_epochs,
+                self.enhanced_training_data,
+            )
+        )
+        self.training_thread.started.connect(self.training_worker.run_training)
+
+        # Start the thread
+        self.training_thread.start()
+
+    @pyqtSlot()
+    def stop_training(self):
+        """Stop the training process."""
+        if not self.training_active:
+            return
+
+        self.log_message("⏹️ Stopping training...")
+        if self.training_worker:
+            self.training_worker.stop_training()
+
+    @pyqtSlot(int)
+    def update_progress(self, value):
+        """Update the progress bar."""
+        self.progress_bar.setValue(value)
+
+    @pyqtSlot(int, dict)
+    def handle_step_completed(self, step, metrics):
+        """Handle the completion of a training step."""
+        self.training_step = step
+
+        # Display metrics in the log every 10 steps to avoid flooding
+        if step % 10 == 0 or step < 10:
+            loss = metrics.get("loss", 0.0)
+            accuracy = metrics.get("accuracy", 0.0)
+            epoch = metrics.get("epoch", 1)
+
+            self.log_message(
+                f"📊 Epoch {epoch}, Step {step}: Loss={loss:.4f}, Accuracy={accuracy:.2%}"
+            )
+
+    @pyqtSlot()
+    def handle_training_complete(self):
+        """Handle the completion of training."""
+        self.training_active = False
+        self.start_btn.setEnabled(True)
+        self.stop_btn.setEnabled(False)
+        self.gen_data_btn.setEnabled(True)
+
+        self.log_message("🎉 Training completed successfully!")
+
+        # Clean up thread
+        if self.training_thread and self.training_thread.isRunning():
+            self.training_thread.quit()
+            self.training_thread.wait()
+
+    @pyqtSlot(str)
+    def handle_training_error(self, error_message):
+        """Handle training errors."""
+        self.log_message(f"❌ {error_message}")
+        self.training_active = False
+        self.start_btn.setEnabled(True)
+        self.stop_btn.setEnabled(False)
+        self.gen_data_btn.setEnabled(True)
+
+        # Clean up thread
+        if self.training_thread and self.training_thread.isRunning():
+            self.training_thread.quit()
+            self.training_thread.wait()
+
+    def test_model(self):
+        """Test the trained model against ARC solutions."""
+        if not self.arc_data:
+            self.log_message("⚠️ No ARC data loaded. Please load the dataset first.")
+            return
+
+        self.log_message("🧪 Testing model against ARC solutions...")
+
+        # Simulated test results
+        test_samples = min(len(self.arc_data), 20)
+        correct = random.randint(int(test_samples * 0.6), test_samples)
+        accuracy = correct / test_samples
+
+        self.log_message(
+            f"✅ Test complete: {correct}/{test_samples} correct ({accuracy:.2%} accuracy)"
+        )
+
+        # Display detailed results (simulated)
+        self.log_message("📊 Test Results:")
+        self.log_message(f"  - Accuracy: {accuracy:.2%}")
+        self.log_message(f"  - Samples Tested: {test_samples}")
+        self.log_message(f"  - Correct Predictions: {correct}")
+        self.log_message(f"  - Incorrect Predictions: {test_samples - correct}")

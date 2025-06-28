@@ -22,23 +22,26 @@ from .art_logger import get_art_logger
 
 # HOLO-1.5 Cognitive Mesh Integration
 try:
-    from ..agents.base import vanta_agent, CognitiveMeshRole, BaseAgent
+    from ..agents.base import BaseAgent, CognitiveMeshRole, vanta_agent
     from ..core.base_agent import VantaAgentCapability
+
     HOLO_AVAILABLE = True
 except ImportError:
     HOLO_AVAILABLE = False
+
     # Fallback decorators and classes
     def vanta_agent(**kwargs):
         def decorator(cls):
             return cls
+
         return decorator
-    
+
     class CognitiveMeshRole:
         MANAGER = "manager"
-    
+
     class BaseAgent:
         pass
-    
+
     class VantaAgentCapability:
         ORCHESTRATION = "orchestration"
         COMPONENT_MANAGEMENT = "component_management"
@@ -55,10 +58,10 @@ except ImportError:
         VantaAgentCapability.RESOURCE_COORDINATION,
         "art_coordination",
         "bridge_management",
-        "pattern_orchestration"
+        "pattern_orchestration",
     ],
     cognitive_load=3.2,
-    symbolic_depth=4
+    symbolic_depth=4,
 )
 class ARTManager(BaseAgent if HOLO_AVAILABLE else object):
     """
@@ -74,7 +77,7 @@ class ARTManager(BaseAgent if HOLO_AVAILABLE else object):
     - ARTBLTBridge (BLT integration)
     - PatternAnalysis (pattern processing utilities)
     - DuplicationChecker (duplicate detection)
-    
+
     Enhanced with HOLO-1.5 Recursive Symbolic Cognition Mesh:
     - Orchestral coordination of ART subsystems
     - Cognitive load balancing across components
@@ -574,7 +577,8 @@ class ARTManager(BaseAgent if HOLO_AVAILABLE else object):
             self.logger.error(f"Error during art generation: {e}", exc_info=True)
             return {"error": f"Art generation exception: {e}"}
 
-        # === Integration Methods ===    def set_entropy_guardian(self, guardian: Any) -> bool:
+    # === Integration Methods ===
+    def set_entropy_guardian(self, guardian: Any) -> bool:
         """Attach an entropy guardian to the entropy bridge."""
         if not self.entropy_bridge:
             return False
@@ -585,11 +589,6 @@ class ARTManager(BaseAgent if HOLO_AVAILABLE else object):
                 )
                 return False
             # Note: Ensure this method is called with a valid `guardian` before using `entropy_bridge`.
-            if guardian is None:
-                self.logger.warning(
-                    "set_entropy_guardian called without a valid guardian."
-                )
-                return False
             self.entropy_bridge.entropy_guardian = guardian
             return True
         except Exception as e:

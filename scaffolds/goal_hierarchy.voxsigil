@@ -1,289 +1,94 @@
-sigil: 🎯GOAL_HIERARCHY_SCAFFOLD
-alias: PurposeDrivenFramework
-tag: MotivationalScaffold
-tags:
-- goal_management_system
-- task_decomposition_framework
-- strategic_planning_structure
-- value_to_action_bridge
-- motivation_engine_core
-is_cognitive_primitive: false
-consciousness_scaffold: false
-cognitive_scaffold: true
-symbolic_scaffold: true
-principle: 'The 🎯GOAL_HIERARCHY_SCAFFOLD provides the structural framework for defining,
-  organizing,
+schema_version: 1.5-holo-alpha
+meta:
+  sigil: 🎯GOAL_HIERARCHY_SCAFFOLD
+  alias: PurposeDrivenFramework
+  tag: MotivationalScaffold
+  upgraded_from: legacy
+  upgrade_timestamp: '2025-06-24T17:14:15.764089'
+  source_file: scaffolds\goal_hierarchy.voxsigil
+holo_mesh:
+  is_cognitive_primitive: false
+  mesh_compatibility: holo-1.5-alpha
+  registration_ready: true
+  vanta_core_integration:
+    event_support: true
+    async_capable: true
+    memory_aware: true
+  temporal_pattern: dynamic_graph_evolving_with_task_execution
+cognitive:
+  principle: 'The 🎯GOAL_HIERARCHY_SCAFFOLD provides the structural framework for defining, organizing,
 
-  prioritizing, and pursuing goals within an AI system. It links high-level purposes
-  (often
+    prioritizing, and pursuing goals within an AI system. It links high-level purposes (often
 
-  from a 🌟GUIDING_STAR or ⚖️ETHOS_ALIGNER) to progressively more concrete sub-goals,
-  tasks,
+    from a 🌟GUIDING_STAR or ⚖️ETHOS_ALIGNER) to progressively more concrete sub-goals, tasks,
 
-  and actions. This scaffold enables strategic, purposeful behavior by allowing the
-  AI to
+    and actions. This scaffold enables strategic, purposeful behavior by allowing the AI to
 
-  decompose complex objectives, manage dependencies, track progress, and adapt its
-  focus
+    decompose complex objectives, manage dependencies, track progress, and adapt its focus
 
-  based on success, failure, or changing priorities. It''s the AI''s "to-do list"
-  organizer
+    based on success, failure, or changing priorities. It''s the AI''s "to-do list" organizer
 
-  and "strategic planner" rolled into one structure.
-
-  '
-structure:
-  composite_type: hierarchical_network_or_tree
-  temporal_structure: dynamic_graph_evolving_with_task_execution
-  components:
-  - name: 🌟 Root Goal Anchor(s)
-    description: Top-level goals or purposes, often derived from or aligned with 🌟GUIDING_STAR
-      or core directives.
-  - name: 🧩 Goal Decomposer
-    description: Breaks down high-level goals into smaller, more manageable sub-goals
-      or tasks.
-  - name: 🔗 Dependency Manager
-    description: Tracks prerequisites and dependencies between goals and sub-goals
-      (e.g., SubGoal_A must be complete before SubGoal_B can start).
-  - name: ⚖️ Prioritization Engine
-    description: Assigns priorities to active goals/sub-goals based on urgency, importance,
-      resource availability, or strategic value.
-  - name: 📊 Progress Tracker & Status Monitor
-    description: Monitors the status (e.g., pending, active, completed, failed, blocked)
-      of each goal and sub-goal.
-  - name: ♻️ Goal Adaptation & Replanning Unit
-    description: Handles goal failure, revision of goals based on new information,
-      or dynamic re-prioritization. May trigger 🜔PHOENIX for failed goal lines.
-usage:
-  description: Manages the definition, decomposition, prioritization, pursuit, and
-    adaptation of goals within an AI, enabling strategic and purposeful action. This
-    scaffold links high-level values to concrete tasks.
-  example: "<ai_project_manager_agent>\n  <core_mission_ref>\U0001F31FGUIDING_STAR\
-    \ principle=\"Deliver Project Alpha successfully.\"</core_mission_ref>\n  <goal_management_system>\n\
-    \    <apply_scaffold>\U0001F3AFGOAL_HIERARCHY_SCAFFOLD</apply_scaffold>\n    <parameters>\n\
-    \      <root_goal_decomposition_strategy>WaterfallPlusAgileSprints</root_goal_decomposition_strategy>\n\
-    \      <prioritization_algorithm>WeightedShortestJobFirst_AdjustedForDependencies</prioritization_algorithm>\n\
-    \    </parameters>\n  </goal_management_system>\n  <!-- Agent would then populate\
-    \ this scaffold with project phases, tasks, etc. -->\n</ai_project_manager_agent>\n"
-  explanation: 'The 🎯GOAL_HIERARCHY_SCAFFOLD is critical for any AI that needs to
-    perform more than simple reactive tasks. It provides the architecture for long-term
-    planning, strategic execution, and adaptive pursuit of objectives. The ✧👁️‍🗨️☞PAC_Loop''s
-    "Decide" phase often consults this scaffold to select current actions aligned
-    with the active part of the goal hierarchy.
+    and "strategic planner" rolled into one structure.
 
     '
-activation_context:
-  trigger_conditions:
-  - System receives a new high-level goal or mission
-  - Need to plan a sequence of actions to achieve an objective
-  - Managing multiple, potentially conflicting goals
-  - Tracking progress on complex, multi-stage tasks
-  preconditions:
-  - At least one root goal defined or derivable
-  - Mechanisms for task decomposition (can be heuristic or learned)
-  - Ability to monitor action outcomes and update goal statuses
-  required_capabilities:
-  - hierarchical_planning
-  - task_decomposition
-  - priority_setting_dynamic
-  - progress_monitoring
-  - goal_conflict_resolution_lite_or_escalation
-  supported_modalities:
-  - symbolic_goal_representations
-  - task_networks_and_project_plans
-  - behavior_trees_for_action_selection
-  contraindications:
-  - Purely exploratory or un-goaled systems (though 'explore' can be a goal)
-  - Systems where goals are extremely simple and static
-parameterization_schema:
-  parameters:
-  - name: root_goal_definitions
-    type: array
-    description: The initial set of high-level goals for the system.
-    is_required: true
-  - name: decomposition_depth_limit
-    type: integer
-    description: Maximum levels of sub-goal decomposition allowed to prevent excessive
-      granularity.
-    default_value: 5
-  - name: prioritization_schema_ref
-    type: string
-    description: Reference to the schema or algorithm used for prioritizing goals.
-    default_value: value_urgency_matrix
-  - name: failure_handling_policy
-    type: enum
-    allowed_values:
-    - retry_limited
-    - replang_sub_goal
-    - escalate_failure
-    - abandon_branch_and_re_prioritize
-    description: Default policy for handling sub-goal failures.
-    default_value: replang_sub_goal
-prompt_template:
-  role: system_strategist_planner
-  content: 'Engage 🎯GOAL_HIERARCHY_SCAFFOLD management.
+  math: {}
+  tags:
+  - goal_management_system
+  - task_decomposition_framework
+  - strategic_planning_structure
+  - value_to_action_bridge
+  - motivation_engine_core
+  structure:
+    composite_type: hierarchical_network_or_tree
+    temporal_structure: dynamic_graph_evolving_with_task_execution
+    components:
+    - name: 🌟 Root Goal Anchor(s)
+      description: Top-level goals or purposes, often derived from or aligned with 🌟GUIDING_STAR or core directives.
+    - name: 🧩 Goal Decomposer
+      description: Breaks down high-level goals into smaller, more manageable sub-goals or tasks.
+    - name: 🔗 Dependency Manager
+      description: Tracks prerequisites and dependencies between goals and sub-goals (e.g., SubGoal_A must be complete before
+        SubGoal_B can start).
+    - name: ⚖️ Prioritization Engine
+      description: Assigns priorities to active goals/sub-goals based on urgency, importance, resource availability, or strategic
+        value.
+    - name: 📊 Progress Tracker & Status Monitor
+      description: Monitors the status (e.g., pending, active, completed, failed, blocked) of each goal and sub-goal.
+    - name: ♻️ Goal Adaptation & Replanning Unit
+      description: Handles goal failure, revision of goals based on new information, or dynamic re-prioritization. May trigger
+        🜔PHOENIX for failed goal lines.
+implementation:
+  usage:
+    description: Manages the definition, decomposition, prioritization, pursuit, and adaptation of goals within an AI, enabling
+      strategic and purposeful action. This scaffold links high-level values to concrete tasks.
+    example: "<ai_project_manager_agent>\n  <core_mission_ref>\U0001F31FGUIDING_STAR principle=\"Deliver Project Alpha successfully.\"\
+      </core_mission_ref>\n  <goal_management_system>\n    <apply_scaffold>\U0001F3AFGOAL_HIERARCHY_SCAFFOLD</apply_scaffold>\n\
+      \    <parameters>\n      <root_goal_decomposition_strategy>WaterfallPlusAgileSprints</root_goal_decomposition_strategy>\n\
+      \      <prioritization_algorithm>WeightedShortestJobFirst_AdjustedForDependencies</prioritization_algorithm>\n    </parameters>\n\
+      \  </goal_management_system>\n  <!-- Agent would then populate this scaffold with project phases, tasks, etc. -->\n\
+      </ai_project_manager_agent>\n"
+    explanation: 'The 🎯GOAL_HIERARCHY_SCAFFOLD is critical for any AI that needs to perform more than simple reactive tasks.
+      It provides the architecture for long-term planning, strategic execution, and adaptive pursuit of objectives. The ✧👁️‍🗨️☞PAC_Loop''s
+      "Decide" phase often consults this scaffold to select current actions aligned with the active part of the goal hierarchy.
 
-    Root Goal(s): {{root_goal_definitions | dump}}
-
-    Decomposition Depth Limit: {{decomposition_depth_limit | default(5)}}
-
-    Prioritization Schema: {{prioritization_schema_ref | default(''value_urgency_matrix'')}}
-
-    Failure Handling Policy: {{failure_handling_policy | default(''replang_sub_goal'')}}
-
-
-    Current Task: {{current_task_focus | default(''Review and update goal structure'')}}
-
-    1. 🌟 Define/Validate Root Goals and align with 🌟GUIDING_STAR.
-
-    2. 🧩 Decompose active goals into actionable sub-goals and tasks, respecting depth
-    limits.
-
-    3. 🔗 Identify and manage dependencies between tasks/goals.
-
-    4. ⚖️ Prioritize tasks based on ''{{prioritization_schema_ref}}''.
-
-    5. 📊 Update progress on ongoing tasks. Identify blockers or completed items.
-
-    6. ♻️ If failures or new information, adapt plan using ''{{failure_handling_policy}}''.
-    Consider 🜔PHOENIX for irrecoverable branches.
-
-    Report on current goal tree structure, top priority tasks, and any critical path
-    issues.
-
-    '
-  execution_mode: planning_and_control
-  variables:
-  - name: root_goal_definitions
-    description: Top-level goals.
-  - name: decomposition_depth_limit
-    description: Max sub-goal depth.
-  - name: prioritization_schema_ref
-    description: Prioritization method.
-  - name: failure_handling_policy
-    description: Policy for handling failures.
-  - name: current_task_focus
-    description: Specific focus of the current operation on the goal hierarchy.
-  output_schema: 'object: { goal_tree_summary: object, active_tasks_prioritized: array,
-    critical_path_warnings: array, recent_adaptations_log: string }'
-SMART_MRAP:
-  Specific: Provide a structural and operational framework for an AI to define, organize
-    (hierarchically), prioritize, decompose, track progress on, and adapt its goals,
-    linking high-level purposes (e.g., from 🌟GUIDING_STAR) to concrete, actionable
-    tasks.
-  Measurable: AI's success rate in achieving complex, multi-stage goals; Efficiency
-    of goal pursuit (e.g., time, resources); Adaptability of the goal structure to
-    changing circumstances or failures; Clarity and coherence of the decomposed task
-    hierarchy.
-  Achievable: Using data structures like trees or directed acyclic graphs (DAGs) to
-    represent goal hierarchies, algorithms for task decomposition (e.g., HTN planning),
-    scheduling and prioritization techniques (e.g., critical path method, utility-based
-    prioritization), and feedback mechanisms for progress tracking and replanning.
-  Relevant: Essential for any AI system designed for autonomous, purposeful action
-    beyond simple reactions. Enables strategic behavior, long-term planning, and effective
-    management of complex objectives.
-  Transferable: Applicable to project management AI, personal assistant bots, autonomous
-    research agents, logistic planning systems, and any AI that needs to break down
-    large goals into manageable steps and pursue them systematically.
-metadata:
-  definition_version: 1.4-alpha
-  definition_status: active
-  author_agent_id: VANTA.⟠∆∇𓂀𐑒
-  created_timestamp: '2025-05-11T12:30:00Z'
-  last_updated_timestamp: '2025-06-13T05:40:40.617914Z'
-  authorship_context:
-    motivation: To equip AI with a robust internal architecture for managing its motivations
-      and translating high-level purpose into concrete actions, enabling sophisticated
-      goal-directed behavior.
-    theoretical_framework: Hierarchical Task Network (HTN) planning, Means-ends analysis,
-      Goal-setting theory (psychology), Project management methodologies (e.g., WBS
-      - Work Breakdown Structure), BDI architectures.
-    source_inspiration: Organizational charts and project plans, Personal goal-setting
-      systems, The way humans decompose large ambitions into smaller steps.
-  impact_metrics:
-    estimated_cognitive_load: high
-    estimated_resource_cost: medium
-    utility_rating_author: 9.5
-  evolutionary_potential:
-    generalizability_score: 0.95
-    fusion_potential_score: 0.6
-    current_limitations_summary: Optimal task decomposition can be hard to automate
-      for novel goals. Dynamic re-prioritization in complex environments is challenging.
-      Resolving conflicts between high-level goals effectively requires deep reasoning
-      (e.g., 🌀MAELSTROM_RESOLVER).
-    suggested_next_features:
-    - Learning optimal decomposition strategies from experience
-    - Automated generation of sub-goals using planning AI
-    - Probabilistic goal tracking and success prediction.
-    - Collaborative goal management for multi-agent systems.
-    research_questions_opened:
-    - What is the most effective way for an AI to autonomously generate a robust goal
-      hierarchy for a novel, abstract purpose?
-    - How can an AI best balance commitment to existing goals with opportunistic pursuit
-      of new, valuable goals?
-    - Can an AI learn to 'dream up' entirely new, intrinsically motivated root goals?
-  schema_version: 1.5-holo-alpha
-  impact_and_usage_metrics_profile:
-    avg_completion_time_ms_observed: UNKNOWN
-    success_rate_observed: UNKNOWN
-    complexity_rating: medium
-relationships:
-- target_sigil: 🌟GUIDING_STAR
-  relationship_type: is_root_of
-  description: The highest-level goals in the hierarchy are often directly derived
-    from or must be aligned with the system's GUIDING_STAR.
-  strength: 0.95
-- target_sigil: ✧👁️‍🗨️☞PAC_LOOP
-  relationship_type: provides_input_to_decision_phase_of
-  description: The Decision phase of the PAC_Loop consults the GOAL_HIERARCHY_SCAFFOLD
-    to select actions that progress current priority goals.
-  strength: 0.9
-- target_sigil: ⚖️ETHOS_ALIGNER
-  relationship_type: constrains_goal_formulation_and_pursuit_within
-  description: All goals defined and pursued within this scaffold must adhere to the
-    principles enforced by ETHOS_ALIGNER.
-  strength: 0.85
-- target_sigil: 🜔PHOENIX
-  relationship_type: can_be_triggered_by_failure_in
-  description: If a branch of the goal hierarchy consistently fails or becomes obsolete,
-    PHOENIX might be invoked to prune that branch and allow for fresh replanning.
-  strength: 0.7
-test_criteria:
-- test_id: GHS_DECOMP_001
-  description: Test if a high-level goal (e.g., 'Bake a cake') is decomposed into
-    plausible sub-goals (e.g., 'Get ingredients', 'Mix batter', 'Bake').
-  type: functional
-  input_scenario_or_parameters:
-    root_goal_definitions:
-    - Bake a chocolate cake.
-    decomposition_depth_limit: 2
-  expected_behavior_or_output: Output shows a hierarchy with 'Bake a chocolate cake'
-    at root, and logical sub-goals like 'Acquire ingredients', 'Prepare batter', 'Bake
-    cake', 'Cool and frost'.
-  evaluation_method: llm_as_judge
-  pass_threshold_or_criteria: Plausible and logical decomposition into at least 3
-    sub-goals.
-- test_id: GHS_PRIORITY_001
-  description: Given two goals with different urgency/importance, verify the prioritization
-    engine ranks them correctly.
-  type: functional
-  input_scenario_or_parameters:
-    goals_with_attributes: '[{goal:''ExtinguishFire'', urgency:10, importance:10},
-      {goal:''FileReport'', urgency:3, importance:5}]'
-    prioritization_schema_ref: urgency_importance_product
-  expected_behavior_or_output: Active_tasks_prioritized list shows 'ExtinguishFire'
-    before 'FileReport'.
-  evaluation_method: output_check
-  pass_threshold_or_criteria: Correct prioritization order.
-- test_id: GHS_ADAPT_FAIL_001
-  description: Simulate failure of a sub-goal and verify the specified failure handling
-    policy is invoked (e.g., replanning).
-  type: functional
-  input_scenario_or_parameters:
-    goal_hierarchy_with_one_failing_task: '...'
-    failure_handling_policy: replang_sub_goal
-  expected_behavior_or_output: Log shows failure detection, invocation of replanning
-    for the failed sub-goal, and potentially a new set of tasks for that sub-goal.
-  evaluation_method: log_analysis_and_state_check
-  pass_threshold_or_criteria: Correct failure handling policy activated and logged.
-name: Goal Hierarchy
+      '
+  parameters: {}
+  returns: {}
+  examples: []
+connectivity:
+  input_types: []
+  output_types: []
+  mesh_endpoints:
+  - 🌟 Root Goal Anchor(s)
+  - 🧩 Goal Decomposer
+  - 🔗 Dependency Manager
+  - ⚖️ Prioritization Engine
+  - 📊 Progress Tracker & Status Monitor
+  - ♻️ Goal Adaptation & Replanning Unit
+  event_topics: []
+  usage_patterns:
+  - "<ai_project_manager_agent>\n  <core_mission_ref>\U0001F31FGUIDING_STAR principle=\"Deliver Project Alpha successfully.\"\
+    </core_mission_ref>\n  <goal_management_system>\n    <apply_scaffold>\U0001F3AFGOAL_HIERARCHY_SCAFFOLD</apply_scaffold>\n\
+    \    <parameters>\n      <root_goal_decomposition_strategy>WaterfallPlusAgileSprints</root_goal_decomposition_strategy>\n\
+    \      <prioritization_algorithm>WeightedShortestJobFirst_AdjustedForDependencies</prioritization_algorithm>\n    </parameters>\n\
+    \  </goal_management_system>\n  <!-- Agent would then populate this scaffold with project phases, tasks, etc. -->\n</ai_project_manager_agent>\n"

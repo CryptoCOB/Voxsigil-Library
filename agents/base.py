@@ -505,18 +505,29 @@ class BaseAgent:
         if getattr(self.__class__, "_is_vanta_registrable", False):
             agent_name = getattr(self.__class__, "_vanta_name", self.__class__.__name__)
             try:
-                vanta_core.register_agent(
-                    agent_name,
-                    self,
-                    {
-                        "subsystem": getattr(self.__class__, "_vanta_subsystem", None),
-                        "mesh_role": self._mesh_role,
-                        "sigil": self.sigil,
-                        "auto_registered": True,
-                        "holo_1_5": True,
-                    },
-                )
-                logger.info(f"🔗 Self-registered {agent_name} with Vanta Core")
+                # Check if already registered to prevent duplicates
+                if (
+                    hasattr(vanta_core, "get_agent")
+                    and vanta_core.get_agent(agent_name) is not None
+                ):
+                    logger.debug(
+                        f"🔄 Agent {agent_name} already registered, skipping self-registration"
+                    )
+                else:
+                    vanta_core.register_agent(
+                        agent_name,
+                        self,
+                        {
+                            "subsystem": getattr(
+                                self.__class__, "_vanta_subsystem", None
+                            ),
+                            "mesh_role": self._mesh_role,
+                            "sigil": self.sigil,
+                            "auto_registered": True,
+                            "holo_1_5": True,
+                        },
+                    )
+                    logger.info(f"🔗 Self-registered {agent_name} with Vanta Core")
             except AttributeError as e:
                 logger.warning(
                     f"Failed to self-register {agent_name} - missing register_agent method: {e}"

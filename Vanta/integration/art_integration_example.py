@@ -40,7 +40,7 @@ try:
     from Vanta.interfaces.rag_interface import BaseRagInterface
     from Vanta.interfaces.memory_interface import BaseMemoryInterface
     from Vanta.interfaces.model_manager import ModelManager
-    from BLT.voxsigil_rag import VoxSigilRAG
+    from BLT.hybrid_blt import BLTEnhancedRAG as VoxSigilRAG
     from ARC.llm.llm_interface import BaseLlmInterface
     from ARC.llm.arc_llm_handler import initialize_llm_handler, _llm_call_api_internal
 except ImportError as e:

@@ -11,6 +11,21 @@ The unified interface allows seamless interaction with multiple memory systems t
 a single consistent API, supporting both direct access and component-based communication.
 """
 
+# HOLO-1.5 Registration System
+try:
+    from core.base import CognitiveMeshRole, vanta_core_module
+except ImportError:
+    # Safe fallback decorator that accepts parameters
+    def vanta_core_module(**kwargs):
+        def decorator(cls):
+            return cls
+
+        return decorator
+
+    class CognitiveMeshRole:
+        MANAGER = "manager"
+
+
 import logging
 import threading
 from collections import defaultdict
@@ -22,12 +37,25 @@ from typing import Any, Callable, Dict, List, Optional, Tuple
 from interfaces.memory_interface import JsonFileMemoryInterface
 from memory.echo_memory import EchoMemory
 from memory.memory_braid import MemoryBraid
+
 from Vanta.core.UnifiedAsyncBus import AsyncMessage, MessageType
 
 # Setup the logger
 logger = logging.getLogger("Vanta.UnifiedMemoryInterface")
 
 
+@vanta_core_module(
+    name="unified_memory_interface",
+    subsystem="memory_management",
+    mesh_role=CognitiveMeshRole.MANAGER,
+    description="Unified interface for all memory operations in the VoxSigil system",
+    capabilities=[
+        "memory_storage",
+        "retrieval",
+        "event_logging",
+        "component_communication",
+    ],
+)
 class UnifiedMemoryInterface:
     """
     Central interface for all memory operations in the VoxSigil system.
@@ -89,7 +117,9 @@ class UnifiedMemoryInterface:
                     )
                 logger.info("UnifiedMemoryInterface registered with VantaCore")
             except Exception as e:
-                logger.error(f"Failed to register UnifiedMemoryInterface with VantaCore: {e}")
+                logger.error(
+                    f"Failed to register UnifiedMemoryInterface with VantaCore: {e}"
+                )
 
     def _initialize_memory_subsystems(self):
         """Initialize all memory subsystems with appropriate configuration."""
@@ -117,7 +147,9 @@ class UnifiedMemoryInterface:
             self.echo_memory = EchoMemory(
                 vanta_core=None,  # We'll manage the registration ourselves
                 max_log_size=getattr(self.config, "max_echo_memory_size", 10000),
-                enable_persistence=getattr(self.config, "enable_echo_persistence", False),
+                enable_persistence=getattr(
+                    self.config, "enable_echo_persistence", False
+                ),
                 persistence_path=getattr(self.config, "echo_persistence_path", None),
             )
             logger.info("EchoMemory initialized")
@@ -304,7 +336,9 @@ class UnifiedMemoryInterface:
 
         # If not found in MemoryBraid, try JsonFileMemoryInterface
         if result is None:
-            similar_interactions = self.file_memory.retrieve_similar_interactions(key, limit=1)
+            similar_interactions = self.file_memory.retrieve_similar_interactions(
+                key, limit=1
+            )
             if similar_interactions and similar_interactions[0].get("query") == key:
                 result = similar_interactions[0].get("response")
 
@@ -351,7 +385,9 @@ class UnifiedMemoryInterface:
             namespace = self.default_namespace
 
         # Retrieve from JsonFileMemoryInterface
-        similar_interactions = self.file_memory.retrieve_similar_interactions(query, limit=limit)
+        similar_interactions = self.file_memory.retrieve_similar_interactions(
+            query, limit=limit
+        )
 
         # Filter by namespace if specified
         if namespace:
@@ -536,7 +572,9 @@ class UnifiedMemoryInterface:
         """
         stats = {
             "file_memory": {
-                "interactions": len(self.file_memory._get_index().get("interactions", [])),
+                "interactions": len(
+                    self.file_memory._get_index().get("interactions", [])
+                ),
                 "last_updated": self.file_memory._get_index().get("last_updated"),
             },
             "memory_braid": {

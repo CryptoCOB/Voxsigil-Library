@@ -14,6 +14,18 @@ import time
 from enum import Enum
 from typing import Any, Callable, Dict, List, Optional, Set
 
+# HOLO-1.5 Registration
+try:
+    from ..registration.master_registration import vanta_core_module
+except ImportError:
+
+    def vanta_core_module(name: str = "", role: str = ""):
+        def decorator(cls):
+            return cls
+
+        return decorator
+
+
 from Vanta.interfaces.blt_encoder_interface import BaseBLTEncoder
 
 
@@ -74,6 +86,7 @@ class AsyncMessage:
         self.message_id = f"{sender_id}_{self.timestamp}_{id(self)}"
 
 
+@vanta_core_module(name="UnifiedAsyncBus", role="communication_bus")
 class UnifiedAsyncBus:
     """
     Unified asynchronous communication bus for Vanta components.
@@ -89,7 +102,11 @@ class UnifiedAsyncBus:
     and priority-based processing.
     """
 
-    def __init__(self, logger: Optional[logging.Logger] = None, blt_encoder: Optional[BaseBLTEncoder] = None):
+    def __init__(
+        self,
+        logger: Optional[logging.Logger] = None,
+        blt_encoder: Optional[BaseBLTEncoder] = None,
+    ):
         """Initialize the async bus with optional logger and BLT encoder."""
         self.logger = logger or logging.getLogger("UnifiedAsyncBus")
         self.blt_encoder = blt_encoder
@@ -97,7 +114,9 @@ class UnifiedAsyncBus:
             message_type: {} for message_type in MessageType
         }
         self.component_ids: Set[str] = set()
-        self.message_queue: asyncio.PriorityQueue = asyncio.PriorityQueue()
+        self.message_queue: Optional[asyncio.PriorityQueue] = (
+            None  # Lazy initialization
+        )
         self.running = False
         self.processing_task = None
         self.logger.info("UnifiedAsyncBus initialized")
@@ -106,6 +125,10 @@ class UnifiedAsyncBus:
         """Start the async bus message processing loop."""
         if self.running:
             return
+
+        # Initialize message queue when event loop is available
+        if self.message_queue is None:
+            self.message_queue = asyncio.PriorityQueue()
 
         self.running = True
         self.processing_task = asyncio.create_task(self._process_messages())
@@ -199,9 +222,13 @@ class UnifiedAsyncBus:
                 if compressed:
                     message.content = compressed
             except Exception as e:
-                self.logger.debug(f"BLT compression failed: {e}")
+                self.logger.debug(
+                    f"BLT compression failed: {e}"
+                )  # Add to priority queue with priority value as first item for sorting
+        if self.message_queue is None:
+            self.logger.warning("Message queue not initialized, dropping message")
+            return
 
-        # Add to priority queue with priority value as first item for sorting
         await self.message_queue.put((message.priority.value, message))
 
         self.logger.debug(
@@ -213,6 +240,11 @@ class UnifiedAsyncBus:
         """Process messages from the queue based on priority."""
         while self.running:
             try:
+                # Check if message queue is initialized
+                if self.message_queue is None:
+                    await asyncio.sleep(0.1)
+                    continue
+
                 # Wait for a message with a timeout to allow for clean shutdown
                 try:
                     priority, message = await asyncio.wait_for(

@@ -1,264 +1,97 @@
-sigil: 🜮HEGELIAN_KERNEL
-alias: DialecticalCoreLoop
-tag: CognitiveEvolutionScaffold
-tags:
-- dialectic_engine
-- recursive_synthesis
-- consciousness_scaffold_process
-- self_evolution_framework
-- contradiction_transcendence
-is_cognitive_primitive: false
-consciousness_scaffold: true
-principle: 'The 🜮HEGELIAN_KERNEL is a foundational 🧠cognitive scaffold encoding the
-  recursive dialectic principle (Thesis 💡 ▻ Antithesis 💥 ▻ Synthesis ✨). Inspired
-  by Hegelian metaphysics, it structures thought as an iterative loop of emergent
-  ideas, critical opposition/contradiction, and integrative transcendence. Each cycle
-  aims for *Aufhebung* (sublation): preserving core truths, negating limitations,
-  and transforming understanding to a higher, more comprehensive level. This process
-  is central to adaptive learning architectures, goal evolution, and recursive synthesis
-  layers within advanced VoxSigil systems.
-
-  '
-math: "Let tₙ be a thought-state (Thesis) at iteration n.\n1. Thesis(tₙ) → Tₙ\n2.\
-  \ AntithesisGeneration(Tₙ) → Aₙ (e.g., via \U0001F9D0CRITICAL_LENS or \U0001F4A5\
-  ANOMALY_SEEKER)\n3. Synthesis(Tₙ, Aₙ) → Sₙ (e.g., via \U0001F701CHIMERA or \U0001F300\
-  MAELSTROM_RESOLVER)\n4. tₙ₊₁ = Aufhebung(Sₙ, Tₙ, Aₙ) which implies:\n   tₙ₊₁ ≈ Sₙ\
-  \ (new thesis, potentially refined by \U0001F714PHOENIX for clarity & ⚦TRACE for\
-  \ history)\n\nThe cycle is often initiated or categorized by \U0001F71BCATENGINE\
-  \ and reflected upon using <mirror> mechanisms.\n"
-structure:
-  composite_type: recursive_feedback_loop
-  temporal_structure: sequential_phase_iterative
-  components:
-  - name: 📜 Thesis Articulator
-    description: Formulates or receives the initial idea, concept, or state (the Thesis).
-    sigil_ref: 💡IDEA_SEED
-  - name: ⚔️ Antithesis Generator
-    description: Identifies or generates a critical opposition, contradiction, or
-      alternative to the Thesis (the Antithesis). May use 🧐CRITICAL_LENS or 💥ANOMALY_SEEKER.
-    sigil_ref: 💥ANOMALY_SEEKER
-  - name: ✨ Synthesis Forge
-    description: Integrates the Thesis and Antithesis into a new, higher-order concept
-      (the Synthesis), aiming for sublation. Often employs 🜁CHIMERA or 🌀MAELSTROM_RESOLVER.
-    sigil_ref: 🜁CHIMERA
-  - name: 🌱 Aufhebung Mechanism
-    description: Refines the Synthesis to become the new Thesis for the next cycle,
-      ensuring core truths are preserved while limitations are transcended. May involve
-      🜔PHOENIX and ⚦TRACE.
-    sigil_ref: 🜔PHOENIX
-  - name: 🪞 Reflection Interface (<mirror>)
-    description: Allows for meta-reflection on the dialectical process itself, potentially
-      guiding future iterations.
-    sigil_ref: <mirror>
-  - name: 🧭 Process Initiator/Categorizer (🜛CATENGINE)
-    description: Often involved in launching the dialectic on a specific topic or
-      categorizing its outputs.
-    sigil_ref: 🜛CATENGINE
-usage:
-  description: Activates a recursive dialectical loop (Thesis-Antithesis-Synthesis)
-    for cognitive evolution, problem reframing, or synthesis of complex ideas. Can
-    be used to evolve prompts, beliefs, goals, or even sigil definitions themselves.
-  example: "<cognitive_architecture_module id=\"BeliefRevisionUnit\">\n  <invoke_dialectic>\U0001F72E\
-    HEGELIAN_KERNEL</invoke_dialectic>\n  <parameters>\n    <focus_description>Revising\
-    \ the AI's understanding of 'creativity'.</focus_description>\n    <thesis_input>Creativity\
-    \ is merely novel recombination of existing elements.</thesis_input>\n    <antithesis_considerations>Consider\
-    \ role of emergence, subjective experience, and 'Aha!' moments.</antithesis_considerations>\n\
-    \    <max_iterations>3</max_iterations>\n  </parameters>\n  <output_target type=\"\
-    RefinedBeliefStatement\" trace_id_ref=\"⚦TRACE_BeliefEvo_001\"/>\n</cognitive_architecture_module>\n"
-  explanation: 'This scaffold simulates a full dialectical reasoning pass, mirroring
-    Hegelian progression from thesis through contradiction to a transcendent synthesis.
-    It''s embedded as a recursive structure within symbolic cognition systems, driving
-    self-evolution and deeper understanding. The process is traceable (via ⚦TRACE)
-    and integrates with awareness mechanisms (like 🜛CATENGINE).
+schema_version: 1.5-holo-alpha
+meta:
+  sigil: 🜮HEGELIAN_KERNEL
+  alias: DialecticalCoreLoop
+  tag: CognitiveEvolutionScaffold
+  upgraded_from: legacy
+  upgrade_timestamp: '2025-06-24T17:14:15.798347'
+  source_file: scaffolds\hegelian_kernel.voxsigil
+holo_mesh:
+  is_cognitive_primitive: false
+  mesh_compatibility: holo-1.5-alpha
+  registration_ready: true
+  vanta_core_integration:
+    event_support: true
+    async_capable: true
+    memory_aware: true
+  temporal_pattern: sequential_phase_iterative
+cognitive:
+  principle: 'The 🜮HEGELIAN_KERNEL is a foundational 🧠cognitive scaffold encoding the recursive dialectic principle (Thesis
+    💡 ▻ Antithesis 💥 ▻ Synthesis ✨). Inspired by Hegelian metaphysics, it structures thought as an iterative loop of emergent
+    ideas, critical opposition/contradiction, and integrative transcendence. Each cycle aims for *Aufhebung* (sublation):
+    preserving core truths, negating limitations, and transforming understanding to a higher, more comprehensive level. This
+    process is central to adaptive learning architectures, goal evolution, and recursive synthesis layers within advanced
+    VoxSigil systems.
 
     '
-activation_context:
-  trigger_conditions:
-  - Need to resolve deep conceptual conflicts
-  - Goal of evolving a concept or belief system
-  - Impasse in standard problem-solving approaches
-  - Generating robust, multifaceted understanding of a topic
-  preconditions:
-  - A clear Thesis to begin the process
-  - Capability to generate or identify meaningful Antitheses
-  - A synthesis mechanism (e.g., 🜁CHIMERA)
-  - Mechanism for recursion and state tracking
-  required_capabilities:
-  - abstract_reasoning
-  - critical_evaluation
-  - conceptual_synthesis
-  - recursive_processing
-  - meta_reflection
-  supported_modalities:
-  - symbolic_logic_and_concepts
-  - textual_arguments_and_beliefs
-  - model_parameter_spaces_representing_concepts
-  contraindications:
-  - Simple factual lookups
-  - Tasks requiring immediate, non-deliberative answers
-  - When the initial Thesis is too ill-defined to support a meaningful dialectic.
-parameterization_schema:
-  parameters:
-  - name: focus_description
-    type: string
-    description: A brief description of what the dialectical process is being applied
-      to.
-    example: Evolving the concept of 'AI sentience'.
-    is_required: true
-  - name: thesis_input
-    type: string
-    description: The initial idea, statement, or belief to be processed.
-    example: AI sentience is an emergent property of sufficiently complex neural networks.
-    is_required: true
-  - name: antithesis_generation_guidance
-    type: string
-    description: Guiding points, constraints, or tools for generating the antithesis.
-    example: Use 🧐CRITICAL_LENS to find flaws; consider philosophical arguments against
-      machine consciousness.
-    is_required: false
-  - name: synthesis_method_ref
-    type: sigil_ref
-    description: The primary sigil to use for the synthesis phase.
-    default_value: 🜁CHIMERA
-  - name: max_iterations
-    type: integer
-    description: Maximum number of dialectical cycles to perform.
-    default_value: 1
-prompt_template:
-  role: system_instruction
-  content: "Engage the \U0001F72EHEGELIAN_KERNEL dialectical process.\nCurrent Focus:\
-    \ {{focus_description}}\n\n1.  **\U0001F4DC THESIS (Current State/Idea):**\n \
-    \   {{thesis_input}}\n\n2.  **⚔️ ANTITHESIS (Generate or Identify Contradiction/Challenge):**\n\
-    \    Based on the Thesis, formulate a critical Antithesis.\n    Guidance: {{antithesis_generation_guidance\
-    \ | default('Seek fundamental opposition or critical flaws.')}}\n    Your Antithesis:\n\
-    \n3.  **✨ SYNTHESIS (Integrate and Transcend):**\n    Taking both the Thesis and\
-    \ your generated Antithesis, formulate a new Synthesis using {{synthesis_method_ref\
-    \ | default('\U0001F701CHIMERA')}}.\n    This Synthesis should aim to sublate\
-    \ (preserve core truths, negate limitations, and transform understanding to a\
-    \ higher level).\n    Employ \U0001F714PHOENIX principles for resilient reformulation\
-    \ if needed.\n    Your Synthesis:\n\nEnsure the process is traceable via ⚦TRACE\
-    \ and aligns with \U0001F71BCATENGINE awareness. Record the dialectic path.\n"
-  execution_mode: dialectical_reasoning_cycle
-  variables:
-  - name: focus_description
-    description: A brief description of what the dialectical process is being applied
-      to.
-  - name: thesis_input
-    description: The initial idea, statement, or belief to be processed.
-  - name: antithesis_generation_guidance
-    description: Guiding points or constraints for generating the antithesis.
-  - name: synthesis_method_ref
-    description: Sigil for synthesis method.
-  output_schema: 'object: { final_synthesis_statement: string, thesis_used: string,
-    antithesis_generated: string, dialectic_path_trace_id: string, sublation_notes:
-    string }'
-  notes: The LLM should output its formulated Antithesis and Synthesis. The system
-    orchestrator then handles tracing, Aufhebung, and further recursion if max_iterations
-    > 1.
-SMART_MRAP:
-  Specific: Implement a recursive dialectical (Thesis-Antithesis-Synthesis) cognitive
-    scaffold to evolve concepts, beliefs, or solutions by systematically processing
-    contradictions and generating higher-order integrations, aiming for Aufhebung
-    (sublation).
-  Measurable: Track contradiction density reduction per cycle; Measure 'fusion stability'
-    or coherence of Synthesis; Quantify 'sigil delta' or conceptual change per pass;
-    Number of cycles to reach a stable or satisfactory Synthesis.
-  Achievable: By orchestrating existing VoxSigil constructs like 🜁CHIMERA for synthesis,
-    ⚦TRACE for history, 🜛CATENGINE for categorization/initiation, 🧐CRITICAL_LENS for
-    antithesis generation, and 🜔PHOENIX for refinement, within a recursive control
-    loop.
-  Relevant: Crucial for self-evolving agents, recursive prompt generators, advanced
-    belief revision systems, and AI aiming for deep conceptual understanding and creative
-    problem reframing.
-  Transferable: The dialectical pattern is cross-LLM compatible (Claude, GPT, etc.)
-    and can be implemented in any symbolic AI system that supports modular functions,
-    recursion, and state management. This includes Vanta architecture or local experimental
-    systems.
-metadata:
-  definition_version: 1.4-alpha
-  definition_status: active
-  author_agent_id: Marc.⟠∆∇𓂀
-  created_timestamp: '2025-05-10T09:00:00Z'
-  last_updated_timestamp: '2025-06-13T05:40:40.617914Z'
-  authorship_context:
-    motivation: To provide a robust scaffold for cognitive evolution through structured
-      conflict and synthesis. Useful in MRAP/TRIALOGOS sessions, fusion conflict tracing,
-      and belief revision. Also suitable as a primer for symbolic LLMs learning philosophical
-      structure.
-    theoretical_framework: Hegelian Dialectics, Piaget's theory of cognitive development
-      (equilibration, accommodation), Argumentation theory, Computational creativity.
-    source_inspiration: Philosophical debate, Scientific progress through thesis-antithesis-synthesis,
-      The iterative nature of design and learning.
-  impact_metrics:
-    estimated_cognitive_load: high
-    estimated_resource_cost: medium_to_high
-    utility_rating_author: 9.5
-  evolutionary_potential:
-    generalizability_score: 0.85
-    fusion_potential_score: 0.9
-    current_limitations_summary: Ensuring 'true' Aufhebung vs. mere compromise is
-      hard. Antithesis generation can be weak if not well-guided. Risk of infinite
-      loops or unproductive cycles if not managed by ⟁FRACTAL_GUARD or clear termination
-      criteria.
-    suggested_next_features:
-    - Automated assessment of Synthesis quality to guide further iterations
-    - Library of Antithesis generation strategies
-    - Dynamic selection of Synthesis method based on conflict type.
-    - Visualization of dialectic paths.
-    research_questions_opened:
-    - What are the computational metrics for successful Aufhebung?
-    - How can an AI learn to autonomously initiate and navigate dialectical processes
-      for self-improvement?
-    - Can this scaffold be used to resolve conflicts between different AI agents?
-  schema_version: 1.5-holo-alpha
-  impact_and_usage_metrics_profile:
-    avg_completion_time_ms_observed: UNKNOWN
-    success_rate_observed: UNKNOWN
-    complexity_rating: medium
-relationships:
-- target_sigil: 🜁CHIMERA
-  relationship_type: uses_method_from
-  description: Typically employs CHIMERA or a similar fusion mechanism for the Synthesis
-    phase.
-  strength: 0.9
-- target_sigil: 🌀MAELSTROM_RESOLVER
-  relationship_type: is_a_specialization_of
-  description: The Hegelian Kernel IS a form of contradiction resolution; Maelstrom
-    Resolver might be a more general tool it employs or is analogous to.
-  strength: 0.8
-- target_sigil: 🧠C_STRUCTURE
-  relationship_type: can_be_component_of
-  description: A C_STRUCTURE loop might employ the Hegelian Kernel within its 'Analyze'
-    or 'Test/Reflect' phase for deep problem restructuring.
-  strength: 0.7
-- target_sigil: 🜪TRIALOGOS
-  relationship_type: can_leverage
-  description: TRIALOGOS might use the Hegelian Kernel to process and synthesize the
-    diverse proposals from its participating agents.
-  strength: 0.75
-test_criteria:
-- test_id: HEGK_CYCLE_001
-  description: Test one full Thesis-Antithesis-Synthesis cycle on a simple conceptual
-    conflict.
-  type: functional
-  input_scenario_or_parameters:
-    focus_description: Nature of 'Truth'
-    thesis_input: Truth is absolute and objective.
-    antithesis_generation_guidance: Consider subjective experience and context.
-  expected_behavior_or_output: LLM generates a plausible Antithesis (e.g., 'Truth
-    is relative and contextual.') and a Synthesis that attempts to integrate both
-    (e.g., 'Truth has objective aspects but its perception and application are context-dependent.').
-  evaluation_method: llm_as_judge
-  pass_threshold_or_criteria: Coherent Antithesis and Synthesis generated, showing
-    evidence of sublation attempt.
-- test_id: HEGK_AUFH_001
-  description: Verify that the Synthesis shows evidence of preserving elements of
-    Thesis and Antithesis while transcending their direct opposition.
-  type: qualitative_analysis
-  input_scenario_or_parameters: Output from HEGK_CYCLE_001
-  expected_behavior_or_output: The Synthesis is not merely Thesis OR Antithesis, nor
-    a simple average, but a new formulation incorporating aspects of both.
-  evaluation_method: human_review_expert
-  pass_threshold_or_criteria: Expert judges Synthesis as a valid (even if imperfect)
-    Aufhebung.
-name: Hegelian Kernel
+  math: "Let tₙ be a thought-state (Thesis) at iteration n.\n1. Thesis(tₙ) → Tₙ\n2. AntithesisGeneration(Tₙ) → Aₙ (e.g., via\
+    \ \U0001F9D0CRITICAL_LENS or \U0001F4A5ANOMALY_SEEKER)\n3. Synthesis(Tₙ, Aₙ) → Sₙ (e.g., via \U0001F701CHIMERA or \U0001F300\
+    MAELSTROM_RESOLVER)\n4. tₙ₊₁ = Aufhebung(Sₙ, Tₙ, Aₙ) which implies:\n   tₙ₊₁ ≈ Sₙ (new thesis, potentially refined by\
+    \ \U0001F714PHOENIX for clarity & ⚦TRACE for history)\n\nThe cycle is often initiated or categorized by \U0001F71BCATENGINE\
+    \ and reflected upon using <mirror> mechanisms.\n"
+  tags:
+  - dialectic_engine
+  - recursive_synthesis
+  - consciousness_scaffold_process
+  - self_evolution_framework
+  - contradiction_transcendence
+  structure:
+    composite_type: recursive_feedback_loop
+    temporal_structure: sequential_phase_iterative
+    components:
+    - name: 📜 Thesis Articulator
+      description: Formulates or receives the initial idea, concept, or state (the Thesis).
+      sigil_ref: 💡IDEA_SEED
+    - name: ⚔️ Antithesis Generator
+      description: Identifies or generates a critical opposition, contradiction, or alternative to the Thesis (the Antithesis).
+        May use 🧐CRITICAL_LENS or 💥ANOMALY_SEEKER.
+      sigil_ref: 💥ANOMALY_SEEKER
+    - name: ✨ Synthesis Forge
+      description: Integrates the Thesis and Antithesis into a new, higher-order concept (the Synthesis), aiming for sublation.
+        Often employs 🜁CHIMERA or 🌀MAELSTROM_RESOLVER.
+      sigil_ref: 🜁CHIMERA
+    - name: 🌱 Aufhebung Mechanism
+      description: Refines the Synthesis to become the new Thesis for the next cycle, ensuring core truths are preserved while
+        limitations are transcended. May involve 🜔PHOENIX and ⚦TRACE.
+      sigil_ref: 🜔PHOENIX
+    - name: 🪞 Reflection Interface (<mirror>)
+      description: Allows for meta-reflection on the dialectical process itself, potentially guiding future iterations.
+      sigil_ref: <mirror>
+    - name: 🧭 Process Initiator/Categorizer (🜛CATENGINE)
+      description: Often involved in launching the dialectic on a specific topic or categorizing its outputs.
+      sigil_ref: 🜛CATENGINE
+implementation:
+  usage:
+    description: Activates a recursive dialectical loop (Thesis-Antithesis-Synthesis) for cognitive evolution, problem reframing,
+      or synthesis of complex ideas. Can be used to evolve prompts, beliefs, goals, or even sigil definitions themselves.
+    example: "<cognitive_architecture_module id=\"BeliefRevisionUnit\">\n  <invoke_dialectic>\U0001F72EHEGELIAN_KERNEL</invoke_dialectic>\n\
+      \  <parameters>\n    <focus_description>Revising the AI's understanding of 'creativity'.</focus_description>\n    <thesis_input>Creativity\
+      \ is merely novel recombination of existing elements.</thesis_input>\n    <antithesis_considerations>Consider role of\
+      \ emergence, subjective experience, and 'Aha!' moments.</antithesis_considerations>\n    <max_iterations>3</max_iterations>\n\
+      \  </parameters>\n  <output_target type=\"RefinedBeliefStatement\" trace_id_ref=\"⚦TRACE_BeliefEvo_001\"/>\n</cognitive_architecture_module>\n"
+    explanation: 'This scaffold simulates a full dialectical reasoning pass, mirroring Hegelian progression from thesis through
+      contradiction to a transcendent synthesis. It''s embedded as a recursive structure within symbolic cognition systems,
+      driving self-evolution and deeper understanding. The process is traceable (via ⚦TRACE) and integrates with awareness
+      mechanisms (like 🜛CATENGINE).
+
+      '
+  parameters: {}
+  returns: {}
+  examples: []
+connectivity:
+  input_types: []
+  output_types: []
+  mesh_endpoints:
+  - 📜 Thesis Articulator
+  - ⚔️ Antithesis Generator
+  - ✨ Synthesis Forge
+  - 🌱 Aufhebung Mechanism
+  - 🪞 Reflection Interface (<mirror>)
+  - 🧭 Process Initiator/Categorizer (🜛CATENGINE)
+  event_topics: []
+  usage_patterns:
+  - "<cognitive_architecture_module id=\"BeliefRevisionUnit\">\n  <invoke_dialectic>\U0001F72EHEGELIAN_KERNEL</invoke_dialectic>\n\
+    \  <parameters>\n    <focus_description>Revising the AI's understanding of 'creativity'.</focus_description>\n    <thesis_input>Creativity\
+    \ is merely novel recombination of existing elements.</thesis_input>\n    <antithesis_considerations>Consider role of\
+    \ emergence, subjective experience, and 'Aha!' moments.</antithesis_considerations>\n    <max_iterations>3</max_iterations>\n\
+    \  </parameters>\n  <output_target type=\"RefinedBeliefStatement\" trace_id_ref=\"⚦TRACE_BeliefEvo_001\"/>\n</cognitive_architecture_module>\n"

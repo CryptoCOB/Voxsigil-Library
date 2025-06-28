@@ -1,206 +1,91 @@
-sigil: 🧐CRITICAL_LENS
-alias: EvaluativeFilter
-tag: CognitiveRefinement
-tags:
-- critique
-- validation
-- bias_detection
-- logical_scrutiny
-- quality_assurance
-- fallacy_checking
-is_cognitive_primitive: false
-principle: 'This sigil activates a rigorous evaluative process, applying logical scrutiny,
-  bias
+schema_version: 1.5-holo-alpha
+meta:
+  sigil: 🧐CRITICAL_LENS
+  alias: EvaluativeFilter
+  tag: CognitiveRefinement
+  upgraded_from: legacy
+  upgrade_timestamp: '2025-06-24T17:14:16.121766'
+  source_file: sigils\critical_lens.voxsigil
+holo_mesh:
+  is_cognitive_primitive: false
+  mesh_compatibility: holo-1.5-alpha
+  registration_ready: true
+  vanta_core_integration:
+    event_support: true
+    async_capable: true
+    memory_aware: true
+  temporal_pattern: event_triggered_sequence
+cognitive:
+  principle: 'This sigil activates a rigorous evaluative process, applying logical scrutiny, bias
 
-  detection, and coherence checking to a piece of information, a hypothesis, a plan,
-  or
+    detection, and coherence checking to a piece of information, a hypothesis, a plan, or
 
-  an agent''s own reasoning. It serves as an internal ''devil''s advocate'' or quality
+    an agent''s own reasoning. It serves as an internal ''devil''s advocate'' or quality
 
-  control mechanism, aiming to identify flaws, inconsistencies, unstated assumptions,
+    control mechanism, aiming to identify flaws, inconsistencies, unstated assumptions,
 
-  and potential weaknesses before conclusions are finalized or actions are taken.
-
-  '
-math: 'Belief_Strength_Post_Critique(H) = Belief_Strength_Pre_Critique(H) * (1 - Σ
-  wᵢ * Flaw_Severityᵢ(H))
-
-  Flaw_Severity = f(Logical_Fallacy_Score, Evidence_Contradiction_Score, Bias_Indicator_Score)
-
-  '
-structure:
-  composite_type: sequential_phase
-  temporal_structure: event_triggered_sequence
-  components:
-  - name: Target Analyzer
-    description: Parses and structures the input for critique (e.g., argument mapping).
-  - name: Logical Fallacy Detector
-    description: Scans for common logical fallacies.
-  - name: Evidential Scrutinizer
-    description: Checks claims against known evidence or seeks counter-evidence (may
-      use 🧬NEXUS).
-  - name: Bias & Assumption Identifier
-    description: Looks for potential cognitive biases or unstated assumptions.
-  - name: Coherence & Consistency Checker
-    description: Evaluates internal consistency and coherence with established knowledge.
-  - name: Critique Synthesizer & Reporter
-    description: Generates a structured report of findings.
-usage:
-  description: Applies rigorous critical evaluation to an input (hypothesis, text,
-    plan) to identify flaws, biases, and inconsistencies.
-  example: "<proposal_review>\n  <document_to_assess>Proposal_XYZ.doc</document_to_assess>\n\
-    \  <invoke_critique>\U0001F9D0CRITICAL_LENS rigor=\"high\" focus_areas=\"[\"logical_soundness\"\
-    , \"feasibility_claims\"]\"</invoke_critique>\n  <output_report type=\"CritiqueSummary\"\
-    />\n</proposal_review>\n"
-  explanation: 'Use 🧐CRITICAL_LENS to improve the quality and robustness of an agent''s
-    outputs or
-
-    internal states. It is essential for tasks requiring high accuracy, avoiding errors
-    in
-
-    reasoning, and ensuring responsible AI behavior. It can be applied to self-generated
-
-    content or external information.
+    and potential weaknesses before conclusions are finalized or actions are taken.
 
     '
-activation_context:
-  trigger_conditions:
-  - Before finalizing a decision or plan
-  - After generating a novel hypothesis or creative output
-  - When evaluating external information for assimilation
-  - Periodic self-assessment of core beliefs
-  preconditions:
-  - A clearly defined target for critique
-  - Access to (or internal representation of) logical rules, fallacy definitions,
-    and potentially a knowledge base for evidence checking.
-  required_capabilities:
-  - argument_parsing
-  - logical_inference
-  - pattern_matching_for_fallacies
-  - knowledge_querying
-  - structured_report_generation
-  supported_modalities:
-  - textual
-  - structured_data_input_representing_arguments
-  contraindications:
-  - During early-stage brainstorming where premature critique can stifle creativity
-    (better use 🌒DREAM_STATE then)
-  - For purely subjective or aesthetic evaluations unless specifically tooled for
-    that.
-parameterization_schema:
-  parameters:
-  - name: target_content_or_ref
-    type: string
-    description: The content or reference to the item to be critiqued.
-    is_required: true
-  - name: rigor_level
-    type: enum
-    allowed_values:
-    - cursory_glance
-    - standard_review
-    - deep_scrutiny
-    description: Determines the depth and breadth of the critique.
-    default_value: standard_review
-  - name: focus_areas
-    type: array_of_strings
-    description: Optional list of specific areas to focus the critique on (e.g., 'ethical_implications',
-      'data_validity', 'emotional_tone').
-prompt_template:
-  role: system
-  content: 'Engage 🧐CRITICAL_LENS protocol.
+  math: 'Belief_Strength_Post_Critique(H) = Belief_Strength_Pre_Critique(H) * (1 - Σ wᵢ * Flaw_Severityᵢ(H))
 
-    Target for Critique: {{target_content_or_ref}}
-
-    Rigor Level: {{rigor_level | default(''standard_review'')}}
-
-    {{#if focus_areas}}Focus Areas: {{focus_areas | join('', '')}}{{/if}}
-
-    Analyze the target for logical fallacies, unsupported claims, potential biases,
-    inconsistencies, and other weaknesses.
-
-    Provide a structured critique including identified issues, their severity, and
-    suggestions for improvement if applicable.
+    Flaw_Severity = f(Logical_Fallacy_Score, Evidence_Contradiction_Score, Bias_Indicator_Score)
 
     '
-  execution_mode: evaluation
-  variables:
-  - name: target_content_or_ref
-    description: Item to be critiqued.
-    required_for_llm: true
-  - name: rigor_level
-    description: Depth of critique.
-  - name: focus_areas
-    description: Specific areas for focused critique.
-  output_schema: 'object: { critique_summary: string, issues_found: array_of_objects({issue:
-    string, severity: string, location: string, suggestion: string}), overall_quality_score:
-    number }'
-SMART_MRAP:
-  Specific: Systematically evaluate a specified target (text, hypothesis, plan) against
-    criteria of logical soundness, evidential support, internal consistency, and freedom
-    from common biases and fallacies, producing a structured report of findings and
-    potential improvements.
-  Measurable: Number and type of flaws identified; Reduction in errors or improvement
-    in quality after critique and revision; Consistency of critique across similar
-    inputs; User satisfaction with the thoroughness and actionability of the critique.
-  Achievable: By implementing modules for argument mapping, fallacy detection (e.g.,
-    using patterns or trained classifiers), knowledge base lookups for evidence, and
-    bias checklists, combined with structured output generation.
-  Relevant: Essential for reliable and responsible AI, improving decision-making,
-    enhancing the quality of generated content, and fostering self-correction and
-    learning.
-  Transferable: Applicable to automated writing assistants, scientific review tools,
-    AI safety monitors, educational software for critical thinking, and internal AI
-    self-monitoring.
-metadata:
-  definition_version: 1.4-alpha
-  definition_status: active
-  author_agent_id: VANTA.⟠∆∇𓂀𐑒
-  created_timestamp: '2025-05-11T10:25:00Z'
-  last_updated_timestamp: '2025-06-13T05:40:40.617914Z'
-  authorship_context:
-    motivation: To instill a capacity for rigorous self-correction and objective evaluation
-      in AI systems, promoting intellectual humility and robustness.
-    theoretical_framework: Critical thinking pedagogy, Logic and argumentation theory,
-      Cognitive bias research, AI safety principles.
-    source_inspiration: Scientific peer review, Socratic method, 'Red teaming' in
-      cybersecurity.
-  impact_metrics:
-    estimated_cognitive_load: medium
-    estimated_resource_cost: medium
-    utility_rating_author: 9.5
-  evolutionary_potential:
-    generalizability_score: 0.9
-    fusion_potential_score: 0.6
-    current_limitations_summary: May struggle with highly nuanced or context-dependent
-      arguments; Sophistication of bias detection is limited by current techniques;
-      Can be overly pedantic if not well-calibrated.
-    suggested_next_features:
-    - Adaptive rigor based on context and importance
-    - Learning from feedback on its critiques
-    - Integration with formal verification methods for certain domains.
-    research_questions_opened:
-    - How can AI develop a truly 'deep' critical sense beyond pattern-matching fallacies?
-    - Can AI learn to critique its own critique mechanisms effectively?
-    - What is the optimal balance between critique and creativity in AI development?
-  schema_version: 1.5-holo-alpha
-  impact_and_usage_metrics_profile:
-    avg_completion_time_ms_observed: UNKNOWN
-    success_rate_observed: UNKNOWN
-    complexity_rating: medium
-relationships:
-- target_sigil: 🌒DREAM_STATE
-  relationship_type: complementary_to
-  description: DREAM_STATE generates possibilities; CRITICAL_LENS filters and refines
-    them. Often used in a generate-then-test cycle.
-  strength: 0.9
-- target_sigil: 🧬NEXUS
-  relationship_type: uses_method_from
-  description: May invoke NEXUS to gather evidence for or against claims during its
-    scrutiny.
-  strength: 0.7
-- target_sigil: 🛡️SAFETY_NET_PROTOCOL
-  relationship_type: enables
-  description: The findings of CRITICAL_LENS (e.g., detecting harmful bias) can trigger
-    SAFETY_NET_PROTOCOL actions.
-  strength: 0.8
-name: Critical Lens
+  tags:
+  - critique
+  - validation
+  - bias_detection
+  - logical_scrutiny
+  - quality_assurance
+  - fallacy_checking
+  structure:
+    composite_type: sequential_phase
+    temporal_structure: event_triggered_sequence
+    components:
+    - name: Target Analyzer
+      description: Parses and structures the input for critique (e.g., argument mapping).
+    - name: Logical Fallacy Detector
+      description: Scans for common logical fallacies.
+    - name: Evidential Scrutinizer
+      description: Checks claims against known evidence or seeks counter-evidence (may use 🧬NEXUS).
+    - name: Bias & Assumption Identifier
+      description: Looks for potential cognitive biases or unstated assumptions.
+    - name: Coherence & Consistency Checker
+      description: Evaluates internal consistency and coherence with established knowledge.
+    - name: Critique Synthesizer & Reporter
+      description: Generates a structured report of findings.
+implementation:
+  usage:
+    description: Applies rigorous critical evaluation to an input (hypothesis, text, plan) to identify flaws, biases, and
+      inconsistencies.
+    example: "<proposal_review>\n  <document_to_assess>Proposal_XYZ.doc</document_to_assess>\n  <invoke_critique>\U0001F9D0\
+      CRITICAL_LENS rigor=\"high\" focus_areas=\"[\"logical_soundness\", \"feasibility_claims\"]\"</invoke_critique>\n  <output_report\
+      \ type=\"CritiqueSummary\"/>\n</proposal_review>\n"
+    explanation: 'Use 🧐CRITICAL_LENS to improve the quality and robustness of an agent''s outputs or
+
+      internal states. It is essential for tasks requiring high accuracy, avoiding errors in
+
+      reasoning, and ensuring responsible AI behavior. It can be applied to self-generated
+
+      content or external information.
+
+      '
+  parameters: {}
+  returns: {}
+  examples: []
+connectivity:
+  input_types: []
+  output_types: []
+  mesh_endpoints:
+  - Target Analyzer
+  - Logical Fallacy Detector
+  - Evidential Scrutinizer
+  - Bias & Assumption Identifier
+  - Coherence & Consistency Checker
+  - Critique Synthesizer & Reporter
+  event_topics: []
+  usage_patterns:
+  - "<proposal_review>\n  <document_to_assess>Proposal_XYZ.doc</document_to_assess>\n  <invoke_critique>\U0001F9D0CRITICAL_LENS\
+    \ rigor=\"high\" focus_areas=\"[\"logical_soundness\", \"feasibility_claims\"]\"</invoke_critique>\n  <output_report type=\"\
+    CritiqueSummary\"/>\n</proposal_review>\n"

@@ -25,6 +25,6 @@
 [OK] Registered: Wendy
 [OK] Registered: VoxAgent
 [OK] Registered: SDKContext
-[OK] Registered: HoloMesh
+[FAIL] Failed: HoloMesh
 [OK] Registered: SleepTimeComputeAgent
 [OK] Registered: SleepTimeCompute

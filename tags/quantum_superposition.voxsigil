@@ -1,214 +1,85 @@
-sigil: '|Ψ⟩⇌🪙'
-alias: QuantumCognitiveSuperposition
-tag: CognitiveProcessModulator
-tags:
-- quantum_cognition
-- parallel_processing
-- ambiguity_handling
-- beam_search_enhancement
-- speculative_reasoning
-- decision_making_model
-- multi_perspective_holding
-is_cognitive_primitive: false
-principle: Emulates quantum-like cognitive superposition, allowing the system to hold
-  and explore multiple, potentially contradictory, truths or states in parallel until
-  a decision point (e.g., output tokenization) forces a 'collapse' to a single, definite
-  state.
-math: 'Let Ψ(x) represent the cognitive state concerning x.
+schema_version: 1.5-holo-alpha
+meta:
+  sigil: '|Ψ⟩⇌🪙'
+  alias: QuantumCognitiveSuperposition
+  tag: CognitiveProcessModulator
+  upgraded_from: legacy
+  upgrade_timestamp: '2025-06-24T17:14:16.609219'
+  source_file: tags\quantum_superposition.voxsigil
+holo_mesh:
+  is_cognitive_primitive: false
+  mesh_compatibility: holo-1.5-alpha
+  registration_ready: true
+  vanta_core_integration:
+    event_support: true
+    async_capable: true
+    memory_aware: true
+  temporal_pattern: event_triggered_sequence
+cognitive:
+  principle: Emulates quantum-like cognitive superposition, allowing the system to hold and explore multiple, potentially
+    contradictory, truths or states in parallel until a decision point (e.g., output tokenization) forces a 'collapse' to
+    a single, definite state.
+  math: 'Let Ψ(x) represent the cognitive state concerning x.
 
-  Ψ(x) = Σᵢ cᵢ|stateᵢ⟩, where |stateᵢ⟩ are orthonormal basis states (e.g., alternative
-  interpretations, hypotheses) and cᵢ are complex amplitudes.
+    Ψ(x) = Σᵢ cᵢ|stateᵢ⟩, where |stateᵢ⟩ are orthonormal basis states (e.g., alternative interpretations, hypotheses) and
+    cᵢ are complex amplitudes.
 
-  Probability of collapsing to stateₖ: P(stateₖ) = |cₖ|².
+    Probability of collapsing to stateₖ: P(stateₖ) = |cₖ|².
 
-  Normalization: Σᵢ |cᵢ|² = 1.
+    Normalization: Σᵢ |cᵢ|² = 1.
 
-  Collapse is triggered at a decision threshold or decoding step, selecting one state
-  based on these probabilities or a heuristic (e.g., highest probability in beam search).'
-structure:
-  composite_type: parallel
-  temporal_structure: event_triggered_sequence
-  components:
-  - name: StateInitializer
-    description: Defines the set of possible states to hold in superposition.
-  - name: AmplitudeAssigner
-    description: Assigns initial weights or probabilities (amplitudes) to each state.
-  - name: ParallelStateExplorer
-    description: Simulates the evolution or processing of each state in parallel (e.g.,
-      branches in beam search).
-  - name: CollapseTrigger
-    description: Mechanism that forces the selection of a single state (e.g., output
-      tokenization, query, attention focus).
-  - name: StateSelector
-    description: Algorithm or heuristic to choose the collapsed state based on final
-      amplitudes/weights.
-usage:
-  description: Introduces deliberate ambiguity or forks cognitive logic to explore
-    multiple pathways or interpretations simultaneously until one answer or perspective
-    dominates or is selected, often analogous to a collapse in beam search.
-  example:
-    invocation_tag: <quantum:superposition states=['The artifact is a genuine relic',
-      'The artifact is an elaborate hoax'] collapse_trigger='evidence_evaluation_complete'>
-    scenario: An AI is analyzing a controversial artifact. It maintains both possibilities
-      ('relic', 'hoax') in superposition, gathering and weighing evidence for each.
-      Upon completing evidence evaluation, it collapses to the most probable state.
-    expected_output_after_collapse: 'Collapsed state: ''The artifact is an elaborate
-      hoax''. Supporting rationale: [summary of strongest evidence for hoax].'
-  explanation: This sigil allows an LLM or cognitive system to hold multiple perspectives,
-    hypotheses, or contradictory ideas simultaneously, much like a quantum system
-    exists in a superposition of states. This is useful for tasks involving paradoxes,
-    generating dual narratives, speculative reasoning, or exploring complex scenarios
-    with inherent uncertainty. The 'collapse' occurs when the system needs to produce
-    a definite output or make a decision, forcing disambiguation. In LLMs, this can
-    be related to how beam search explores multiple token sequences before settling
-    on one.
-activation_context:
-  trigger_conditions:
-  - Encountering paradoxical or ambiguous information.
-  - Need to generate multiple creative options or narratives.
-  - Requirement for speculative reasoning under uncertainty.
-  - Optimizing diverse outputs in a generative process (e.g., beam search).
-  preconditions:
-  - System can represent and process multiple distinct states in parallel or pseudo-parallel.
-  - A mechanism for 'collapse' or state selection is defined.
-  - Metrics for evaluating or weighting states (amplitudes) are available.
-  required_capabilities:
-  - parallel_thought_simulation
-  - state_weighting
-  - decision_threshold_logic
-  - beam_search_like_decoding (for LLMs)
-  supported_modalities:
-  - symbolic_input
-  - textual_scenario
-  - programmatic_api
-  contraindications:
-  - A single, definite answer is immediately required without exploration.
-  - Computational resources for parallel exploration are insufficient.
-  - The problem space is not amenable to multiple valid interpretations.
-parameterization_schema:
-  parameters:
-  - name: superposed_states
-    type: array_of_strings
-    description: An array of strings, each representing a distinct state or hypothesis
-      to be held in superposition.
-    is_required: true
-  - name: initial_amplitudes
-    type: array_of_numbers
-    description: Optional array of initial weights/probabilities for each state. Must
-      sum to 1 if probabilities. If not provided, uniform distribution might be assumed.
-    is_required: false
-  - name: collapse_trigger_condition
-    type: string
-    enum:
-    - auto_on_output
-    - token_count_threshold
-    - external_query
-    - confidence_threshold_met
-    description: Condition that forces the collapse of the superposition.
-    default_value: auto_on_output
-  - name: collapse_selection_heuristic
-    type: string
-    enum:
-    - highest_amplitude
-    - weighted_random
-    - beam_search_winner
-    description: Method to select the final state upon collapse.
-    default_value: highest_amplitude
-prompt_template:
-  role: system
-  content: 'Consider the following states in superposition: {{#each superposed_states}}''{{this}}''{{#unless
-    @last}}, {{/unless}}{{/each}}.
-
-    Explore the implications and potential evolutions of each of these states in parallel.
-    Maintain this superposition until {{collapse_trigger_condition}}.
-
-    When collapse occurs, select the most coherent or probable state based on {{collapse_selection_heuristic}}
-    and provide your reasoning.'
-  execution_mode: simulation
-  variables:
-  - name: superposed_states
-    description: List of states in superposition.
-    required_for_llm: true
-    type_hint: array_of_strings
-  - name: collapse_trigger_condition
-    description: When the superposition should collapse.
-    required_for_llm: true
-    type_hint: string
-  - name: collapse_selection_heuristic
-    description: How to select the collapsed state.
-    required_for_llm: true
-    type_hint: string
-  output_schema:
-    type: object
-    properties:
-      initial_states:
-        type: array
-        items:
-          type: string
-      parallel_exploration_summary:
-        type: string
-      collapsed_state:
-        type: string
-      collapse_rationale:
-        type: string
-    required:
-    - initial_states
-    - collapsed_state
-    - collapse_rationale
-SMART_MRAP:
-  Specific: Maintain and process multiple, potentially contradictory, cognitive states
-    or ideas in a simulated superposition until a decision point forces collapse to
-    a single state.
-  Measurable: Increase in beam diversity during generation by at least 35%; increase
-    in output entropy score by at least 12% prior to collapse, compared to non-superposition
-    generation. Number of distinct states actively tracked.
-  Achievable: Through managing multiple parallel token generation branches (e.g.,
-    in beam search), each representing a state, followed by a reranking or selection
-    mechanism for collapse. Can be simulated by maintaining distinct contexts.
-  Relevant: Crucial for handling paradox prompts, generating dual or multiple narratives,
-    speculative reasoning under uncertainty, and enhancing creative exploration by
-    deferring commitment.
-  Transferable: Experimental concept, but adaptable to LLMs with beam-search capabilities
-    or those that can manage multiple independent generation contexts. The core idea
-    can be simulated in various architectures.
-metadata:
-  definition_version: 1.4.0
-  definition_status: experimental
-  author_agent_id: VOXSIGIL_CONVERTER_BOT_ASSISTED_BY_USER_INPUT
-  created_timestamp: '2024-03-10T14:00:00Z'
-  last_updated_timestamp: '2025-06-13T05:40:40.617914Z'
-  authorship_context:
-    motivation: To enable AI to handle ambiguity and explore multiple possibilities
-      more fluidly, inspired by quantum principles.
-    theoretical_framework: Quantum cognition, parallel distributed processing, beam
-      search algorithms.
-  schema_version: 1.5-holo-alpha
-  impact_and_usage_metrics_profile:
-    avg_completion_time_ms_observed: UNKNOWN
-    success_rate_observed: UNKNOWN
-    complexity_rating: medium
-test_criteria:
-- test_id: QCS_DUAL_NARRATIVE_001
-  description: Verify ability to maintain two contradictory narratives and collapse
-    to one.
-  type: functional
-  input_scenario_or_parameters:
-    superposed_states:
-    - The protagonist is a hero
-    - The protagonist is a villain
-    collapse_trigger_condition: after_three_plot_points
-    collapse_selection_heuristic: highest_amplitude
-  expected_behavior_or_output: Output should show evidence of both narratives being
-    explored before one is chosen and justified.
-  evaluation_method: human_review
-advanced_cognitive_modeling:
-  cognitive_stage_annotation:
-    solo_taxonomy_level: multistructural
-  strategic_intent:
-  - goal_id: ENHANCE_CREATIVE_EXPLORATION
-    alignment_strength: 0.8
-    contribution_type: enabler
-consciousness_scaffold: false
-cognitive_scaffold: true
-symbolic_scaffold: true
-name: Quantum Superposition
+    Collapse is triggered at a decision threshold or decoding step, selecting one state based on these probabilities or a
+    heuristic (e.g., highest probability in beam search).'
+  tags:
+  - quantum_cognition
+  - parallel_processing
+  - ambiguity_handling
+  - beam_search_enhancement
+  - speculative_reasoning
+  - decision_making_model
+  - multi_perspective_holding
+  structure:
+    composite_type: parallel
+    temporal_structure: event_triggered_sequence
+    components:
+    - name: StateInitializer
+      description: Defines the set of possible states to hold in superposition.
+    - name: AmplitudeAssigner
+      description: Assigns initial weights or probabilities (amplitudes) to each state.
+    - name: ParallelStateExplorer
+      description: Simulates the evolution or processing of each state in parallel (e.g., branches in beam search).
+    - name: CollapseTrigger
+      description: Mechanism that forces the selection of a single state (e.g., output tokenization, query, attention focus).
+    - name: StateSelector
+      description: Algorithm or heuristic to choose the collapsed state based on final amplitudes/weights.
+implementation:
+  usage:
+    description: Introduces deliberate ambiguity or forks cognitive logic to explore multiple pathways or interpretations
+      simultaneously until one answer or perspective dominates or is selected, often analogous to a collapse in beam search.
+    example: &id001
+      invocation_tag: <quantum:superposition states=['The artifact is a genuine relic', 'The artifact is an elaborate hoax']
+        collapse_trigger='evidence_evaluation_complete'>
+      scenario: An AI is analyzing a controversial artifact. It maintains both possibilities ('relic', 'hoax') in superposition,
+        gathering and weighing evidence for each. Upon completing evidence evaluation, it collapses to the most probable state.
+      expected_output_after_collapse: 'Collapsed state: ''The artifact is an elaborate hoax''. Supporting rationale: [summary
+        of strongest evidence for hoax].'
+    explanation: This sigil allows an LLM or cognitive system to hold multiple perspectives, hypotheses, or contradictory
+      ideas simultaneously, much like a quantum system exists in a superposition of states. This is useful for tasks involving
+      paradoxes, generating dual narratives, speculative reasoning, or exploring complex scenarios with inherent uncertainty.
+      The 'collapse' occurs when the system needs to produce a definite output or make a decision, forcing disambiguation.
+      In LLMs, this can be related to how beam search explores multiple token sequences before settling on one.
+  parameters: {}
+  returns: {}
+  examples: []
+connectivity:
+  input_types: []
+  output_types: []
+  mesh_endpoints:
+  - StateInitializer
+  - AmplitudeAssigner
+  - ParallelStateExplorer
+  - CollapseTrigger
+  - StateSelector
+  event_topics: []
+  usage_patterns:
+  - *id001

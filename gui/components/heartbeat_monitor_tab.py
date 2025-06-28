@@ -87,7 +87,15 @@ class SystemPulseWidget(QWidget):
         self.error_label = QLabel("Errors: 0/min")
         self.error_label.setStyleSheet(VoxSigilStyles.get_label_stylesheet("section"))
         self.error_bar = VoxSigilWidgetFactory.create_progress_bar()
-        self.error_bar.setRange(0, 100)  # Layout
+        self.error_bar.setRange(0, 100)
+
+        # Timestamp
+        self.timestamp_label = QLabel("Last: Never")
+        self.timestamp_label.setStyleSheet(
+            VoxSigilStyles.get_label_stylesheet("section")
+        )
+
+        # Layout
         row = 0
         layout.addWidget(self.tps_label, row, 0)
         layout.addWidget(self.tps_bar, row, 1)
@@ -112,6 +120,8 @@ class SystemPulseWidget(QWidget):
         row += 1
         layout.addWidget(self.error_label, row, 0)
         layout.addWidget(self.error_bar, row, 1)
+        row += 1
+        layout.addWidget(self.timestamp_label, row, 0, 1, 2)  # Span 2 columns
 
     def update_metrics(self, metrics: Dict[str, Any]):
         """Update displayed metrics"""
@@ -138,10 +148,9 @@ class SystemPulseWidget(QWidget):
                     self.gpu_labels[i].setText(f"GPU {i}: {gpu_data}%")
                     self.gpu_bars[i].setValue(gpu_data)
         elif self.gpu_count == 0:
-            # Fallback for no GPU
-            if hasattr(self, "gpu_label"):
-                self.gpu_label.setText("GPU: Not Available")
-                self.gpu_bar.setValue(0)
+            # Fallback for no GPU            if hasattr(self, "gpu_label"):
+            self.gpu_label.setText("GPU: Not Available")
+            self.gpu_bar.setValue(0)
 
         if "cpu_usage" in metrics:
             cpu = metrics["cpu_usage"]
@@ -157,6 +166,63 @@ class SystemPulseWidget(QWidget):
             errors = metrics["error_rate"]
             self.error_label.setText(f"Errors: {errors}/min")
             self.error_bar.setValue(min(errors, 100))
+
+        if "timestamp" in metrics:
+            from datetime import datetime
+
+            timestamp = metrics["timestamp"]
+            if isinstance(timestamp, str):
+                try:
+                    dt = datetime.fromisoformat(timestamp.replace("Z", "+00:00"))
+                    time_str = dt.strftime("%H:%M:%S")
+                except Exception:
+                    time_str = timestamp[:8] if len(timestamp) > 8 else timestamp
+            else:
+                time_str = datetime.now().strftime("%H:%M:%S")
+            self.timestamp_label.setText(f"Last: {time_str}")
+
+    def update_stats(self, stats: dict):
+        """Update stats with the requested interface format"""
+        self.cpu_label.setText(f"CPU: {stats.get('cpu_usage', '?')}%")
+        self.memory_label.setText(f"Memory: {stats.get('memory_usage', '?')}%")
+
+        # Handle GPU data
+        gpu_data = stats.get("gpu_usage", "?")
+        if self.gpu_count == 0:
+            if hasattr(self, "gpu_label"):
+                self.gpu_label.setText(
+                    f"GPU: {gpu_data}%" if gpu_data != "?" else "GPU: Not Available"
+                )
+        elif isinstance(gpu_data, list) and len(gpu_data) > 0:
+            gpu_percent = gpu_data[0] if len(gpu_data) > 0 else "?"
+            if self.gpu_count > 0:
+                self.gpu_labels[0].setText(f"GPU: {gpu_percent}%")
+        else:
+            if self.gpu_count > 0:
+                self.gpu_labels[0].setText(f"GPU: {gpu_data}%")
+
+        self.error_label.setText(f"Errors: {stats.get('error_rate', '?')}")
+
+        timestamp = stats.get("timestamp", "")
+        if timestamp:
+            if isinstance(timestamp, str):
+                try:
+                    from datetime import datetime
+
+                    if "T" in timestamp:
+                        dt = datetime.fromisoformat(timestamp.replace("Z", "+00:00"))
+                        time_str = dt.strftime("%H:%M:%S")
+                    else:
+                        time_str = timestamp
+                except Exception:
+                    time_str = timestamp[:8] if len(timestamp) > 8 else timestamp
+            else:
+                time_str = str(timestamp)
+            self.timestamp_label.setText(f"Last: {time_str}")
+        else:
+            from datetime import datetime
+
+            self.timestamp_label.setText(f"Last: {datetime.now().strftime('%H:%M:%S')}")
 
     def get_real_gpu_stats(self):
         """Get real GPU statistics if available"""

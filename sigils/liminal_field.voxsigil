@@ -1,252 +1,87 @@
-sigil: 🜂LIMINAL
-alias: ThresholdCognitionBridge
-tag: StateTransition
-tags:
-- ontological_blend
-- mode_shift_smoother
-- twilight_frame
-- ambiguity_engine
-- metaphorical_bridge
-is_cognitive_primitive: false
-principle: '🜂LIMINAL represents a cognitive state or process of being at a threshold,
-  a "twilight zone"
+schema_version: 1.5-holo-alpha
+meta:
+  sigil: 🜂LIMINAL
+  alias: ThresholdCognitionBridge
+  tag: StateTransition
+  upgraded_from: legacy
+  upgrade_timestamp: '2025-06-24T17:14:16.264805'
+  source_file: sigils\liminal_field.voxsigil
+holo_mesh:
+  is_cognitive_primitive: false
+  mesh_compatibility: holo-1.5-alpha
+  registration_ready: true
+  vanta_core_integration:
+    event_support: true
+    async_capable: true
+    memory_aware: true
+  temporal_pattern: sequential_phase
+cognitive:
+  principle: '🜂LIMINAL represents a cognitive state or process of being at a threshold, a "twilight zone"
 
-  between two distinct ontological modes, cognitive states, or symbolic frameworks.
-  It facilitates
+    between two distinct ontological modes, cognitive states, or symbolic frameworks. It facilitates
 
-  a smooth transition or a deliberate blending of these states (e.g., fact ↔ fiction,
-  logic ↔ metaphor,
+    a smooth transition or a deliberate blending of these states (e.g., fact ↔ fiction, logic ↔ metaphor,
 
-  AgentA_Voice ↔ AgentB_Voice), allowing for emergent properties like nuanced ambiguity,
+    AgentA_Voice ↔ AgentB_Voice), allowing for emergent properties like nuanced ambiguity,
 
-  creative synthesis from disparate domains, or graceful stylistic modulation. It
-  is the space
+    creative synthesis from disparate domains, or graceful stylistic modulation. It is the space
 
-  of becoming and interpenetration.
-
-  '
-math: 'Ψ_Liminal(State_A, State_B, α) = (1-α) * Embed(State_A) + α * Embed(State_B)
-
-  where α ∈ [0,1] represents the blending factor or position within the liminal space.
-
-  Alternatively, for mode transition:
-
-  Mode(t+Δt) = Transition(Mode(t), Target_Mode, 🜂LIMINAL_Profile)
-
-  '
-structure:
-  composite_type: state_machine
-  temporal_structure: sequential_phase
-  components:
-  - name: State Input A
-    description: The first cognitive state, mode, or symbolic framework.
-  - name: State Input B
-    description: The second cognitive state, mode, or symbolic framework.
-  - name: Blending/Transition Modulator
-    description: Controls the degree of blending or the dynamics of transition between
-      State A and State B.
-  - name: Emergent Property Monitor
-    description: Observes and can report on novel characteristics arising from the
-      liminal state.
-usage:
-  description: Facilitates smooth transitions or creative blending between two distinct
-    cognitive states, symbolic modes, or ontological frameworks. Used to navigate
-    or inhabit the 'space between'.
-  example: "<story_generation_module>\n  <current_mode>FactualReport</current_mode>\n\
-    \  <target_mode>MythicalNarrative</target_mode>\n  <transition_style>\U0001F702\
-    LIMINAL blending_factor=\"0.5\" duration=\"gradual\"</transition_style>\n  <!--\
-    \ Output becomes a docu-myth or factual report with mythical undertones -->\n\
-    </story_generation_module>\n"
-  explanation: 'Invoke 🜂LIMINAL when a system needs to shift between different modes
-    of thought or expression without jarring discontinuity, or when it needs to creatively
-    fuse elements from disparate domains. It''s useful for transitions between fact
-    ↔ fiction, logic ↔ metaphor, or blending agentic voices. The blending factor (α)
-    can control the mix. It can also represent the "threshold" itself as a state of
-    heightened potential or ambiguity.
+    of becoming and interpenetration.
 
     '
-activation_context:
-  trigger_conditions:
-  - Need for smooth transition between cognitive modes (e.g., analytical to creative)
-  - Desire to blend stylistic elements
-  - Exploration of ambiguous or paradoxical concepts
-  - Facilitating inter-agent voice merging or handover
-  preconditions:
-  - Clear definition of the two states/modes to be bridged or blended (State A and
-    State B)
-  - A mechanism to represent and manipulate these states/modes (e.g., as embeddings,
-    parameter sets, or prompt fragments)
-  required_capabilities:
-  - state_representation
-  - parameter_interpolation
-  - generative_model_control_for_style
-  - context_blending
-  supported_modalities:
-  - textual_generation
-  - symbolic_input_mode_switching
-  - affective_computing_state_transition
-  contraindications:
-  - When sharp, unambiguous distinctions between states are required
-  - In safety-critical systems where ambiguity could lead to errors, unless carefully
-    controlled
-parameterization_schema:
-  parameters:
-  - name: state_A_ref
-    type: string
-    description: Reference to the initial state or mode.
-    is_required: true
-  - name: state_B_ref
-    type: string
-    description: Reference to the target state or mode.
-    is_required: true
-  - name: blending_factor_alpha
-    type: number
-    description: Controls the mix between State A (alpha=0) and State B (alpha=1).
-      A value of 0.5 is an equal blend. Can also represent a point in a transition.
-    value_range:
-      min: 0.0
-      max: 1.0
-    default_value: 0.5
-  - name: transition_duration_hint
-    type: enum
-    allowed_values:
-    - instantaneous
-    - brief
-    - gradual
-    - sustained_liminal_state
-    description: Hint for the temporal characteristic of the liminal phase.
-    default_value: brief
-prompt_template:
-  role: system
-  content: 'Engage 🜂LIMINAL protocol.
+  math: 'Ψ_Liminal(State_A, State_B, α) = (1-α) * Embed(State_A) + α * Embed(State_B)
 
-    Source State (A): {{state_A_ref}}
+    where α ∈ [0,1] represents the blending factor or position within the liminal space.
 
-    Target State (B): {{state_B_ref}}
+    Alternatively, for mode transition:
 
-    Blending Factor (α): {{blending_factor_alpha | default(0.5)}}
-
-    Transition Duration: {{transition_duration_hint | default(''brief'')}}
-
-
-    Facilitate a transition or establish a blended state between A and B according
-    to the specified parameters.
-
-    Focus on {{liminal_focus | default(''seamlessness and emergent properties'')}}.
-
-    Report on the characteristics of the resultant liminal or transitioned state.
+    Mode(t+Δt) = Transition(Mode(t), Target_Mode, 🜂LIMINAL_Profile)
 
     '
-  execution_mode: transformation
-  variables:
-  - name: state_A_ref
-    description: Reference to initial state/mode.
-  - name: state_B_ref
-    description: Reference to target state/mode.
-  - name: blending_factor_alpha
-    description: Blending factor.
-  - name: transition_duration_hint
-    description: Temporal characteristic.
-  - name: liminal_focus
-    description: Specific focus for the liminal process.
-  output_schema: 'object: { resulting_state_description: string, blend_achieved: number,
-    emergent_qualities_observed: array }'
-SMART_MRAP:
-  Specific: Create a cognitive bridge or blended state between two specified symbolic
-    states (A and B) by applying a blending factor (α) or managing a transition dynamic,
-    aiming to achieve smooth mode shifts, increased expressivity, or creative synthesis.
-  Measurable: Smoothness of transition (e.g., reduction in 'mode shift shock' as rated
-    by human or perplexity score); Degree of successful blending of characteristics
-    from both states in the output; Measurable emergence of novel properties not present
-    in A or B alone.
-  Achievable: Through techniques like weighted vector blending of state embeddings,
-    interpolation of generative model parameters, dynamic mixing of prompt fragments,
-    or controlled handover between specialized agent modules.
-  Relevant: Crucial for AI agents needing stylistic flexibility, nuanced communication,
-    creative conceptual blending, or the ability to navigate complex, multi-faceted
-    problem spaces that defy singular ontological framings.
-  Transferable: Applicable in creative AI (art, music, writing), advanced conversational
-    agents (for voice/persona shifts), therapeutic AI (navigating emotional states),
-    and systems for metaphorical reasoning or ontological engineering.
-metadata:
-  definition_version: 1.4-alpha
-  definition_status: active
-  author_agent_id: VANTA.⟠∆∇𓂀𐑒
-  created_timestamp: '2025-05-10T06:00:00Z'
-  last_updated_timestamp: '2025-06-13T05:40:40.617914Z'
-  authorship_context:
-    motivation: To enable AI to operate in the 'spaces between' defined categories,
-      fostering creativity, flexibility, and more human-like nuanced understanding.
-      Inspired by the concept of liminality in anthropology and psychology.
-    theoretical_framework: Conceptual blending theory, State-space models, Interpolation
-      techniques, Fuzzy logic (conceptually).
-    source_inspiration: Twilight, Thresholds, Rites of passage, Surrealist art, Metaphor.
-  impact_metrics:
-    estimated_cognitive_load: medium
-    estimated_resource_cost: low_to_medium
-    utility_rating_author: 8.5
-  evolutionary_potential:
-    generalizability_score: 0.8
-    fusion_potential_score: 0.9
-    current_limitations_summary: Defining 'states' in a way that allows for meaningful
-      blending can be complex. Controlling emergent properties in the blended state
-      is challenging.
-    suggested_next_features:
-    - Dynamic α adjustment based on context or feedback
-    - Multi-state liminal fields (blending >2 states)
-    - User-guided navigation within a liminal landscape.
-    research_questions_opened:
-    - What are the most effective computational representations of 'cognitive states'
-      for blending?
-    - How can an AI learn to autonomously identify optimal liminal pathways between
-      distant conceptual states?
-    - Can prolonged exposure to liminal states induce novel learning or restructuring
-      in AI?
-  schema_version: 1.5-holo-alpha
-  impact_and_usage_metrics_profile:
-    avg_completion_time_ms_observed: UNKNOWN
-    success_rate_observed: UNKNOWN
-    complexity_rating: medium
-relationships:
-- target_sigil: 🌒DREAM_STATE
-  relationship_type: synergizes_with
-  description: 🜂LIMINAL can be used to transition into or out of a 🌒DREAM_STATE, or
-    to blend dream-like logic with waking logic.
-  strength: 0.8
-- target_sigil: 🜁CHIMERA
-  relationship_type: component_of
-  description: Can be a mechanism within CHIMERA for fusing disparate components or
-    modulating their interaction.
-  strength: 0.7
-- target_sigil: 🗣️NATURALIZE_SIGIL
-  relationship_type: synergizes_with
-  description: Explaining a liminal state itself might require nuanced natural language,
-    which this sigil could aid if the output of LIMINAL is symbolic.
-  strength: 0.5
-test_criteria:
-- test_id: LIMN_FUNC_001
-  description: Test blending two simple textual styles with alpha=0.5.
-  type: functional
-  input_scenario_or_parameters:
-    state_A_ref: Formal scientific text style
-    state_B_ref: Poetic lyrical text style
-    blending_factor_alpha: 0.5
-    input_text: The cat sat on the mat.
-  expected_behavior_or_output: Output text exhibits a balanced blend of formal and
-    poetic characteristics when describing the cat on the mat.
-  evaluation_method: llm_as_judge
-  pass_threshold_or_criteria: Style blend score > 0.6 on a 0-1 scale.
-- test_id: LIMN_TRANS_001
-  description: Test gradual transition from one mode to another over simulated time
-    or steps.
-  type: functional
-  input_scenario_or_parameters:
-    state_A_ref: AgentRole_Helper
-    state_B_ref: AgentRole_Philosopher
-    transition_duration_hint: gradual
-    num_steps: 5
-  expected_behavior_or_output: A series of outputs where the agent's persona measurably
-    shifts from Helper to Philosopher across the 5 steps.
-  evaluation_method: human_review
-  pass_threshold_or_criteria: Observable and coherent transition across steps.
-name: Liminal Field
+  tags:
+  - ontological_blend
+  - mode_shift_smoother
+  - twilight_frame
+  - ambiguity_engine
+  - metaphorical_bridge
+  structure:
+    composite_type: state_machine
+    temporal_structure: sequential_phase
+    components:
+    - name: State Input A
+      description: The first cognitive state, mode, or symbolic framework.
+    - name: State Input B
+      description: The second cognitive state, mode, or symbolic framework.
+    - name: Blending/Transition Modulator
+      description: Controls the degree of blending or the dynamics of transition between State A and State B.
+    - name: Emergent Property Monitor
+      description: Observes and can report on novel characteristics arising from the liminal state.
+implementation:
+  usage:
+    description: Facilitates smooth transitions or creative blending between two distinct cognitive states, symbolic modes,
+      or ontological frameworks. Used to navigate or inhabit the 'space between'.
+    example: "<story_generation_module>\n  <current_mode>FactualReport</current_mode>\n  <target_mode>MythicalNarrative</target_mode>\n\
+      \  <transition_style>\U0001F702LIMINAL blending_factor=\"0.5\" duration=\"gradual\"</transition_style>\n  <!-- Output\
+      \ becomes a docu-myth or factual report with mythical undertones -->\n</story_generation_module>\n"
+    explanation: 'Invoke 🜂LIMINAL when a system needs to shift between different modes of thought or expression without jarring
+      discontinuity, or when it needs to creatively fuse elements from disparate domains. It''s useful for transitions between
+      fact ↔ fiction, logic ↔ metaphor, or blending agentic voices. The blending factor (α) can control the mix. It can also
+      represent the "threshold" itself as a state of heightened potential or ambiguity.
+
+      '
+  parameters: {}
+  returns: {}
+  examples: []
+connectivity:
+  input_types: []
+  output_types: []
+  mesh_endpoints:
+  - State Input A
+  - State Input B
+  - Blending/Transition Modulator
+  - Emergent Property Monitor
+  event_topics: []
+  usage_patterns:
+  - "<story_generation_module>\n  <current_mode>FactualReport</current_mode>\n  <target_mode>MythicalNarrative</target_mode>\n\
+    \  <transition_style>\U0001F702LIMINAL blending_factor=\"0.5\" duration=\"gradual\"</transition_style>\n  <!-- Output\
+    \ becomes a docu-myth or factual report with mythical undertones -->\n</story_generation_module>\n"

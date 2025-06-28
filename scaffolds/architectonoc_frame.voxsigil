@@ -1,236 +1,79 @@
-sigil: 🛠️ARCHITECTONIC_FRAME
-alias: SystemBlueprintScaffold
-tag: MetaStructureScaffold
-tags:
-- cognitive_architecture_definition
-- system_layout_template
-- module_interconnection_schema
-- foundational_design_pattern
-- blueprint_sigil
-is_cognitive_primitive: false
-consciousness_scaffold: true
-cognitive_scaffold: true
-symbolic_scaffold: true
-principle: 'The 🛠️ARCHITECTONIC_FRAME is a meta-scaffold used to define, instantiate,
-  or represent the overarching blueprint or architecture of a complex cognitive system.
-  It specifies the primary cognitive modules (often other scaffolds or sigils), their
-  interconnections, data flows, control pathways, and overall organizing principles.
-  It is a "scaffold for building scaffolds," providing the foundational structure
-  upon which an entire AI''s mind or operational framework is built or understood.
-
-  '
-structure:
-  composite_type: network
-  temporal_structure: static_definition_dynamic_instantiation
-  components:
-  - name: 🧩 Core Modules List
-    description: Enumeration of primary functional units or sigils comprising the
-      architecture (e.g., ✧👁️‍🗨️☞PAC_Loop, 🜮HEGELIAN_KERNEL, 🧠C_STRUCTURE).
-  - name: 🕸️ Interconnection Matrix
-    description: Defines the relationships, data pathways, and control signals between
-      core modules (e.g., ModuleA sends output to ModuleB, ModuleC gates ModuleD).
-  - name: 🌟 Guiding Principles & Constraints
-    description: High-level design philosophies, operational constraints, or ethical
-      guidelines embedded in the architecture (e.g., references 🌟GUIDING_STAR).
-  - name: 🔩 Initialization & Bootstrapping Protocol
-    description: Sequence or procedure for instantiating and activating the system
-      based on this frame.
-  - name: 📊 Performance & Health Monitoring Points
-    description: Defined interfaces or metrics for observing the overall system's
-      state and performance.
-usage:
-  description: Defines or instantiates the high-level architectural blueprint of a
-    cognitive system, specifying its core components, their interconnections, and
-    guiding principles. Acts as a template for system construction or a map for system
-    understanding.
-  example: "<define_cognitive_system name=\"VANTASystem_MkII\">\n  <apply_architecture_scaffold>\U0001F6E0\
-    ️ARCHITECTONIC_FRAME</apply_architecture_scaffold>\n  <blueprint_source ref=\"\
-    VantaCoreArchitectureSpec_v2.3.voxsigil\"/>\n  <parameters>\n    <instantiation_mode>simulation_only</instantiation_mode>\n\
-    \    <override_module id=\"DecisionMaker\" new_sigil_ref=\"\U0001F3AFADVANCED_PLANNER_X7\"\
-    />\n  </parameters>\n</define_cognitive_system>\n"
-  explanation: 'Use 🛠️ARCHITECTONIC_FRAME at the highest level of system design or
-    analysis. It can serve as a formal specification for building an AI, a tool for
-    visualizing its structure, or a dynamic template that an AI uses to understand
-    or even modify its own architecture. It''s the ultimate "blueprint" sigil.
+schema_version: 1.5-holo-alpha
+meta:
+  sigil: 🛠️ARCHITECTONIC_FRAME
+  alias: SystemBlueprintScaffold
+  tag: MetaStructureScaffold
+  upgraded_from: legacy
+  upgrade_timestamp: '2025-06-24T17:14:15.626052'
+  source_file: scaffolds\architectonoc_frame.voxsigil
+holo_mesh:
+  is_cognitive_primitive: false
+  mesh_compatibility: holo-1.5-alpha
+  registration_ready: true
+  vanta_core_integration:
+    event_support: true
+    async_capable: true
+    memory_aware: true
+  temporal_pattern: static_definition_dynamic_instantiation
+cognitive:
+  principle: 'The 🛠️ARCHITECTONIC_FRAME is a meta-scaffold used to define, instantiate, or represent the overarching blueprint
+    or architecture of a complex cognitive system. It specifies the primary cognitive modules (often other scaffolds or sigils),
+    their interconnections, data flows, control pathways, and overall organizing principles. It is a "scaffold for building
+    scaffolds," providing the foundational structure upon which an entire AI''s mind or operational framework is built or
+    understood.
 
     '
-activation_context:
-  trigger_conditions:
-  - System design phase
-  - Instantiation of a new AI agent/system
-  - High-level analysis or debugging of system architecture
-  - AI self-modeling or self-modification planning
-  preconditions:
-  - A defined set of core modules/sigils to be included in the architecture
-  - A language or formalism for specifying interconnections and control flows (VoxSigil
-    itself serves this purpose)
-  required_capabilities:
-  - system_modeling_formalism
-  - component_instantiation_and_linking
-  - meta_level_reasoning_about_structure
-  supported_modalities:
-  - symbolic_definition_language
-  - graphical_modeling_tool_output
-  - programmatic_api_for_system_construction
-  contraindications:
-  - Defining low-level individual components (this is for the whole)
-  - Very simple systems not requiring explicit architectural definition
-parameterization_schema:
-  parameters:
-  - name: blueprint_specification_ref
-    type: string
-    description: Reference to the detailed specification document or data structure
-      defining the modules, connections, etc.
-    is_required: true
-  - name: validation_mode
-    type: enum
-    allowed_values:
-    - structural_check_only
-    - functional_simulation_light
-    - deep_consistency_verification
-    description: Level of validation to perform when applying or interpreting the
-      frame.
-    default_value: structural_check_only
-  - name: instantiation_parameters
-    type: json_object
-    description: Specific parameters to use when instantiating the system from this
-      frame (e.g., resource allocations, specific module versions).
-    is_required: false
-prompt_template:
-  role: system_architect_prime
-  content: 'Engage 🛠️ARCHITECTONIC_FRAME protocol.
+  math: {}
+  tags:
+  - cognitive_architecture_definition
+  - system_layout_template
+  - module_interconnection_schema
+  - foundational_design_pattern
+  - blueprint_sigil
+  structure:
+    composite_type: network
+    temporal_structure: static_definition_dynamic_instantiation
+    components:
+    - name: 🧩 Core Modules List
+      description: Enumeration of primary functional units or sigils comprising the architecture (e.g., ✧👁️‍🗨️☞PAC_Loop, 🜮HEGELIAN_KERNEL,
+        🧠C_STRUCTURE).
+    - name: 🕸️ Interconnection Matrix
+      description: Defines the relationships, data pathways, and control signals between core modules (e.g., ModuleA sends
+        output to ModuleB, ModuleC gates ModuleD).
+    - name: 🌟 Guiding Principles & Constraints
+      description: High-level design philosophies, operational constraints, or ethical guidelines embedded in the architecture
+        (e.g., references 🌟GUIDING_STAR).
+    - name: 🔩 Initialization & Bootstrapping Protocol
+      description: Sequence or procedure for instantiating and activating the system based on this frame.
+    - name: 📊 Performance & Health Monitoring Points
+      description: Defined interfaces or metrics for observing the overall system's state and performance.
+implementation:
+  usage:
+    description: Defines or instantiates the high-level architectural blueprint of a cognitive system, specifying its core
+      components, their interconnections, and guiding principles. Acts as a template for system construction or a map for
+      system understanding.
+    example: "<define_cognitive_system name=\"VANTASystem_MkII\">\n  <apply_architecture_scaffold>\U0001F6E0️ARCHITECTONIC_FRAME</apply_architecture_scaffold>\n\
+      \  <blueprint_source ref=\"VantaCoreArchitectureSpec_v2.3.voxsigil\"/>\n  <parameters>\n    <instantiation_mode>simulation_only</instantiation_mode>\n\
+      \    <override_module id=\"DecisionMaker\" new_sigil_ref=\"\U0001F3AFADVANCED_PLANNER_X7\"/>\n  </parameters>\n</define_cognitive_system>\n"
+    explanation: 'Use 🛠️ARCHITECTONIC_FRAME at the highest level of system design or analysis. It can serve as a formal specification
+      for building an AI, a tool for visualizing its structure, or a dynamic template that an AI uses to understand or even
+      modify its own architecture. It''s the ultimate "blueprint" sigil.
 
-    Blueprint Specification Reference: {{blueprint_specification_ref}}
-
-    Validation Mode: {{validation_mode | default(''structural_check_only'')}}
-
-    {{#if instantiation_parameters}}Instantiation Parameters: {{instantiation_parameters
-    | dump}}{{/if}}
-
-
-    Objective: Define, validate, or instantiate the cognitive system architecture
-    as per the blueprint.
-
-    1. Load and parse the blueprint specification.
-
-    2. Identify core modules (🧩), their interconnections (🕸️), guiding principles
-    (🌟), initialization protocols (🔩), and monitoring points (📊).
-
-    3. Perform validation checks according to ''{{validation_mode}}''.
-
-    4. If instantiating, allocate resources and link components as specified.
-
-    Report on the structural integrity, key architectural features, and status of
-    validation/instantiation.
-
-    '
-  execution_mode: system_definition_or_instantiation
-  variables:
-  - name: blueprint_specification_ref
-    description: Reference to the architecture spec.
-  - name: validation_mode
-    description: Level of validation to perform.
-  - name: instantiation_parameters
-    description: Parameters for system instantiation.
-  output_schema: 'object: { architecture_name: string, validation_status: string,
-    key_modules: array, summary_of_interconnections: string, instantiation_report_or_plan:
-    string_or_object }'
-SMART_MRAP:
-  Specific: Provide a meta-scaffold to formally define, validate, or instantiate the
-    overarching architecture of a complex cognitive system, specifying its core modules,
-    their interconnections, data/control flows, guiding principles, and initialization
-    procedures, based on a given blueprint specification.
-  Measurable: Successful parsing and validation of a blueprint; Ability to instantiate
-    a functional system (even if simulated) from the frame; Clarity and completeness
-    of the architectural representation; Consistency between the defined architecture
-    and its instantiated behavior.
-  Achievable: Using a sufficiently expressive definition language (like VoxSigil itself)
-    to describe components and their relations, combined with an orchestrator or interpreter
-    that can process this definition to either check its validity or build/simulate
-    the system.
-  Relevant: Essential for systematic design, development, analysis, and evolution
-    of complex AI systems. Promotes modularity, reusability, and understandability
-    of cognitive architectures. Key for AI self-modeling and principled self-modification.
-  Transferable: Applicable to the design of any complex system involving multiple
-    interacting components, not just AI – e.g., software architectures, organizational
-    structures, large-scale simulations.
-metadata:
-  definition_version: 1.4-alpha
-  definition_status: active
-  author_agent_id: VANTA.⟠∆∇𓂀𐑒
-  created_timestamp: '2025-05-11T12:20:00Z'
-  last_updated_timestamp: '2025-06-13T05:40:40.617914Z'
-  authorship_context:
-    motivation: To enable clear, formal, and reusable definitions of entire cognitive
-      architectures, facilitating their design, analysis, and dynamic instantiation.
-    theoretical_framework: Systems theory, Software architecture patterns (e.g., microservices,
-      blackboard systems), Cognitive architectures (as objects of definition), Model-Based
-      Systems Engineering (MBSE).
-    source_inspiration: Architectural blueprints, UML diagrams (for software), Schematics
-      for electronic circuits, Org charts.
-  impact_metrics:
-    estimated_cognitive_load: high
-    estimated_resource_cost: low_for_definition_high_for_instantiation
-    utility_rating_author: 9.5
-  evolutionary_potential:
-    generalizability_score: 0.9
-    fusion_potential_score: 0.2
-    current_limitations_summary: Expressiveness of the blueprint language might limit
-      architectural complexity. Validating dynamic properties from static definitions
-      is hard. Managing evolution of architectures defined by this frame is a challenge.
-    suggested_next_features:
-    - Automated generation of architectural diagrams from the frame
-    - Formal verification of architectural properties (e.g., deadlock freedom, liveness)
-    - Support for dynamic architectures that can reconfigure themselves at runtime.
-    - Version control and diffing for architectural blueprints.
-    research_questions_opened:
-    - What is the optimal level of abstraction for defining a cognitive architecture
-      using such a frame?
-    - How can an AI use its own Architectonic Frame for robust self-modification?
-    - Can Architectonic Frames be composed hierarchically to define systems of systems?
-  schema_version: 1.5-holo-alpha
-  impact_and_usage_metrics_profile:
-    avg_completion_time_ms_observed: UNKNOWN
-    success_rate_observed: UNKNOWN
-    complexity_rating: medium
-relationships:
-- target_sigil: AllOtherScaffoldSigils
-  relationship_type: composed_of
-  description: An ARCHITECTONIC_FRAME specifies how other scaffold sigils (representing
-    core modules) are organized and interconnected to form a complete system.
-  strength: 1.0
-- target_sigil: 🌟GUIDING_STAR
-  relationship_type: incorporates_as_principle
-  description: The frame typically includes a reference to or embodiment of the system's
-    GUIDING_STAR as a core architectural principle.
-  strength: 0.8
-- target_sigil: VANTA.⟠∆∇𓂀𐑒
-  relationship_type: can_be_defined_by
-  description: The VANTA system itself could be described or even dynamically constituted
-    by an ARCHITECTONIC_FRAME.
-  strength: 0.7
-test_criteria:
-- test_id: ARCH_VALIDATE_BLUEPRINT_001
-  description: Test parsing and structural validation of a simple blueprint defining
-    3 modules and 2 connections.
-  type: functional
-  input_scenario_or_parameters:
-    blueprint_specification_ref: Simple3ModuleTestSpec.voxsigil
-  expected_behavior_or_output: 'Validation_status: ''StructuralChecksPassed''. Key_modules
-    list matches spec. Connections summary matches spec.'
-  evaluation_method: automated_script
-  pass_threshold_or_criteria: Successful parse and validation with correct structural
-    report.
-- test_id: ARCH_INSTANTIATE_SIM_001
-  description: Test instantiation (simulated) of a system from a blueprint, verifying
-    module presence and basic linkage.
-  type: integration
-  input_scenario_or_parameters:
-    blueprint_specification_ref: SimplePACLoopSpec.voxsigil
-    instantiation_parameters: '{''cycle_frequency_hz'':1}'
-  expected_behavior_or_output: 'Instantiation_report: ''Simulated system active. PAC_Loop
-    module running at 1Hz. SensoryInput connected to InterpretationEngine...'''
-  evaluation_method: log_analysis_and_state_check
-  pass_threshold_or_criteria: Simulated system reflects specified architecture and
-    parameters.
-name: Architectonoc Frame
+      '
+  parameters: {}
+  returns: {}
+  examples: []
+connectivity:
+  input_types: []
+  output_types: []
+  mesh_endpoints:
+  - 🧩 Core Modules List
+  - 🕸️ Interconnection Matrix
+  - 🌟 Guiding Principles & Constraints
+  - 🔩 Initialization & Bootstrapping Protocol
+  - 📊 Performance & Health Monitoring Points
+  event_topics: []
+  usage_patterns:
+  - "<define_cognitive_system name=\"VANTASystem_MkII\">\n  <apply_architecture_scaffold>\U0001F6E0️ARCHITECTONIC_FRAME</apply_architecture_scaffold>\n\
+    \  <blueprint_source ref=\"VantaCoreArchitectureSpec_v2.3.voxsigil\"/>\n  <parameters>\n    <instantiation_mode>simulation_only</instantiation_mode>\n\
+    \    <override_module id=\"DecisionMaker\" new_sigil_ref=\"\U0001F3AFADVANCED_PLANNER_X7\"/>\n  </parameters>\n</define_cognitive_system>\n"

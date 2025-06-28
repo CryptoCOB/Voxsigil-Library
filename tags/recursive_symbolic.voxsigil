@@ -1,320 +1,86 @@
-sigil: S↻∑
-alias: RecursiveSymbolicReasoning
-tag: ReasoningPattern
-tags:
-- recursion
-- symbolic_manipulation
-- meta_reasoning
-- problem_decomposition
-- self_reference
-- hierarchical_processing
-is_cognitive_primitive: false
-principle: 'The application of self-referential and iterative symbolic operations
-  to analyze, transform, or generate complex symbolic structures, enabling problem-solving
-  through layered abstraction and hierarchical decomposition.
-
-  '
-math: "Let S be a set of symbols and O be a set of operations o: S* → S*. A recursive\
-  \ symbolic process R can be defined as:\nR(s_input) = \n  IF BaseCaseCondition(s_input)\
-  \ THEN \n    BaseCaseTransform(s_input)\n  ELSE \n    CombineResults(s_input, R(RecursiveStepTransform_1(s_input)),\
-  \ ..., R(RecursiveStepTransform_n(s_input)))\nWhere s_input ∈ S*.\n"
-structure:
-  composite_type: recursive
-  temporal_structure: feedback_loop
-  components:
-  - name: SymbolSetDefinition
-    description: The vocabulary of symbols the recursive process operates upon.
-  - name: BaseCaseIdentifier
-    description: Logic to identify the terminal condition(s) of the recursion.
-  - name: BaseCaseAction
-    description: The operation performed when a base case is met.
-  - name: RecursiveStepOperator
-    description: The transformation applied to the input to generate sub-problems
-      for further recursive calls.
-  - name: ResultCombinationLogic
-    description: How results from recursive calls are combined or aggregated.
-  - name: TerminationConditionEnforcer
-    description: Ensures the recursion eventually stops (e.g., depth limit, convergence).
-usage:
-  description: Applying recursive patterns in symbolic reasoning for complex problem-solving,
-    analysis, or generation tasks that benefit from self-similar processing at multiple
-    levels of abstraction.
-  example:
-    task: Hierarchical symbolic decomposition of a complex problem statement.
-    input: 'Problem: ''Optimize global supply chain for sustainable energy components
-      considering geopolitical risks and material scarcity.'''
-    recursive_logic_sketch: "R(ProblemStatement):\n  IF ProblemStatement is atomic_and_solvable\
-      \ THEN Analyze(ProblemStatement)\n  ELSE \n    SubProblems = Decompose(ProblemStatement\
-      \ into KeyThemes/Constraints)\n    Solutions = []\n    FOR SP in SubProblems:\
-      \ Solutions.append(R(SP))\n    RETURN SynthesizeSolutions(Solutions, OriginalContext(ProblemStatement))\n"
-    explanation_of_example: The main problem is recursively broken down into smaller,
-      more manageable sub-problems (e.g., 'sustainable energy components', 'geopolitical
-      risks', 'material scarcity'). Each sub-problem is then addressed recursively
-      until a base level of analysis is possible. The solutions/analyses are then
-      synthesized back up the hierarchy.
-  explanation: 'This sigil represents reasoning processes that call upon themselves,
-    either directly or indirectly, to operate on progressively simpler, more abstract,
-    or transformed versions of an initial symbolic input. It''s fundamental for tasks
-    like parsing hierarchical structures (e.g., language, code), meta-reasoning (reasoning
-    about reasoning), exploring fractal-like problem spaces, and any situation where
-    a problem can be defined in terms of smaller instances of itself. Examples include
-    self-referential symbolic processes, hierarchical symbolic decomposition, and
-    meta-symbolic reasoning about reasoning systems.
+schema_version: 1.5-holo-alpha
+meta:
+  sigil: S↻∑
+  alias: RecursiveSymbolicReasoning
+  tag: ReasoningPattern
+  upgraded_from: legacy
+  upgrade_timestamp: '2025-06-24T17:14:16.631428'
+  source_file: tags\recursive_symbolic.voxsigil
+holo_mesh:
+  is_cognitive_primitive: false
+  mesh_compatibility: holo-1.5-alpha
+  registration_ready: true
+  vanta_core_integration:
+    event_support: true
+    async_capable: true
+    memory_aware: true
+  temporal_pattern: feedback_loop
+cognitive:
+  principle: 'The application of self-referential and iterative symbolic operations to analyze, transform, or generate complex
+    symbolic structures, enabling problem-solving through layered abstraction and hierarchical decomposition.
 
     '
-activation_context:
-  trigger_conditions:
-  - Problem exhibits a nested or self-similar structure.
-  - A task requires iterative refinement or exploration at multiple levels of detail.
-  - Need for meta-level analysis of symbolic systems or processes.
-  - Generation of fractal or hierarchically organized symbolic output is required.
-  preconditions:
-  - The set of symbols and operations are well-defined and understood by the system.
-  - The problem can be meaningfully broken down into smaller, similar sub-problems.
-  - Clear base cases for terminating the recursion can be defined.
-  - Mechanisms for managing recursion depth and state are in place.
-  required_capabilities:
-  - self_reference_execution
-  - symbolic_manipulation_engine
-  - pattern_recognition
-  - state_management
-  supported_modalities:
-  - symbolic_input
-  - textual_problem_description
-  - programmatic_api
-  contraindications:
-  - Problem is inherently linear or flat, lacking recursive structure.
-  - Base cases are ill-defined, leading to infinite recursion.
-  - The overhead of recursion (e.g., stack depth, repeated computations) outweighs
-    benefits compared to iterative solutions.
-parameterization_schema:
-  parameters:
-  - name: initial_symbolic_input
-    type: json_object
-    description: The initial symbol, structure, or problem statement to process recursively.
-    is_required: true
-  - name: base_case_definitions
-    type: json_object
-    description: A structured definition of conditions and actions for base cases.
-    is_required: true
-  - name: recursive_step_logic_id
-    type: sigil_ref
-    description: Reference to a sigil defining the transformation for the recursive
-      step.
-    is_required: true
-  - name: max_recursion_depth
-    type: integer
-    description: Maximum depth for recursion to prevent infinite loops.
-    default_value: 10
-    value_range:
-      min: 1
-  - name: combination_strategy_id
-    type: sigil_ref
-    description: Reference to a sigil defining how results from multiple recursive
-      calls are combined.
-prompt_template:
-  role: system
-  content: 'You are a recursive symbolic processor. Given the input ''{{initial_symbolic_input_description}}'',
-    apply recursive symbolic reasoning to analyze/solve/transform it.
+  math: "Let S be a set of symbols and O be a set of operations o: S* → S*. A recursive symbolic process R can be defined\
+    \ as:\nR(s_input) = \n  IF BaseCaseCondition(s_input) THEN \n    BaseCaseTransform(s_input)\n  ELSE \n    CombineResults(s_input,\
+    \ R(RecursiveStepTransform_1(s_input)), ..., R(RecursiveStepTransform_n(s_input)))\nWhere s_input ∈ S*.\n"
+  tags:
+  - recursion
+  - symbolic_manipulation
+  - meta_reasoning
+  - problem_decomposition
+  - self_reference
+  - hierarchical_processing
+  structure:
+    composite_type: recursive
+    temporal_structure: feedback_loop
+    components:
+    - name: SymbolSetDefinition
+      description: The vocabulary of symbols the recursive process operates upon.
+    - name: BaseCaseIdentifier
+      description: Logic to identify the terminal condition(s) of the recursion.
+    - name: BaseCaseAction
+      description: The operation performed when a base case is met.
+    - name: RecursiveStepOperator
+      description: The transformation applied to the input to generate sub-problems for further recursive calls.
+    - name: ResultCombinationLogic
+      description: How results from recursive calls are combined or aggregated.
+    - name: TerminationConditionEnforcer
+      description: Ensures the recursion eventually stops (e.g., depth limit, convergence).
+implementation:
+  usage:
+    description: Applying recursive patterns in symbolic reasoning for complex problem-solving, analysis, or generation tasks
+      that benefit from self-similar processing at multiple levels of abstraction.
+    example: &id001
+      task: Hierarchical symbolic decomposition of a complex problem statement.
+      input: 'Problem: ''Optimize global supply chain for sustainable energy components considering geopolitical risks and
+        material scarcity.'''
+      recursive_logic_sketch: "R(ProblemStatement):\n  IF ProblemStatement is atomic_and_solvable THEN Analyze(ProblemStatement)\n\
+        \  ELSE \n    SubProblems = Decompose(ProblemStatement into KeyThemes/Constraints)\n    Solutions = []\n    FOR SP\
+        \ in SubProblems: Solutions.append(R(SP))\n    RETURN SynthesizeSolutions(Solutions, OriginalContext(ProblemStatement))\n"
+      explanation_of_example: The main problem is recursively broken down into smaller, more manageable sub-problems (e.g.,
+        'sustainable energy components', 'geopolitical risks', 'material scarcity'). Each sub-problem is then addressed recursively
+        until a base level of analysis is possible. The solutions/analyses are then synthesized back up the hierarchy.
+    explanation: 'This sigil represents reasoning processes that call upon themselves, either directly or indirectly, to operate
+      on progressively simpler, more abstract, or transformed versions of an initial symbolic input. It''s fundamental for
+      tasks like parsing hierarchical structures (e.g., language, code), meta-reasoning (reasoning about reasoning), exploring
+      fractal-like problem spaces, and any situation where a problem can be defined in terms of smaller instances of itself.
+      Examples include self-referential symbolic processes, hierarchical symbolic decomposition, and meta-symbolic reasoning
+      about reasoning systems.
 
-    1. Identify the base case(s) for this problem.
-
-    2. Define the recursive step: how would you break down the problem into a smaller
-    or simpler version of itself and what operation would you apply?
-
-    3. Describe how you would combine results from recursive calls.
-
-    4. Illustrate the first few levels of recursion with the given input.
-
-
-    Input context: {{initial_symbolic_input_description}}
-
-    [Optional: Base Case Hint: {{base_case_hint}}]
-
-    [Optional: Recursive Step Hint: {{recursive_step_hint}}]
-
-    '
-  execution_mode: decomposition
-  variables:
-  - name: initial_symbolic_input_description
-    description: Textual description of the symbolic input or problem.
-    required_for_llm: true
-    type_hint: string
-  - name: base_case_hint
-    description: Optional hint for identifying base cases.
-    required_for_llm: false
-    type_hint: string
-  - name: recursive_step_hint
-    description: Optional hint for defining the recursive step.
-    required_for_llm: false
-    type_hint: string
-  output_schema:
-    type: object
-    properties:
-      problem_understanding:
-        type: string
-      base_cases_identified:
-        type: array
-        items:
-          type: string
-      recursive_step_definition:
-        type: string
-      result_combination_strategy:
-        type: string
-      recursion_trace_example:
-        type: string
-        description: Example of how the input would be processed through a few recursive
-          calls.
-    required:
-    - base_cases_identified
-    - recursive_step_definition
-    - result_combination_strategy
-  notes: This prompt guides an LLM to think through the structure of a recursive process.
-    An actual implementation would involve code or a more formal symbolic engine.
-relationships:
-- target_sigil: 🧠C_STRUCTURE
-  relationship_type: depends_on
-  description: Relies on foundational cognitive structures or symbolic representations
-    to operate upon. (Interpreted from user input)
-- target_sigil: 🜮HEGELIAN_KERNEL
-  relationship_type: depends_on
-  description: May draw upon dialectical or thesis-antithesis-synthesis patterns,
-    which can be recursive. (Interpreted from user input)
-- target_sigil: 🜪TRIALOGOS
-  relationship_type: enables
-  description: Can be a core mechanism for constructing complex multi-perspective
-    dialogues or trialogues. (Interpreted from user input)
-- target_sigil: 🜁CHIMERA
-  relationship_type: enables
-  description: Facilitates the generation or analysis of composite, multi-layered
-    symbolic entities (chimeras). (Interpreted from user input)
-- target_sigil: HIERARCHICAL_DECOMPOSITION_PRIMITIVE
-  relationship_type: uses_method_from
-  description: Often employs hierarchical decomposition as part of its recursive step.
-- target_sigil: META_REASONING_FRAMEWORK
-  relationship_type: component_of
-  description: Recursive symbolic reasoning is a key component of many meta-reasoning
-    frameworks.
-cross_domain_tags:
-- domain: Computer Science
-  term: Recursion
-  mapping_type: formal_equivalence
-- domain: Mathematics
-  term: Recursive Functions / Recurrence Relations
-  mapping_type: formal_equivalence
-- domain: Linguistics
-  term: Recursive Structures in Grammar (e.g., embedding)
-  mapping_type: analogy
-- domain: Philosophy
-  term: Self-Reference / Strange Loops
-  mapping_type: inspiration
-trajectory_annotations:
-  typical_sequence_position: analysis
-  recommended_predecessors:
-  - PROBLEM_DEFINITION
-  - SYMBOL_SET_ESTABLISHMENT
-  recommended_successors:
-  - SOLUTION_SYNTHESIS
-  - COMPLEX_STRUCTURE_GENERATION
-  - META_ANALYSIS_REPORT
-  branching_behavior: recursive_call
-  workflow_id_refs:
-  - COMPLEX_PROBLEM_SOLVING_WF
-  - GENERATIVE_SYMBOLIC_ART_WF
-SMART_MRAP:
-  Specific: Enable the recursive application of symbolic operators or reasoning patterns
-    to an input, transforming it through self-referential steps towards a base case
-    or solution.
-  Measurable: Depth of recursion achieved, breadth of symbolic transformation at each
-    level, reduction in problem complexity per step, or successful attainment of defined
-    base cases. Number of distinct symbolic states explored.
-  Achievable: Through programmatic implementation of recursive functions operating
-    on symbolic data structures, or by LLMs guided to iteratively self-reference and
-    meta-analyze inputs according to recursive rules.
-  Relevant: Essential for problems requiring multi-level symbolic interpretation,
-    hierarchical decomposition, generation of complex nested structures, or meta-cognitive
-    analysis of symbolic systems.
-  Transferable: Applicable across any domain requiring nested symbolic reasoning,
-    from formal language parsing and theorem proving to creative generation and complex
-    system modeling.
-metadata:
-  definition_version: 1.4.0
-  definition_status: active
-  author_agent_id: VOXSIGIL_CONVERTER_BOT
-  created_timestamp: '2024-03-10T12:05:00Z'
-  last_updated_timestamp: '2025-06-13T05:40:40.617914Z'
-  revision_history:
-  - version_tag: 1.4.0
-    timestamp: '2024-03-10T12:05:00Z'
-    author_agent_id: VOXSIGIL_CONVERTER_BOT
-    summary_of_change: Initial conversion from custom tag to VoxSigil 1.4 schema.
-    change_type: initial_creation
-  authorship_context:
-    motivation: To formalize a core pattern of advanced reasoning that involves self-similarity
-      and layered processing of symbolic information.
-    theoretical_framework: Recursion theory, symbolic AI, cognitive architectures
-      supporting meta-reasoning.
-  impact_metrics:
-    estimated_cognitive_load: high
-    estimated_resource_cost: medium
-  evolutionary_potential:
-    generalizability_score: 0.9
-    fusion_potential_score: 0.8
-    current_limitations_summary: Can be computationally expensive if not optimized
-      (e.g., via memoization). Defining appropriate base cases and recursive steps
-      can be challenging for novel problems.
-    suggested_next_features:
-    - Automated discovery of recursive structures in data
-    - Integration with probabilistic reasoning for uncertain base cases
-    - Visual tracing tools for recursive symbolic execution
-    research_questions_opened:
-    - How can AI learn to formulate recursive solutions autonomously?
-    - What are the cognitive limits of recursion in LLMs?
-    - Can recursive symbolic reasoning bridge the gap to more human-like general intelligence?
-  schema_version: 1.5-holo-alpha
-  impact_and_usage_metrics_profile:
-    avg_completion_time_ms_observed: UNKNOWN
-    success_rate_observed: UNKNOWN
-    complexity_rating: medium
-test_criteria:
-- test_id: RECSYMB_FACTORIAL_001
-  description: Test symbolic factorial calculation (e.g., Factorial(N) -> N * Factorial(N-1)).
-  type: functional
-  input_scenario_or_parameters:
-    initial_symbolic_input:
-      function: Factorial
-      argument: 3
-  expected_behavior_or_output:
-    result: 3 * (2 * (1 * Factorial(0))) where Factorial(0) is 1 -> 6
-  evaluation_method: automated_script
-  pass_threshold_or_criteria: Correct symbolic expansion and numerical result.
-- test_id: RECSYMB_HIERARCHICAL_DECOMP_001
-  description: Test decomposition of a simple hierarchical problem statement.
-  type: output_validation
-  input_scenario_or_parameters:
-    initial_symbolic_input_description: Analyze the impact of 'climate change' on
-      'coastal cities'.
-  expected_behavior_or_output: A trace showing 'climate change' broken into sub-aspects
-    (sea level rise, storms) and 'coastal cities' assessed against them.
-  evaluation_method: human_review
-  pass_threshold_or_criteria: Logical decomposition, identification of plausible base
-    cases for analysis, coherent recursive steps.
-advanced_cognitive_modeling:
-  cognitive_stage_annotation:
-    primary_developmental_model: Piaget's Stages of Cognitive Development (adapted
-      for AI)
-    stage_within_model: Formal Operational (ability for abstract, recursive thought)
-    solo_taxonomy_level: extended_abstract
-    mapping_rationale: Recursive reasoning on symbols represents a high level of abstraction
-      and meta-cognition.
-  strategic_intent:
-  - goal_id: SOLVE_COMPLEX_HIERARCHICAL_PROBLEMS
-    alignment_strength: 0.95
-    contribution_type: direct_achiever
-  - goal_id: ENABLE_META_REASONING
-    alignment_strength: 0.8
-    contribution_type: enabler
-consciousness_scaffold: false
-cognitive_scaffold: true
-symbolic_scaffold: true
-name: Recursive Symbolic
+      '
+  parameters: {}
+  returns: {}
+  examples: []
+connectivity:
+  input_types: []
+  output_types: []
+  mesh_endpoints:
+  - SymbolSetDefinition
+  - BaseCaseIdentifier
+  - BaseCaseAction
+  - RecursiveStepOperator
+  - ResultCombinationLogic
+  - TerminationConditionEnforcer
+  event_topics: []
+  usage_patterns:
+  - *id001

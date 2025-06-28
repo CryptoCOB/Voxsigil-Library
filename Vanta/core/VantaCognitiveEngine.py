@@ -18,6 +18,18 @@ from typing import Any, Dict, List, Optional, Protocol, Tuple, runtime_checkable
 
 import numpy as np
 
+# HOLO-1.5 Registration
+try:
+    from ..registration.master_registration import vanta_core_module
+except ImportError:
+
+    def vanta_core_module(name: str = "", role: str = ""):
+        def decorator(cls):
+            return cls
+
+        return decorator
+
+
 # --- BEGIN PYTHONPATH MODIFICATION ---
 # Configure a project root based on this file location rather than a hardcoded
 # Windows path.  This keeps the module portable across environments.
@@ -49,12 +61,16 @@ def calculate_file_hash(file_path: str) -> str:
 # Assuming Voxsigil_Library is the top-level package in PYTHONPATH
 try:
     # Import interfaces with aliases to avoid conflicts    # Import implementations - corrected paths based on project structure
-    from BLT.blt_encoder import BLTEncoder as _BLTEncoder
+    # Use hybrid BLT components for better performance
+    from BLT.hybrid_blt import BLTEncoder as _BLTEncoder
+    from BLT.hybrid_blt import BLTEnhancedRAG as _BLTEnhancedRAG
 
     # Using RealSupervisorConnector from integration
     from integration.real_supervisor_connector import (
         RealSupervisorConnector as _RealSupervisorConnector,
     )
+    from VoxSigilRag.hybrid_blt import HybridMiddleware as _HybridMiddleware
+
     from Vanta.interfaces.blt_encoder_interface import BaseBLTEncoder as _BaseBLTEncoder
     from Vanta.interfaces.hybrid_middleware_interface import (
         BaseHybridMiddleware as _BaseHybridMiddleware,
@@ -62,7 +78,6 @@ try:
     from Vanta.interfaces.supervisor_connector_interface import (
         BaseSupervisorConnector as _BaseSupervisorConnector,
     )
-    from VoxSigilRag.hybrid_blt import HybridMiddleware as _HybridMiddleware
 
     BLT_COMPONENTS_AVAILABLE = True
     logger.info(
@@ -75,6 +90,7 @@ try:
     BaseHybridMiddleware = _BaseHybridMiddleware  # type: ignore[assignment]
     RealSupervisorConnector = _RealSupervisorConnector  # type: ignore[assignment]
     BLTEncoder = _BLTEncoder  # type: ignore[assignment]
+    BLTEnhancedRAG = _BLTEnhancedRAG  # type: ignore[assignment]
     HybridMiddleware = _HybridMiddleware  # type: ignore[assignment]
 
 except ImportError as e:
@@ -92,7 +108,9 @@ except ImportError as e:
     # Define fallback interface classes with required methods as stubs
     @runtime_checkable
     class BaseSupervisorConnector(Protocol):
-        def get_sigil_content_as_dict(self, sigil_ref: str) -> Optional[Dict[str, Any]]: ...
+        def get_sigil_content_as_dict(
+            self, sigil_ref: str
+        ) -> Optional[Dict[str, Any]]: ...
         def get_sigil_content_as_text(self, sigil_ref: str) -> Optional[str]: ...
         def create_sigil(
             self,
@@ -119,7 +137,9 @@ except ImportError as e:
 
     @runtime_checkable
     class BaseBLTEncoder(Protocol):
-        def encode(self, text_content: str, task_type: str = "general") -> List[float]: ...
+        def encode(
+            self, text_content: str, task_type: str = "general"
+        ) -> List[float]: ...
         def encode_batch(
             self, text_contents: List[str], task_type: str = "general"
         ) -> List[List[float]]: ...
@@ -165,11 +185,15 @@ except ImportError as e:
 
     class RealSupervisorConnector:
         def get_sigil_content_as_dict(self, sigil_ref: str) -> Optional[Dict[str, Any]]:
-            logger.warning("Using fallback RealSupervisorConnector.get_sigil_content_as_dict")
+            logger.warning(
+                "Using fallback RealSupervisorConnector.get_sigil_content_as_dict"
+            )
             return {}
 
         def get_sigil_content_as_text(self, sigil_ref: str) -> Optional[str]:
-            logger.warning("Using fallback RealSupervisorConnector.get_sigil_content_as_text")
+            logger.warning(
+                "Using fallback RealSupervisorConnector.get_sigil_content_as_text"
+            )
             return None
 
         def create_sigil(
@@ -205,11 +229,15 @@ except ImportError as e:
             module_capabilities: Dict[str, Any],
             requested_sigil_ref: Optional[str] = None,
         ) -> Optional[str]:
-            logger.warning("Using fallback RealSupervisorConnector.register_module_with_supervisor")
+            logger.warning(
+                "Using fallback RealSupervisorConnector.register_module_with_supervisor"
+            )
             return None
 
         def perform_health_check(self, module_registration_sigil_ref: str) -> bool:
-            logger.warning("Using fallback RealSupervisorConnector.perform_health_check")
+            logger.warning(
+                "Using fallback RealSupervisorConnector.perform_health_check"
+            )
             return False
 
 
@@ -263,6 +291,7 @@ class ConfigModel(BaseModel):
 # --- END Pydantic Check ---
 
 
+@vanta_core_module(name="VantaCognitiveEngine", role="cognitive_processor")
 class VantaCognitiveEngine:
     """
     VantaCognitiveEngine - Advanced Cognitive Processing Engine for VoxSigil.
@@ -306,17 +335,25 @@ class VantaCognitiveEngine:
         # --- Meta-Learning Kernel Attributes ---
         self.meta_parameters: Dict[str, Any] = {
             "default_learning_rate": self.config.get("default_learning_rate", 0.05),
-            "default_exploration_rate": self.config.get("default_exploration_rate", 0.1),
+            "default_exploration_rate": self.config.get(
+                "default_exploration_rate", 0.1
+            ),
             "transfer_strength": self.config.get("transfer_strength", 0.3),
-            "parameter_damping_factor": self.config.get("parameter_damping_factor", 0.7),
+            "parameter_damping_factor": self.config.get(
+                "parameter_damping_factor", 0.7
+            ),
             "similarity_threshold_for_transfer": self.config.get(
                 "similarity_threshold_for_transfer", 0.75
             ),
             "max_performance_history_per_task": self.config.get(
                 "max_performance_history_per_task", 50
             ),
-            "min_perf_points_for_adaptation": self.config.get("min_perf_points_for_adaptation", 5),
-            "min_perf_points_for_global_opt": self.config.get("min_perf_points_for_global_opt", 10),
+            "min_perf_points_for_adaptation": self.config.get(
+                "min_perf_points_for_adaptation", 5
+            ),
+            "min_perf_points_for_global_opt": self.config.get(
+                "min_perf_points_for_global_opt", 10
+            ),
         }
         self.task_adaptation_profiles: Dict[str, Dict[str, Any]] = {}
         self.cross_task_knowledge_index: Dict[str, List[float]] = {}
@@ -340,17 +377,23 @@ class VantaCognitiveEngine:
     def _load_configuration(self, config_sigil_ref: str) -> Dict[str, Any]:
         """Loads configuration from a VoxSigil definition."""
         try:
-            config_content = self.supervisor_connector.get_sigil_content_as_dict(config_sigil_ref)
+            config_content = self.supervisor_connector.get_sigil_content_as_dict(
+                config_sigil_ref
+            )
             if not config_content:
                 logger.error(
                     f"VantaCore config sigil '{config_sigil_ref}' is empty or not found. Using defaults."
                 )
                 return {}
-            logger.info(f"VantaCore configuration loaded successfully from '{config_sigil_ref}'.")
+            logger.info(
+                f"VantaCore configuration loaded successfully from '{config_sigil_ref}'."
+            )
             # Assuming config structure might have a specific key for VantaCore settings
             return config_content.get(
                 "vanta_core_settings",
-                config_content.get("custom_attributes_vanta_extensions", config_content),
+                config_content.get(
+                    "custom_attributes_vanta_extensions", config_content
+                ),
             )
         except Exception as e:
             logger.error(
@@ -418,7 +461,9 @@ class VantaCognitiveEngine:
 
         # Validate input parameters
         if not input_data_sigil_ref or not task_sigil_ref:
-            logger.error("Invalid input: input_data_sigil_ref and task_sigil_ref must be non-empty")
+            logger.error(
+                "Invalid input: input_data_sigil_ref and task_sigil_ref must be non-empty"
+            )
             return None
 
         # Check if task is registered, if not, try to register it
@@ -428,18 +473,27 @@ class VantaCognitiveEngine:
                 try:
                     # Try to get information about the task from the supervisor
                     task_metadata = (
-                        self.supervisor_connector.get_sigil_content_as_dict(task_sigil_ref) or {}
+                        self.supervisor_connector.get_sigil_content_as_dict(
+                            task_sigil_ref
+                        )
+                        or {}
                     )  # Ensure a dict even if the supervisor returns None
-                    task_description_sigil_ref = task_metadata.get("description_sigil_ref")
+                    task_description_sigil_ref = task_metadata.get(
+                        "description_sigil_ref"
+                    )
 
                     if not task_description_sigil_ref:
                         # If no description sigil is found in metadata, use a fallback
-                        task_description_sigil_ref = f"SigilRef:Descriptor_For_{task_sigil_ref}"
+                        task_description_sigil_ref = (
+                            f"SigilRef:Descriptor_For_{task_sigil_ref}"
+                        )
                         logger.warning(
                             f"No description sigil found in task metadata. Using fallback: '{task_description_sigil_ref}'"
                         )
                 except Exception as e:
-                    task_description_sigil_ref = f"SigilRef:Descriptor_For_{task_sigil_ref}"
+                    task_description_sigil_ref = (
+                        f"SigilRef:Descriptor_For_{task_sigil_ref}"
+                    )
                     logger.warning(
                         f"Error retrieving task metadata: {e}. Using fallback descriptor: '{task_description_sigil_ref}'"
                     )
@@ -476,9 +530,12 @@ class VantaCognitiveEngine:
             "learning_rate": learning_rate,
             "exploration_rate": exploration_rate,
             "adaptation_count": len(
-                self.task_adaptation_profiles.get(task_sigil_ref, {}).get("performance_history", [])
+                self.task_adaptation_profiles.get(task_sigil_ref, {}).get(
+                    "performance_history", []
+                )
             ),
-            "is_transfer_learning_applied": task_sigil_ref in self.cross_task_knowledge_index,
+            "is_transfer_learning_applied": task_sigil_ref
+            in self.cross_task_knowledge_index,
         }
 
         logger.debug(
@@ -503,12 +560,16 @@ class VantaCognitiveEngine:
                 # Log performance details
                 try:
                     perf_data = (
-                        self.supervisor_connector.get_sigil_content_as_dict(perf_metric_sigil_ref)
+                        self.supervisor_connector.get_sigil_content_as_dict(
+                            perf_metric_sigil_ref
+                        )
                         or {}
                     )
                     perf_value = perf_data.get("achieved_performance")
                     if perf_value is not None:
-                        logger.info(f"Task '{task_sigil_ref}' performance: {perf_value:.4f}")
+                        logger.info(
+                            f"Task '{task_sigil_ref}' performance: {perf_value:.4f}"
+                        )
                 except Exception as e:
                     logger.warning(f"Error retrieving performance data: {e}")
             else:
@@ -632,8 +693,12 @@ class VantaCognitiveEngine:
                     f"Invalid or missing performance metric data in sigil '{performance_metric_sigil_ref}'. Full entry: {sigil_entry}"
                 )
                 # Check if the sigil_ref itself indicates a known failure type
-                if performance_metric_sigil_ref.startswith("SigilRef:PerfMetric_Failure"):
-                    performance_value = 0.0  # Assign low performance for known failure signals
+                if performance_metric_sigil_ref.startswith(
+                    "SigilRef:PerfMetric_Failure"
+                ):
+                    performance_value = (
+                        0.0  # Assign low performance for known failure signals
+                    )
                     logger.info(
                         f"Recognized failure sigil '{performance_metric_sigil_ref}', assigning performance 0.0."
                     )
@@ -743,7 +808,9 @@ class VantaCognitiveEngine:
                 second_half_mean = np.mean(recent_values[mid_point:])
                 if second_half_mean > first_half_mean:
                     trend_improving = True
-        elif len(recent_values) >= 2:  # Simpler trend for 2 or 3 points (last vs second last)
+        elif (
+            len(recent_values) >= 2
+        ):  # Simpler trend for 2 or 3 points (last vs second last)
             if (
                 recent_values[-1] > recent_values[-2]
             ):  # Check if last is greater than second to last
@@ -772,7 +839,9 @@ class VantaCognitiveEngine:
             len(recent_values) >= 2 and not trend_improving
         ):  # Declining or stuck fluctuating (and we have at least 2 points to make this call)
             new_er = min(0.9, new_er * 1.15 + 0.03)  # Try exploring more
-            new_lr = min(0.2, new_lr * 1.05 + 0.01)  # Learn a bit faster from new exploration
+            new_lr = min(
+                0.2, new_lr * 1.05 + 0.01
+            )  # Learn a bit faster from new exploration
 
         # Ensure parameters stay within reasonable bounds
         current_params["learning_rate"] = round(max(0.01, min(0.2, new_lr)), 4)
@@ -783,7 +852,9 @@ class VantaCognitiveEngine:
             f"Adapted parameters for task '{task_sigil_ref}': LR={current_params['learning_rate']:.4f}, ER={current_params['exploration_rate']:.4f} (AvgPerf: {avg_perf:.3f}, Var: {variance:.4f}, TrendImproving: {trend_improving}, PointsConsidered: {len(recent_values)})"
         )
 
-    def _calculate_profile_similarity(self, task_sigil_ref1: str, task_sigil_ref2: str) -> float:
+    def _calculate_profile_similarity(
+        self, task_sigil_ref1: str, task_sigil_ref2: str
+    ) -> float:
         """Calculates semantic similarity between two task profiles based on their description embeddings."""
         emb1 = self.cross_task_knowledge_index.get(task_sigil_ref1)
         emb2 = self.cross_task_knowledge_index.get(task_sigil_ref2)
@@ -805,7 +876,9 @@ class VantaCognitiveEngine:
         similarity = dot_product / (norm1 * norm2)
         return float(max(0.0, min(1.0, similarity)))  # Ensure value is between 0 and 1
 
-    def _find_similar_task_profiles(self, current_task_sigil_ref: str) -> List[Tuple[str, float]]:
+    def _find_similar_task_profiles(
+        self, current_task_sigil_ref: str
+    ) -> List[Tuple[str, float]]:
         """Finds tasks similar to the current one using BLT embeddings of their descriptions."""
         similarities = []
         if current_task_sigil_ref not in self.cross_task_knowledge_index:
@@ -856,11 +929,15 @@ class VantaCognitiveEngine:
         total_similarity_weight: float = 0.0
 
         # Consider only top N (e.g., 3) most similar tasks for transfer
-        for source_task_sigil_ref, similarity in source_task_profiles_with_similarity[:3]:
+        for source_task_sigil_ref, similarity in source_task_profiles_with_similarity[
+            :3
+        ]:
             source_profile = self.task_adaptation_profiles.get(source_task_sigil_ref)
             if source_profile and source_profile["parameters"]:
                 for param_name, param_value in source_profile["parameters"].items():
-                    if isinstance(param_value, (int, float)):  # Only transfer numerical params
+                    if isinstance(
+                        param_value, (int, float)
+                    ):  # Only transfer numerical params
                         weighted_sum_params[param_name] = weighted_sum_params.get(
                             param_name, 0.0
                         ) + (param_value * similarity)
@@ -886,7 +963,9 @@ class VantaCognitiveEngine:
                 1.0 - transfer_strength
             ) * original_value + transfer_strength * avg_weighted_value
             target_profile["parameters"][param_name] = round(transferred_value, 4)
-            updated_params_for_log[param_name] = target_profile["parameters"][param_name]
+            updated_params_for_log[param_name] = target_profile["parameters"][
+                param_name
+            ]
 
         if updated_params_for_log:
             logger.info(
@@ -973,7 +1052,9 @@ class VantaCognitiveEngine:
             )
             # logger.debug(f"Collected best param values for optimization: {best_param_values_across_tasks}")
         else:
-            logger.info("No updates made to global meta-parameters during this optimization cycle.")
+            logger.info(
+                "No updates made to global meta-parameters during this optimization cycle."
+            )
 
     def get_adapted_parameters_for_task(self, task_sigil_ref: str) -> Dict[str, Any]:
         """
@@ -1029,7 +1110,9 @@ class VantaCognitiveEngine:
     def register_with_supervisor(self) -> bool:  # Return boolean for success
         """Registers VantaCore with the Supervisor and performs an initial health check."""
         if not self.supervisor_connector:
-            logger.warning("Supervisor connector not available. Cannot register VantaCore.")
+            logger.warning(
+                "Supervisor connector not available. Cannot register VantaCore."
+            )
             self.supervisor_registration_sigil = None
             self.last_supervisor_health_check_status = "degraded"
             return False  # Indicate failure
@@ -1129,12 +1212,16 @@ class VantaCognitiveEngine:
         try:
             # Check 1: Can we retrieve our config?
             try:
-                config = self.supervisor_connector.get_sigil_content_as_dict(self.config_sigil_ref)
+                config = self.supervisor_connector.get_sigil_content_as_dict(
+                    self.config_sigil_ref
+                )
                 if config:
                     health_report["details"]["config_retrieval"] = "passed"
                     health_report["checks_passed"] += 1
                 else:
-                    health_report["details"]["config_retrieval"] = "failed - empty config"
+                    health_report["details"]["config_retrieval"] = (
+                        "failed - empty config"
+                    )
                     health_report["checks_failed"] += 1
             except Exception as e:
                 health_report["details"]["config_retrieval"] = f"failed - {str(e)}"
@@ -1155,7 +1242,9 @@ class VantaCognitiveEngine:
                     health_report["details"]["sigil_creation"] = "passed"
                     health_report["checks_passed"] += 1
                 else:
-                    health_report["details"]["sigil_creation"] = "failed - creation returned False"
+                    health_report["details"]["sigil_creation"] = (
+                        "failed - creation returned False"
+                    )
                     health_report["checks_failed"] += 1
             except Exception as e:
                 health_report["details"]["sigil_creation"] = f"failed - {str(e)}"
@@ -1163,14 +1252,18 @@ class VantaCognitiveEngine:
 
             # Check 3: Can we search for sigils?
             try:
-                results = self.supervisor_connector.search_sigils({"prefix": "SigilRef:Vanta"})
+                results = self.supervisor_connector.search_sigils(
+                    {"prefix": "SigilRef:Vanta"}
+                )
                 if results is not None:
                     health_report["details"]["sigil_search"] = (
                         f"passed - found {len(results)} results"
                     )
                     health_report["checks_passed"] += 1
                 else:
-                    health_report["details"]["sigil_search"] = "failed - search returned None"
+                    health_report["details"]["sigil_search"] = (
+                        "failed - search returned None"
+                    )
                     health_report["checks_failed"] += 1
             except Exception as e:
                 health_report["details"]["sigil_search"] = f"failed - {str(e)}"
@@ -1226,7 +1319,9 @@ class VantaCognitiveEngine:
                     ),
                     "average_performance": np.mean(
                         [
-                            np.mean([p["value"] for p in profile["performance_history"]])
+                            np.mean(
+                                [p["value"] for p in profile["performance_history"]]
+                            )
                             for profile in self.task_adaptation_profiles.values()
                             if profile["performance_history"]
                         ]
@@ -1244,7 +1339,9 @@ class VantaCognitiveEngine:
             )
 
             if success:
-                logger.debug(f"VantaCore status updated successfully: {status_sigil_ref}")
+                logger.debug(
+                    f"VantaCore status updated successfully: {status_sigil_ref}"
+                )
                 return True
             else:
                 logger.warning("Failed to update VantaCore status in supervisor")
@@ -1322,7 +1419,9 @@ class VantaCognitiveEngine:
         """
         try:
             # Extract task parameters from task_data
-            input_data_sigil_ref = task_data.get("input_data_sigil_ref", "unified_task_input")
+            input_data_sigil_ref = task_data.get(
+                "input_data_sigil_ref", "unified_task_input"
+            )
             task_sigil_ref = task_data.get("task_sigil_ref", "unified_task")
 
             # Use existing process_input method
@@ -1356,7 +1455,9 @@ class VantaCognitiveEngine:
         This is a placeholder implementation that can be expanded.
         """
         try:
-            logger.info(f"Training cognitive engine with data type: {type(training_data)}")
+            logger.info(
+                f"Training cognitive engine with data type: {type(training_data)}"
+            )
 
             # For now, just log the training attempt
             # Future implementation could update meta-parameters, task profiles, etc.
@@ -1386,12 +1487,16 @@ class VantaCognitiveEngine:
             if hasattr(self, "supervisor_connector") and self.supervisor_connector:
                 try:
                     # Try to call disconnect if available
-                    disconnect_method = getattr(self.supervisor_connector, "disconnect", None)
+                    disconnect_method = getattr(
+                        self.supervisor_connector, "disconnect", None
+                    )
                     if disconnect_method and callable(disconnect_method):
                         disconnect_method()
                         logger.info("Disconnected from supervisor")
                     else:
-                        logger.info("Supervisor connector doesn't support disconnect method")
+                        logger.info(
+                            "Supervisor connector doesn't support disconnect method"
+                        )
                 except Exception as e:
                     logger.warning(f"Error disconnecting from supervisor: {e}")
 
@@ -1409,6 +1514,43 @@ class VantaCognitiveEngine:
 
 
 # === End of missing methods ===
+
+# --- Example Usage (Conceptual - Supervisor would orchestrate this) ---
+if __name__ == "__main__":
+    # Use the real implementations instead of mocks
+    # You must ensure these are properly configured and available in your environment
+
+    # Example: instantiate the real supervisor connector, BLT encoder, and hybrid middleware
+    # You may need to adjust constructor arguments as required by your real classes
+
+    # Import the real classes (already imported above if available)
+    # from Vanta.interfaces.real_supervisor_connector import RealSupervisorConnector
+    # from BLT.blt_encoder import BLTEncoder
+    # from BLT.hybrid_middleware import HybridMiddleware
+
+    # Instantiate real components
+    supervisor_connector = RealSupervisorConnector()
+    blt_encoder = BLTEncoder()
+    hybrid_middleware = HybridMiddleware()
+
+    # Initialize VantaCognitiveEngine with real components
+    vanta_core = VantaCognitiveEngine(
+        config_sigil_ref="SigilRef:VantaCore_TestConfig_V1",
+        supervisor_connector=supervisor_connector,
+        blt_encoder=blt_encoder,
+        hybrid_middleware=hybrid_middleware,
+    )
+
+    # Example: register a task and process input (adjust sigil refs as needed)
+    # task_sigil = "SigilRef:YourTask"
+    # task_desc_sigil = "SigilRef:YourTaskDesc"
+    # vanta_core.register_arc_task_profile(task_sigil, task_desc_sigil)
+    # solution_ref = vanta_core.process_input(input_data_sigil_ref="SigilRef:YourInput", task_sigil_ref=task_sigil)
+    # print("Solution sigil:", solution_ref)
+
+    # ...add your real workflow here...
+
+# ===== END HOLO-OPT HELPERS =====
 
 # --- Example Usage (Conceptual - Supervisor would orchestrate this) ---
 if __name__ == "__main__":

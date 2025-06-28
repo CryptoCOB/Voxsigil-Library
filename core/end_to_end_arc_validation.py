@@ -12,17 +12,17 @@ HOLO-1.5 Enhanced Validation Processor:
 - Adaptive validation depth based on task complexity
 """
 
-import sys
 import json
-import random
-import traceback
-import time
 import logging
+import random
+import sys
+import time
+import traceback
 from pathlib import Path
-from typing import Dict, List, Any, Tuple, Optional
+from typing import Any, Dict, List, Optional, Tuple
 
 # HOLO-1.5 Recursive Symbolic Cognition Mesh imports
-from .base import BaseCore, vanta_core_module, CognitiveMeshRole
+from .base import BaseCore, CognitiveMeshRole, vanta_core_module
 
 # Add project root to path
 project_root = Path(__file__).resolve().parent.parent.parent
@@ -110,6 +110,12 @@ try:
 except ImportError:
     # Fallback: define a stub implementation that mirrors the required interface
     class _GridFormerInference:  # noqa: N801 – private alias for consistency
+        def __init__(self, model_loader=None, data_loader=None):
+            """Initialize GridFormerInference with optional loader components"""
+            self.model_loader = model_loader
+            self.data_loader = data_loader
+            debug_log("Initialized stub GridFormerInference")
+
         def predict(self, task_data, strategy=None):
             debug_log(f"Using stub GridFormerInference with strategy: {strategy}")
             # Create dummy predictions
@@ -119,9 +125,8 @@ except ImportError:
                 predictions.append([[0 for _ in range(len(row))] for row in input_grid])
             return predictions
 
-
-# Expose a single public reference regardless of the import outcome
-GridFormerInference = _GridFormerInference
+    # Expose a single public reference regardless of the import outcome
+    GridFormerInference = _GridFormerInference
 
 
 class NeuralInterface:
@@ -193,12 +198,12 @@ class SubmissionFormatter:
         return {"valid": True, "errors": []}
 
 
-# Try to import BLT components
+# Try to import BLT components - use hybrid version for better performance
 try:
-    from BLT import BLTEncoder
+    from BLT.hybrid_blt import BLTEncoder
 
     BLT_AVAILABLE = True
-    debug_log("BLT components imported successfully")
+    debug_log("Hybrid BLT components imported successfully")
 except ImportError:
     BLT_AVAILABLE = False
     debug_log("BLT components not available, will test without them")
@@ -213,17 +218,22 @@ except ImportError:
     name="end_to_end_arc_validator",
     subsystem="validation_processing",
     mesh_role=CognitiveMeshRole.PROCESSOR,
+    description="HOLO-1.5 Enhanced End-to-End Validation Processor for comprehensive ARC task validation",
     capabilities=[
-        "comprehensive_validation", "end_to_end_testing", "format_validation", 
-        "cognitive_assessment", "validation_synthesis", "multi_layer_validation"
+        "comprehensive_validation",
+        "end_to_end_testing",
+        "format_validation",
+        "cognitive_assessment",
+        "validation_synthesis",
+        "multi_layer_validation",
     ],
     cognitive_load=4.0,
-    symbolic_depth=3
+    symbolic_depth=3,
 )
 class EndToEndValidator(BaseCore):
     """
     HOLO-1.5 Enhanced End-to-End Validation Processor
-    
+
     Implements comprehensive validation with recursive symbolic cognition for:
     - Multi-layer validation synthesis across inference pipelines
     - Cognitive assessment of validation patterns and anomalies
@@ -235,26 +245,26 @@ class EndToEndValidator(BaseCore):
         """Initialize HOLO-1.5 enhanced validation processor"""
         # Initialize BaseCore first
         super().__init__(vanta_core, config)
-        
+
         # Initialize validation components
         self.inference_engine = GridFormerInference()
         self.neural_interface = NeuralInterface()
         self.validator = ValidationUtils()
         self.data_loader = ARCDataLoader()
         self.submission_formatter = SubmissionFormatter()
-        
+
         # HOLO-1.5 cognitive validation metrics
         self.validation_metrics = {
             "validation_depth": 0,
             "synthesis_efficiency": 0.0,
             "anomaly_detection_rate": 0.0,
             "cognitive_consistency": 0.0,
-            "multi_layer_coherence": 0.0
+            "multi_layer_coherence": 0.0,
         }
-        
+
         # Validation trace storage
         self.validation_traces = []
-        
+
     async def initialize(self) -> bool:
         """Initialize HOLO-1.5 validation processor with cognitive capabilities"""
         try:
@@ -265,44 +275,46 @@ class EndToEndValidator(BaseCore):
                         "type": "cognitive_validator",
                         "capabilities": self._get_metadata()["capabilities"],
                         "validation_depth": 3,
-                        "synthesis_modes": ["comprehensive", "adaptive", "multi_layer"]
-                    }
+                        "synthesis_modes": ["comprehensive", "adaptive", "multi_layer"],
+                    },
                 )
                 logger.info("✅ EndToEndValidator registered with VantaCore")
-            
+
             # Initialize cognitive validation systems
             await self._initialize_cognitive_validation()
-            
+
             self.is_initialized = True
             return True
-            
+
         except Exception as e:
             logger.error(f"❌ Failed to initialize EndToEndValidator: {e}")
             return False
-    
+
     async def _initialize_cognitive_validation(self):
         """Initialize cognitive validation capabilities"""
         # Set up multi-layer validation synthesis
         self.validation_synthesis_layers = {
             "structural": {"weight": 0.3, "depth": 2},
             "semantic": {"weight": 0.3, "depth": 3},
-            "cognitive": {"weight": 0.4, "depth": 4}
+            "cognitive": {"weight": 0.4, "depth": 4},
         }
-        
+
         # Initialize anomaly detection patterns
         self.anomaly_patterns = {
             "format_inconsistencies": [],
             "cognitive_contradictions": [],
-            "synthesis_failures": []
+            "synthesis_failures": [],
         }
-        
+
         logger.info("🧠 Cognitive validation systems initialized")
-    
-    def _update_validation_metrics(self, test_name: str, result: bool, complexity: float = 1.0):
+
+    def _update_validation_metrics(
+        self, test_name: str, result: bool, complexity: float = 1.0
+    ):
         """Update HOLO-1.5 cognitive validation metrics"""
         # Update validation depth based on test complexity
         self.validation_metrics["validation_depth"] += complexity
-        
+
         # Update synthesis efficiency
         if result:
             self.validation_metrics["synthesis_efficiency"] = (
@@ -310,40 +322,59 @@ class EndToEndValidator(BaseCore):
             )
         else:
             self.validation_metrics["synthesis_efficiency"] *= 0.85
-        
+
         # Update cognitive consistency
         self.validation_metrics["cognitive_consistency"] = min(
-            1.0, self.validation_metrics["cognitive_consistency"] + (0.1 if result else -0.15)
+            1.0,
+            self.validation_metrics["cognitive_consistency"]
+            + (0.1 if result else -0.15),
         )
-        
+
         # Store validation trace
-        self.validation_traces.append({
-            "test_name": test_name,
-            "result": result,
-            "complexity": complexity,
-            "cognitive_load": self.validation_metrics["validation_depth"] * 0.1,
-            "timestamp": time.time()
-        })
-    
+        self.validation_traces.append(
+            {
+                "test_name": test_name,
+                "result": result,
+                "complexity": complexity,
+                "cognitive_load": self.validation_metrics["validation_depth"] * 0.1,
+                "timestamp": time.time(),
+            }
+        )
+
     def generate_validation_trace(self) -> Dict[str, Any]:
         """Generate cognitive validation trace for HOLO-1.5 mesh analysis"""
         return {
             "validator_state": {
                 "validation_depth": self.validation_metrics["validation_depth"],
                 "synthesis_efficiency": self.validation_metrics["synthesis_efficiency"],
-                "cognitive_consistency": self.validation_metrics["cognitive_consistency"]
+                "cognitive_consistency": self.validation_metrics[
+                    "cognitive_consistency"
+                ],
             },
             "validation_patterns": {
-                "successful_validations": len([t for t in self.validation_traces if t["result"]]),
-                "failed_validations": len([t for t in self.validation_traces if not t["result"]]),
-                "average_complexity": sum(t["complexity"] for t in self.validation_traces) / max(1, len(self.validation_traces)),
-                "cognitive_load_trend": [t["cognitive_load"] for t in self.validation_traces[-10:]]
+                "successful_validations": len(
+                    [t for t in self.validation_traces if t["result"]]
+                ),
+                "failed_validations": len(
+                    [t for t in self.validation_traces if not t["result"]]
+                ),
+                "average_complexity": sum(
+                    t["complexity"] for t in self.validation_traces
+                )
+                / max(1, len(self.validation_traces)),
+                "cognitive_load_trend": [
+                    t["cognitive_load"] for t in self.validation_traces[-10:]
+                ],
             },
             "anomaly_summary": {
-                "detected_patterns": len(self.anomaly_patterns["format_inconsistencies"]),
-                "cognitive_flags": len(self.anomaly_patterns["cognitive_contradictions"]),
-                "synthesis_issues": len(self.anomaly_patterns["synthesis_failures"])
-            }
+                "detected_patterns": len(
+                    self.anomaly_patterns["format_inconsistencies"]
+                ),
+                "cognitive_flags": len(
+                    self.anomaly_patterns["cognitive_contradictions"]
+                ),
+                "synthesis_issues": len(self.anomaly_patterns["synthesis_failures"]),
+            },
         }
 
     def create_synthetic_tasks(self, num_tasks: int = 5) -> Dict[str, Dict[str, Any]]:
@@ -425,7 +456,8 @@ class EndToEndValidator(BaseCore):
                         "input": [[i % 10 for i in range(30)] for _ in range(30)]
                     },  # 30x30
                 ],
-            },        }
+            },
+        }
 
         return edge_cases
 
@@ -459,7 +491,9 @@ class EndToEndValidator(BaseCore):
                     if validation["is_valid"]:
                         debug_log(f"✅ Valid prediction: shape={validation['shape']}")
                         # Update cognitive metrics for successful validation
-                        self._update_validation_metrics(f"neural_prediction_{task_id}_{i}", True, 1.5)
+                        self._update_validation_metrics(
+                            f"neural_prediction_{task_id}_{i}", True, 1.5
+                        )
                     else:
                         debug_log(
                             f"❌ Invalid prediction: {validation['invalid_count']} invalid values"
@@ -467,14 +501,18 @@ class EndToEndValidator(BaseCore):
                         debug_log(f"Invalid values: {validation['invalid_values']}")
                         success = False
                         # Update cognitive metrics for failed validation
-                        self._update_validation_metrics(f"neural_prediction_{task_id}_{i}", False, 1.5)
+                        self._update_validation_metrics(
+                            f"neural_prediction_{task_id}_{i}", False, 1.5
+                        )
 
                 except Exception as e:
                     debug_log(f"❌ Error predicting example {i + 1}: {e}")
                     debug_log(traceback.format_exc())
                     success = False
                     # Update cognitive metrics for error
-                    self._update_validation_metrics(f"neural_prediction_{task_id}_{i}", False, 2.0)
+                    self._update_validation_metrics(
+                        f"neural_prediction_{task_id}_{i}", False, 2.0
+                    )
 
         return success
 
@@ -777,25 +815,33 @@ class EndToEndValidator(BaseCore):
             except Exception as e:
                 debug_log(f"<< Test Error: {e}")
                 debug_log(traceback.format_exc())
-                results[test_name] = False        # Print summary
+                results[test_name] = False  # Print summary
         debug_log("\n========== Test Summary ==========")
         passed = sum(1 for r in results.values() if r)
         total = len(results)
         debug_log(f"Passed: {passed}/{total} ({passed / total:.2%})")
-        
+
         pass_symbol = "✓" if not use_ascii else "PASS"
         fail_symbol = "✗" if not use_ascii else "FAIL"
         for test_name, result in results.items():
             debug_log(f"{test_name}: {pass_symbol if result else fail_symbol}")
 
         # Generate HOLO-1.5 cognitive validation trace
-        if hasattr(self, 'validation_traces'):
+        if hasattr(self, "validation_traces"):
             cognitive_trace = self.generate_validation_trace()
-            debug_log(f"\n🧠 HOLO-1.5 Cognitive Validation Summary:")
-            debug_log(f"  Validation Depth: {cognitive_trace['validator_state']['validation_depth']:.2f}")
-            debug_log(f"  Synthesis Efficiency: {cognitive_trace['validator_state']['synthesis_efficiency']:.3f}")
-            debug_log(f"  Cognitive Consistency: {cognitive_trace['validator_state']['cognitive_consistency']:.3f}")
-            debug_log(f"  Successful/Failed: {cognitive_trace['validation_patterns']['successful_validations']}/{cognitive_trace['validation_patterns']['failed_validations']}")
+            debug_log("\n🧠 HOLO-1.5 Cognitive Validation Summary:")
+            debug_log(
+                f"  Validation Depth: {cognitive_trace['validator_state']['validation_depth']:.2f}"
+            )
+            debug_log(
+                f"  Synthesis Efficiency: {cognitive_trace['validator_state']['synthesis_efficiency']:.3f}"
+            )
+            debug_log(
+                f"  Cognitive Consistency: {cognitive_trace['validator_state']['cognitive_consistency']:.3f}"
+            )
+            debug_log(
+                f"  Successful/Failed: {cognitive_trace['validation_patterns']['successful_validations']}/{cognitive_trace['validation_patterns']['failed_validations']}"
+            )
 
         return all(results.values())
 

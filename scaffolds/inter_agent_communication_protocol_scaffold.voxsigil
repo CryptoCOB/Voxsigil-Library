@@ -1,210 +1,90 @@
-sigil: 💬🤝🌍
-alias: ICNP_Scaffold
-tag: MultiAgentSystems
-tags:
-- CommunicationProtocol
-- NegotiationFramework
-- Collaboration
-- DistributedAI
-- SemanticGrounding
-is_cognitive_primitive: false
-consciousness_scaffold: false
-cognitive_scaffold: true
-symbolic_scaffold: true
-principle: "The \U0001F4AC\U0001F91D\U0001F30D (Inter-Agent Communication & Negotiation\
-  \ Protocol) scaffold defines the protocols, message structures,\nand mechanisms\
-  \ for structured, meaningful communication and negotiation between distinct intelligent\
-  \ agents\n(Vanta-native or external). It includes layers for establishing common\
-  \ ground (semantic grounding), \nexchanging information, clarifying intent, sharing\
-  \ beliefs/goals, managing commitments, resolving conflicts, \nand forming joint\
-  \ plans for collaborative action.\n"
-structure:
-  composite_type: layered_protocol_stack
-  temporal_structure: event_triggered_sequence
-  components:
-  - name: MessageEncoderDecoder
-    description: Translates internal agent representations into a shared communication
-      language (and vice-versa).
-    sigil_ref: 🗣️LINGUA_FRANCA_TRANSLATOR
-  - name: SemanticGroundingModule
-    description: Establishes shared meaning for symbols and concepts between agents,
-      potentially through dialogue or reference to common ontologies.
-    sigil_ref: 🌍SHARED_ONTOLOGY_MAPPER
-  - name: IntentClarificationUnit
-    description: Manages dialogues to ensure mutual understanding of goals, intentions,
-      and speech acts.
-  - name: BeliefExchangeMechanism
-    description: Protocols for agents to share and update their beliefs based on communication.
-  - name: NegotiationStrategyEngine
-    description: Implements strategies for bargaining, compromise, and reaching mutually
-      acceptable agreements.
-    sigil_ref: ⚖️NEGOTIATION_TACTICIAN
-  - name: CommitmentTracker
-    description: Manages promises and commitments made by agents during interaction.
-  - name: JointPlanCoordinator
-    description: Facilitates the collaborative creation and execution monitoring of
-      plans involving multiple agents.
-usage:
-  description: Provides the framework for robust and effective communication, negotiation,
-    and collaboration between multiple AI agents or between AI agents and humans.
-  example: "// AgentA wants to collaborate with AgentB on task_Z\nICNP_SCAFFOLD.initiate_dialogue(\n\
-    \    initiator_agent_id=\"AgentA\",\n    recipient_agent_id=\"AgentB\",\n    initial_proposal={\n\
-    \        type: \"collaboration_request\",\n        task_id: \"task_Z\",\n    \
-    \    proposed_roles: { AgentA: \"data_analyzer\", AgentB: \"report_generator\"\
-    \ }\n    },\n    communication_channel=\"secure_vanta_link_07\"\n);\n"
-  explanation: 'This scaffold is essential for any system involving multiple interacting
-    intelligent entities. It supports tasks
+schema_version: 1.5-holo-alpha
+meta:
+  sigil: 💬🤝🌍
+  alias: ICNP_Scaffold
+  tag: MultiAgentSystems
+  upgraded_from: legacy
+  upgrade_timestamp: '2025-06-24T17:14:15.810485'
+  source_file: scaffolds\inter_agent_communication_protocol_scaffold.voxsigil
+holo_mesh:
+  is_cognitive_primitive: false
+  mesh_compatibility: holo-1.5-alpha
+  registration_ready: true
+  vanta_core_integration:
+    event_support: true
+    async_capable: true
+    memory_aware: true
+  temporal_pattern: event_triggered_sequence
+cognitive:
+  principle: "The \U0001F4AC\U0001F91D\U0001F30D (Inter-Agent Communication & Negotiation Protocol) scaffold defines the protocols,\
+    \ message structures,\nand mechanisms for structured, meaningful communication and negotiation between distinct intelligent\
+    \ agents\n(Vanta-native or external). It includes layers for establishing common ground (semantic grounding), \nexchanging\
+    \ information, clarifying intent, sharing beliefs/goals, managing commitments, resolving conflicts, \nand forming joint\
+    \ plans for collaborative action.\n"
+  math: {}
+  tags:
+  - CommunicationProtocol
+  - NegotiationFramework
+  - Collaboration
+  - DistributedAI
+  - SemanticGrounding
+  structure:
+    composite_type: layered_protocol_stack
+    temporal_structure: event_triggered_sequence
+    components:
+    - name: MessageEncoderDecoder
+      description: Translates internal agent representations into a shared communication language (and vice-versa).
+      sigil_ref: 🗣️LINGUA_FRANCA_TRANSLATOR
+    - name: SemanticGroundingModule
+      description: Establishes shared meaning for symbols and concepts between agents, potentially through dialogue or reference
+        to common ontologies.
+      sigil_ref: 🌍SHARED_ONTOLOGY_MAPPER
+    - name: IntentClarificationUnit
+      description: Manages dialogues to ensure mutual understanding of goals, intentions, and speech acts.
+    - name: BeliefExchangeMechanism
+      description: Protocols for agents to share and update their beliefs based on communication.
+    - name: NegotiationStrategyEngine
+      description: Implements strategies for bargaining, compromise, and reaching mutually acceptable agreements.
+      sigil_ref: ⚖️NEGOTIATION_TACTICIAN
+    - name: CommitmentTracker
+      description: Manages promises and commitments made by agents during interaction.
+    - name: JointPlanCoordinator
+      description: Facilitates the collaborative creation and execution monitoring of plans involving multiple agents.
+implementation:
+  usage:
+    description: Provides the framework for robust and effective communication, negotiation, and collaboration between multiple
+      AI agents or between AI agents and humans.
+    example: "// AgentA wants to collaborate with AgentB on task_Z\nICNP_SCAFFOLD.initiate_dialogue(\n    initiator_agent_id=\"\
+      AgentA\",\n    recipient_agent_id=\"AgentB\",\n    initial_proposal={\n        type: \"collaboration_request\",\n  \
+      \      task_id: \"task_Z\",\n        proposed_roles: { AgentA: \"data_analyzer\", AgentB: \"report_generator\" }\n \
+      \   },\n    communication_channel=\"secure_vanta_link_07\"\n);\n"
+    explanation: 'This scaffold is essential for any system involving multiple interacting intelligent entities. It supports
+      tasks
 
-    like distributed problem solving, resource allocation negotiations, information
-    sharing in a team,
+      like distributed problem solving, resource allocation negotiations, information sharing in a team,
 
-    and coordinated action in complex environments. It aims to make multi-agent interactions
-    more than just
+      and coordinated action in complex environments. It aims to make multi-agent interactions more than just
 
-    message passing, fostering genuine understanding and cooperation.
+      message passing, fostering genuine understanding and cooperation.
 
-    '
-activation_context:
-  trigger_conditions:
-  - Need to exchange information with another agent.
-  - Requirement for collaborative action or joint goal pursuit.
-  - Conflict of interest or resources requiring negotiation.
-  - Ambiguity in another agent's behavior or intent requiring clarification.
-  preconditions:
-  - At least two agents capable of sending/receiving messages.
-  - A shared (or translatable) communication medium/language.
-  required_capabilities:
-  - message_parsing_generation
-  - belief_representation
-  - basic_reasoning_about_others_intentions
-  supported_modalities:
-  - textual
-  - symbolic_input
-  - programmatic_api
-parameterization_schema:
-  parameters:
-  - name: default_communication_protocol_version
-    type: string
-    description: The default underlying message transport/speech act protocol to use.
-    default_value: VantaTalk_v2.0
-  - name: max_negotiation_rounds
-    type: integer
-    description: Default limit for negotiation dialogues before timeout or escalation.
-    default_value: 10
-  - name: semantic_grounding_strategy
-    type: enum
-    allowed_values:
-    - shared_ontology_lookup
-    - interactive_clarification
-    - example_based_alignment
-    description: Method for ensuring shared understanding of terms.
-    default_value: shared_ontology_lookup
-prompt_template:
-  role: system_instruction
-  content: '**Engage Inter-Agent Communication/Negotiation (💬🤝🌍) with Agent ''{{target_agent_id}}''**
-
-
-    **Your Current Goal/Intent for this interaction:** {{your_current_goal_or_intent}}
-
-    **Shared Communication Protocol Version:** {{default_communication_protocol_version}}
-
-
-    {{#if initiating_dialogue}}
-
-    **Your Initial Message/Proposal:**
-
-    {{initial_message_or_proposal_content}}
-
-    {{/if}}
-
-    {{#if responding_to_message}}
-
-    **Received Message from ''{{target_agent_id}}'':**
-
-    {{received_message_content}}
-
-    {{/if}}
-
-
-    **Process (select appropriate steps):**
-
-    1.  **Encode/Decode Message:** Use 🗣️LINGUA_FRANCA_TRANSLATOR if needed.
-
-    2.  **Ground Semantics:** Ensure understanding of terms with 🌍SHARED_ONTOLOGY_MAPPER
-    or clarification.
-
-    3.  **Clarify Intent:** If message is unclear, formulate clarification questions.
-
-    4.  **Negotiate (if applicable):** Employ ⚖️NEGOTIATION_TACTICIAN strategies based
-    on `{{your_current_goal_or_intent}}`. Max rounds: `{{max_negotiation_rounds}}`.
-
-    5.  **Manage Commitments:** Update CommitmentTracker with any agreements.
-
-    6.  **Formulate Response:** Craft your reply to ''{{target_agent_id}}''.
-
-
-    Output your next message to ''{{target_agent_id}}'' and any internal state updates
-    (e.g., belief changes, new commitments).
-
-    '
-  execution_mode: instruction
-  variables:
-  - name: target_agent_id
-  - name: your_current_goal_or_intent
-  - name: default_communication_protocol_version
-  - name: initial_message_or_proposal_content
-  - name: received_message_content
-  - name: max_negotiation_rounds
-  output_schema:
-    type: object
-    description: The message to send and internal state updates.
-    example:
-      message_to_send: '{ type: ''accept_proposal'', proposal_id: ''xyz'', ... }'
-      internal_updates: '{ belief_X_updated: true, commitment_Y_added: true }'
-relationships:
-- target_sigil: 🎭💖⚖️AREM_Scaffold
-  relationship_type: depends_on
-  description: Effective and ethical communication often requires understanding and
-    managing affective states and ethical considerations.
-- target_sigil: 🌍WORLD_MODEL
-  relationship_type: interacts_with
-  description: Agents exchange information to update their respective world models.
-- target_sigil: 🤝THEORY_OF_MIND_SIM
-  relationship_type: uses_method_from
-  description: Crucial for inferring other agents' intentions and beliefs during communication.
-- target_sigil: 🤖MULTI_AGENT_SYSTEM_ORCHESTRATOR
-  relationship_type: component_of
-  description: This scaffold provides the communication layer for a multi-agent system.
-SMART_MRAP:
-  Specific: Provides a structured framework and protocols for inter-agent communication,
-    intent clarification, belief sharing, negotiation, and collaborative plan formation.
-  Measurable: Success rate of collaborative tasks; efficiency of information exchange;
-    reduction in misunderstandings or conflicts; quality of negotiated agreements;
-    time to reach consensus.
-  Achievable: Implementable using standardized agent communication languages (e.g.,
-    FIPA ACL, KQML), combined with modules for semantic mapping, dialogue management,
-    and negotiation strategies.
-  Relevant: Essential for any system composed of multiple intelligent agents that
-    need to coordinate, collaborate, or resolve conflicts to achieve individual or
-    collective goals.
-  Transferable: The principles of structured communication and negotiation are applicable
-    to human-computer interaction, distributed computing, and organizational dynamics.
-metadata:
-  definition_version: '1.0'
-  definition_status: proposed
-  author_agent_id: LLM_Alpha_via_VANTA_CoEvolution
-  authorship_context:
-    motivation: To enable sophisticated, robust, and semantically grounded interactions
-      within multi-agent systems, fostering true collaboration rather than simple
-      message passing.
-    theoretical_framework: Speech Act Theory (Searle, Austin), Agent Communication
-      Languages, Game Theory (Negotiation), Distributed Artificial Intelligence, Common
-      Ground Theory (Clark).
-  created_timestamp: TBD
-  last_updated_timestamp: '2025-06-13T05:40:40.617914Z'
-  schema_version: 1.5-holo-alpha
-  impact_and_usage_metrics_profile:
-    avg_completion_time_ms_observed: UNKNOWN
-    success_rate_observed: UNKNOWN
-    complexity_rating: medium
-name: Inter Agent Communication Protocol Scaffold
+      '
+  parameters: {}
+  returns: {}
+  examples: []
+connectivity:
+  input_types: []
+  output_types: []
+  mesh_endpoints:
+  - MessageEncoderDecoder
+  - SemanticGroundingModule
+  - IntentClarificationUnit
+  - BeliefExchangeMechanism
+  - NegotiationStrategyEngine
+  - CommitmentTracker
+  - JointPlanCoordinator
+  event_topics: []
+  usage_patterns:
+  - "// AgentA wants to collaborate with AgentB on task_Z\nICNP_SCAFFOLD.initiate_dialogue(\n    initiator_agent_id=\"AgentA\"\
+    ,\n    recipient_agent_id=\"AgentB\",\n    initial_proposal={\n        type: \"collaboration_request\",\n        task_id:\
+    \ \"task_Z\",\n        proposed_roles: { AgentA: \"data_analyzer\", AgentB: \"report_generator\" }\n    },\n    communication_channel=\"\
+    secure_vanta_link_07\"\n);\n"

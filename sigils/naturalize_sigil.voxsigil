@@ -1,203 +1,82 @@
-sigil: 🗣️NATURALIZE_SIGIL
-alias: SymbolicInterpreter
-tag: HumanInterface
-tags:
-- explainability
-- semantic_translation
-- sigil_to_text
-- conceptual_grounding_verbal
-- user_communication
-is_cognitive_primitive: false
-principle: 'This sigil activates a process to translate internal symbolic representations,
+schema_version: 1.5-holo-alpha
+meta:
+  sigil: 🗣️NATURALIZE_SIGIL
+  alias: SymbolicInterpreter
+  tag: HumanInterface
+  upgraded_from: legacy
+  upgrade_timestamp: '2025-06-24T17:14:16.304304'
+  source_file: sigils\naturalize_sigil.voxsigil
+holo_mesh:
+  is_cognitive_primitive: false
+  mesh_compatibility: holo-1.5-alpha
+  registration_ready: true
+  vanta_core_integration:
+    event_support: true
+    async_capable: true
+    memory_aware: true
+  temporal_pattern: event_triggered_sequence
+cognitive:
+  principle: 'This sigil activates a process to translate internal symbolic representations,
 
-  particularly VoxSigils and their operational implications, into understandable
+    particularly VoxSigils and their operational implications, into understandable
 
-  natural language explanations for human users or other systems lacking sigil fluency.
+    natural language explanations for human users or other systems lacking sigil fluency.
 
-  It bridges the gap between compact symbolic thought and verbose human-readable
+    It bridges the gap between compact symbolic thought and verbose human-readable
 
-  descriptions, enhancing transparency and interpretability.
-
-  '
-math: 'NL_Explanation(σ) = Template_Select(σ_type) ∪ Slot_Fill(σ_params, σ_context)
-  ∪ Style_Adapt(User_Profile)
-
-  Faithfulness_Score(NL_Explanation, σ) = CosineSimilarity(Embedding(NL_Explanation),
-  Embedding(Principle(σ) ⊕ Usage(σ)))
-
-  '
-structure:
-  composite_type: sequential
-  temporal_structure: event_triggered_sequence
-  components:
-  - name: Sigil Recognizer & Metadata Fetcher
-    description: Identifies the target sigil and retrieves its definition (principle,
-      usage, etc.).
-  - name: Context Analyzer
-    description: Examines the context in which the sigil was used or queried to tailor
-      the explanation.
-  - name: Explanation Generator
-    description: Uses templates or generative models to construct a natural language
-      explanation.
-  - name: Readability & Style Adjuster
-    description: Refines the explanation for clarity, conciseness, and appropriate
-      tone for the audience.
-usage:
-  description: Translates a VoxSigil or internal symbolic state into a natural language
-    explanation for human understanding or cross-system communication.
-  example: "<system_trace_explanation_request user_query=\"What did \U0001F578️MEMORY_BRAID_ALGORITHM\
-    \ just do?\">\n  <invoke_naturalization>\U0001F5E3️NATURALIZE_SIGIL sigil_ref=\"\
-    \U0001F578️MEMORY_BRAID_ALGORITHM\" context=\"Last operation in multi_agent_debrief\"\
-    </invoke_naturalization>\n  <output_to user_interface_panel=\"explanation_box\"\
-    />\n</system_trace_explanation_request>\n"
-  explanation: 'Use 🗣️NATURALIZE_SIGIL whenever the system needs to explain its internal
-    symbolic
-
-    operations to a human user (e.g., in logs, UI tooltips, conversational explanations)
-
-    or to another system that requires natural language input instead of sigils.
+    descriptions, enhancing transparency and interpretability.
 
     '
-activation_context:
-  trigger_conditions:
-  - User requests explanation of a sigil or symbolic process
-  - Generating human-readable logs or traces
-  - Interfacing with systems that require natural language
-  - AI tutoring systems explaining concepts
-  preconditions:
-  - Access to the VoxSigil library/definitions
-  - The target sigil must be defined
-  required_capabilities:
-  - sigil_database_lookup
-  - natural_language_generation
-  - contextual_understanding
-  - explanation_templating_or_generation
-  supported_modalities:
-  - textual_output
-  - speech_synthesis_target
-  contraindications:
-  - Communication between sigil-fluent systems where it adds unnecessary overhead
-  - When extreme brevity of symbolic representation is paramount
-parameterization_schema:
-  parameters:
-  - name: sigil_to_explain
-    type: string
-    description: The sigil or symbolic token that needs to be naturalized.
-    is_required: true
-  - name: explanation_depth
-    type: enum
-    allowed_values:
-    - brief_summary
-    - standard_definition
-    - detailed_example_usage
-    description: Controls the verbosity and detail level of the explanation.
-    default_value: standard_definition
-  - name: audience_profile_hint
-    type: string
-    description: Hint about the target audience to tailor language style (e.g., 'layperson',
-      'developer', 'domain_expert').
-    default_value: layperson
-prompt_template:
-  role: system
-  content: 'Engage 🗣️NATURALIZE_SIGIL protocol.
+  math: 'NL_Explanation(σ) = Template_Select(σ_type) ∪ Slot_Fill(σ_params, σ_context) ∪ Style_Adapt(User_Profile)
 
-    Sigil for Explanation: {{sigil_to_explain}}
-
-    Explanation Depth: {{explanation_depth | default(''standard_definition'')}}
-
-    Audience Profile: {{audience_profile_hint | default(''layperson'')}}
-
-    Provide a clear, concise, and accurate natural language explanation of the specified
-    sigil,
-
-    its principle, and its typical usage, tailored to the audience.
-
-    If context of use is available ({{sigil_context | default(''not provided'')}}),
-    incorporate that into the explanation.
+    Faithfulness_Score(NL_Explanation, σ) = CosineSimilarity(Embedding(NL_Explanation), Embedding(Principle(σ) ⊕ Usage(σ)))
 
     '
-  execution_mode: generation
-  variables:
-  - name: sigil_to_explain
-    description: The sigil to explain.
-    required_for_llm: true
-  - name: explanation_depth
-    description: Desired detail level.
-  - name: audience_profile_hint
-    description: Target audience.
-  - name: sigil_context
-    description: Optional context of the sigil's use.
-  output_schema: 'object: { natural_language_explanation: string, sigil_explained:
-    string, confidence_in_explanation: number }'
-SMART_MRAP:
-  Specific: Generate a clear, accurate, and contextually relevant natural language
-    explanation for a given VoxSigil (or internal symbolic token), tailored to a specified
-    audience and desired depth, by retrieving its definition and applying natural
-    language generation techniques.
-  Measurable: Clarity and accuracy of the explanation (human rated); User understanding
-    improvement after receiving explanation; Faithfulness of explanation to the sigil's
-    formal definition; Task success rate for users relying on these explanations.
-  Achievable: Using a combination of template-based generation (for structured parts
-    of sigil definitions), generative LLMs (for more fluid explanations and examples),
-    and metadata from the VoxSigil library.
-  Relevant: Crucial for AI explainability (XAI), user interface design, debugging,
-    interoperability with non-sigil-native systems, and building trust with human
-    users by making internal processes more transparent.
-  Transferable: Applicable in any system using symbolic AI or internal DSLs that need
-    to be understood by humans, e.g., expert systems, cognitive architectures, workflow
-    automation tools.
-metadata:
-  definition_version: 1.4-alpha
-  definition_status: active
-  author_agent_id: VANTA.⟠∆∇𓂀𐑒
-  created_timestamp: '2025-05-11T10:40:00Z'
-  last_updated_timestamp: '2025-06-13T05:40:40.617914Z'
-  authorship_context:
-    motivation: To make complex symbolic AI systems more transparent and understandable
-      to humans, fostering collaboration and trust.
-    theoretical_framework: Explainable AI (XAI), Natural Language Generation (NLG),
-      Human-Computer Interaction (HCI), Semiotics.
-    source_inspiration: Code commenting best practices, Dictionary definitions, Museum
-      exhibit explanations, API documentation generators.
-  impact_metrics:
-    estimated_cognitive_load: low_to_medium
-    estimated_resource_cost: low_to_medium
-    utility_rating_author: 9
-  evolutionary_potential:
-    generalizability_score: 0.9
-    fusion_potential_score: 0.4
-    current_limitations_summary: Ensuring faithfulness while maintaining conciseness
-      can be hard. Tailoring explanations effectively to diverse audiences is complex.
-      Explaining highly abstract sigils is challenging.
-    suggested_next_features:
-    - Interactive explanations (user can ask follow-up questions)
-    - Generation of visual or diagrammatic explanations alongside text
-    - Learning user preferences for explanation styles.
-    research_questions_opened:
-    - What are the most effective ways to explain complex, emergent symbolic behavior
-      in natural language?
-    - How can AI learn to anticipate what aspects of a sigil a specific user will
-      find confusing?
-    - Can sigil naturalization be used to teach humans symbolic thinking more effectively?
-  schema_version: 1.5-holo-alpha
-  impact_and_usage_metrics_profile:
-    avg_completion_time_ms_observed: UNKNOWN
-    success_rate_observed: UNKNOWN
-    complexity_rating: medium
-relationships:
-- target_sigil: 📜AUDIT_TRAIL
-  relationship_type: enables
-  description: Makes the symbolic entries in an AUDIT_TRAIL understandable by humans
-    by naturalizing the sigils within it.
-  strength: 0.9
-- target_sigil: Marc.pglyph
-  relationship_type: synergizes_with
-  description: Can help explain the meaning and purpose of Marc's identity sigil if
-    queried, or explain operations conducted under that identity.
-  strength: 0.6
-- target_sigil: 🌐BridgeFlesh
-  relationship_type: core_component_of
-  description: This is a key capability for any system aiming to bridge symbolic AI
-    with other forms of representation, including human language.
-  strength: 0.85
-name: Naturalize Sigil
+  tags:
+  - explainability
+  - semantic_translation
+  - sigil_to_text
+  - conceptual_grounding_verbal
+  - user_communication
+  structure:
+    composite_type: sequential
+    temporal_structure: event_triggered_sequence
+    components:
+    - name: Sigil Recognizer & Metadata Fetcher
+      description: Identifies the target sigil and retrieves its definition (principle, usage, etc.).
+    - name: Context Analyzer
+      description: Examines the context in which the sigil was used or queried to tailor the explanation.
+    - name: Explanation Generator
+      description: Uses templates or generative models to construct a natural language explanation.
+    - name: Readability & Style Adjuster
+      description: Refines the explanation for clarity, conciseness, and appropriate tone for the audience.
+implementation:
+  usage:
+    description: Translates a VoxSigil or internal symbolic state into a natural language explanation for human understanding
+      or cross-system communication.
+    example: "<system_trace_explanation_request user_query=\"What did \U0001F578️MEMORY_BRAID_ALGORITHM just do?\">\n  <invoke_naturalization>\U0001F5E3\
+      ️NATURALIZE_SIGIL sigil_ref=\"\U0001F578️MEMORY_BRAID_ALGORITHM\" context=\"Last operation in multi_agent_debrief\"\
+      </invoke_naturalization>\n  <output_to user_interface_panel=\"explanation_box\"/>\n</system_trace_explanation_request>\n"
+    explanation: 'Use 🗣️NATURALIZE_SIGIL whenever the system needs to explain its internal symbolic
+
+      operations to a human user (e.g., in logs, UI tooltips, conversational explanations)
+
+      or to another system that requires natural language input instead of sigils.
+
+      '
+  parameters: {}
+  returns: {}
+  examples: []
+connectivity:
+  input_types: []
+  output_types: []
+  mesh_endpoints:
+  - Sigil Recognizer & Metadata Fetcher
+  - Context Analyzer
+  - Explanation Generator
+  - Readability & Style Adjuster
+  event_topics: []
+  usage_patterns:
+  - "<system_trace_explanation_request user_query=\"What did \U0001F578️MEMORY_BRAID_ALGORITHM just do?\">\n  <invoke_naturalization>\U0001F5E3\
+    ️NATURALIZE_SIGIL sigil_ref=\"\U0001F578️MEMORY_BRAID_ALGORITHM\" context=\"Last operation in multi_agent_debrief\"</invoke_naturalization>\n\
+    \  <output_to user_interface_panel=\"explanation_box\"/>\n</system_trace_explanation_request>\n"

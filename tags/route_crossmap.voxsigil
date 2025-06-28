@@ -1,356 +1,78 @@
-sigil: 🗺️🔗🧭
-alias: RouteCrossmap
-tag: ConceptualNavigation
-tags:
-- graph_traversal
-- semantic_routing
-- conceptual_bridging
-- pathfinding
-- reasoning_path
-is_cognitive_primitive: false
-cognitive_primitive_type: null
-principle: Directed Graph Navigation of Conceptual Domains Based on topological optimization
-  and semantic routing. The aim is to find the most coherent and efficient cognitive
-  path between two or more symbolic points in a conceptual space.
-math: 'Given a graph G = (V, E) where V is a set of concepts (vertices) and E is a
-  set of relationships (edges) with associated weights w(e) representing semantic
-  distance or transition cost.
+schema_version: 1.5-holo-alpha
+meta:
+  sigil: 🗺️🔗🧭
+  alias: RouteCrossmap
+  tag: ConceptualNavigation
+  upgraded_from: legacy
+  upgrade_timestamp: '2025-06-24T17:14:16.654016'
+  source_file: tags\route_crossmap.voxsigil
+holo_mesh:
+  is_cognitive_primitive: false
+  mesh_compatibility: holo-1.5-alpha
+  registration_ready: true
+  vanta_core_integration:
+    event_support: true
+    async_capable: true
+    memory_aware: true
+  temporal_pattern: sequential_phase
+cognitive:
+  principle: Directed Graph Navigation of Conceptual Domains Based on topological optimization and semantic routing. The aim
+    is to find the most coherent and efficient cognitive path between two or more symbolic points in a conceptual space.
+  math: 'Given a graph G = (V, E) where V is a set of concepts (vertices) and E is a set of relationships (edges) with associated
+    weights w(e) representing semantic distance or transition cost.
 
-  route(concept_start, concept_end) = P_min | P = (v_0, v_1, ..., v_k) such that v_0
-  = concept_start, v_k = concept_end, and (v_i, v_{i+1}) ∈ E for all 0 ≤ i < k. Cost(P)
-  = Σ w(v_i, v_{i+1}). The objective is to find P_min that minimizes Cost(P).'
-structure:
-  composite_type: sequential
-  temporal_structure: sequential_phase
-  components:
-  - name: StartNodeIdentifier
-    description: Defines the initial concept or symbolic point of origin.
-  - name: EndNodeIdentifier
-    description: Defines the target concept or symbolic destination.
-  - name: ConceptualGraphAccessor
-    description: Interface to the underlying knowledge graph or semantic space.
-  - name: PathfindingAlgorithmExecutor
-    description: Implements the logic for traversing the graph (e.g., Dijkstra's,
-      A* search, semantic similarity jumps).
-  - name: EdgeWeightEvaluator
-    description: Component to determine the cost or semantic relevance of transitioning
-      between concepts.
-  - name: PathPresenter
-    description: Formats and presents the discovered conceptual route.
-usage:
-  description: Defines start and end points within a semantic Directed Acyclic Graph
-    (DAG) or general graph; the system must traverse this conceptual space identifying
-    optimal or most coherent transition paths.
-  example:
-    invocation: <route:crossmap from='rationality' to='compassion' via_context='ethical_decision_making'>
-    scenario_description: An AI is asked to explain how one might bridge the concepts
-      of 'rationality' and 'compassion' when making an ethical decision. The system
-      uses RouteCrossmap to generate a reasoned pathway.
-    expected_output_snippet: 'Path: Rationality → (via cost-benefit analysis) → Understanding
-      Consequences → (via empathy bridge) → Perspective Taking → (via value alignment)
-      → Compassion. Rationale: Ethical decisions require both logical assessment of
-      outcomes and empathetic understanding of impact.'
-  explanation: Models reasoning, explanation generation, or conceptual exploration
-    as a pathfinding task in a symbolic or semantic space. It allows for bridging
-    disparate concepts, outlining arguments, exploring related topics, or even shifting
-    emotional tones in a structured manner. Edge weights can be dynamic, based on
-    context, semantic similarity, logical entailment, or learned associations.
-activation_context:
-  trigger_conditions:
-  - Need to generate an explanation bridging two concepts.
-  - Requirement for a structured argument or narrative flow.
-  - Exploration of conceptual relationships.
-  - Task requires transforming one mental state/concept to another.
-  - Planning a sequence of cognitive operations.
-  preconditions:
-  - A traversable conceptual graph or semantic space is accessible.
-  - Start and end concepts (or symbolic states) are defined.
-  - A method for evaluating path cost or transition coherence exists.
-  required_capabilities:
-  - graph_representation_access
-  - pathfinding_algorithms (e.g., A*, Dijkstra, beam search)
-  - semantic_similarity_assessment (for edge weighting or heuristic)
-  - symbolic_manipulation
-  supported_modalities:
-  - symbolic_input
-  - textual
-  - programmatic_api
-  contraindications:
-  - Concepts are entirely unrelated with no conceivable bridge in the current knowledge
-    graph.
-  - The conceptual space is too sparse or disconnected.
-  - The computational cost of pathfinding is prohibitive for the given graph size
-    and constraints.
-parameterization_schema:
-  parameters:
-  - name: from_concept
-    type: string
-    description: The starting concept or symbolic node.
-    is_required: true
-  - name: to_concept
-    type: string
-    description: The target concept or symbolic node.
-    is_required: true
-  - name: via_concepts
-    type: array_of_strings
-    description: Optional intermediate concepts the path should try to include.
-    is_required: false
-  - name: avoid_concepts
-    type: array_of_strings
-    description: Optional concepts the path should try to exclude.
-    is_required: false
-  - name: knowledge_graph_id
-    type: string
-    description: Identifier for the specific conceptual graph to use.
-    default_value: default_semantic_network
-  - name: cost_function
-    type: string
-    description: Identifier for the cost function or heuristic to use for path optimization
-      (e.g., 'shortest_semantic_distance', 'highest_logical_coherence').
-    default_value: shortest_semantic_distance
-  - name: max_path_length
-    type: integer
-    description: Maximum number of steps in the path.
-    value_range:
-      min: 1
-prompt_template:
-  role: system
-  content: 'You are a conceptual navigator. Your task is to find the most coherent
-    and efficient cognitive path from the concept ''{{from_concept}}'' to ''{{to_concept}}''.
-
-    {{#if via_concepts}}The path should ideally pass through or relate to: {{#each
-    via_concepts}}{{this}}{{#unless @last}}, {{/unless}}{{/each}}.{{/if}}
-
-    {{#if avoid_concepts}}The path should avoid: {{#each avoid_concepts}}{{this}}{{#unless
-    @last}}, {{/unless}}{{/each}}.{{/if}}
-
-    Utilize the knowledge graph ''{{knowledge_graph_id | default ''default_semantic_network''}}''
-    and optimize using the ''{{cost_function | default ''shortest_semantic_distance''}}''
-    heuristic.
-
-
-    Describe the path as a sequence of intermediate concepts/states, and for each
-    step, provide a brief rationale for the transition. If multiple paths exist, choose
-    the optimal one based on the heuristic and briefly explain why it''s preferred.
-    If no reasonable path is found, explain the difficulty.'
-  execution_mode: decomposition
-  variables:
-  - name: from_concept
-    description: Starting concept
-    required_for_llm: true
-    type_hint: string
-  - name: to_concept
-    description: Target concept
-    required_for_llm: true
-    type_hint: string
-  - name: via_concepts
-    description: Optional intermediate concepts
-    required_for_llm: false
-    type_hint: array_of_strings
-  - name: avoid_concepts
-    description: Optional concepts to avoid
-    required_for_llm: false
-    type_hint: array_of_strings
-  - name: knowledge_graph_id
-    description: Identifier for the knowledge graph
-    required_for_llm: false
-    type_hint: string
-  - name: cost_function
-    description: Cost function for path optimization
-    required_for_llm: false
-    type_hint: string
-  output_schema:
-    type: object
-    properties:
-      path_found:
-        type: boolean
-      start_concept:
-        type: string
-      end_concept:
-        type: string
-      path:
-        type: array
-        items:
-          type: object
-          properties:
-            step_number:
-              type: integer
-            concept:
-              type: string
-            transition_rationale:
-              type: string
-          required:
-          - step_number
-          - concept
-          - transition_rationale
-      total_cost:
-        type: number
-      optimality_rationale:
-        type: string
-      failure_reason:
-        type: string
-        description: Reason if path_found is false.
-    required:
-    - path_found
-    - start_concept
-    - end_concept
-  notes: The prompt encourages the LLM to simulate pathfinding and explain its reasoning.
-    For actual graph traversal, this would often be an algorithmic process where the
-    LLM might be used to evaluate semantic distances or generate rationales for algorithmically
-    chosen steps.
-relationships:
-- target_sigil: KNOWLEDGE_GRAPH_CORE
-  relationship_type: depends_on
-  description: Requires an underlying knowledge graph to traverse.
-- target_sigil: SEMANTIC_SIMILARITY_CALCULATOR
-  relationship_type: uses_method_from
-  description: May use semantic similarity to determine edge weights or guide search.
-- target_sigil: ANALOGICAL_REASONING_ENGINE
-  relationship_type: enables
-  description: Finding paths between concepts is foundational for analogical reasoning.
-- target_sigil: EXPLANATION_GENERATOR
-  relationship_type: component_of
-  description: Can be used to construct coherent explanations by linking ideas.
-cross_domain_tags:
-- domain: AI/Robotics
-  term: Path Planning
-  mapping_type: analogy
-- domain: Graph Theory
-  term: Shortest Path Problem
-  mapping_type: formal_equivalence
-- domain: Cognitive Psychology
-  term: Spreading Activation Models
-  mapping_type: inspiration
-- domain: Narratology
-  term: Plot Structure
-  mapping_type: metaphorical_link
-trajectory_annotations:
-  typical_sequence_position: analysis
-  recommended_predecessors:
-  - PROBLEM_DECOMPOSITION
-  - CONCEPT_IDENTIFICATION
-  recommended_successors:
-  - SOLUTION_SYNTHESIS
-  - ARGUMENT_CONSTRUCTION
-  - NARRATIVE_GENERATION
-  branching_behavior: linear_progression
-  workflow_id_refs:
-  - EXPLANATION_WORKFLOW_V1
-  - DECISION_REASONING_PIPELINE
-SMART_MRAP:
-  Specific: Constructs an optimal or highly coherent cognitive route through a symbolic
-    or semantic terrain (conceptual graph) between specified start and end concepts.
-  Measurable: Path token cost, number of steps, or a semantic coherence score can
-    be tracked. Link efficiency scored based on predefined metrics or human evaluation
-    of relevance.
-  Achievable: Using standard graph traversal algorithms (e.g., Dijkstra's, A*) on
-    a concept graph, where edge weights can be pre-defined or dynamically calculated
-    (e.g., by an LLM estimating semantic distance). Priority queues manage concept
-    exploration.
-  Relevant: Crucial for contextual navigation in knowledge bases, generating coherent
-    explanations, performing analogical reasoning, and constructing structured prompts
-    or arguments.
-  Transferable: The core logic is portable to any system with graph-aware capabilities,
-    including LLMs augmented with knowledge graphs, vector databases with relationship
-    information, or dedicated graph processing engines.
-metadata:
-  definition_version: 1.4.0
-  definition_status: active
-  author_agent_id: VOXSIGIL_CONVERTER_BOT
-  created_timestamp: '2024-03-10T12:00:00Z'
-  last_updated_timestamp: '2025-06-13T05:40:40.617914Z'
-  revision_history:
-  - version_tag: 1.4.0
-    timestamp: '2024-03-10T12:00:00Z'
-    author_agent_id: VOXSIGIL_CONVERTER_BOT
-    summary_of_change: Initial conversion from custom tag to VoxSigil 1.4 schema.
-    change_type: initial_creation
-  authorship_context:
-    motivation: To formalize the process of navigating conceptual spaces for AI reasoning
-      and explanation.
-    theoretical_framework: Graph theory, semantic network models, cognitive pathfinding.
-  impact_metrics:
-    estimated_cognitive_load: medium
-    estimated_resource_cost: medium
-  evolutionary_potential:
-    generalizability_score: 0.85
-    fusion_potential_score: 0.7
-    current_limitations_summary: Performance depends heavily on the quality and completeness
-      of the underlying conceptual graph and the accuracy of edge weight calculations.
-    suggested_next_features:
-    - Dynamic graph construction based on context
-    - Multi-objective path optimization (e.g., shortest and most novel)
-    - Learning optimal paths from examples
-    research_questions_opened:
-    - How to best represent and weight edges for different types of cognitive tasks?
-    - Can LLMs reliably perform complex pathfinding internally without explicit graph
-      structures?
-  schema_version: 1.5-holo-alpha
-  impact_and_usage_metrics_profile:
-    avg_completion_time_ms_observed: UNKNOWN
-    success_rate_observed: UNKNOWN
-    complexity_rating: medium
-test_criteria:
-- test_id: CROSSMAP_SIMPLE_PATH_001
-  description: Verify path generation between two closely related concepts.
-  type: functional
-  input_scenario_or_parameters:
-    from_concept: cat
-    to_concept: mammal
-    knowledge_graph_id: basic_ontology
-  expected_behavior_or_output:
-    path_found: true
-    path:
-    - step_number: 1
-      concept: cat
-      transition_rationale: Start
-    - step_number: 2
-      concept: feline
-      transition_rationale: is-a-type-of
-    - step_number: 3
-      concept: mammal
-      transition_rationale: is-a-type-of
-  evaluation_method: automated_script
-  pass_threshold_or_criteria: Path contains expected intermediate nodes and correct
-    'to_concept'.
-- test_id: CROSSMAP_RATIONALITY_COMPASSION_001
-  description: Verify path generation between 'rationality' and 'compassion' as in
-    example.
-  type: output_validation
-  input_scenario_or_parameters:
-    from_concept: rationality
-    to_concept: compassion
-    cost_function: highest_logical_coherence
-  expected_behavior_or_output: A coherent path with plausible intermediate steps and
-    rationales, similar to the usage example.
-  evaluation_method: llm_as_judge
-  pass_threshold_or_criteria: Judge rates path coherence >= 4/5 and relevance of steps.
-advanced_cognitive_modeling:
-  strategic_intent:
-  - goal_id: GENERATE_COHERENT_EXPLANATIONS
-    alignment_strength: 0.9
-    contribution_type: direct_achiever
-  - goal_id: FACILITATE_ANALOGICAL_THOUGHT
-    alignment_strength: 0.7
-    contribution_type: enabler
-  tool_integration_points:
-  - tool_name_or_id: Neo4jGraphDB
-    invocation_type: api_call
-    description: Query graph database for concepts and relationships.
-    input_mapping_schema:
-      query_template: Cypher query
-    output_mapping_schema:
-      results_format: JSON list of paths/nodes
-  - tool_name_or_id: SentenceTransformerEmbeddings
-    invocation_type: function_call
-    description: Calculate semantic similarity for edge weighting.
-    input_mapping_schema:
-      text_pair:
-      - string
-      - string
-    output_mapping_schema:
-      similarity_score: float
-consciousness_scaffold: false
-cognitive_scaffold: true
-symbolic_scaffold: true
-name: Route Crossmap
+    route(concept_start, concept_end) = P_min | P = (v_0, v_1, ..., v_k) such that v_0 = concept_start, v_k = concept_end,
+    and (v_i, v_{i+1}) ∈ E for all 0 ≤ i < k. Cost(P) = Σ w(v_i, v_{i+1}). The objective is to find P_min that minimizes Cost(P).'
+  tags:
+  - graph_traversal
+  - semantic_routing
+  - conceptual_bridging
+  - pathfinding
+  - reasoning_path
+  structure:
+    composite_type: sequential
+    temporal_structure: sequential_phase
+    components:
+    - name: StartNodeIdentifier
+      description: Defines the initial concept or symbolic point of origin.
+    - name: EndNodeIdentifier
+      description: Defines the target concept or symbolic destination.
+    - name: ConceptualGraphAccessor
+      description: Interface to the underlying knowledge graph or semantic space.
+    - name: PathfindingAlgorithmExecutor
+      description: Implements the logic for traversing the graph (e.g., Dijkstra's, A* search, semantic similarity jumps).
+    - name: EdgeWeightEvaluator
+      description: Component to determine the cost or semantic relevance of transitioning between concepts.
+    - name: PathPresenter
+      description: Formats and presents the discovered conceptual route.
+implementation:
+  usage:
+    description: Defines start and end points within a semantic Directed Acyclic Graph (DAG) or general graph; the system
+      must traverse this conceptual space identifying optimal or most coherent transition paths.
+    example: &id001
+      invocation: <route:crossmap from='rationality' to='compassion' via_context='ethical_decision_making'>
+      scenario_description: An AI is asked to explain how one might bridge the concepts of 'rationality' and 'compassion'
+        when making an ethical decision. The system uses RouteCrossmap to generate a reasoned pathway.
+      expected_output_snippet: 'Path: Rationality → (via cost-benefit analysis) → Understanding Consequences → (via empathy
+        bridge) → Perspective Taking → (via value alignment) → Compassion. Rationale: Ethical decisions require both logical
+        assessment of outcomes and empathetic understanding of impact.'
+    explanation: Models reasoning, explanation generation, or conceptual exploration as a pathfinding task in a symbolic or
+      semantic space. It allows for bridging disparate concepts, outlining arguments, exploring related topics, or even shifting
+      emotional tones in a structured manner. Edge weights can be dynamic, based on context, semantic similarity, logical
+      entailment, or learned associations.
+  parameters: {}
+  returns: {}
+  examples: []
+connectivity:
+  input_types: []
+  output_types: []
+  mesh_endpoints:
+  - StartNodeIdentifier
+  - EndNodeIdentifier
+  - ConceptualGraphAccessor
+  - PathfindingAlgorithmExecutor
+  - EdgeWeightEvaluator
+  - PathPresenter
+  event_topics: []
+  usage_patterns:
+  - *id001

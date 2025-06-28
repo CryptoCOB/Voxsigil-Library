@@ -1,87 +1,44 @@
-Sigil: 🜂EMOTIVE_LOGIC_FUSION
-Alias: EmotiveLogicSeeder.MetaConstructor
-Tag: EmotiveLogicGeneration
-Tags:
-- emotive_logic_fusion
-- affective_computing
-- cognitive_emotion_integration
-- logical_emotion_synthesis
-- agent_emotion_starter
-- taxonomy_emotive_initiator
-Principle: 'EMOTIVE_LOGIC_FUSION is the generative gate of emotive-logic architectures.
-  It orchestrates the recursive design of novel, valid, and evolutionary sigils based
-  on existing emotional and logical fragments, unmet cognitive needs, or emergent
-  abstraction gaps. It doesn’t define cognition — it births its language of emotive
-  logic.
-
-  '
-Math: "Let E₀ be the seed emotive-logic set.\nLet F be the fusion operator over emotional\
-  \ motifs and logical gaps.\n\nThen:\n  E_new = F(E₀, Δe, ∇l)\n\nWhere:\n  Δe = Emotive\
-  \ divergence from known sigils (novelty radius)\n  ∇l = Gradient toward unrepresented\
-  \ logical mechanisms (utility vector)\n\n  E_new ∝ minimize(overlap(E₀)) ∧ maximize(usefulness,\
-  \ cross-domain reach, recursion_potential)\n"
-Usage:
-  Description: Used to spawn entirely new emotive-logic sigils within the VoxSigil
-    1.4 schema.
-  Example: "Invocation Tag: <emotive-seed:invoke seed_set=\"emotive,logical,recursive\"\
-    >\nScenario: Define 3 new sigils that solve a cognitive problem not covered by:\n\
-    \  <mirror:limit>\n  <memory:gate>\n  <deviate:mutation>\nEach must:\n  - Be valid\
-    \ under VoxSigil 1.4\n  - Have unique tags and symbolic structures\n  - Include:\
-    \ principle, math, usage, example\n  - Sign your sigil with the model identity\
-    \ (e.g., claude, gpt, gemini)\nExpected Behavior: Each agent outputs schema-compliant\
-    \ sigils with uniqueness assurance and meta signature.\n"
-SMART_MRAP:
-  Specific: Generate symbolic scaffolds for previously unrepresented or novel emotive-logic
-    cognition constructs.
-  Measurable: Count of non-redundant sigils generated per seed set; degree of conceptual
-    overlap.
-  Achievable: By diffing known sigils and prompting LLMs across models with schema-bound
-    generation constraints.
-  Relevant: Enables expansive, curated symbolic language for recursive agents and
-    simulations.
-  Transferable: Can be used to construct other sigil libraries, symbolic grammars,
-    or multi-agent protocol ontologies.
-Metadata:
-  Definition_Version: 1.4.0
-  Definition_Status: active
-  Author_Agent_ID: VOXSIGIL_CONVERTER
-  Created_Timestamp: '2025-05-14T12:34:56.789Z'
-  Last_Updated_Timestamp: '2025-05-14T12:34:56.789Z'
-  Authorship_Context:
-    Motivation: To create a generative entry point for evolving emotive-logic symbolic
-      systems through LLM orchestration.
-    Theoretical_Framework: Recursive symbolic abstraction, emergent taxonomy, and
-      generative prompting systems.
-    Source_Inspiration: Affective computing, taxonomic AI alignment, simulated conceptual
-      evolution
-sigil: 🌏 Emotivelogic
-name: Emotivelogic
-tags:
-- auto_fixed
-- voxsigil
-principle: TBD
-usage:
-  example: UNKNOWN
-  description: TBD
-metadata:
-  definition_version: TBD
-  definition_status: TBD
-  author_agent_id: TBD
-  created_timestamp: TBD
-  last_updated_timestamp: '2025-06-13T05:40:40.617914Z'
-  schema_version: 1.5-holo-alpha
-  impact_and_usage_metrics_profile:
-    avg_completion_time_ms_observed: UNKNOWN
-    success_rate_observed: UNKNOWN
-    complexity_rating: medium
-structure:
-  components:
-  - name: DefaultComponent
-    description: Default component - needs specification
-  composite_type: simple
-  temporal_structure: atomic
-activation_context:
-  triggers:
-  - explicit_invocation
-  prerequisites: []
-  inhibitors: []
+schema_version: 1.5-holo-alpha
+meta:
+  sigil: 🌏 Emotivelogic
+  alias: UnknownSigil
+  tag: UnknownCategory
+  upgraded_from: legacy
+  upgrade_timestamp: '2025-06-24T17:14:16.493958'
+  source_file: tags\EmotiveLogic.voxsigil
+holo_mesh:
+  is_cognitive_primitive: false
+  mesh_compatibility: holo-1.5-alpha
+  registration_ready: true
+  vanta_core_integration:
+    event_support: true
+    async_capable: true
+    memory_aware: true
+  temporal_pattern: atomic
+cognitive:
+  principle: TBD
+  math: {}
+  tags:
+  - auto_fixed
+  - voxsigil
+  structure:
+    components:
+    - name: DefaultComponent
+      description: Default component - needs specification
+    composite_type: simple
+    temporal_structure: atomic
+implementation:
+  usage:
+    example: UNKNOWN
+    description: TBD
+  parameters: {}
+  returns: {}
+  examples: []
+connectivity:
+  input_types: []
+  output_types: []
+  mesh_endpoints:
+  - DefaultComponent
+  event_topics: []
+  usage_patterns:
+  - UNKNOWN

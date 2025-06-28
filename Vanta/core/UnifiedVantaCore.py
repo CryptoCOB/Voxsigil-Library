@@ -19,12 +19,26 @@ import time
 from collections import defaultdict
 from typing import Any, Callable, Dict, List, Optional
 
-from BLT import BLTEncoder
-from Vanta.interfaces.blt_encoder_interface import BaseBLTEncoder
-from Vanta.interfaces.hybrid_middleware_interface import BaseHybridMiddleware
+# HOLO-1.5 Registration
+try:
+    from ..registration.master_registration import vanta_core_module
+except ImportError:
+
+    def vanta_core_module(name: str = "", role: str = ""):
+        def decorator(cls):
+            return cls
+
+        return decorator
+
+
+# Use hybrid BLT components for better performance
+from BLT.hybrid_blt import BLTEncoder
 
 # The HybridMiddleware implementation lives in VoxSigilRag.hybrid_blt
 from VoxSigilRag.hybrid_blt import HybridMiddleware
+
+from Vanta.interfaces.blt_encoder_interface import BaseBLTEncoder
+from Vanta.interfaces.hybrid_middleware_interface import BaseHybridMiddleware
 
 # RealSupervisorConnector implementation lives in integration.real_supervisor_connector
 # RealSupervisorConnector is located in the top-level integration package
@@ -49,8 +63,9 @@ except ImportError:
 # 🧠 Codex BugPatch - Vanta Phase @2025-06-09
 # Lazy imports to avoid circular dependency issues
 
-from Vanta.interfaces.supervisor_connector_interface import BaseSupervisorConnector
 from VoxSigilRag.voxsigil_mesh import VoxSigilMesh
+
+from Vanta.interfaces.supervisor_connector_interface import BaseSupervisorConnector
 
 # Lazy imports for modules that may cause circular dependencies
 # from ..integration.vanta_mesh_graph import VantaMeshGraph
@@ -200,7 +215,9 @@ class EventBus:
         """Unsubscribe from an event type."""
         with self._lock:
             self._subscribers[event_type] = [
-                (cb, prio) for cb, prio in self._subscribers[event_type] if cb != callback
+                (cb, prio)
+                for cb, prio in self._subscribers[event_type]
+                if cb != callback
             ]
             logger.debug(f"Unsubscribed from event '{event_type}'")
 
@@ -238,7 +255,9 @@ class EventBus:
             return {
                 "total_events": len(self._event_history),
                 "event_type_counts": dict(self._event_stats),
-                "recent_events": self._event_history[-10:] if self._event_history else [],
+                "recent_events": self._event_history[-10:]
+                if self._event_history
+                else [],
             }
 
 
@@ -250,6 +269,7 @@ def trace_event(message: str, category: str = "info", **kwargs):
         logger.debug(f"Event data: {kwargs}")
 
 
+@vanta_core_module(name="UnifiedVantaCore", role="core_orchestrator")
 class UnifiedVantaCore:
     """
     Unified VantaCore - Integrated Cognitive Orchestration Engine
@@ -279,6 +299,7 @@ class UnifiedVantaCore:
         blt_encoder: Optional[BaseBLTEncoder] = None,
         hybrid_middleware: Optional[BaseHybridMiddleware] = None,
         enable_cognitive_features: bool = True,
+        enable_async_bus: bool = False,  # Disabled by default to avoid GUI issues
     ):
         """
         Initialize UnifiedVantaCore with progressive capability loading.
@@ -294,10 +315,14 @@ class UnifiedVantaCore:
             return
 
         self._initialized = True
-        self.start_time = datetime.datetime.now()  # --- ORCHESTRATION LAYER (Always Available) ---
+        self.start_time = (
+            datetime.datetime.now()
+        )  # --- ORCHESTRATION LAYER (Always Available) ---
         self.registry = ComponentRegistry()
         self.event_bus = EventBus()
-        self.mesh = VoxSigilMesh(gui_hook=lambda msg: self.event_bus.emit("mesh_echo", msg))
+        self.mesh = VoxSigilMesh(
+            gui_hook=lambda msg: self.event_bus.emit("mesh_echo", msg)
+        )
 
         # Lazy initialization of mesh graph
         VantaMeshGraph = _get_vanta_mesh_graph()
@@ -306,26 +331,31 @@ class UnifiedVantaCore:
         else:
             self.mesh_graph = None
 
-        self.async_bus = UnifiedAsyncBus(logger, blt_encoder)
-
-        try:
-            # Check if there's a running event loop before creating task
+        # Conditional async bus creation
+        if enable_async_bus:
+            self.async_bus = UnifiedAsyncBus(logger, blt_encoder)
             try:
-                loop = asyncio.get_running_loop()
-                asyncio.create_task(self.async_bus.start())
-            except RuntimeError:
-                # No running event loop, start async bus in a thread
-                import threading
+                # Check if there's a running event loop before creating task
+                try:
+                    loop = asyncio.get_running_loop()
+                    loop.create_task(self.async_bus.start())
+                except RuntimeError:
+                    # No running event loop, start async bus in a thread
+                    import threading
 
-                def start_async_bus():
-                    loop = asyncio.new_event_loop()
-                    asyncio.set_event_loop(loop)
-                    loop.run_until_complete(self.async_bus.start())
+                    def start_async_bus():
+                        loop = asyncio.new_event_loop()
+                        asyncio.set_event_loop(loop)
+                        loop.run_until_complete(self.async_bus.start())
 
-                thread = threading.Thread(target=start_async_bus, daemon=True)
-                thread.start()
-        except Exception as e:
-            logger.error(f"Failed to start async bus: {e}")
+                    thread = threading.Thread(target=start_async_bus, daemon=True)
+                    thread.start()
+            except Exception as e:
+                logger.error(f"Failed to start async bus: {e}")
+            logger.info("Async bus enabled and started")
+        else:
+            self.async_bus = None
+            logger.info("Async bus disabled (sync mode only)")
         self._config: Dict[str, Any] = {}
 
         # --- AGENT MANAGEMENT LAYER (Step 1 of VANTA Integration Master Plan) ---
@@ -343,7 +373,9 @@ class UnifiedVantaCore:
         if VANTA_SUPERVISOR_AVAILABLE and VantaSupervisor is not None:
             try:
                 self.vanta_supervisor = VantaSupervisor(self)
-                logger.info("VantaSupervisor initialized for central agent orchestration")
+                logger.info(
+                    "VantaSupervisor initialized for central agent orchestration"
+                )
             except Exception as e:
                 logger.error(f"Failed to initialize VantaSupervisor: {e}")
                 self.vanta_supervisor = None
@@ -392,8 +424,21 @@ class UnifiedVantaCore:
             self.holo_mesh = None
 
         self.get_agents_by_capability = (
-            self.agent_registry.get_agents_by_capability if self.agent_registry else None
-        )
+            self.agent_registry.get_agents_by_capability
+            if self.agent_registry
+            else None
+        )  # Auto-register all training, evaluation, inference, and visualization components
+        logger.info("🔍 Starting comprehensive component auto-registration...")
+        try:
+            auto_registration_results = self.auto_register_all_components()
+            total_registered = auto_registration_results.get("total_registered", 0)
+            logger.info(
+                f"✅ Auto-registration completed: {total_registered} components registered and assigned to agents"
+            )
+        except Exception as e:
+            logger.warning(f"⚠️ Auto-registration encountered issues: {e}")
+            # Fallback to ensure basic functionality
+            auto_registration_results = {"total_registered": 0}
 
         # Emit initialization event
         self.event_bus.emit(
@@ -429,10 +474,16 @@ class UnifiedVantaCore:
 
             # Initialize meta-learning parameters
             self.meta_parameters = {
-                "default_learning_rate": self._config.get("default_learning_rate", 0.05),
-                "default_exploration_rate": self._config.get("default_exploration_rate", 0.1),
+                "default_learning_rate": self._config.get(
+                    "default_learning_rate", 0.05
+                ),
+                "default_exploration_rate": self._config.get(
+                    "default_exploration_rate", 0.1
+                ),
                 "transfer_strength": self._config.get("transfer_strength", 0.3),
-                "parameter_damping_factor": self._config.get("parameter_damping_factor", 0.7),
+                "parameter_damping_factor": self._config.get(
+                    "parameter_damping_factor", 0.7
+                ),
                 "similarity_threshold_for_transfer": self._config.get(
                     "similarity_threshold_for_transfer", 0.75
                 ),
@@ -484,8 +535,13 @@ class UnifiedVantaCore:
             self.registry,
             {"description": "Core component registry"},
         )
-        self.registry.register("event_bus", self.event_bus, {"description": "Core event bus"})
-        self.registry.register("async_bus", self.async_bus, {"description": "Unified async bus"})
+        self.registry.register(
+            "event_bus", self.event_bus, {"description": "Core event bus"}
+        )
+        if self.async_bus:
+            self.registry.register(
+                "async_bus", self.async_bus, {"description": "Unified async bus"}
+            )
 
         if self.cognitive_enabled:
             if self.supervisor_connector:
@@ -519,7 +575,10 @@ class UnifiedVantaCore:
             return []
 
         # Try to get capabilities from agent metadata in registry
-        if hasattr(self.agent_registry, "agents") and agent_name in self.agent_registry.agents:
+        if (
+            hasattr(self.agent_registry, "agents")
+            and agent_name in self.agent_registry.agents
+        ):
             metadata = self.agent_registry.agents[agent_name].get("metadata", {})
             if "capabilities" in metadata:
                 return metadata["capabilities"]
@@ -530,10 +589,52 @@ class UnifiedVantaCore:
                 return agent.get_capabilities()
             except Exception as e:
                 logger.error(f"Error getting capabilities from {agent_name}: {e}")
-                return []
+                return []  # Provide default capabilities based on agent name/type if no explicit capabilities
+        agent_type = type(agent).__name__.lower()
+        default_capabilities = []
 
-        logger.warning(f"Agent '{agent_name}' does not have capabilities defined")
-        return []
+        if "training" in agent_name.lower() or "trainer" in agent_type:
+            default_capabilities = ["training", "learning", "optimization"]
+        elif "evaluation" in agent_name.lower() or "eval" in agent_type:
+            default_capabilities = ["evaluation", "testing", "assessment"]
+        elif "inference" in agent_name.lower() or "infer" in agent_type:
+            default_capabilities = ["inference", "prediction", "generation"]
+        elif "visualization" in agent_name.lower() or "visual" in agent_type:
+            default_capabilities = ["visualization", "display", "rendering"]
+        elif "system" in agent_name.lower() or "core" in agent_name.lower():
+            default_capabilities = ["system", "coordination", "management"]
+        elif "agent" in agent_name.lower():
+            default_capabilities = ["agent", "processing", "task_execution"]
+        else:
+            default_capabilities = ["general", "processing"]
+
+        # Only warn for specific non-auto-registered components and log at debug level for others
+        should_warn = not any(
+            prefix in agent_name.lower()
+            for prefix in [
+                "training_",
+                "evaluation_",
+                "inference_",
+                "visualization_",
+                "system_",
+                "core_",
+                "base",
+                "simple",
+                "mock",
+                "test",
+            ]
+        ) and agent_type not in ["baseagent", "simpleagent", "testagent"]
+
+        if should_warn:
+            logger.warning(
+                f"Agent '{agent_name}' does not have capabilities defined, using defaults: {default_capabilities}"
+            )
+        else:
+            logger.debug(
+                f"Agent '{agent_name}' using default capabilities: {default_capabilities}"
+            )
+
+        return default_capabilities
 
     def query_deep_cognition_memory(
         self, query: str, task_sigil_ref: Optional[str] = None
@@ -617,7 +718,30 @@ class UnifiedVantaCore:
 
         for cls in agent_classes:
             try:
-                instance = cls()
+                # Try different instantiation patterns
+                instance = None
+
+                # First try with no parameters
+                try:
+                    instance = cls()
+                except TypeError:
+                    # Try with vanta_core parameter
+                    try:
+                        instance = cls(vanta_core=self)
+                    except TypeError:
+                        # Try with both vanta_core and empty config
+                        try:
+                            instance = cls(self, {})
+                        except TypeError:
+                            # Skip this agent if we can't instantiate it
+                            logger.debug(
+                                f"Skipping agent {cls.__name__} - incompatible constructor signature"
+                            )
+                            continue
+
+                if instance is None:
+                    continue
+
             except Exception as e:
                 from agents import NullAgent
 
@@ -654,7 +778,9 @@ class UnifiedVantaCore:
 
             mapping = AGENT_SUBSYSTEM_MAP
         except ImportError:
-            logger.warning("AGENT_SUBSYSTEM_MAP not available, skipping subsystem mapping")
+            logger.warning(
+                "AGENT_SUBSYSTEM_MAP not available, skipping subsystem mapping"
+            )
             mapping = {}
 
         for agent_name, component_key in mapping.items():
@@ -721,7 +847,9 @@ class UnifiedVantaCore:
         elif hasattr(agent, "execute"):
             return agent.execute(message, **kwargs)
         else:
-            logger.warning(f"Agent '{agent_name}' does not have a recognized message interface")
+            logger.warning(
+                f"Agent '{agent_name}' does not have a recognized message interface"
+            )
             return None
 
     # --- ORCHESTRATION METHODS ---
@@ -742,11 +870,17 @@ class UnifiedVantaCore:
         """Get a component by name."""
         return self.registry.get(name, default)
 
-    def emit_event(self, event_type: str, data: Any = None, **kwargs) -> None:
-        """Emit an event on the event bus."""
+    def publish_event(self, event_type: str, data: Any = None, **kwargs) -> None:
+        """Publish an event on the event bus."""
         self.event_bus.emit(event_type, data, **kwargs)
 
-    def subscribe_to_event(self, event_type: str, callback: Callable, priority: int = 0) -> None:
+    def emit_event(self, event_type: str, data: Any = None, **kwargs) -> None:
+        """Emit an event (alias for publish_event)."""
+        self.publish_event(event_type, data, **kwargs)
+
+    def subscribe_to_event(
+        self, event_type: str, callback: Callable, priority: int = 0
+    ) -> None:
         """Subscribe to an event type."""
         self.event_bus.subscribe(event_type, callback, priority)
 
@@ -768,7 +902,9 @@ class UnifiedVantaCore:
         status = {
             "vanta_core_version": "unified_v1.0",
             "start_time": self.start_time.isoformat(),
-            "uptime_seconds": (datetime.datetime.now() - self.start_time).total_seconds(),
+            "uptime_seconds": (
+                datetime.datetime.now() - self.start_time
+            ).total_seconds(),
             "cognitive_enabled": self.cognitive_enabled,
             "blt_components_available": BLT_COMPONENTS_AVAILABLE,
             "registry": registry_status,
@@ -791,11 +927,15 @@ class UnifiedVantaCore:
     def _load_configuration(self, config_sigil_ref: str) -> Dict[str, Any]:
         """Load configuration from VoxSigil definition."""
         if not self.supervisor_connector:
-            logger.warning("No supervisor connector available for configuration loading")
+            logger.warning(
+                "No supervisor connector available for configuration loading"
+            )
             return {}
 
         try:
-            config_content = self.supervisor_connector.get_sigil_content_as_dict(config_sigil_ref)
+            config_content = self.supervisor_connector.get_sigil_content_as_dict(
+                config_sigil_ref
+            )
             if not config_content:
                 logger.error(f"Config sigil '{config_sigil_ref}' is empty or not found")
                 return {}
@@ -803,7 +943,9 @@ class UnifiedVantaCore:
             logger.info(f"Configuration loaded from '{config_sigil_ref}'")
             return config_content.get(
                 "vanta_core_settings",
-                config_content.get("custom_attributes_vanta_extensions", config_content),
+                config_content.get(
+                    "custom_attributes_vanta_extensions", config_content
+                ),
             )
         except Exception as e:
             logger.error(f"Failed to load configuration: {e}", exc_info=True)
@@ -830,7 +972,9 @@ class UnifiedVantaCore:
         """Register VantaCore with the supervisor."""
         # Implementation would depend on supervisor interface
         # For now, simulate successful registration
-        self.supervisor_registration_sigil = f"vanta_core_registration_{int(time.time())}"
+        self.supervisor_registration_sigil = (
+            f"vanta_core_registration_{int(time.time())}"
+        )
         return True
 
     def _perform_supervisor_health_check(self) -> None:
@@ -862,7 +1006,9 @@ class UnifiedVantaCore:
             logger.error("Required cognitive components not available")
             return None
 
-        logger.info(f"Processing input '{input_data_sigil_ref}' for task '{task_sigil_ref}'")
+        logger.info(
+            f"Processing input '{input_data_sigil_ref}' for task '{task_sigil_ref}'"
+        )
 
         # Emit processing start event
         self.event_bus.emit(
@@ -927,7 +1073,9 @@ class UnifiedVantaCore:
         # Step 1: Discover agents with required capabilities
         suitable_agents = self.discover_agents_by_capabilities(required_capabilities)
         if not suitable_agents:
-            logger.warning(f"No agents found with required capabilities: {required_capabilities}")
+            logger.warning(
+                f"No agents found with required capabilities: {required_capabilities}"
+            )
             return {
                 "error": "No suitable agents found",
                 "required_capabilities": required_capabilities,
@@ -944,12 +1092,16 @@ class UnifiedVantaCore:
         # Assign agents to task components based on capabilities
         for capability in required_capabilities:
             capable_agents = [
-                agent for agent in suitable_agents if capability in agent["capabilities"]
+                agent
+                for agent in suitable_agents
+                if capability in agent["capabilities"]
             ]
             if capable_agents:
                 # Select the first available agent for this capability
                 selected_agent = capable_agents[0]
-                coordination_plan["agent_assignments"][capability] = selected_agent["name"]
+                coordination_plan["agent_assignments"][capability] = selected_agent[
+                    "name"
+                ]
                 if selected_agent["name"] not in coordination_plan["execution_order"]:
                     coordination_plan["execution_order"].append(selected_agent["name"])
 
@@ -1046,7 +1198,9 @@ class UnifiedVantaCore:
 
             result = self.vanta_supervisor.perform_task(delegation_task)
             delegation_details["result"] = result
-            delegation_details["status"] = "completed" if "error" not in result else "failed"
+            delegation_details["status"] = (
+                "completed" if "error" not in result else "failed"
+            )
 
             # Emit delegation event
             self.event_bus.emit(
@@ -1068,7 +1222,9 @@ class UnifiedVantaCore:
             delegation_details["error"] = str(e)
             return delegation_details
 
-    def discover_agents_by_capabilities(self, capabilities: List[str]) -> List[Dict[str, Any]]:
+    def discover_agents_by_capabilities(
+        self, capabilities: List[str]
+    ) -> List[Dict[str, Any]]:
         """
         Discover agents that have specific capabilities.
 
@@ -1103,7 +1259,9 @@ class UnifiedVantaCore:
                     logger.debug(f"Could not get capabilities from {agent_name}: {e}")
 
             # Check if agent has any of the required capabilities
-            matching_capabilities = [cap for cap in capabilities if cap in agent_capabilities]
+            matching_capabilities = [
+                cap for cap in capabilities if cap in agent_capabilities
+            ]
             if matching_capabilities:
                 discovered_agents.append(
                     {
@@ -1115,7 +1273,9 @@ class UnifiedVantaCore:
                     }
                 )
 
-        logger.info(f"Discovered {len(discovered_agents)} agents with capabilities: {capabilities}")
+        logger.info(
+            f"Discovered {len(discovered_agents)} agents with capabilities: {capabilities}"
+        )
         return discovered_agents
 
     def route_task_by_capability(
@@ -1140,7 +1300,9 @@ class UnifiedVantaCore:
 
         if not capable_agents:
             logger.warning(f"No agents found with capability: {required_capability}")
-            return {"error": f"No agents available for capability: {required_capability}"}
+            return {
+                "error": f"No agents available for capability: {required_capability}"
+            }
 
         # Select the first available agent (could be enhanced with load balancing)
         selected_agent = capable_agents[0]
@@ -1189,8 +1351,12 @@ class UnifiedVantaCore:
         # Apply agent filter if specified
         if agent_filter:
             if "capability" in agent_filter:
-                capable_agents = self.discover_agents_by_capabilities([agent_filter["capability"]])
-                target_agents = [(agent["name"], agent["agent"]) for agent in capable_agents]
+                capable_agents = self.discover_agents_by_capabilities(
+                    [agent_filter["capability"]]
+                )
+                target_agents = [
+                    (agent["name"], agent["agent"]) for agent in capable_agents
+                ]
             elif "type" in agent_filter:
                 target_agents = [
                     (name, agent)
@@ -1261,7 +1427,9 @@ class UnifiedVantaCore:
         }
 
         if self.vanta_supervisor:
-            coordination_status["vanta_supervisor_status"] = self.vanta_supervisor.get_status()
+            coordination_status["vanta_supervisor_status"] = (
+                self.vanta_supervisor.get_status()
+            )
             coordination_status["coordination_capabilities"] = (
                 self.vanta_supervisor.get_capabilities()
             )
@@ -1300,99 +1468,503 @@ class UnifiedVantaCore:
 
         return coordination_status
 
-    # --- UTILITY METHODS ---
+    # --- AUTO-REGISTRATION METHODS (Component Discovery & Agent Assignment) ---
 
-    def shutdown(self) -> None:
-        """Gracefully shutdown VantaCore."""
-        logger.info("Shutting down UnifiedVantaCore")
+    def auto_register_all_components(self) -> Dict[str, Any]:
+        """
+        Auto-discover and register ALL training, evaluation, inference, and visualization components.
+        Then assign each component to appropriate agents for orchestration.
+        """
+        logger.info("🔍 Starting comprehensive component auto-registration...")
 
-        self.event_bus.emit(
-            "vanta_core_shutdown",
-            {"uptime_seconds": (datetime.datetime.now() - self.start_time).total_seconds()},
+        registration_results = {
+            "training_components": [],
+            "evaluation_components": [],
+            "inference_components": [],
+            "visualization_components": [],
+            "agent_assignments": {},
+            "total_registered": 0,
+            "errors": [],
+        }
+
+        try:
+            # Register training components
+            training_results = self._auto_register_training_components()
+            registration_results["training_components"] = training_results
+
+            # Register evaluation components
+            eval_results = self._auto_register_evaluation_components()
+            registration_results["evaluation_components"] = eval_results
+
+            # Register inference components
+            inference_results = self._auto_register_inference_components()
+            registration_results["inference_components"] = inference_results
+
+            # Register visualization components
+            viz_results = self._auto_register_visualization_components()
+            registration_results["visualization_components"] = viz_results
+
+            # Auto-assign components to agents
+            assignment_results = self._auto_assign_components_to_agents()
+            registration_results["agent_assignments"] = assignment_results
+
+            # Calculate totals
+            total = (
+                len(training_results)
+                + len(eval_results)
+                + len(inference_results)
+                + len(viz_results)
+            )
+            registration_results["total_registered"] = total
+
+            logger.info(f"✅ Auto-registration complete: {total} components registered")
+
+            # Emit comprehensive registration event
+            self.event_bus.emit("auto_registration_complete", registration_results)
+
+            return registration_results
+
+        except Exception as e:
+            logger.error(f"❌ Auto-registration failed: {e}")
+            registration_results["errors"].append(str(e))
+            return registration_results
+
+    def _auto_register_training_components(self) -> List[str]:
+        """Auto-discover and register all training components."""
+        training_components = []
+
+        # Training modules to discover and register
+        training_modules = [
+            ("training.arc_grid_trainer", "ARCGridTrainer"),
+            ("ART.art_trainer", "ArtTrainer"),
+            ("training.vanta_registration", "VantaTrainingAdapter"),
+            ("Vanta.async_training_engine", "AsyncTrainingEngine"),
+            ("interfaces.training_interface", "VoxSigilTrainingInterface"),
+            ("gui.components.enhanced_training_tab", "EnhancedTrainingTab"),
+            ("training.rag_interface", "SupervisorRagInterface"),
+        ]
+
+        for module_path, class_name in training_modules:
+            try:
+                # Use safe import with error handling
+                module = None
+                try:
+                    module = __import__(module_path, fromlist=[class_name])
+                except ImportError as ie:
+                    logger.debug(f"Module {module_path} not available: {ie}")
+                    continue
+                except Exception as e:
+                    logger.warning(f"Error importing {module_path}: {e}")
+                    continue
+
+                if module and hasattr(module, class_name):
+                    component_class = getattr(module, class_name)
+
+                    # Register with VantaCore
+                    component_name = f"training_{class_name.lower()}"
+                    self.register_component(
+                        component_name,
+                        component_class,
+                        {
+                            "type": "training",
+                            "module": module_path,
+                            "class": class_name,
+                            "capabilities": [
+                                "training",
+                                "model_optimization",
+                                "learning",
+                            ],
+                        },
+                    )
+                    training_components.append(component_name)
+                    logger.info(f"✅ Registered training component: {component_name}")
+
+            except Exception as e:
+                logger.debug(f"⚠️ Could not register {module_path}.{class_name}: {e}")
+
+        return training_components
+
+    def _auto_register_evaluation_components(self) -> List[str]:
+        """Auto-discover and register all evaluation components."""
+        evaluation_components = []
+
+        # Evaluation modules to discover and register
+        eval_modules = [
+            ("core.grid_former_evaluator", "GridFormerEvaluator"),
+            ("VoxSigilRag.voxsigil_evaluator", "VoxSigilResponseEvaluator"),
+            (
+                "voxsigil_supervisor.strategies.evaluation_heuristics",
+                "EvaluationHeuristics",
+            ),
+            ("ARC.end_to_end_arc_validation", "ARCValidationEngine"),
+            (
+                "core.ensemble_integration.arc_ensemble_orchestrator",
+                "ARCEnsembleOrchestrator",
+            ),
+            ("tests_archive.final_training_validation", "TrainingValidationEngine"),
+        ]
+
+        for module_path, class_name in eval_modules:
+            try:
+                module = __import__(module_path, fromlist=[class_name])
+                if hasattr(module, class_name):
+                    component_class = getattr(module, class_name)
+
+                    # Register with VantaCore
+                    component_name = f"evaluation_{class_name.lower()}"
+                    self.register_component(
+                        component_name,
+                        component_class,
+                        {
+                            "type": "evaluation",
+                            "module": module_path,
+                            "class": class_name,
+                            "capabilities": [
+                                "evaluation",
+                                "validation",
+                                "metrics",
+                                "assessment",
+                            ],
+                        },
+                    )
+                    evaluation_components.append(component_name)
+                    logger.info(f"✅ Registered evaluation component: {component_name}")
+
+            except Exception as e:
+                logger.warning(f"⚠️ Could not register {module_path}.{class_name}: {e}")
+
+        return evaluation_components
+
+    def _auto_register_inference_components(self) -> List[str]:
+        """Auto-discover and register all inference components."""
+        inference_components = []
+
+        # Inference modules to discover and register
+        inference_modules = [
+            (
+                "Gridformer.inference.gridformer_inference_engine",
+                "GridFormerInferenceEngine",
+            ),
+            ("Gridformer.inference.inference_strategy", "InferenceStrategy"),
+            ("VoxSigil_Gridformer.gridformer_arc_inference", "GridFormerARCInference"),
+            ("ARC.arc_grid_former_runner", "ARCGridFormerRunner"),
+            ("VoxSigilRag.voxsigil_mesh", "VoxSigilMesh"),
+        ]
+
+        for module_path, class_name in inference_modules:
+            try:
+                module = __import__(module_path, fromlist=[class_name])
+                if hasattr(module, class_name):
+                    component_class = getattr(module, class_name)
+
+                    # Register with VantaCore
+                    component_name = f"inference_{class_name.lower()}"
+                    self.register_component(
+                        component_name,
+                        component_class,
+                        {
+                            "type": "inference",
+                            "module": module_path,
+                            "class": class_name,
+                            "capabilities": [
+                                "inference",
+                                "prediction",
+                                "reasoning",
+                                "problem_solving",
+                            ],
+                        },
+                    )
+                    inference_components.append(component_name)
+                    logger.info(f"✅ Registered inference component: {component_name}")
+
+            except Exception as e:
+                logger.warning(f"⚠️ Could not register {module_path}.{class_name}: {e}")
+
+        return inference_components
+
+    def _auto_register_visualization_components(self) -> List[str]:
+        """Auto-discover and register all visualization components."""
+        visualization_components = []
+
+        # Visualization modules to discover and register
+        viz_modules = [
+            ("utils.visualization_utils", "GridVisualizer"),
+            ("utils.visualization_utils", "PerformanceVisualizer"),
+            ("ARC.arc_task_visualizer", "ARCTaskVisualizer"),
+            ("gui.components.streaming_dashboard", "StreamingDashboard"),
+            ("gui.components.novel_reasoning_tab", "NovelReasoningTab"),
+        ]
+
+        for module_path, class_name in viz_modules:
+            try:
+                module = __import__(module_path, fromlist=[class_name])
+                if hasattr(module, class_name):
+                    component_class = getattr(module, class_name)
+
+                    # Register with VantaCore
+                    component_name = f"visualization_{class_name.lower()}"
+                    self.register_component(
+                        component_name,
+                        component_class,
+                        {
+                            "type": "visualization",
+                            "module": module_path,
+                            "class": class_name,
+                            "capabilities": [
+                                "visualization",
+                                "plotting",
+                                "display",
+                                "monitoring",
+                            ],
+                        },
+                    )
+                    visualization_components.append(component_name)
+                    logger.info(
+                        f"✅ Registered visualization component: {component_name}"
+                    )
+
+            except Exception as e:
+                logger.warning(f"⚠️ Could not register {module_path}.{class_name}: {e}")
+
+        return visualization_components
+
+    def _auto_assign_components_to_agents(self) -> Dict[str, List[str]]:
+        """Auto-assign registered components to appropriate agents based on capabilities."""
+        logger.info("🤖 Auto-assigning components to agents...")
+
+        assignments = {
+            "training_agents": [],
+            "evaluation_agents": [],
+            "inference_agents": [],
+            "visualization_agents": [],
+            "unassigned_components": [],
+        }
+
+        try:
+            # Get all registered components
+            all_components = self.registry.list_components()
+
+            # Get all available agents
+            all_agents = self.get_all_agents() if self.agent_registry else []
+
+            for component_name in all_components:
+                component_metadata = self.registry.get_metadata(component_name)
+                if not component_metadata:
+                    continue
+
+                component_type = component_metadata.get("type", "unknown")
+                component_capabilities = component_metadata.get("capabilities", [])
+
+                # Find suitable agents for this component
+                assigned = False
+                for agent_name, agent in all_agents:
+                    agent_capabilities = self.get_agent_capabilities(agent_name)
+
+                    # Check if agent capabilities match component needs
+                    if self._capabilities_match(
+                        component_capabilities, agent_capabilities
+                    ):
+                        # Assign component to agent
+                        if hasattr(agent, "assign_component"):
+                            try:
+                                agent.assign_component(
+                                    component_name, self.get_component(component_name)
+                                )
+                                assignments[f"{component_type}_agents"].append(
+                                    {
+                                        "agent": agent_name,
+                                        "component": component_name,
+                                        "capabilities": component_capabilities,
+                                    }
+                                )
+                                assigned = True
+                                logger.info(
+                                    f"✅ Assigned {component_name} to agent {agent_name}"
+                                )
+                                break
+                            except Exception as e:
+                                logger.warning(
+                                    f"⚠️ Failed to assign {component_name} to {agent_name}: {e}"
+                                )
+
+                if not assigned:
+                    assignments["unassigned_components"].append(component_name)
+                    logger.info(
+                        f"📋 Component {component_name} not assigned to any agent"
+                    )
+
+            # Create specialized agents if needed
+            self._create_specialized_agents_for_unassigned(
+                assignments["unassigned_components"]
+            )
+
+            return assignments
+
+        except Exception as e:
+            logger.error(f"❌ Error during component-to-agent assignment: {e}")
+            return assignments
+
+    def _capabilities_match(
+        self, component_caps: List[str], agent_caps: List[str]
+    ) -> bool:
+        """Check if agent capabilities match component requirements."""
+        if not component_caps or not agent_caps:
+            return False
+
+        # Simple overlap check - at least one capability must match
+        return bool(set(component_caps) & set(agent_caps))
+
+    def _create_specialized_agents_for_unassigned(
+        self, unassigned_components: List[str]
+    ) -> None:
+        """Create specialized agents for components that couldn't be assigned."""
+        if not unassigned_components:
+            return
+
+        logger.info(
+            f"🔧 Creating specialized agents for {len(unassigned_components)} unassigned components"
         )
 
-        # Stop async bus if running
-        if hasattr(self, "async_bus") and self.async_bus.running:
+        # Group unassigned components by type
+        component_groups = {}
+        for comp_name in unassigned_components:
+            metadata = self.registry.get_metadata(comp_name)
+            comp_type = metadata.get("type", "general") if metadata else "general"
+
+            if comp_type not in component_groups:
+                component_groups[comp_type] = []
+            component_groups[comp_type].append(comp_name)
+
+        # Create specialized agents for each type
+        for comp_type, components in component_groups.items():
             try:
-                loop = asyncio.get_event_loop()
-                if loop.is_running():
-                    loop.create_task(self.async_bus.stop())
-                else:
-                    loop.run_until_complete(self.async_bus.stop())
-            except RuntimeError:
-                asyncio.run(self.async_bus.stop())
+                # Create a specialized coordinator agent
+                agent_name = f"{comp_type}_coordinator_agent"
+
+                # Simple agent class for component coordination
+                class ComponentCoordinatorAgent:
+                    def __init__(self, component_type, assigned_components):
+                        self.component_type = component_type
+                        self.assigned_components = assigned_components
+                        self.capabilities = [comp_type, "coordination", "management"]
+
+                    def assign_component(self, component_name, component_instance):
+                        self.assigned_components.append(component_name)
+                        return True
+
+                    def get_capabilities(self):
+                        return self.capabilities
+
+                    def execute_task(self, task):
+                        return {
+                            "status": "delegated",
+                            "components": self.assigned_components,
+                        }
+
+                # Create and register the specialized agent
+                coordinator_agent = ComponentCoordinatorAgent(
+                    comp_type, components.copy()
+                )
+
+                self.register_agent(
+                    agent_name,
+                    coordinator_agent,
+                    {
+                        "type": f"{comp_type}_coordinator",
+                        "managed_components": components,
+                        "capabilities": coordinator_agent.capabilities,
+                        "auto_created": True,
+                    },
+                )
+
+                logger.info(
+                    f"✅ Created {agent_name} for {len(components)} {comp_type} components"
+                )
+
             except Exception as e:
-                logger.error(f"Failed to stop async bus during shutdown: {e}")
+                logger.error(
+                    f"❌ Failed to create specialized agent for {comp_type}: {e}"
+                )
 
-        # Additional cleanup would go here
-        logger.info("UnifiedVantaCore shutdown complete")
+    def get_all_registered_components_by_type(
+        self, component_type: str = None
+    ) -> Dict[str, List[str]]:
+        """Get all registered components, optionally filtered by type."""
+        components_by_type = {
+            "training": [],
+            "evaluation": [],
+            "inference": [],
+            "visualization": [],
+            "other": [],
+        }
 
-    def _initialize_speech_integration(self) -> None:
-        """Initialize speech (TTS/STT) integration for VantaCore."""
+        all_components = self.registry.list_components()
+
+        for component_name in all_components:
+            metadata = self.registry.get_metadata(component_name)
+            comp_type = metadata.get("type", "other") if metadata else "other"
+
+            if comp_type in components_by_type:
+                components_by_type[comp_type].append(component_name)
+            else:
+                components_by_type["other"].append(component_name)
+
+        if component_type:
+            return {component_type: components_by_type.get(component_type, [])}
+
+        return components_by_type
+
+    def assign_component_to_agent(self, component_name: str, agent_name: str) -> bool:
+        """Manually assign a specific component to a specific agent."""
         try:
-            from handlers.speech_integration_handler import (
-                initialize_speech_system,
-            )
+            agent = self.get_agent(agent_name)
+            component = self.get_component(component_name)
 
-            # Initialize speech system with default settings
-            speech_handler = initialize_speech_system(
-                vanta_core=self,
-                enable_tts=True,
-                enable_stt=True,
-                register_with_async_bus=True,
-            )
+            if not agent:
+                logger.error(f"Agent '{agent_name}' not found")
+                return False
 
-            # Register the handler with VantaCore
-            self.registry.register(
-                "speech_integration_handler",
-                speech_handler,
-                {
-                    "description": "Speech Integration Handler",
-                    "capabilities": ["text_to_speech", "speech_to_text"],
-                    "status": speech_handler.get_status(),
-                },
-            )
+            if not component:
+                logger.error(f"Component '{component_name}' not found")
+                return False
 
-            logger.info("Speech integration initialized successfully")
+            # Try to assign component to agent
+            if hasattr(agent, "assign_component"):
+                agent.assign_component(component_name, component)
 
-        except ImportError:
-            logger.warning("Speech integration handler not available")
+                # Emit assignment event
+                self.event_bus.emit(
+                    "component_assigned_to_agent",
+                    {
+                        "component": component_name,
+                        "agent": agent_name,
+                        "timestamp": datetime.datetime.now().isoformat(),
+                    },
+                )
+
+                logger.info(f"✅ Manually assigned {component_name} to {agent_name}")
+                return True
+            else:
+                logger.warning(
+                    f"Agent {agent_name} does not support component assignment"
+                )
+                return False
+
         except Exception as e:
-            logger.error(f"Failed to initialize speech integration: {e}")
+            logger.error(f"❌ Failed to assign {component_name} to {agent_name}: {e}")
+            return False
 
     def _initialize_vmb_integration(self) -> None:
-        """Initialize VMB (VANTA Model Builder) integration for VantaCore."""
+        """Initialize VMB integration (Step 16 of VANTA Integration Master Plan)."""
         try:
-            from handlers.vmb_integration_handler import initialize_vmb_system
-
-            # Initialize VMB system with default settings
-            vmb_handler = initialize_vmb_system(
-                vanta_core=self,
-                config={
-                    "sigil": "⟠∆∇𓂀",
-                    "agent_class": "CopilotSwarm",
-                    "swarm_variant": "RPG_Sentinel",
-                    "role_scope": ["planner", "validator", "executor", "summarizer"],
-                    "activation_mode": "VMB_Production",
-                },
+            from Vanta.handlers.vmb_integration_handler import (
+                VantaVMBIntegrationHandler,
             )
 
-            # Register the handler with VantaCore
-            self.registry.register(
-                "vmb_integration_handler",
-                vmb_handler,
-                {
-                    "description": "VMB Integration Handler",
-                    "capabilities": [
-                        "model_building",
-                        "code_analysis",
-                        "component_validation",
-                        "error_detection",
-                        "performance_monitoring",
-                        "task_execution",
-                    ],
-                    "status": vmb_handler.get_status(),
-                },
+            self.vmb_integration_handler = VantaVMBIntegrationHandler(
+                vanta_core=self,
+                logger=logger,
+                event_bus=self.event_bus,
             )
 
             logger.info("VMB integration initialized successfully")
@@ -1406,6 +1978,15 @@ class UnifiedVantaCore:
         """Placeholder for Nebula cross-system link integration."""
         pass
 
+    def _initialize_speech_integration(self) -> None:
+        """Initialize speech integration (TTS/STT components)."""
+        try:
+            # Placeholder for future speech integration
+            # This could include TTS/STT component initialization
+            logger.info("Speech integration placeholder initialized")
+        except Exception as e:
+            logger.error(f"Failed to initialize speech integration: {e}")
+
 
 def get_vanta_core(**kwargs) -> UnifiedVantaCore:
     """Get the singleton VantaCore instance."""
@@ -1414,11 +1995,14 @@ def get_vanta_core(**kwargs) -> UnifiedVantaCore:
 
 def trace_vanta_event(message: str, category: str = "info", **kwargs):
     """Trace an event in VantaCore."""
-    trace_event(message, category, **kwargs)
-    # Also emit on event bus if VantaCore is initialized
+    trace_event(
+        message, category, **kwargs
+    )  # Also emit on event bus if VantaCore is initialized
     try:
         core = get_vanta_core()
-        core.emit_event("trace_event", {"message": message, "category": category, **kwargs})
+        core.publish_event(
+            "trace_event", {"message": message, "category": category, **kwargs}
+        )
     except Exception:
         pass  # Ignore if VantaCore not yet initialized
 

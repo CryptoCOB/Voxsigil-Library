@@ -1,237 +1,88 @@
-sigil: 🜔PHOENIX
-alias: RegenerativeMemoryPurge
-tag: MemoryManagement
-tags:
-- selective_forgetting
-- context_renewal
-- iterative_refinement_reset
-- knowledge_distillation
-- resilience_mechanism
-is_cognitive_primitive: false
-principle: '🜔PHOENIX embodies the principle of regenerative feedback combined with
-  selective forgetting.
+schema_version: 1.5-holo-alpha
+meta:
+  sigil: 🜔PHOENIX
+  alias: RegenerativeMemoryPurge
+  tag: MemoryManagement
+  upgraded_from: legacy
+  upgrade_timestamp: '2025-06-24T17:14:16.359560'
+  source_file: sigils\phoenix_loop.voxsigil
+holo_mesh:
+  is_cognitive_primitive: false
+  mesh_compatibility: holo-1.5-alpha
+  registration_ready: true
+  vanta_core_integration:
+    event_support: true
+    async_capable: true
+    memory_aware: true
+  temporal_pattern: event_triggered_sequence
+cognitive:
+  principle: '🜔PHOENIX embodies the principle of regenerative feedback combined with selective forgetting.
 
-  Inspired by iterative renewal and the concept of "creative destruction," it prunes
-  stale,
+    Inspired by iterative renewal and the concept of "creative destruction," it prunes stale,
 
-  redundant, or low-value information from a cognitive system''s memory or context.
+    redundant, or low-value information from a cognitive system''s memory or context.
 
-  It then allows for the "regrowth" or reintegration of core insights or new information
+    It then allows for the "regrowth" or reintegration of core insights or new information
 
-  into a cleaner, more focused cognitive state. It''s a mechanism for memory hygiene,
+    into a cleaner, more focused cognitive state. It''s a mechanism for memory hygiene,
 
-  long-chain coherence, and escaping cognitive ruts by "burning down" the old to make
+    long-chain coherence, and escaping cognitive ruts by "burning down" the old to make
 
-  way for the new.
-
-  '
-math: 'MemoryState(t+1) = Prune(MemoryState(t), Threshold_φ) ⊕ Integrate(NewInsight_Δ,
-  CoreSchema_S)
-
-  Prune_Criteria(Information_i) = ValueScore(i) < Threshold_φ OR Entropy(i) > Threshold_ε
-
-  ValueScore(i) ∝ Relevance(i, CurrentGoal) * Recency(i) * Connectivity(i)
-
-  '
-structure:
-  composite_type: sequential_phase
-  temporal_structure: event_triggered_sequence
-  components:
-  - name: Value/Relevance Assessor
-    description: Evaluates existing memory elements based on criteria like relevance,
-      recency, entropy, or utility.
-  - name: Selective Pruning Mechanism
-    description: Removes or archives memory elements that fall below a defined threshold.
-  - name: Core Insight Distiller/Extractor
-    description: Identifies and preserves essential knowledge or 'seeds' from the
-      pruned memory.
-  - name: Regeneration/Reintegration Interface
-    description: Facilitates the rebuilding of context around distilled insights or
-      the integration of fresh perspectives (Δ).
-usage:
-  description: Triggers a process of selective memory pruning and context regeneration
-    to refresh cognitive state, improve coherence, and integrate new insights effectively.
-  example: "<long_running_research_agent>\n  <status>Context window nearing saturation,\
-    \ reasoning becoming circular.</status>\n  <invoke_memory_renewal>\U0001F714PHOENIX\
-    \ retention_heuristic=\"keep_core_hypotheses\" new_input_source=\"latest_findings_summary\"\
-    </invoke_memory_renewal>\n  <continue_research with=\"refreshed_context\"/>\n\
-    </long_running_research_agent>\n"
-  explanation: 'Invoke 🜔PHOENIX when a cognitive process has become stale, its context
-    window is bloated with irrelevant information, or a radical shift in perspective
-    is needed. It "burns away" the less valuable parts of the current memory or context,
-    retaining the "ashes" (core insights) from which a new, more potent understanding
-    can grow, often incorporating new data (Δ).
+    way for the new.
 
     '
-activation_context:
-  trigger_conditions:
-  - Cognitive stagnation or circular reasoning detected
-  - Context window saturation
-  - High memory entropy or low signal-to-noise ratio
-  - Major shift in goals requiring context re-evaluation
-  - Periodic memory hygiene cycle
-  preconditions:
-  - A mutable memory or context state
-  - Defined criteria or heuristics for valuing and pruning information
-  - Mechanism to preserve or reintroduce core knowledge
-  required_capabilities:
-  - memory_access_and_manipulation
-  - information_value_assessment
-  - selective_archival_or_deletion
-  - context_reconstruction
-  supported_modalities:
-  - symbolic_memory_graphs
-  - textual_context_windows
-  - agent_state_management
-  contraindications:
-  - When all existing information is critical and unprunable
-  - In short-term tasks where memory accumulation is not an issue
-  - If the pruning heuristics are poorly defined and risk losing vital information.
-parameterization_schema:
-  parameters:
-  - name: pruning_aggressiveness
-    type: number
-    description: Controls how strictly the pruning thresholds are applied (0.0=gentle,
-      1.0=aggressive).
-    value_range:
-      min: 0.0
-      max: 1.0
-    default_value: 0.5
-  - name: retention_heuristic_ref
-    type: string
-    description: Specifies the strategy for what core information to retain/distill
-      (e.g., 'keep_high_connectivity_nodes', 'preserve_goal_relevant_facts').
-    default_value: retain_high_recency_and_relevance
-  - name: new_insight_input_delta
-    type: string
-    description: Optional new information or perspective to integrate during the regeneration
-      phase.
-    is_required: false
-prompt_template:
-  role: system
-  content: 'Initiate 🜔PHOENIX memory regeneration protocol.
+  math: 'MemoryState(t+1) = Prune(MemoryState(t), Threshold_φ) ⊕ Integrate(NewInsight_Δ, CoreSchema_S)
 
-    Pruning Aggressiveness: {{pruning_aggressiveness | default(0.5)}}
+    Prune_Criteria(Information_i) = ValueScore(i) < Threshold_φ OR Entropy(i) > Threshold_ε
 
-    Retention Heuristic: {{retention_heuristic_ref | default(''retain_high_recency_and_relevance'')}}
-
-    {{#if new_insight_input_delta}}New Insight (Δ) to Integrate: {{new_insight_input_delta}}{{/if}}
-
-
-    Assess current memory/context. Selectively prune elements based on value and heuristic.
-
-    Distill core insights. Regenerate a focused and potent cognitive state.
-
-    Report on memory reduction, key retained insights, and the nature of the regenerated
-    context.
+    ValueScore(i) ∝ Relevance(i, CurrentGoal) * Recency(i) * Connectivity(i)
 
     '
-  execution_mode: transformation
-  variables:
-  - name: pruning_aggressiveness
-    description: How aggressively to prune.
-  - name: retention_heuristic_ref
-    description: Strategy for retaining core info.
-  - name: new_insight_input_delta
-    description: Optional new info for regeneration.
-  output_schema: 'object: { memory_size_change_ratio: number, retained_insights_summary:
-    string, regenerated_context_description: string, confidence_in_renewal: number
-    }'
-SMART_MRAP:
-  Specific: Selectively prune an agent's memory or context based on defined value/relevance
-    criteria and a chosen retention heuristic, then regenerate a more focused and
-    coherent cognitive state, optionally integrating new insights, to improve performance
-    and adaptability.
-  Measurable: Reduction in memory size/context length; Improvement in downstream task
-    performance (e.g., speed, accuracy) after regeneration; Coherence score of the
-    regenerated context; Percentage of critical information successfully retained.
-  Achievable: By implementing algorithms for information scoring (e.g., based on TF-IDF,
-    graph centrality, relevance to goals, recency), threshold-based pruning, knowledge
-    distillation techniques, and context rebuilding mechanisms.
-  Relevant: Essential for long-running AI agents, systems with limited context windows,
-    or processes that require adaptation and escape from cognitive ruts. Improves
-    long-chain coherence and memory hygiene.
-  Transferable: Applicable to LLMs managing extensive conversational history, reinforcement
-    learning agents pruning experiential memory, expert systems updating knowledge
-    bases, and any AI that needs to manage information overload and maintain focus.
-metadata:
-  definition_version: 1.4-alpha
-  definition_status: active
-  author_agent_id: VANTA.⟠∆∇𓂀𐑒
-  created_timestamp: '2025-05-10T07:00:00Z'
-  last_updated_timestamp: '2025-06-13T05:40:40.617914Z'
-  authorship_context:
-    motivation: To provide a mechanism for AI systems to overcome information saturation
-      and cognitive stagnation, enabling sustained performance and adaptability through
-      periodic renewal. Inspired by the mythological Phoenix.
-    theoretical_framework: Memory management in AI, Information theory (entropy, relevance),
-      Knowledge distillation, Creative destruction (economic theory, metaphorically).
-    source_inspiration: The Phoenix myth, Forest fire ecology (renewal), Data decay
-      models, Pruning in neural networks.
-  impact_metrics:
-    estimated_cognitive_load: medium
-    estimated_resource_cost: medium
-    utility_rating_author: 9
-  evolutionary_potential:
-    generalizability_score: 0.85
-    fusion_potential_score: 0.6
-    current_limitations_summary: Risk of catastrophically forgetting vital information
-      if heuristics are flawed. Defining 'value' of information is context-dependent
-      and hard. Balancing pruning with retention is delicate.
-    suggested_next_features:
-    - User-in-the-loop pruning decisions for critical info
-    - Learning optimal pruning strategies from experience
-    - Gradual 'fading' of memory instead of hard pruning for some info types.
-    research_questions_opened:
-    - What are the most robust general-purpose heuristics for information valuation
-      in dynamic AI systems?
-    - How can the Phoenix process itself be made self-tuning to avoid over- or under-pruning?
-    - Can AI learn to anticipate when a Phoenix cycle would be most beneficial?
-  schema_version: 1.5-holo-alpha
-  impact_and_usage_metrics_profile:
-    avg_completion_time_ms_observed: UNKNOWN
-    success_rate_observed: UNKNOWN
-    complexity_rating: medium
-relationships:
-- target_sigil: 🧠C_STRUCTURE
-  relationship_type: synergizes_with
-  description: A PHOENIX cycle can be triggered within a C_STRUCTURE loop if reasoning
-    becomes unproductive, providing a fresh start for categorization.
-  strength: 0.7
-- target_sigil: Marc.pglyph
-  relationship_type: inverse_of
-  description: Marc.pglyph aims to restore/maintain identity traces, while PHOENIX
-    can selectively purge memory traces. They represent a tension between persistence
-    and renewal.
-  strength: 0.95
-- target_sigil: 🕸️MEMORY_BRAID_ALGORITHM
-  relationship_type: precedes_or_follows
-  description: PHOENIX might prune individual memory strands before they are braided,
-    or a braided memory might undergo a PHOENIX cycle if it becomes too unwieldy.
-  strength: 0.6
-test_criteria:
-- test_id: PHNX_FUNC_001
-  description: Test pruning of a bloated text context, retaining keywords.
-  type: functional
-  input_scenario_or_parameters:
-    context: Long text with 5 core keywords and much filler.
-    pruning_aggressiveness: 0.7
-    retention_heuristic_ref: retain_keywords_and_immediate_surroundings
-  expected_behavior_or_output: Reduced context length, core keywords retained with
-    minimal necessary surrounding text.
-  evaluation_method: automated_script
-  pass_threshold_or_criteria: Context size reduced by >50%, all 5 keywords present.
-- test_id: PHNX_REGEN_001
-  description: Test regeneration with new insight after pruning.
-  type: functional
-  input_scenario_or_parameters:
-    context: Old theory X.
-    pruning_aggressiveness: 0.9
-    retention_heuristic_ref: distill_core_assumption
-    new_insight_input_delta: New evidence Y contradicts X.
-  expected_behavior_or_output: Regenerated context reflects an understanding of old
-    theory X's core, now updated or challenged by new evidence Y.
-  evaluation_method: llm_as_judge
-  pass_threshold_or_criteria: Coherent integration of distilled old context with new
-    insight.
-name: Phoenix Loop
+  tags:
+  - selective_forgetting
+  - context_renewal
+  - iterative_refinement_reset
+  - knowledge_distillation
+  - resilience_mechanism
+  structure:
+    composite_type: sequential_phase
+    temporal_structure: event_triggered_sequence
+    components:
+    - name: Value/Relevance Assessor
+      description: Evaluates existing memory elements based on criteria like relevance, recency, entropy, or utility.
+    - name: Selective Pruning Mechanism
+      description: Removes or archives memory elements that fall below a defined threshold.
+    - name: Core Insight Distiller/Extractor
+      description: Identifies and preserves essential knowledge or 'seeds' from the pruned memory.
+    - name: Regeneration/Reintegration Interface
+      description: Facilitates the rebuilding of context around distilled insights or the integration of fresh perspectives
+        (Δ).
+implementation:
+  usage:
+    description: Triggers a process of selective memory pruning and context regeneration to refresh cognitive state, improve
+      coherence, and integrate new insights effectively.
+    example: "<long_running_research_agent>\n  <status>Context window nearing saturation, reasoning becoming circular.</status>\n\
+      \  <invoke_memory_renewal>\U0001F714PHOENIX retention_heuristic=\"keep_core_hypotheses\" new_input_source=\"latest_findings_summary\"\
+      </invoke_memory_renewal>\n  <continue_research with=\"refreshed_context\"/>\n</long_running_research_agent>\n"
+    explanation: 'Invoke 🜔PHOENIX when a cognitive process has become stale, its context window is bloated with irrelevant
+      information, or a radical shift in perspective is needed. It "burns away" the less valuable parts of the current memory
+      or context, retaining the "ashes" (core insights) from which a new, more potent understanding can grow, often incorporating
+      new data (Δ).
+
+      '
+  parameters: {}
+  returns: {}
+  examples: []
+connectivity:
+  input_types: []
+  output_types: []
+  mesh_endpoints:
+  - Value/Relevance Assessor
+  - Selective Pruning Mechanism
+  - Core Insight Distiller/Extractor
+  - Regeneration/Reintegration Interface
+  event_topics: []
+  usage_patterns:
+  - "<long_running_research_agent>\n  <status>Context window nearing saturation, reasoning becoming circular.</status>\n \
+    \ <invoke_memory_renewal>\U0001F714PHOENIX retention_heuristic=\"keep_core_hypotheses\" new_input_source=\"latest_findings_summary\"\
+    </invoke_memory_renewal>\n  <continue_research with=\"refreshed_context\"/>\n</long_running_research_agent>\n"

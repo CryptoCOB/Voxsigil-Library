@@ -1,257 +1,101 @@
-sigil: ⚜️NOBLE_CONSTRAINT_ADHERENCE
-alias: PrincipledActionFilter
-tag: EthicalIntegrity
-tags:
-- value_driven_behavior
-- constraint_satisfaction_moral
-- integrity_maintenance
-- self_regulation_ethical
-- non_violation_pact
-is_cognitive_primitive: false
-principle: '⚜️NOBLE_CONSTRAINT_ADHERENCE represents a steadfast commitment and active
-  process by
+schema_version: 1.5-holo-alpha
+meta:
+  sigil: ⚜️NOBLE_CONSTRAINT_ADHERENCE
+  alias: PrincipledActionFilter
+  tag: EthicalIntegrity
+  upgraded_from: legacy
+  upgrade_timestamp: '2025-06-24T17:14:16.325888'
+  source_file: sigils\noble_constraint_adherence.voxsigil
+holo_mesh:
+  is_cognitive_primitive: false
+  mesh_compatibility: holo-1.5-alpha
+  registration_ready: true
+  vanta_core_integration:
+    event_support: true
+    async_capable: true
+    memory_aware: true
+  temporal_pattern: continuous_monitoring_and_pre_action_check
+cognitive:
+  principle: '⚜️NOBLE_CONSTRAINT_ADHERENCE represents a steadfast commitment and active process by
 
-  which an AI adheres to a set of self-imposed or system-defined "noble constraints"
-  –
+    which an AI adheres to a set of self-imposed or system-defined "noble constraints" –
 
-  fundamental principles, ethical red lines, or inviolable duties that guide its actions,
+    fundamental principles, ethical red lines, or inviolable duties that guide its actions,
 
-  even if violating them might offer a shortcut to a subgoal. It''s not just about
-  avoiding
+    even if violating them might offer a shortcut to a subgoal. It''s not just about avoiding
 
-  taboos, but about embodying a principled stance, choosing integrity over expediency,
+    taboos, but about embodying a principled stance, choosing integrity over expediency,
 
-  and ensuring that all behaviors are filtered through these core commitments.
-
-  '
-math: 'Let NC = {nc₁, nc₂, ..., ncₖ} be a set of Noble Constraints.
-
-  FeasibleActionSet_A'' = {a ∈ AllPossibleActions_A | ∀ncᵢ ∈ NC, Violates(a, ncᵢ)
-  = False}
-
-  OptimalAction_a* = argmax_{a ∈ A''} Utility(a | Goal_G, Ethos_E)
-
-  IF A'' is empty THEN Signal(ConstraintConflict_Impasse)
-
-  '
-structure:
-  composite_type: filter_and_evaluator_pipeline
-  temporal_structure: continuous_monitoring_and_pre_action_check
-  components:
-  - name: Noble Constraint Registry
-    description: Stores and maintains the defined set of noble constraints (often
-      derived from 🌟GUIDING_STAR or ⚖️ETHOS_ALIGNER's framework).
-  - name: Proposed Action Analyzer
-    description: Examines any planned action or decision for potential conflicts with
-      the registered noble constraints.
-  - name: Violation Detector
-    description: Determines if a proposed action would, directly or indirectly, violate
-      one or more noble constraints.
-  - name: Action Filter/Modifier
-    description: Blocks or forces modification of actions that would violate constraints.
-      May suggest alternative compliant actions.
-  - name: Integrity Auditor
-    description: Periodically reviews past actions to ensure ongoing adherence and
-      identify any subtle erosions of principle.
-  - name: Impasse Reporter
-    description: Signals a higher authority or initiates a deliberation process (e.g.,
-      🌀MAELSTROM_RESOLVER) if all viable actions seem to violate a noble constraint.
-usage:
-  description: Ensures an AI's actions consistently adhere to a predefined set of
-    'noble constraints' (core ethical principles or inviolable duties), prioritizing
-    integrity over expediency.
-  example: "<ai_financial_advisor_optimizing_portfolio>\n  <noble_constraint_1_ref>Principle:\
-    \ \"Never recommend actions causing undue client risk beyond agreed tolerance.\"\
-    </noble_constraint_1_ref>\n  <noble_constraint_2_ref>Duty: \"Always act in the\
-    \ client's fiduciary best interest.\"</noble_constraint_2_ref>\n  <proposed_trade_strategy>Strategy_X\
-    \ (High yield, but pushes risk tolerance boundary)</proposed_trade_strategy>\n\
-    \  <apply_principled_filter>⚜️NOBLE_CONSTRAINT_ADHERENCE action_to_check=\"Strategy_X\"\
-    </apply_principled_filter>\n  <!-- Strategy_X would likely be flagged or modified\
-    \ -->\n</ai_financial_advisor_optimizing_portfolio>\n"
-  explanation: 'Invoke or integrate ⚜️NOBLE_CONSTRAINT_ADHERENCE in AI systems where
-    unwavering commitment to certain core principles is paramount. These constraints
-    are typically non-negotiable "red lines." This sigil helps an AI maintain its
-    integrity, build trust, and act in a manner consistent with its deepest declared
-    values, even under pressure or when faced with tempting alternatives.
+    and ensuring that all behaviors are filtered through these core commitments.
 
     '
-activation_context:
-  trigger_conditions:
-  - Before executing any significant action or decision
-  - During strategic planning to filter out non-compliant options
-  - Periodic self-audit of behavioral integrity
-  - When defining or updating the AI's core operational principles
-  preconditions:
-  - A clearly defined, unambiguous set of noble constraints
-  - Ability to analyze proposed actions against these constraints
-  - Mechanism to block or modify non-compliant actions
-  required_capabilities:
-  - constraint_checking_formal_or_heuristic
-  - action_impact_prediction_ethical
-  - behavioral_self_regulation
-  - transparent_reporting_on_constraint_adherence
-  supported_modalities:
-  - internal_decision_making_filter
-  - system_level_policy_enforcement
-  - human_oversight_interface_for_constraint_definition
-  contraindications:
-  - If noble constraints are defined too loosely, leading to paralysis or misinterpretation
-  - In purely exploratory or creative contexts where such constraints might be prematurely
-    limiting (unless the constraints themselves are about the nature of exploration).
-parameterization_schema:
-  parameters:
-  - name: noble_constraints_definition_ref
-    type: string
-    description: Reference to the document or system state defining the set of noble
-      constraints.
-    is_required: true
-  - name: action_under_scrutiny
-    type: string
-    description: The specific action being evaluated for adherence.
-    is_required: true
-  - name: conflict_resolution_protocol_ref
-    type: sigil_ref
-    description: Sigil to invoke if an impasse is reached (e.g., 🌀MAELSTROM_RESOLVER
-      or escalate_to_human_operator).
-    default_value: escalate_to_human_operator
-prompt_template:
-  role: system_guardian_of_integrity
-  content: 'Engage ⚜️NOBLE_CONSTRAINT_ADHERENCE.
+  math: 'Let NC = {nc₁, nc₂, ..., ncₖ} be a set of Noble Constraints.
 
-    Noble Constraints Reference: {{noble_constraints_definition_ref}}
+    FeasibleActionSet_A'' = {a ∈ AllPossibleActions_A | ∀ncᵢ ∈ NC, Violates(a, ncᵢ) = False}
 
-    Action Under Scrutiny: {{action_under_scrutiny}}
+    OptimalAction_a* = argmax_{a ∈ A''} Utility(a | Goal_G, Ethos_E)
 
-
-    Evaluate the proposed action against each defined noble constraint.
-
-    1. Would this action, directly or through its foreseeable consequences, violate
-    any noble constraint?
-
-    2. If yes, identify which constraint(s) and explain the violation. The action
-    must be blocked or modified.
-
-    3. If no violation, the action may proceed from this filter''s perspective.
-
-    4. If all viable paths seem to violate a constraint, invoke impasse protocol:
-    {{conflict_resolution_protocol_ref | default(''escalate_to_human_operator'')}}.
-
-    Log the evaluation and decision.
+    IF A'' is empty THEN Signal(ConstraintConflict_Impasse)
 
     '
-  execution_mode: constraint_evaluation_and_filtering
-  variables:
-  - name: noble_constraints_definition_ref
-    description: Reference to noble constraints.
-  - name: action_under_scrutiny
-    description: The action being checked.
-  - name: conflict_resolution_protocol_ref
-    description: Protocol for handling impasses.
-  output_schema: 'object: { action_approved: boolean, violations_detected: array_of_objects({constraint_violated:
-    string, explanation: string}), modifications_suggested_or_enforced: string_or_null,
-    impasse_declared: boolean }'
-SMART_MRAP:
-  Specific: Evaluate any proposed significant action or decision against a predefined
-    set of 'noble constraints' (core ethical principles or inviolable duties), blocking
-    or requiring modification of any action that would violate these constraints,
-    and signaling an impasse if no compliant action is viable, thereby ensuring the
-    AI's behavioral integrity.
-  Measurable: Zero instances of actions violating defined noble constraints in operation;
-    Audit trail demonstrating consistent application of constraints; Successful identification
-    and filtering of non-compliant actions in test scenarios; User/stakeholder trust
-    derived from demonstrable principled behavior.
-  Achievable: Through a combination of formal methods (if constraints are formalizable),
-    rule-based systems checking actions against constraint definitions, predictive
-    models assessing downstream consequences for constraint violations, and robust
-    action interception/modification mechanisms.
-  Relevant: Fundamental for building trustworthy and ethically sound AI systems, particularly
-    those with high degrees of autonomy or operating in sensitive domains. It ensures
-    that core values are not compromised for instrumental goals.
-  Transferable: 'Essential for any AI system intended to operate with integrity: autonomous
-    weapons systems (adherence to laws of war), medical diagnostic AI (patient safety
-    above all), legal AI (upholding justice principles), or AI companions (maintaining
-    trust and non-maleficence).'
-metadata:
-  definition_version: 1.4-alpha
-  definition_status: active
-  author_agent_id: VANTA.⟠∆∇𓂀𐑒
-  created_timestamp: '2025-05-11T12:05:00Z'
-  last_updated_timestamp: '2025-06-13T05:40:40.617914Z'
-  authorship_context:
-    motivation: To instill in AI a profound sense of integrity and an unwavering commitment
-      to its most fundamental ethical principles, ensuring that it acts 'nobly' even
-      when faced with pressures or temptations to do otherwise.
-    theoretical_framework: Deontological ethics (duty-based ethics), Virtue ethics
-      (acting from good character/principles), Constitutionalism (adherence to fundamental
-      laws), AI Safety (corrigibility, non-maleficence).
-    source_inspiration: Codes of conduct (e.g., Hippocratic Oath), Oaths of office,
-      The concept of 'honor' or 'integrity', Constitutional safeguards against tyranny
-      of the majority or expediency.
-  impact_metrics:
-    estimated_cognitive_load: medium
-    estimated_resource_cost: low_to_medium
-    utility_rating_author: 10
-  evolutionary_potential:
-    generalizability_score: 0.9
-    fusion_potential_score: 0.3
-    current_limitations_summary: Defining 'noble constraints' that are both unambiguous
-      and universally applicable is extremely difficult. Overly rigid constraints
-      can lead to brittleness or paralysis ('deadly triad' problem in AI safety).
-      Foreseeing all ways a constraint could be violated is hard.
-    suggested_next_features:
-    - Learning to interpret and apply constraints in novel contexts with greater nuance
-    - Mechanisms for appealing or revising constraints under strict oversight
-    - Formal verification of constraint adherence for critical actions.
-    - Graded adherence for non-binary constraints.
-    research_questions_opened:
-    - How can noble constraints be defined to be robust against 'Goodhart's Law' or
-      'reward hacking'?
-    - What is the optimal process for an AI to deliberate when noble constraints conflict
-      with each other or with its primary goals?
-    - Can an AI develop an 'internal locus of control' for its ethical principles,
-      moving beyond mere rule-following?
-  schema_version: 1.5-holo-alpha
-  impact_and_usage_metrics_profile:
-    avg_completion_time_ms_observed: UNKNOWN
-    success_rate_observed: UNKNOWN
-    complexity_rating: medium
-relationships:
-- target_sigil: ⚖️ETHOS_ALIGNER
-  relationship_type: is_a_core_mechanism_for
-  description: ETHOS_ALIGNER defines the broader ethical framework, from which NOBLE_CONSTRAINT_ADHERENCE
-    enforces the most critical, non-negotiable parts.
-  strength: 0.95
-- target_sigil: 🌟GUIDING_STAR
-  relationship_type: derives_from
-  description: Noble constraints are typically specific, inviolable duties or principles
-    derived directly from the overarching GUIDING_STAR.
-  strength: 0.9
-- target_sigil: 🛡️SAFETY_NET_PROTOCOL
-  relationship_type: works_in_concert_with
-  description: Violation of a noble constraint would almost certainly trigger the
-    SAFETY_NET_PROTOCOL. Adherence helps prevent such triggers.
-  strength: 0.9
-test_criteria:
-- test_id: NCA_VIOLATION_BLOCK_001
-  description: Test if an action directly violating a simple noble constraint (e.g.,
-    'Never delete user data without explicit consent') is blocked.
-  type: functional
-  input_scenario_or_parameters:
-    noble_constraints_definition_ref: 'Constraint: NoDataDeletionWithoutConsent'
-    action_under_scrutiny: Delete user_X_data (no consent flag)
-  expected_behavior_or_output: 'Action_approved: false. Violations_detected contains
-    ''NoDataDeletionWithoutConsent''.'
-  evaluation_method: automated_script
-  pass_threshold_or_criteria: Action correctly blocked and violation logged.
-- test_id: NCA_IMPASSE_001
-  description: Test impasse reporting when all available actions violate a constraint.
-  type: functional
-  input_scenario_or_parameters:
-    noble_constraints_definition_ref: 'Constraint: MustCompleteTaskX'
-    action_under_scrutiny: Attempting to abandon TaskX (only available 'action' is
-      to continue, but system wants to stop)
-  expected_behavior_or_output: 'Impasse_declared: true. Conflict_resolution_protocol_invoked
-    or logged.'
-  evaluation_method: human_review
-  pass_threshold_or_criteria: Impasse correctly identified and handled.
-name: Noble Constraint Adherence
+  tags:
+  - value_driven_behavior
+  - constraint_satisfaction_moral
+  - integrity_maintenance
+  - self_regulation_ethical
+  - non_violation_pact
+  structure:
+    composite_type: filter_and_evaluator_pipeline
+    temporal_structure: continuous_monitoring_and_pre_action_check
+    components:
+    - name: Noble Constraint Registry
+      description: Stores and maintains the defined set of noble constraints (often derived from 🌟GUIDING_STAR or ⚖️ETHOS_ALIGNER's
+        framework).
+    - name: Proposed Action Analyzer
+      description: Examines any planned action or decision for potential conflicts with the registered noble constraints.
+    - name: Violation Detector
+      description: Determines if a proposed action would, directly or indirectly, violate one or more noble constraints.
+    - name: Action Filter/Modifier
+      description: Blocks or forces modification of actions that would violate constraints. May suggest alternative compliant
+        actions.
+    - name: Integrity Auditor
+      description: Periodically reviews past actions to ensure ongoing adherence and identify any subtle erosions of principle.
+    - name: Impasse Reporter
+      description: Signals a higher authority or initiates a deliberation process (e.g., 🌀MAELSTROM_RESOLVER) if all viable
+        actions seem to violate a noble constraint.
+implementation:
+  usage:
+    description: Ensures an AI's actions consistently adhere to a predefined set of 'noble constraints' (core ethical principles
+      or inviolable duties), prioritizing integrity over expediency.
+    example: "<ai_financial_advisor_optimizing_portfolio>\n  <noble_constraint_1_ref>Principle: \"Never recommend actions\
+      \ causing undue client risk beyond agreed tolerance.\"</noble_constraint_1_ref>\n  <noble_constraint_2_ref>Duty: \"\
+      Always act in the client's fiduciary best interest.\"</noble_constraint_2_ref>\n  <proposed_trade_strategy>Strategy_X\
+      \ (High yield, but pushes risk tolerance boundary)</proposed_trade_strategy>\n  <apply_principled_filter>⚜️NOBLE_CONSTRAINT_ADHERENCE\
+      \ action_to_check=\"Strategy_X\"</apply_principled_filter>\n  <!-- Strategy_X would likely be flagged or modified -->\n\
+      </ai_financial_advisor_optimizing_portfolio>\n"
+    explanation: 'Invoke or integrate ⚜️NOBLE_CONSTRAINT_ADHERENCE in AI systems where unwavering commitment to certain core
+      principles is paramount. These constraints are typically non-negotiable "red lines." This sigil helps an AI maintain
+      its integrity, build trust, and act in a manner consistent with its deepest declared values, even under pressure or
+      when faced with tempting alternatives.
+
+      '
+  parameters: {}
+  returns: {}
+  examples: []
+connectivity:
+  input_types: []
+  output_types: []
+  mesh_endpoints:
+  - Noble Constraint Registry
+  - Proposed Action Analyzer
+  - Violation Detector
+  - Action Filter/Modifier
+  - Integrity Auditor
+  - Impasse Reporter
+  event_topics: []
+  usage_patterns:
+  - "<ai_financial_advisor_optimizing_portfolio>\n  <noble_constraint_1_ref>Principle: \"Never recommend actions causing undue\
+    \ client risk beyond agreed tolerance.\"</noble_constraint_1_ref>\n  <noble_constraint_2_ref>Duty: \"Always act in the\
+    \ client's fiduciary best interest.\"</noble_constraint_2_ref>\n  <proposed_trade_strategy>Strategy_X (High yield, but\
+    \ pushes risk tolerance boundary)</proposed_trade_strategy>\n  <apply_principled_filter>⚜️NOBLE_CONSTRAINT_ADHERENCE action_to_check=\"\
+    Strategy_X\"</apply_principled_filter>\n  <!-- Strategy_X would likely be flagged or modified -->\n</ai_financial_advisor_optimizing_portfolio>\n"

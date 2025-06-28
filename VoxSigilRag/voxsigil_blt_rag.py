@@ -17,11 +17,29 @@ import yaml
 
 # Import real implementations instead of stubs
 from BLT.blt_rag_compression import PatchAwareCompressor, PatchAwareValidator
+
 from VoxSigilRag.voxsigil_blt import (
     ByteLatentTransformerEncoder,
     SigilPatchEncoder,
 )
-from VoxSigilRag.voxsigil_rag import VoxSigilRAG
+
+# Lazy import VoxSigilRAG to avoid heavy dependencies at startup
+VoxSigilRAG = None
+
+
+def get_voxsigil_rag():
+    """Lazy loader for VoxSigilRAG to avoid heavy startup imports."""
+    global VoxSigilRAG
+    if VoxSigilRAG is None:
+        try:
+            from VoxSigilRag.voxsigil_rag import VoxSigilRAG as _VoxSigilRAG
+
+            VoxSigilRAG = _VoxSigilRAG
+        except ImportError as e:
+            print(f"Warning: VoxSigilRAG not available: {e}")
+            VoxSigilRAG = object  # Fallback
+    return VoxSigilRAG
+
 
 # Configure logging
 logging.basicConfig(
@@ -30,14 +48,18 @@ logging.basicConfig(
 logger = logging.getLogger("VoxSigilBLTRag")
 
 
-class BLTEnhancedRAG(VoxSigilRAG):
-    """
-    BLT-enhanced RAG system that extends the standard VoxSigil RAG.
+def create_blt_enhanced_rag_class():
+    """Create BLTEnhancedRAG class with lazy loading of VoxSigilRAG."""
+    VoxSigilRAGClass = get_voxsigil_rag()
 
-    This RAG system integrates Byte Latent Transformer concepts for improved
-    entropy-based byte-level processing, patch-based embeddings, and dynamic
-    computation allocation.
-    """
+    class BLTEnhancedRAG(VoxSigilRAGClass):
+        """
+        BLT-enhanced RAG system that extends the standard VoxSigil RAG.
+
+        This RAG system integrates Byte Latent Transformer concepts for improved
+        entropy-based byte-level processing, patch-based embeddings, and dynamic
+        computation allocation.
+        """
 
     def __init__(
         self,
@@ -106,9 +128,13 @@ class BLTEnhancedRAG(VoxSigilRAG):
         self.patch_encoder = SigilPatchEncoder(entropy_threshold=entropy_threshold)
 
         # Initialize validator and compressor
-        self.patch_validator = PatchAwareValidator(entropy_threshold=entropy_threshold + 0.1)
+        self.patch_validator = PatchAwareValidator(
+            entropy_threshold=entropy_threshold + 0.1
+        )
 
-        self.patch_compressor = PatchAwareCompressor(entropy_threshold=entropy_threshold)
+        self.patch_compressor = PatchAwareCompressor(
+            entropy_threshold=entropy_threshold
+        )
 
         # BLT configuration
         self.blt_hybrid_weight = blt_hybrid_weight
@@ -132,7 +158,9 @@ class BLTEnhancedRAG(VoxSigilRAG):
         """  # Use the BLT patch encoder
         return self.patch_encoder.encode(text)
 
-    def _validate_sigil(self, sigil_data: Dict[str, Any]) -> Tuple[bool, List[Dict[str, Any]]]:
+    def _validate_sigil(
+        self, sigil_data: Dict[str, Any]
+    ) -> Tuple[bool, List[Dict[str, Any]]]:
         """
         Validate a sigil with BLT-based patch validation.
 
@@ -162,7 +190,9 @@ class BLTEnhancedRAG(VoxSigilRAG):
         # Combine results
         return is_valid and blt_valid, issues + blt_issues
 
-    def precompute_all_embeddings(self, force_recompute: bool = False, batch_size: int = 32) -> int:
+    def precompute_all_embeddings(
+        self, force_recompute: bool = False, batch_size: int = 32
+    ) -> int:
         """
         Override to use BLT-based embeddings for precomputation.
 
@@ -289,7 +319,9 @@ class BLTEnhancedRAG(VoxSigilRAG):
             sigil_embedding = self.patch_encoder.encode(text_to_embed)
 
             # Compute similarity
-            similarity = self.patch_encoder.calculate_similarity(query_embedding, sigil_embedding)
+            similarity = self.patch_encoder.calculate_similarity(
+                query_embedding, sigil_embedding
+            )
 
             # If above threshold, add to results
             if similarity >= min_score_threshold:
@@ -367,7 +399,9 @@ class BLTEnhancedRAG(VoxSigilRAG):
         # Add at least one BLT term to ensure the query is augmented
         if augmented_query == query:  # If no augmentation happened in parent
             # Add a relevant BLT term
-            blt_term = blt_terms[hash(query) % len(blt_terms)]  # Deterministic selection
+            blt_term = blt_terms[
+                hash(query) % len(blt_terms)
+            ]  # Deterministic selection
             augmented_query = f"{query} {blt_term}"
             logger.info(f"BLT augmentation: '{query}' -> '{augmented_query}'")
 
@@ -424,7 +458,9 @@ class BLTEnhancedRAG(VoxSigilRAG):
                             )
 
                 except (ValueError, TypeError) as e:
-                    logger.warning(f"Error parsing last_updated for BLT recency boost: {e}")
+                    logger.warning(
+                        f"Error parsing last_updated for BLT recency boost: {e}"
+                    )
 
         return boosted_sigils
 
@@ -512,20 +548,26 @@ class BLTEnhancedRAG(VoxSigilRAG):
             effective_query = self._augment_query(query)
         else:
             effective_query = query
-            logger.info(f"Processing query with BLT-enhanced RAG: '{effective_query[:50]}...'")
+            logger.info(
+                f"Processing query with BLT-enhanced RAG: '{effective_query[:50]}...'"
+            )
 
         # Determine entropy characteristics for this query
         try:
             patches = self.blt_encoder.create_patches(effective_query)
             entropy_scores = [p.entropy for p in patches]
-            avg_entropy = sum(entropy_scores) / len(entropy_scores) if entropy_scores else 0.5
+            avg_entropy = (
+                sum(entropy_scores) / len(entropy_scores) if entropy_scores else 0.5
+            )
         except (AttributeError, Exception) as e:
             # Improved fallback if create_patches is not available or fails
             logger.warning(
                 f"Error using create_patches method: {e}. Using patch_encoder fallback instead."
             )
             _, entropy_scores = self.patch_encoder.analyze_entropy(effective_query)
-            avg_entropy = sum(entropy_scores) / len(entropy_scores) if entropy_scores else 0.5
+            avg_entropy = (
+                sum(entropy_scores) / len(entropy_scores) if entropy_scores else 0.5
+            )
 
             # Create a simple Patch class for compatibility
             class Patch:
@@ -544,7 +586,9 @@ class BLTEnhancedRAG(VoxSigilRAG):
                 start_idx = i * chunk_size
                 end_idx = min(start_idx + chunk_size, len(effective_query))
                 content = (
-                    effective_query[start_idx:end_idx] if start_idx < len(effective_query) else ""
+                    effective_query[start_idx:end_idx]
+                    if start_idx < len(effective_query)
+                    else ""
                 )
                 patches.append(Patch(content, score))
 
@@ -558,7 +602,9 @@ class BLTEnhancedRAG(VoxSigilRAG):
             # High entropy, maybe use standard
             if not use_blt_encoding:
                 embedding_method = "standard"
-                logger.info(f"Using standard embedding (high entropy: {avg_entropy:.2f})")
+                logger.info(
+                    f"Using standard embedding (high entropy: {avg_entropy:.2f})"
+                )
 
         # Retrieve relevant sigils
         try:
@@ -590,7 +636,9 @@ class BLTEnhancedRAG(VoxSigilRAG):
             if apply_recency_boost:
                 sigils_with_scores = self._apply_recency_boost(sigils_with_scores)
                 # Re-sort after boosting
-                sigils_with_scores.sort(key=lambda x: x.get("_similarity_score", 0.0), reverse=True)
+                sigils_with_scores.sort(
+                    key=lambda x: x.get("_similarity_score", 0.0), reverse=True
+                )
 
             # Select top sigils
             selected_sigils = sigils_with_scores[:num_sigils]
@@ -601,7 +649,9 @@ class BLTEnhancedRAG(VoxSigilRAG):
                     selected_sigils, max_additional=max_fusion_sigils
                 )
                 # Re-sort after fusion
-                selected_sigils.sort(key=lambda x: x.get("_similarity_score", 0.0), reverse=True)
+                selected_sigils.sort(
+                    key=lambda x: x.get("_similarity_score", 0.0), reverse=True
+                )
 
             # Optimize context if enabled
             if enable_context_optimization:
@@ -622,8 +672,13 @@ class BLTEnhancedRAG(VoxSigilRAG):
             formatted_context = "\n\n---\n\n".join(formatted_parts)
 
             # If BLT compression is enabled and we're over budget, apply it
-            if self.enable_patch_compression and len(formatted_context) > max_context_chars:
-                compressed_context, ratio = self.patch_compressor.compress(formatted_context)
+            if (
+                self.enable_patch_compression
+                and len(formatted_context) > max_context_chars
+            ):
+                compressed_context, ratio = self.patch_compressor.compress(
+                    formatted_context
+                )
                 logger.info(
                     f"Applied BLT compression: {len(formatted_context)} → {len(compressed_context)} chars ({ratio:.2f} ratio)"
                 )
@@ -635,7 +690,9 @@ class BLTEnhancedRAG(VoxSigilRAG):
             logger.error(f"Error in BLT-enhanced RAG process: {e}", exc_info=True)
             return f"Error retrieving context: {str(e)}", []
 
-    def format_sigil_for_prompt(self, sigil: Dict[str, Any], detail_level: str = "standard") -> str:
+    def format_sigil_for_prompt(
+        self, sigil: Dict[str, Any], detail_level: str = "standard"
+    ) -> str:
         """
         Format a sigil for inclusion in a prompt, with BLT enhancements.
 
@@ -658,7 +715,11 @@ class BLTEnhancedRAG(VoxSigilRAG):
             if "entropy" in blt_data:
                 entropy_val = blt_data["entropy"]
                 entropy_desc = (
-                    "high" if entropy_val > 0.7 else "medium" if entropy_val > 0.4 else "low"
+                    "high"
+                    if entropy_val > 0.7
+                    else "medium"
+                    if entropy_val > 0.4
+                    else "low"
                 )
                 blt_info.append(f"Entropy: {entropy_desc} ({entropy_val:.2f})")
 
@@ -709,7 +770,9 @@ class BLTEnhancedRAG(VoxSigilRAG):
         remaining_quota = max_additional
 
         # For each base sigil, try to find related ones
-        for base_sigil in base_sigils[: min(3, len(base_sigils))]:  # Only use top N base sigils
+        for base_sigil in base_sigils[
+            : min(3, len(base_sigils))
+        ]:  # Only use top N base sigils
             # Get sigil ID for tracking
             base_id = base_sigil.get("sigil", "")
             if not base_id:
@@ -746,7 +809,9 @@ class BLTEnhancedRAG(VoxSigilRAG):
                         continue
 
                 if not patch_entropies:
-                    logger.debug(f"No valid entropy values for patches in base_sigil {base_id}")
+                    logger.debug(
+                        f"No valid entropy values for patches in base_sigil {base_id}"
+                    )
                     continue
 
                 base_entropy = sum(patch_entropies) / len(patch_entropies)
@@ -766,7 +831,9 @@ class BLTEnhancedRAG(VoxSigilRAG):
                         other_patches = self.blt_encoder.create_patches(other_text)
 
                         if not other_patches:
-                            logger.debug(f"No patches generated for other_sigil {other_id}")
+                            logger.debug(
+                                f"No patches generated for other_sigil {other_id}"
+                            )
                             continue
 
                         # Safely calculate entropy
@@ -781,7 +848,9 @@ class BLTEnhancedRAG(VoxSigilRAG):
                         if not other_patch_entropies:
                             continue
 
-                        other_entropy = sum(other_patch_entropies) / len(other_patch_entropies)
+                        other_entropy = sum(other_patch_entropies) / len(
+                            other_patch_entropies
+                        )
 
                         # Compare patch entropy profiles
                         max_entropy = max(base_entropy, other_entropy)
@@ -793,7 +862,9 @@ class BLTEnhancedRAG(VoxSigilRAG):
                             )
 
                         # If entropy profiles are similar enough, add to results
-                        if entropy_similarity > 0.85:  # High entropy similarity threshold
+                        if (
+                            entropy_similarity > 0.85
+                        ):  # High entropy similarity threshold
                             related_data = other_sigil.copy()
                             related_data["_fusion_reason"] = (
                                 f"blt_entropy_match:{base_id}({entropy_similarity:.2f})"
@@ -829,7 +900,9 @@ class BLTEnhancedRAG(VoxSigilRAG):
 
         return result_list
 
-    def _validate_sigil_data(self, sigil_data: Dict[str, Any], file_path: str = None) -> bool:
+    def _validate_sigil_data(
+        self, sigil_data: Dict[str, Any], file_path: str = None
+    ) -> bool:
         """
         BLT-enhanced validation of sigil data.
 
@@ -881,7 +954,9 @@ class BLTEnhancedRAG(VoxSigilRAG):
             self._using_normalized_json = False
 
         if self._using_normalized_json:
-            logger.info(f"Loading normalized JSON files from {self.voxsigil_library_path}")
+            logger.info(
+                f"Loading normalized JSON files from {self.voxsigil_library_path}"
+            )
             # Load JSON files from normalized directory
             json_files = list(self.voxsigil_library_path.glob("**/*.json"))
             if not json_files:
@@ -908,7 +983,9 @@ class BLTEnhancedRAG(VoxSigilRAG):
                 logger.info(f"Loading YAML files from {self.voxsigil_library_path}")
                 yaml_files = list(self.voxsigil_library_path.glob("**/*.voxsigil"))
                 if not yaml_files:
-                    logger.warning(f"No YAML files found in {self.voxsigil_library_path}")
+                    logger.warning(
+                        f"No YAML files found in {self.voxsigil_library_path}"
+                    )
 
                 loaded_sigils = []
                 for yaml_path in yaml_files:
@@ -935,7 +1012,11 @@ class BLTEnhancedRAG(VoxSigilRAG):
         Returns:
             List of sigil data dictionaries
         """
-        if refresh or not hasattr(self, "_loaded_sigils") or self._loaded_sigils is None:
+        if (
+            refresh
+            or not hasattr(self, "_loaded_sigils")
+            or self._loaded_sigils is None
+        ):
             self._loaded_sigils = self._load_sigil_files()
             logger.info(
                 f"Loaded {len(self._loaded_sigils)} sigils from {self.voxsigil_library_path}"
@@ -969,13 +1050,13 @@ class BLTEnhancedRAG(VoxSigilRAG):
         """
         try:
             # Process query through BLT-enhanced RAG
-            formatted_context, sigils = self.create_rag_context(query=query_text, num_sigils=top_k)
+            formatted_context, sigils = self.create_rag_context(
+                query=query_text, num_sigils=top_k
+            )
             return sigils
         except Exception as e:
             logger.error(f"Error in BLTEnhancedRAG query: {e}")
             return []
-
-
 
 
 def analyze_entropy(self, text):

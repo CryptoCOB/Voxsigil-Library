@@ -45,16 +45,26 @@ class PipelineStatusWidget(QWidget):
         active_layout = QGridLayout(active_group)
 
         # Pipeline metrics
-        self.active_count_label = VoxSigilWidgetFactory.create_label("Active Pipelines: --", "info")
-        self.queued_count_label = VoxSigilWidgetFactory.create_label("Queued: --", "info")
+        self.active_count_label = VoxSigilWidgetFactory.create_label(
+            "Active Pipelines: --", "info"
+        )
+        self.queued_count_label = VoxSigilWidgetFactory.create_label(
+            "Queued: --", "info"
+        )
         self.completed_today_label = VoxSigilWidgetFactory.create_label(
             "Completed Today: --", "info"
         )
-        self.failed_today_label = VoxSigilWidgetFactory.create_label("Failed Today: --", "info")
+        self.failed_today_label = VoxSigilWidgetFactory.create_label(
+            "Failed Today: --", "info"
+        )
 
         # GPU/Resource usage
-        self.gpu_usage_label = VoxSigilWidgetFactory.create_label("GPU Usage: --%", "info")
-        self.memory_usage_label = VoxSigilWidgetFactory.create_label("Memory Usage: --%", "info")
+        self.gpu_usage_label = VoxSigilWidgetFactory.create_label(
+            "GPU Usage: --%", "info"
+        )
+        self.memory_usage_label = VoxSigilWidgetFactory.create_label(
+            "Memory Usage: --%", "info"
+        )
 
         self.gpu_progress = VoxSigilWidgetFactory.create_progress_bar()
         self.memory_progress = VoxSigilWidgetFactory.create_progress_bar()
@@ -75,9 +85,13 @@ class PipelineStatusWidget(QWidget):
         stats_group.setStyleSheet(VoxSigilStyles.get_group_box_stylesheet())
         stats_layout = QGridLayout(stats_group)
 
-        self.total_epochs_label = VoxSigilWidgetFactory.create_label("Total Epochs: --", "info")
+        self.total_epochs_label = VoxSigilWidgetFactory.create_label(
+            "Total Epochs: --", "info"
+        )
         self.avg_loss_label = VoxSigilWidgetFactory.create_label("Avg Loss: --", "info")
-        self.best_accuracy_label = VoxSigilWidgetFactory.create_label("Best Accuracy: --", "info")
+        self.best_accuracy_label = VoxSigilWidgetFactory.create_label(
+            "Best Accuracy: --", "info"
+        )
         self.training_time_label = VoxSigilWidgetFactory.create_label(
             "Total Training Time: --", "info"
         )
@@ -90,7 +104,9 @@ class PipelineStatusWidget(QWidget):
         layout.addWidget(stats_group)
 
         # Status Indicator
-        self.pipeline_status = VoxSigilWidgetFactory.create_label("⏳ Initializing...", "info")
+        self.pipeline_status = VoxSigilWidgetFactory.create_label(
+            "⏳ Initializing...", "info"
+        )
         layout.addWidget(self.pipeline_status)
 
     def refresh_status(self):
@@ -139,7 +155,9 @@ class PipelineStatusWidget(QWidget):
                 for i in range(torch.cuda.device_count()):
                     memory_reserved = torch.cuda.memory_reserved(i)
                     total_memory = torch.cuda.get_device_properties(i).total_memory
-                    gpu_usage = max(gpu_usage, int((memory_reserved / total_memory) * 100))
+                    gpu_usage = max(
+                        gpu_usage, int((memory_reserved / total_memory) * 100)
+                    )
 
             # Real memory usage
             memory_info = psutil.virtual_memory()
@@ -153,7 +171,11 @@ class PipelineStatusWidget(QWidget):
                 "has_real_data": True,
             }
 
-            return training_data if training_data["active_count"] > 0 or gpu_usage > 5 else None
+            return (
+                training_data
+                if training_data["active_count"] > 0 or gpu_usage > 5
+                else None
+            )
 
         except Exception as e:
             logger.debug(f"Could not get real training data: {e}")
@@ -169,7 +191,9 @@ class PipelineStatusWidget(QWidget):
         # Estimate other metrics based on real data
         import random
 
-        completed_today = random.randint(active_count, active_count * 3) if active_count > 0 else 0
+        completed_today = (
+            random.randint(active_count, active_count * 3) if active_count > 0 else 0
+        )
         failed_today = random.randint(0, max(1, active_count // 2))
 
         self.active_count_label.setText(f"Active Pipelines: {active_count}")
@@ -183,17 +207,25 @@ class PipelineStatusWidget(QWidget):
         self.memory_progress.setValue(memory_usage)
 
         # Training stats with realistic values
-        epochs = random.randint(50, 500) if active_count > 0 else random.randint(100, 1000)
-        loss = round(random.uniform(0.1, 1.5) if active_count > 0 else random.uniform(0.5, 2.5), 3)
+        epochs = (
+            random.randint(50, 500) if active_count > 0 else random.randint(100, 1000)
+        )
+        loss = round(
+            random.uniform(0.1, 1.5) if active_count > 0 else random.uniform(0.5, 2.5),
+            3,
+        )
         accuracy = round(
-            random.uniform(0.75, 0.95) if active_count > 0 else random.uniform(0.7, 0.99), 3
+            random.uniform(0.75, 0.95)
+            if active_count > 0
+            else random.uniform(0.7, 0.99),
+            3,
         )
         training_time = f"{random.randint(1, 24)}h {random.randint(10, 59)}m"
 
         self.total_epochs_label.setText(f"Total Epochs: {epochs}")
         self.avg_loss_label.setText(f"Avg Loss: {loss}")
         self.best_accuracy_label.setText(f"Best Accuracy: {accuracy}")
-        self.total_training_time_label.setText(f"Total Training Time: {training_time}")
+        self.training_time_label.setText(f"Total Training Time: {training_time}")
 
         # Update status indicator
         status_color = "#4CAF50" if active_count > 0 else "#FF9800"
@@ -217,7 +249,9 @@ class PipelineStatusWidget(QWidget):
         # More realistic patterns
         active_count = random.randint(1, 4) if is_work_hours else random.randint(0, 2)
         queued_count = random.randint(0, 2) if active_count > 2 else 0
-        completed_today = random.randint(5, 15) if is_work_hours else random.randint(2, 8)
+        completed_today = (
+            random.randint(5, 15) if is_work_hours else random.randint(2, 8)
+        )
         failed_today = random.randint(0, 2)
 
         # GPU usage patterns (higher during work hours)
@@ -244,7 +278,7 @@ class PipelineStatusWidget(QWidget):
         self.total_epochs_label.setText(f"Total Epochs: {epochs}")
         self.avg_loss_label.setText(f"Avg Loss: {loss}")
         self.best_accuracy_label.setText(f"Best Accuracy: {accuracy}")
-        self.total_training_time_label.setText(f"Total Training Time: {training_time}")
+        self.training_time_label.setText(f"Total Training Time: {training_time}")
 
         # Enhanced status
         status_text = f"🔄 Enhanced Simulation ({active_count} simulated)"
@@ -283,7 +317,7 @@ class PipelineStatusWidget(QWidget):
         self.total_epochs_label.setText(f"Total Epochs: {epochs}")
         self.avg_loss_label.setText(f"Avg Loss: {loss}")
         self.best_accuracy_label.setText(f"Best Accuracy: {accuracy}")
-        self.total_training_time_label.setText(f"Total Training Time: {training_time}")
+        self.training_time_label.setText(f"Total Training Time: {training_time}")
 
         # Update status indicator
         status_text = "🔄 Basic Simulation"
@@ -305,7 +339,9 @@ class PipelineTree(QWidget):
         layout = QVBoxLayout(self)
 
         self.tree = QTreeWidget()
-        self.tree.setHeaderLabels(["Pipeline", "Status", "Progress", "ETA", "Last Updated"])
+        self.tree.setHeaderLabels(
+            ["Pipeline", "Status", "Progress", "ETA", "Last Updated"]
+        )
         self.tree.setStyleSheet(VoxSigilStyles.get_list_widget_stylesheet())
 
         layout.addWidget(self.tree)
@@ -357,7 +393,9 @@ class PipelineTree(QWidget):
                 elif status == "Queued":
                     child.setForeground(1, QColor(VoxSigilStyles.COLORS["warning"]))
                 else:
-                    child.setForeground(1, QColor(VoxSigilStyles.COLORS["text_secondary"]))
+                    child.setForeground(
+                        1, QColor(VoxSigilStyles.COLORS["text_secondary"])
+                    )
 
                 parent.addChild(child)
 
@@ -381,7 +419,9 @@ class TrainingLogsWidget(QWidget):
         self.auto_scroll_checkbox = VoxSigilWidgetFactory.create_checkbox("Auto-scroll")
         self.auto_scroll_checkbox.setChecked(True)
 
-        self.filter_level = VoxSigilWidgetFactory.create_button("Filter: ALL", "default")
+        self.filter_level = VoxSigilWidgetFactory.create_button(
+            "Filter: ALL", "default"
+        )
         clear_btn = VoxSigilWidgetFactory.create_button("Clear Logs", "default")
         clear_btn.clicked.connect(self.clear_logs)
 
@@ -434,7 +474,9 @@ class TrainingLogsWidget(QWidget):
         else:
             color = VoxSigilStyles.COLORS["text_primary"]
 
-        self.log_display.append(f'<span style="color: {color}">{formatted_message}</span>')
+        self.log_display.append(
+            f'<span style="color: {color}">{formatted_message}</span>'
+        )
 
         if self.auto_scroll_checkbox.isChecked():
             self.log_display.moveCursor(self.log_display.textCursor().End)
@@ -507,7 +549,9 @@ class TrainingPipelinesTab(QWidget):
         layout = QVBoxLayout(self)
 
         # Title
-        title = VoxSigilWidgetFactory.create_label("🏗️ Training Pipelines Monitor", "title")
+        title = VoxSigilWidgetFactory.create_label(
+            "🏗️ Training Pipelines Monitor", "title"
+        )
         layout.addWidget(title)
 
         # Main tab widget
@@ -538,7 +582,9 @@ class TrainingPipelinesTab(QWidget):
         self.connection_status = VoxSigilWidgetFactory.create_label(
             "🔌 Connected to Training Monitor", "info"
         )
-        self.last_update = VoxSigilWidgetFactory.create_label("Last update: --:--:--", "info")
+        self.last_update = VoxSigilWidgetFactory.create_label(
+            "Last update: --:--:--", "info"
+        )
 
         status_layout.addWidget(self.connection_status)
         status_layout.addStretch()
@@ -553,7 +599,9 @@ class TrainingPipelinesTab(QWidget):
         """Setup event bus streaming subscriptions"""
         if self.event_bus:
             # Subscribe to training-related events
-            self.event_bus.subscribe("training.pipeline.status", self.on_pipeline_status)
+            self.event_bus.subscribe(
+                "training.pipeline.status", self.on_pipeline_status
+            )
             self.event_bus.subscribe("training.log", self.on_training_log)
             self.event_bus.subscribe("training.experiment", self.on_experiment_update)
 
@@ -572,7 +620,9 @@ class TrainingPipelinesTab(QWidget):
         """Handle pipeline status updates"""
         try:
             self.pipeline_update.emit(data)
-            self.last_update.setText(f"Last update: {datetime.now().strftime('%H:%M:%S')}")
+            self.last_update.setText(
+                f"Last update: {datetime.now().strftime('%H:%M:%S')}"
+            )
         except Exception as e:
             logger.error(f"Error processing pipeline status: {e}")
 

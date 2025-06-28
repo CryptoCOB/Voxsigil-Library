@@ -20,11 +20,13 @@ except ImportError:
     RealSupervisorConnector = None
 
 try:
-    from BLT import BLTEncoder
+    from BLT.hybrid_blt import BLTEncoder
 
     HOMOTOPY_COMPRESSION_AVAILABLE = True
+    BLT_ENCODER_AVAILABLE = True
 except ImportError:
     BLT_ENCODER_AVAILABLE = False
+    HOMOTOPY_COMPRESSION_AVAILABLE = False
     BLTEncoder = None
 
 try:

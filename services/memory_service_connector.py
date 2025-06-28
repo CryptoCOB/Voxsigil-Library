@@ -12,10 +12,41 @@ from typing import Any, Dict, List, Optional
 from Vanta.core.UnifiedMemoryInterface import UnifiedMemoryInterface
 from Vanta.core.UnifiedVantaCore import get_vanta_core
 
+# HOLO-1.5 imports
+try:
+    from ..agents.base import BaseAgent, vanta_agent, CognitiveMeshRole
+    HOLO_AVAILABLE = True
+except ImportError:
+    # Fallback for non-HOLO environments
+    def vanta_agent(**kwargs):
+        def decorator(cls):
+            return cls
+        return decorator
+    
+    class CognitiveMeshRole:
+        CONNECTOR = "connector"
+    
+    class BaseAgent:
+        def __init__(self, *args, **kwargs):
+            pass
+        
+        async def async_init(self):
+            pass
+    
+    HOLO_AVAILABLE = False
+
 logger = logging.getLogger("Vanta.MemoryServiceConnector")
 
 
-class MemoryServiceConnector:
+@vanta_agent(
+    name="memory_service_connector",
+    subsystem="memory_services",
+    mesh_role=CognitiveMeshRole.CONNECTOR,
+    description="Service connector for UnifiedMemoryInterface integration",
+    capabilities=["memory_connectivity", "service_registration", "interface_bridging"],
+    models=["auto"]
+)
+class MemoryServiceConnector(BaseAgent if HOLO_AVAILABLE else object):
     """
     Connector to register UnifiedMemoryInterface with UnifiedVantaCore
     and provide memory services to other components.
@@ -28,6 +59,10 @@ class MemoryServiceConnector:
         Args:
             config: Configuration object with memory settings
         """
+        # Initialize BaseAgent if HOLO is available
+        if HOLO_AVAILABLE:
+            super().__init__()
+        
         self.config = config
         self.vanta_core = get_vanta_core()
         self.memory_interface = None

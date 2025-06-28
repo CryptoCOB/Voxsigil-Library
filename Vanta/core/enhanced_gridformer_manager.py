@@ -15,6 +15,21 @@ Key Features:
 - Integration with VantaCore's task adaptation profiles
 """
 
+# HOLO-1.5 Registration System
+try:
+    from core.base import CognitiveMeshRole, vanta_core_module
+except ImportError:
+    # Safe fallback decorator that accepts parameters
+    def vanta_core_module(**kwargs):
+        def decorator(cls):
+            return cls
+
+        return decorator
+
+    class CognitiveMeshRole:
+        PROCESSOR = "processor"
+
+
 import logging
 import threading
 import time
@@ -26,9 +41,8 @@ import numpy as np
 import torch
 import torch.nn as nn
 import torch.optim as optim
-from torch.utils.data import DataLoader
-
 from core.simple_grid_former_handler import SimpleGridFormerHandler
+from torch.utils.data import DataLoader
 
 # Import VantaCore components
 try:
@@ -104,7 +118,9 @@ class PerformanceTracker:
         if len(self.loss_history) < 5:
             return 0.0
         recent = list(self.loss_history)[-5:]
-        earlier = list(self.loss_history)[-10:-5] if len(self.loss_history) >= 10 else recent
+        earlier = (
+            list(self.loss_history)[-10:-5] if len(self.loss_history) >= 10 else recent
+        )
         return float(np.mean(recent) - np.mean(earlier))
 
     def _calculate_convergence_rate(self) -> float:
@@ -118,7 +134,9 @@ class PerformanceTracker:
     def get_performance_summary(self) -> Dict[str, float]:
         """Get current performance summary for meta-learning"""
         return {
-            "current_loss": float(self.loss_history[-1]) if self.loss_history else float("inf"),
+            "current_loss": float(self.loss_history[-1])
+            if self.loss_history
+            else float("inf"),
             # Convert deques to lists so NumPy receives a compatible sequence type
             "avg_loss": float(np.mean(list(self.loss_history)))
             if self.loss_history
@@ -171,7 +189,9 @@ class MetaLearningIntegrator:
                     logger.warning(f"Could not connect to advanced meta learner: {e}")
 
                 # Register task with meta learner if available
-                if advanced_meta_learner and hasattr(advanced_meta_learner, "register_task"):
+                if advanced_meta_learner and hasattr(
+                    advanced_meta_learner, "register_task"
+                ):
                     advanced_meta_learner.register_task(
                         task_id=self.task_id,
                         task_features={
@@ -204,12 +224,16 @@ class MetaLearningIntegrator:
             try:
                 components = self.vanta_core.list_components()
                 if "advanced_meta_learner" in components:
-                    advanced_meta_learner = self.vanta_core.get_component("advanced_meta_learner")
+                    advanced_meta_learner = self.vanta_core.get_component(
+                        "advanced_meta_learner"
+                    )
             except Exception:
                 pass
 
             # Update with performance if available
-            if advanced_meta_learner and hasattr(advanced_meta_learner, "update_performance"):
+            if advanced_meta_learner and hasattr(
+                advanced_meta_learner, "update_performance"
+            ):
                 advanced_meta_learner.update_performance(
                     task_id=self.task_id, performance=performance_score
                 )
@@ -239,12 +263,16 @@ class MetaLearningIntegrator:
             try:
                 components = self.vanta_core.list_components()
                 if "advanced_meta_learner" in components:
-                    advanced_meta_learner = self.vanta_core.get_component("advanced_meta_learner")
+                    advanced_meta_learner = self.vanta_core.get_component(
+                        "advanced_meta_learner"
+                    )
             except Exception:
                 pass
 
             # Get parameters if available
-            if advanced_meta_learner and hasattr(advanced_meta_learner, "get_task_parameters"):
+            if advanced_meta_learner and hasattr(
+                advanced_meta_learner, "get_task_parameters"
+            ):
                 return advanced_meta_learner.get_task_parameters(self.task_id)
             else:
                 return {}
@@ -252,7 +280,9 @@ class MetaLearningIntegrator:
             logger.error(f"Failed to get adaptive parameters from VantaCore: {e}")
             return {}
 
-    def transfer_knowledge(self, source_domain: str, target_performance: float) -> Dict[str, Any]:
+    def transfer_knowledge(
+        self, source_domain: str, target_performance: float
+    ) -> Dict[str, Any]:
         """Initiate cross-task knowledge transfer"""
         if not self.vanta_core:
             return {}
@@ -265,21 +295,30 @@ class MetaLearningIntegrator:
         }
 
         self.knowledge_transfer_events.append(transfer_record)
-        logger.info(f"Recorded knowledge transfer request from domain '{source_domain}'")
+        logger.info(
+            f"Recorded knowledge transfer request from domain '{source_domain}'"
+        )
 
         return {"recorded": True}
 
-    def _calculate_meta_learning_score(self, performance_summary: Dict[str, float]) -> float:
+    def _calculate_meta_learning_score(
+        self, performance_summary: Dict[str, float]
+    ) -> float:
         """Convert training metrics to meta-learning performance score"""
         # Combine multiple performance indicators
         loss_score = 1.0 / (1.0 + performance_summary.get("current_loss", 1.0))
         trend_score = max(0.0, -performance_summary.get("performance_trend", 0.0))
         convergence_score = max(0.0, performance_summary.get("convergence_rate", 0.0))
-        stability_score = 1.0 / (1.0 + performance_summary.get("gradient_stability", 1.0))
+        stability_score = 1.0 / (
+            1.0 + performance_summary.get("gradient_stability", 1.0)
+        )
 
         # Weighted combination
         meta_score = (
-            0.4 * loss_score + 0.3 * trend_score + 0.2 * convergence_score + 0.1 * stability_score
+            0.4 * loss_score
+            + 0.3 * trend_score
+            + 0.2 * convergence_score
+            + 0.1 * stability_score
         )
 
         return np.clip(meta_score, 0.0, 1.0)
@@ -288,7 +327,9 @@ class MetaLearningIntegrator:
 class AdaptiveOptimizer:
     """Adaptive optimizer that responds to meta-learning signals"""
 
-    def __init__(self, base_optimizer: optim.Optimizer, adaptation_strength: float = 0.1):
+    def __init__(
+        self, base_optimizer: optim.Optimizer, adaptation_strength: float = 0.1
+    ):
         self.base_optimizer = base_optimizer
         self.adaptation_strength = adaptation_strength
         self.adaptation_decisions = []
@@ -313,9 +354,13 @@ class AdaptiveOptimizer:
         )
 
         self.adaptation_decisions.append(decision)
-        logger.info(f"Adapted learning rate: {current_lr:.6f} -> {adapted_lr:.6f} ({reason})")
+        logger.info(
+            f"Adapted learning rate: {current_lr:.6f} -> {adapted_lr:.6f} ({reason})"
+        )
 
-    def adapt_momentum(self, new_momentum: float, reason: str = "meta_learning") -> None:
+    def adapt_momentum(
+        self, new_momentum: float, reason: str = "meta_learning"
+    ) -> None:
         """Adapt momentum based on meta-learning feedback"""
         current_momentum = self.base_optimizer.param_groups[0].get("momentum", 0.0)
 
@@ -342,6 +387,18 @@ class AdaptiveOptimizer:
         )
 
 
+@vanta_core_module(
+    name="enhanced_gridformer_manager",
+    subsystem="neural_training",
+    mesh_role=CognitiveMeshRole.PROCESSOR,
+    description="Enhanced GridFormer Manager with VantaCore meta-learning integration",
+    capabilities=[
+        "adaptive_training",
+        "meta_learning",
+        "neural_optimization",
+        "cross_component_learning",
+    ],
+)
 class EnhancedGridFormerManager:
     """
     Enhanced GridFormer Manager with VantaCore Meta-Learning Integration
@@ -351,7 +408,7 @@ class EnhancedGridFormerManager:
     real-time parameter optimization.
     """
 
-    def __init(
+    def __init__(
         self,
         hidden_dim: int = 256,
         num_layers: int = 6,
@@ -386,13 +443,19 @@ class EnhancedGridFormerManager:
         self.adaptation_thread = None
         self.adaptation_interval = 10  # Adapt every N batches
 
-        logger.info("Enhanced GridFormer Manager initialized with VantaCore integration")
+        logger.info(
+            "Enhanced GridFormer Manager initialized with VantaCore integration"
+        )
         logger.info(f"VantaCore available: {VANTA_AVAILABLE}")
 
-    def _initialize_vanta_core(self, config_path: Optional[str]) -> Optional[UnifiedVantaCore]:
+    def _initialize_vanta_core(
+        self, config_path: Optional[str]
+    ) -> Optional[UnifiedVantaCore]:
         """Initialize VantaCore with meta-learning capabilities"""
         if not VANTA_AVAILABLE:
-            logger.warning("VantaCore components not available, running in standalone mode")
+            logger.warning(
+                "VantaCore components not available, running in standalone mode"
+            )
             return None
 
         try:
@@ -453,7 +516,9 @@ class EnhancedGridFormerManager:
 
         try:
             for epoch in range(num_epochs):
-                logger.info(f"⚔️ Epoch {epoch + 1}/{num_epochs} - GridFormer Neural-Symbolic Fusion")
+                logger.info(
+                    f"⚔️ Epoch {epoch + 1}/{num_epochs} - GridFormer Neural-Symbolic Fusion"
+                )
 
                 # Training phase with real-time adaptation
                 self.handler.model.train()
@@ -552,7 +617,9 @@ class EnhancedGridFormerManager:
         )
         history["knowledge_transfers"].append(final_transfer)
 
-        logger.info("🗡️✨ GridFormer Awakening Complete - Neural-Symbolic Fusion Achieved ⚔️")
+        logger.info(
+            "🗡️✨ GridFormer Awakening Complete - Neural-Symbolic Fusion Achieved ⚔️"
+        )
         return history
 
     def _calculate_gradient_norm(self) -> float:
@@ -604,7 +671,10 @@ class EnhancedGridFormerManager:
 
         if adaptive_params:
             # Adapt learning rate
-            if "learning_rate" in adaptive_params and self.adaptive_optimizer is not None:
+            if (
+                "learning_rate" in adaptive_params
+                and self.adaptive_optimizer is not None
+            ):
                 self.adaptive_optimizer.adapt_learning_rate(
                     adaptive_params["learning_rate"], "vanta_meta_learning"
                 )
@@ -634,7 +704,9 @@ class EnhancedGridFormerManager:
 
         return val_loss / len(val_dataloader)
 
-    def _save_model_with_meta_context(self, filepath: str, epoch: int, meta_score: float) -> None:
+    def _save_model_with_meta_context(
+        self, filepath: str, epoch: int, meta_score: float
+    ) -> None:
         """Save model with meta-learning context"""
         # Get base model state
         model = (
@@ -690,13 +762,17 @@ class EnhancedGridFormerManager:
                         if trend > 0.1:  # Performance degrading
                             self.meta_integrator.transfer_knowledge(
                                 source_domain="stagnation_recovery",
-                                target_performance=self.performance_tracker.loss_history[-1],
+                                target_performance=self.performance_tracker.loss_history[
+                                    -1
+                                ],
                             )
 
                 except Exception as e:
                     logger.error(f"Adaptation monitoring error: {e}")
 
-        self.adaptation_thread = threading.Thread(target=adaptation_monitor, daemon=True)
+        self.adaptation_thread = threading.Thread(
+            target=adaptation_monitor, daemon=True
+        )
         self.adaptation_thread.start()
         logger.info("Adaptation monitoring thread started")
 
@@ -736,7 +812,9 @@ class EnhancedGridFormerManager:
                     logger.debug(f"Applied meta-context to prediction: {meta_context}")
 
             except Exception as e:
-                logger.warning(f"Meta-enhancement failed, using standard prediction: {e}")
+                logger.warning(
+                    f"Meta-enhancement failed, using standard prediction: {e}"
+                )
 
         return predictions
 

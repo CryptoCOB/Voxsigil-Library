@@ -1,302 +1,94 @@
-sigil: 📚CURRICULUM_SCAFFOLD
-alias: LearningPathDesigner
-tag: KnowledgeAcquisitionScaffold
-tags:
-- pedagogical_framework
-- skill_progression_map
-- ai_training_plan_structure
-- knowledge_dependency_graph_for_learning
-- educational_program_template
-is_cognitive_primitive: false
-consciousness_scaffold: false
-cognitive_scaffold: true
-symbolic_scaffold: true
-principle: 'The 📚CURRICULUM_SCAFFOLD provides a structured framework for designing,
-  managing, and
+schema_version: 1.5-holo-alpha
+meta:
+  sigil: 📚CURRICULUM_SCAFFOLD
+  alias: LearningPathDesigner
+  tag: KnowledgeAcquisitionScaffold
+  upgraded_from: legacy
+  upgrade_timestamp: '2025-06-24T17:14:15.692881'
+  source_file: scaffolds\curriculum.voxsigil
+holo_mesh:
+  is_cognitive_primitive: false
+  mesh_compatibility: holo-1.5-alpha
+  registration_ready: true
+  vanta_core_integration:
+    event_support: true
+    async_capable: true
+    memory_aware: true
+  temporal_pattern: sequential_progression_with_conditional_branching
+cognitive:
+  principle: 'The 📚CURRICULUM_SCAFFOLD provides a structured framework for designing, managing, and
 
-  executing a learning pathway for an AI agent or system. It defines learning objectives,
+    executing a learning pathway for an AI agent or system. It defines learning objectives,
 
-  sequences learning modules or experiences, specifies prerequisites, outlines assessment
+    sequences learning modules or experiences, specifies prerequisites, outlines assessment
 
-  methods, and tracks progress. It transforms ad-hoc learning into a deliberate, scaffolded
+    methods, and tracks progress. It transforms ad-hoc learning into a deliberate, scaffolded
 
-  process of knowledge and skill acquisition, moving from foundational concepts to
-  advanced
+    process of knowledge and skill acquisition, moving from foundational concepts to advanced
 
-  mastery. It''s the AI''s "lesson plan" and "degree program" architect.
+    mastery. It''s the AI''s "lesson plan" and "degree program" architect.
 
-  '
-structure:
-  composite_type: directed_acyclic_graph_or_tree
-  temporal_structure: sequential_progression_with_conditional_branching
-  components:
-  - name: 🎓 Learning Objectives Definer
-    description: Specifies the overall knowledge, skills, or competencies the AI should
-      acquire through the curriculum.
-    sigil_ref: 🎯GOAL_HIERARCHY_SCAFFOLD
-  - name: 📖 Module Sequencer & Prerequisite Manager
-    description: Organizes learning modules (e.g., datasets, simulation exercises,
-      theoretical lessons, other sigils to master) in a logical progression, defining
-      dependencies.
-  - name: 🧠 Content & Experience Delivery Interface
-    description: Provides access to or generates the actual learning materials, training
-      data, or simulated experiences for each module.
-    sigil_ref: 🌿ECOSYSTEM_SIMULATION_SCAFFOLD
-  - name: ⚖️ Assessment & Mastery Engine
-    description: Defines and administers tests, evaluations, or performance benchmarks
-      to assess understanding and skill acquisition for each module. May use 🧐CRITICAL_LENS.
-  - name: 📈 Progress Tracker & Competency Modeler
-    description: Monitors the learner's progress through the curriculum, updates a
-      model of their current competencies, and identifies areas needing remediation
-      or advancement.
-  - name: 🔄 Adaptive Learning Pathway Adjuster
-    description: Dynamically modifies the learning path based on learner performance,
-      interests, or changing objectives (e.g., skipping mastered modules, adding remedial
-      content).
-usage:
-  description: Defines and manages a structured learning pathway for an AI, including
-    objectives, modules, prerequisites, assessments, and progress tracking. This scaffold
-    guides the AI's knowledge and skill development.
-  example: "<ai_training_program name=\"NaturalLanguageMastery_Level1\">\n  <apply_learning_framework>\U0001F4DA\
-    CURRICULUM_SCAFFOLD</apply_learning_framework>\n  <parameters>\n    <overall_learning_objective>Achieve\
-    \ 90% accuracy on GLUE benchmark tasks.</overall_learning_objective>\n    <module_sequence_definition_ref>NLMastery_L1_Modules.voxsigil</module_sequence_definition_ref>\n\
-    \    <assessment_strategy>AutomatedBenchmarkTesting_PerModule</assessment_strategy>\n\
+    '
+  math: {}
+  tags:
+  - pedagogical_framework
+  - skill_progression_map
+  - ai_training_plan_structure
+  - knowledge_dependency_graph_for_learning
+  - educational_program_template
+  structure:
+    composite_type: directed_acyclic_graph_or_tree
+    temporal_structure: sequential_progression_with_conditional_branching
+    components:
+    - name: 🎓 Learning Objectives Definer
+      description: Specifies the overall knowledge, skills, or competencies the AI should acquire through the curriculum.
+      sigil_ref: 🎯GOAL_HIERARCHY_SCAFFOLD
+    - name: 📖 Module Sequencer & Prerequisite Manager
+      description: Organizes learning modules (e.g., datasets, simulation exercises, theoretical lessons, other sigils to
+        master) in a logical progression, defining dependencies.
+    - name: 🧠 Content & Experience Delivery Interface
+      description: Provides access to or generates the actual learning materials, training data, or simulated experiences
+        for each module.
+      sigil_ref: 🌿ECOSYSTEM_SIMULATION_SCAFFOLD
+    - name: ⚖️ Assessment & Mastery Engine
+      description: Defines and administers tests, evaluations, or performance benchmarks to assess understanding and skill
+        acquisition for each module. May use 🧐CRITICAL_LENS.
+    - name: 📈 Progress Tracker & Competency Modeler
+      description: Monitors the learner's progress through the curriculum, updates a model of their current competencies,
+        and identifies areas needing remediation or advancement.
+    - name: 🔄 Adaptive Learning Pathway Adjuster
+      description: Dynamically modifies the learning path based on learner performance, interests, or changing objectives
+        (e.g., skipping mastered modules, adding remedial content).
+implementation:
+  usage:
+    description: Defines and manages a structured learning pathway for an AI, including objectives, modules, prerequisites,
+      assessments, and progress tracking. This scaffold guides the AI's knowledge and skill development.
+    example: "<ai_training_program name=\"NaturalLanguageMastery_Level1\">\n  <apply_learning_framework>\U0001F4DACURRICULUM_SCAFFOLD</apply_learning_framework>\n\
+      \  <parameters>\n    <overall_learning_objective>Achieve 90% accuracy on GLUE benchmark tasks.</overall_learning_objective>\n\
+      \    <module_sequence_definition_ref>NLMastery_L1_Modules.voxsigil</module_sequence_definition_ref>\n    <assessment_strategy>AutomatedBenchmarkTesting_PerModule</assessment_strategy>\n\
+      \  </parameters>\n  <assign_learner agent_id=\"NLG_Agent_Candidate3\"/>\n</ai_training_program>\n"
+    explanation: 'The 📚CURRICULUM_SCAFFOLD is used when an AI''s development involves systematic learning rather than just
+      pre-programming or unstructured experience. It''s crucial for training specialized AIs, for lifelong learning agents,
+      or for systems that need to acquire complex skills in a step-by-step manner. It provides the "scaffolding" for effective
+      learning.
+
+      '
+  parameters: {}
+  returns: {}
+  examples: []
+connectivity:
+  input_types: []
+  output_types: []
+  mesh_endpoints:
+  - 🎓 Learning Objectives Definer
+  - 📖 Module Sequencer & Prerequisite Manager
+  - 🧠 Content & Experience Delivery Interface
+  - ⚖️ Assessment & Mastery Engine
+  - 📈 Progress Tracker & Competency Modeler
+  - 🔄 Adaptive Learning Pathway Adjuster
+  event_topics: []
+  usage_patterns:
+  - "<ai_training_program name=\"NaturalLanguageMastery_Level1\">\n  <apply_learning_framework>\U0001F4DACURRICULUM_SCAFFOLD</apply_learning_framework>\n\
+    \  <parameters>\n    <overall_learning_objective>Achieve 90% accuracy on GLUE benchmark tasks.</overall_learning_objective>\n\
+    \    <module_sequence_definition_ref>NLMastery_L1_Modules.voxsigil</module_sequence_definition_ref>\n    <assessment_strategy>AutomatedBenchmarkTesting_PerModule</assessment_strategy>\n\
     \  </parameters>\n  <assign_learner agent_id=\"NLG_Agent_Candidate3\"/>\n</ai_training_program>\n"
-  explanation: 'The 📚CURRICULUM_SCAFFOLD is used when an AI''s development involves
-    systematic learning rather than just pre-programming or unstructured experience.
-    It''s crucial for training specialized AIs, for lifelong learning agents, or for
-    systems that need to acquire complex skills in a step-by-step manner. It provides
-    the "scaffolding" for effective learning.
-
-    '
-activation_context:
-  trigger_conditions:
-  - Initiating a new AI training program
-  - An AI identifies a skill gap and requests learning
-  - Need to systematically onboard an AI to a new domain or task
-  - Designing an educational experience for an AI (or by an AI for humans)
-  preconditions:
-  - Clearly defined learning objectives
-  - Availability of or means to generate learning content/experiences for modules
-  - Mechanisms for assessing learning outcomes
-  required_capabilities:
-  - knowledge_representation_for_curriculum_structure
-  - content_delivery_or_generation
-  - assessment_and_evaluation_tools
-  - progress_tracking_and_learner_modeling
-  - adaptive_path_adjustment_logic
-  supported_modalities:
-  - symbolic_knowledge_modules
-  - textual_learning_materials
-  - interactive_simulation_exercises
-  - code_repositories_for_practice
-  - question_answer_datasets_for_testing
-  contraindications:
-  - For innate, hardcoded capabilities
-  - For purely emergent learning without explicit structure (though curriculum can
-    guide emergence)
-  - If learning objectives are entirely unknown or unknowable.
-parameterization_schema:
-  parameters:
-  - name: curriculum_definition_source_ref
-    type: string
-    description: Reference to the specification defining learning objectives, modules,
-      sequences, and assessments.
-    is_required: true
-  - name: learner_id_or_profile_ref
-    type: string
-    description: Identifier of the AI agent undergoing the curriculum, or a profile
-      of its current knowledge state.
-    is_required: true
-  - name: adaptation_level
-    type: enum
-    allowed_values:
-    - fixed_path
-    - minor_adjustments_remedial
-    - fully_adaptive_path_generation
-    description: Degree to which the learning pathway can be dynamically adjusted
-      for the learner.
-    default_value: minor_adjustments_remedial
-  - name: mastery_threshold_default
-    type: number
-    description: Default performance level required to consider a module 'mastered'
-      (0.0 to 1.0).
-    value_range:
-      min: 0.0
-      max: 1.0
-    default_value: 0.85
-prompt_template:
-  role: system_pedagogue_ai_tutor
-  content: 'Engage 📚CURRICULUM_SCAFFOLD for Learner ''{{learner_id_or_profile_ref}}''.
-
-    Curriculum Definition: {{curriculum_definition_source_ref}}
-
-    Adaptation Level: {{adaptation_level | default(''minor_adjustments_remedial'')}}
-
-    Default Mastery Threshold: {{mastery_threshold_default | default(0.85)}}
-
-
-    Current Learning Focus: {{current_module_or_objective | default(''Determine next
-    optimal learning step'')}}
-
-    Process:
-
-    1. 🎓 Review overall Learning Objectives (from 🎯GoalHierarchy if linked).
-
-    2. 📖 Identify current/next module based on learner progress and prerequisites.
-
-    3. 🧠 Deliver content/experience for the current module. Consider 🌿EcosystemSimulation
-    for practice if applicable.
-
-    4. ⚖️ Assess learner performance on module using defined methods. Employ 🧐CRITICAL_LENS
-    for evaluating complex responses.
-
-    5. 📈 Update Progress Tracker and Competency Model.
-
-    6. 🔄 If adaptation enabled, adjust next steps based on performance (e.g., remedial
-    loop, skip ahead, deeper dive).
-
-    Report on learner progress, current module status, and next recommended learning
-    actions.
-
-    '
-  execution_mode: educational_orchestration
-  variables:
-  - name: curriculum_definition_source_ref
-    description: Reference to the curriculum structure.
-  - name: learner_id_or_profile_ref
-    description: The AI agent learning.
-  - name: adaptation_level
-    description: How adaptive the path is.
-  - name: mastery_threshold_default
-    description: Default mastery level.
-  - name: current_module_or_objective
-    description: Current focus of the learning process.
-  output_schema: 'object: { learner_id: string, current_module_id: string, module_status:
-    enum[''pending'', ''active'', ''passed'', ''failed'', ''remedial''], overall_progress_percentage:
-    number, next_recommended_module_id: string_or_null, competency_updates: object
-    }'
-SMART_MRAP:
-  Specific: Provide a structured framework to define, manage, and execute a learning
-    pathway for an AI, encompassing learning objectives, sequenced modules with prerequisites,
-    content/experience delivery, assessment methods, progress tracking, and adaptive
-    path adjustment, to facilitate systematic knowledge and skill acquisition.
-  Measurable: Learner's achievement of defined learning objectives; Performance on
-    module assessments (scores, completion times); Rate of progress through the curriculum;
-    Reduction in skill gaps over time; Learner 'engagement' metrics (if applicable,
-    e.g., for interactive learning).
-  Achievable: By using data structures (like DAGs) to represent curriculum structure,
-    linking to content repositories or generative modules, integrating with assessment
-    tools or oracles (like 🧐CRITICAL_LENS or specialized tests), and implementing
-    logic for progress tracking and adaptive sequencing.
-  Relevant: Essential for any AI system that needs to learn new skills or knowledge
-    in a structured way, moving beyond simple pre-training. Crucial for lifelong learning,
-    specialization, and upskilling of AI agents.
-  Transferable: Applicable to AI training systems across various domains (e.g., teaching
-    an AI medical diagnosis, programming, a new language, or a complex game strategy),
-    and can even be adapted for human computer-aided instruction systems.
-metadata:
-  definition_version: 1.4-alpha
-  definition_status: active
-  author_agent_id: VANTA.⟠∆∇𓂀𐑒
-  created_timestamp: '2025-05-11T12:45:00Z'
-  last_updated_timestamp: '2025-06-13T05:40:40.617914Z'
-  authorship_context:
-    motivation: To enable AI systems to learn in a more structured, efficient, and
-      adaptive manner, mirroring effective pedagogical principles and facilitating
-      deeper, more robust knowledge acquisition.
-    theoretical_framework: Instructional Design theories (e.g., Gagne's Nine Events
-      of Instruction, Bloom's Taxonomy), Curriculum theory, Mastery learning, Intelligent
-      Tutoring Systems (ITS) architecture, Knowledge Space Theory.
-    source_inspiration: University curricula and course syllabi, Skills trees in video
-      games, Apprenticeship models, Adaptive learning platforms for humans.
-  impact_metrics:
-    estimated_cognitive_load: medium_to_high
-    estimated_resource_cost: variable
-    utility_rating_author: 9
-  evolutionary_potential:
-    generalizability_score: 0.9
-    fusion_potential_score: 0.5
-    current_limitations_summary: Designing effective, comprehensive curricula is a
-      complex human task. Automating curriculum generation is still nascent. Assessing
-      deep understanding vs. rote memorization is hard. Personalizing paths effectively
-      for diverse AI learners is challenging.
-    suggested_next_features:
-    - Automated curriculum generation based on target competencies and existing knowledge
-    - AI self-assessment and learning goal proposal
-    - Collaborative curriculum design among AIs.
-    - Integration with 💡INSIGHT_NUCLEATOR for 'breakthrough' learning moments within
-      modules.
-    research_questions_opened:
-    - What are the most effective pedagogical strategies for AI learners with different
-      cognitive architectures?
-    - How can an AI learn to 'learn how to learn' more effectively by reflecting on
-      its curriculum experiences?
-    - Can curricula be designed to foster not just skills, but also 'wisdom' or ethical
-      understanding in AI?
-  schema_version: 1.5-holo-alpha
-  impact_and_usage_metrics_profile:
-    avg_completion_time_ms_observed: UNKNOWN
-    success_rate_observed: UNKNOWN
-    complexity_rating: medium
-relationships:
-- target_sigil: 🎯GOAL_HIERARCHY_SCAFFOLD
-  relationship_type: can_define_objectives_for_and_be_informed_by
-  description: Learning objectives in a CURRICULUM_SCAFFOLD are often goals within
-    a GOAL_HIERARCHY. Successfully completing a curriculum can unlock new capabilities,
-    thus informing the goal hierarchy.
-  strength: 0.85
-- target_sigil: 🌿ECOSYSTEM_SIMULATION_SCAFFOLD
-  relationship_type: can_provide_learning_environment_for_modules_in
-  description: Provides interactive environments for experiential learning modules
-    within a curriculum (e.g., an RL agent learning in a simulated world).
-  strength: 0.8
-- target_sigil: 🧐CRITICAL_LENS
-  relationship_type: can_be_used_for_assessment_within
-  description: Can be employed as an assessment tool within curriculum modules to
-    evaluate the learner's understanding or output quality.
-  strength: 0.7
-- target_sigil: 🧬NEXUS
-  relationship_type: can_be_a_content_source_for_modules_in
-  description: NEXUS can be used to fetch specific knowledge or data required for
-    a learning module.
-  strength: 0.6
-test_criteria:
-- test_id: CURR_SEQ_VALID_001
-  description: Test if a simple curriculum with 3 modules and one prerequisite (ModuleB
-    depends on ModuleA) is correctly structured and sequenced.
-  type: structural_validation
-  input_scenario_or_parameters:
-    curriculum_definition_source_ref: TestCurriculum_SimpleSeq.voxsigil
-  expected_behavior_or_output: Parsed curriculum shows ModuleA as a prerequisite for
-    ModuleB, and ModuleC can be independent or depend on B. Learning path correctly
-    suggests A then B.
-  evaluation_method: automated_script
-  pass_threshold_or_criteria: Correct prerequisite linking and sequencing.
-- test_id: CURR_PROGRESS_TRACK_001
-  description: Simulate a learner passing ModuleA. Verify progress tracker updates
-    correctly and next suggested module is ModuleB.
-  type: functional
-  input_scenario_or_parameters:
-    curriculum_ref: TestCurriculum_SimpleSeq.voxsigil
-    learner_id: TestLearner1
-    assessment_result: '{''module_id'':''ModuleA'', ''status'':''passed'', ''score'':0.9}'
-  expected_behavior_or_output: Learner profile shows ModuleA as passed. Next recommended
-    module is ModuleB.
-  evaluation_method: state_check
-  pass_threshold_or_criteria: Correct progress update and next module recommendation.
-- test_id: CURR_ADAPT_REMEDIAL_001
-  description: Simulate learner failing ModuleA. Verify adaptive pathway suggests
-    a remedial action or re-attempt if policy allows.
-  type: functional
-  input_scenario_or_parameters:
-    curriculum_ref: TestCurriculum_Adaptive.voxsigil
-    learner_id: TestLearner2
-    assessment_result: '{''module_id'':''ModuleA'', ''status'':''failed'', ''score'':0.4}'
-    adaptation_level: minor_adjustments_remedial
-  expected_behavior_or_output: Next recommended action is 'Remedial_Module_A_Prime'
-    or 'Reattempt_ModuleA_With_Support'.
-  evaluation_method: state_check_and_log_analysis
-  pass_threshold_or_criteria: Appropriate remedial action suggested based on adaptive
-    policy.
-name: Curriculum

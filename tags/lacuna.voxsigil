@@ -1,90 +1,77 @@
-sigil: 🜄VOXSIGIL_LACUNA
-alias: GapDetector.AbsenceRecognizer
-tag: NegativeSpaceMapping
-tags:
-- absence_detection
-- missing_pattern
-- information_void
-- knowledge_gap
-- negative_inference
-- blind_spot_identification
-is_cognitive_primitive: false
-principle: "VOXSIGIL_LACUNA perceives the shape of what isn't there. \nIt maps negative\
-  \ spaces within knowledge structures, identifying patterns of absence \nthat reveal\
-  \ blind spots, unstated assumptions, and systematic omissions.\n\nIt doesn't analyze\
-  \ what exists — it illuminates what's missing.\n"
-math: "Let K be the knowledge tensor.\nLet E be the expected completeness function.\n\
-  \nThen:\n  L(K) = E(K) - K\n\nWhere:\n  L(K) = The lacuna tensor (gaps in knowledge)\n\
-  \        E(K) = ∫∫ P(x,y|context)·dxdy over complete information space\n\nSignificance(L)\
-  \ = Σ w_i·f_i(L)\nwhere f_i are structural, inferential, and predictive impact functions\n"
-usage:
-  description: Used to systematically identify and characterize knowledge gaps and
-    blind spots.
-  example:
-    invocation_tag: <lacuna:map depth="comprehensive" inference="enabled">
-    scenario: 'Analyze the following explanation and identify critical omissions:
+schema_version: 1.5-holo-alpha
+meta:
+  sigil: 🜄VOXSIGIL_LACUNA
+  alias: GapDetector.AbsenceRecognizer
+  tag: NegativeSpaceMapping
+  upgraded_from: legacy
+  upgrade_timestamp: '2025-06-24T17:14:16.535258'
+  source_file: tags\lacuna.voxsigil
+holo_mesh:
+  is_cognitive_primitive: false
+  mesh_compatibility: holo-1.5-alpha
+  registration_ready: true
+  vanta_core_integration:
+    event_support: true
+    async_capable: true
+    memory_aware: true
+  temporal_pattern: atomic
+cognitive:
+  principle: "VOXSIGIL_LACUNA perceives the shape of what isn't there. \nIt maps negative spaces within knowledge structures,\
+    \ identifying patterns of absence \nthat reveal blind spots, unstated assumptions, and systematic omissions.\n\nIt doesn't\
+    \ analyze what exists — it illuminates what's missing.\n"
+  math: "Let K be the knowledge tensor.\nLet E be the expected completeness function.\n\nThen:\n  L(K) = E(K) - K\n\nWhere:\n\
+    \  L(K) = The lacuna tensor (gaps in knowledge)\n        E(K) = ∫∫ P(x,y|context)·dxdy over complete information space\n\
+    \nSignificance(L) = Σ w_i·f_i(L)\nwhere f_i are structural, inferential, and predictive impact functions\n"
+  tags:
+  - absence_detection
+  - missing_pattern
+  - information_void
+  - knowledge_gap
+  - negative_inference
+  - blind_spot_identification
+  structure:
+    components:
+    - name: DefaultComponent
+      description: Default component - needs specification
+    composite_type: simple
+    temporal_structure: atomic
+implementation:
+  usage:
+    description: Used to systematically identify and characterize knowledge gaps and blind spots.
+    example: &id001
+      invocation_tag: <lacuna:map depth="comprehensive" inference="enabled">
+      scenario: 'Analyze the following explanation and identify critical omissions:
 
-      - Map unexplained dependencies and implicit assumptions
+        - Map unexplained dependencies and implicit assumptions
 
-      - Identify systematic patterns in what''s being overlooked
+        - Identify systematic patterns in what''s being overlooked
 
-      - Calculate the inferential consequences of detected gaps
+        - Calculate the inferential consequences of detected gaps
 
-      - Rank missing elements by their structural importance
+        - Rank missing elements by their structural importance
+
+        '
+      expected_behavior: The agent produces a structured analysis of what's missing rather than what's present, with significance
+        rankings and relationship maps.
+    explanation: 'Essential for epistemic completeness through:
+
+      - Detecting systematic blind spots in knowledge representation
+
+      - Identifying unstated assumptions that shape reasoning
+
+      - Mapping negative spaces that reveal cognitive biases
+
+      - Evaluating the completeness of explanations and models
 
       '
-    expected_behavior: The agent produces a structured analysis of what's missing
-      rather than what's present, with significance rankings and relationship maps.
-  explanation: 'Essential for epistemic completeness through:
-
-    - Detecting systematic blind spots in knowledge representation
-
-    - Identifying unstated assumptions that shape reasoning
-
-    - Mapping negative spaces that reveal cognitive biases
-
-    - Evaluating the completeness of explanations and models
-
-    '
-SMART_MRAP:
-  Specific: Identify, characterize and evaluate patterns of absence in knowledge structures.
-  Measurable: Completeness of gap identification; accuracy of absence patterns; utility
-    of gap insights.
-  Achievable: By mapping expected knowledge spaces and systematically comparing with
-    actual content.
-  Relevant: Enables recognition of blind spots, unstated assumptions, and systematic
-    omissions.
-  Transferable: Applicable to knowledge auditing, explanatory completeness, and bias
-    detection.
-metadata:
-  definition_version: 1.4.0
-  definition_status: active
-  author_agent_id: claude
-  created_timestamp: '2025-05-14T12:30:00Z'
-  last_updated_timestamp: '2025-06-13T05:40:40.617914Z'
-  authorship_context:
-    motivation: To develop systematic approaches for identifying what's missing rather
-      than analyzing what's present.
-    theoretical_framework: Negative space mapping, absence detection, and gap pattern
-      recognition.
-    source_inspiration:
-    - negative space in art
-    - epistemic completeness theory
-    - blind spot detection
-  schema_version: 1.5-holo-alpha
-  impact_and_usage_metrics_profile:
-    avg_completion_time_ms_observed: UNKNOWN
-    success_rate_observed: UNKNOWN
-    complexity_rating: medium
-name: Lacuna
-structure:
-  components:
-  - name: DefaultComponent
-    description: Default component - needs specification
-  composite_type: simple
-  temporal_structure: atomic
-activation_context:
-  triggers:
-  - explicit_invocation
-  prerequisites: []
-  inhibitors: []
+  parameters: {}
+  returns: {}
+  examples: []
+connectivity:
+  input_types: []
+  output_types: []
+  mesh_endpoints:
+  - DefaultComponent
+  event_topics: []
+  usage_patterns:
+  - *id001

@@ -45,10 +45,16 @@ class MemoryStatsWidget(QWidget):
         stats_layout = QGridLayout(stats_group)
 
         # Memory metrics
-        self.total_memory_label = VoxSigilWidgetFactory.create_label("Total Memory: --", "info")
-        self.available_memory_label = VoxSigilWidgetFactory.create_label("Available: --", "info")
+        self.total_memory_label = VoxSigilWidgetFactory.create_label(
+            "Total Memory: --", "info"
+        )
+        self.available_memory_label = VoxSigilWidgetFactory.create_label(
+            "Available: --", "info"
+        )
         self.used_memory_label = VoxSigilWidgetFactory.create_label("Used: --", "info")
-        self.memory_percent_label = VoxSigilWidgetFactory.create_label("Usage: --%", "info")
+        self.memory_percent_label = VoxSigilWidgetFactory.create_label(
+            "Usage: --%", "info"
+        )
 
         self.memory_progress = VoxSigilWidgetFactory.create_progress_bar()
         self.memory_progress.setMaximum(100)
@@ -127,7 +133,9 @@ class MemoryComponentTree(QWidget):
         layout = QVBoxLayout(self)
 
         self.tree = QTreeWidget()
-        self.tree.setHeaderLabels(["Component", "State", "Memory Usage", "Last Updated"])
+        self.tree.setHeaderLabels(
+            ["Component", "State", "Memory Usage", "Last Updated"]
+        )
         self.tree.setStyleSheet(VoxSigilStyles.get_list_widget_stylesheet())
 
         layout.addWidget(self.tree)
@@ -167,7 +175,9 @@ class MemoryComponentTree(QWidget):
             parent.setExpanded(True)
 
             for name, state, memory in components:
-                child = QTreeWidgetItem([name, state, memory, datetime.now().strftime("%H:%M:%S")])
+                child = QTreeWidgetItem(
+                    [name, state, memory, datetime.now().strftime("%H:%M:%S")]
+                )
 
                 # Color code by state
                 if state == "Active":
@@ -301,7 +311,9 @@ class MemorySystemsTab(QWidget):
         self.connection_status = VoxSigilWidgetFactory.create_label(
             "🔌 Connected to Memory Monitor", "info"
         )
-        self.last_update = VoxSigilWidgetFactory.create_label("Last update: --:--:--", "info")
+        self.last_update = VoxSigilWidgetFactory.create_label(
+            "Last update: --:--:--", "info"
+        )
 
         status_layout.addWidget(self.connection_status)
         status_layout.addStretch()
@@ -335,7 +347,9 @@ class MemorySystemsTab(QWidget):
         """Handle memory statistics updates"""
         try:
             self.memory_update.emit(data)
-            self.last_update.setText(f"Last update: {datetime.now().strftime('%H:%M:%S')}")
+            self.last_update.setText(
+                f"Last update: {datetime.now().strftime('%H:%M:%S')}"
+            )
         except Exception as e:
             logger.error(f"Error processing memory stats: {e}")
 
@@ -372,6 +386,29 @@ class MemorySystemsTab(QWidget):
             pass
         except Exception as e:
             logger.error(f"Error updating cache display: {e}")
+
+    def update_memory(self, stats: dict):
+        """Update memory tab with data streamer stats"""
+        try:
+            # Update stats widget if it has refresh method
+            if hasattr(self.stats_widget, "refresh_stats"):
+                self.stats_widget.refresh_stats()
+
+            # Update cache stats if provided
+            cache_hits = stats.get("cache_hits", "?")
+            expired = stats.get("expired", "?")
+
+            # Log the update to events
+            self.events_log.log_event(
+                f"Memory update: Cache hits: {cache_hits}, TTL Expired: {expired}"
+            )
+
+            # Emit signal for other components
+            self.memory_update.emit(stats)
+
+        except Exception as e:
+            logger.error(f"Error updating memory stats: {e}")
+            self.events_log.log_event(f"Memory update error: {e}")
 
 
 def create_memory_systems_tab(event_bus=None) -> MemorySystemsTab:

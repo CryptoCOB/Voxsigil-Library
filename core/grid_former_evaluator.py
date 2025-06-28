@@ -29,12 +29,14 @@ from enum import Enum
 from .base import BaseCore, vanta_core_module, CognitiveMeshRole
 
 # Setup logging
+log_dir = Path(__file__).resolve().parent.parent / "working_gui" / "logs"
+log_dir.mkdir(exist_ok=True)
 logging.basicConfig(
     level=logging.INFO,
     format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
     handlers=[
         logging.StreamHandler(),
-        logging.FileHandler("logs/grid_former_eval.log", mode="a"),
+        logging.FileHandler(log_dir / "grid_former_eval.log", mode="a"),
     ],
 )
 logger = logging.getLogger("GridFormer-Evaluator")
@@ -45,8 +47,8 @@ sys.path.insert(0, str(project_root))
 
 # Import VoxSigil modules with graceful fallbacks
 try:
-    from ARC.data_loader import ARCDataLoader
-    from Gridformer.inference import GridFormerInference, InferenceStrategy
+    from utils.data_loader import ARCDataLoader
+    from core.end_to_end_arc_validation import GridFormerInference, InferenceStrategy
     from tools.utilities.model_utils import ModelLoader, discover_models, get_latest_models
 
     logger.info("✅ Successfully imported VoxSigil utility modules")
@@ -57,8 +59,8 @@ except ImportError as e:
     # Try alternative import paths
     try:
         sys.path.insert(0, str(project_root / "utils"))
-        from ARC.data_loader import ARCDataLoader
-        from inference import GridFormerInference, InferenceStrategy
+        from utils.data_loader import ARCDataLoader
+        from core.end_to_end_arc_validation import GridFormerInference, InferenceStrategy
         from model_utils import ModelLoader, discover_models, get_latest_models
 
         logger.info("✅ Successfully imported from utils directory")
@@ -131,14 +133,19 @@ class GridFormerEvaluator(BaseCore):
         super().__init__(vanta_core, config or {})
         
         self.output_dir = Path(output_dir)
-        self.output_dir.mkdir(parents=True, exist_ok=True)
-
-        # Initialize components
+        self.output_dir.mkdir(parents=True, exist_ok=True)        # Initialize components
         self.data_loader = ARCDataLoader()
         self.model_loader = ModelLoader()
-        self.inference_engine = GridFormerInference(
-            model_loader=self.model_loader, data_loader=self.data_loader
-        )
+        
+        # Initialize inference engine with proper fallback handling
+        try:
+            self.inference_engine = GridFormerInference(
+                model_loader=self.model_loader, data_loader=self.data_loader
+            )
+        except TypeError:
+            # Fallback for GridFormerInference that doesn't accept arguments
+            self.inference_engine = GridFormerInference()
+            logger.info("Using fallback GridFormerInference without arguments")
 
         # HOLO-1.5 Enhanced Features
         self.cognitive_metrics = {

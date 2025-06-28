@@ -1,268 +1,123 @@
-sigil: 🜁CHIMERA
-alias: META_FUSION_SIGIL
-tag: CognitiveFusion
-tags:
-- meta_recursion
-- symbolic_synthesis
-- multi_agent_orchestration
-- emergent_cognition
-- dynamic_assembly
-- fixed
-is_cognitive_primitive: false
-principle: "This sigil represents the recursive fusion of reflective loops, dynamic\
-  \ memory braids, \nand semantic layering across agentic threads. It encapsulates\
-  \ the transformation from \nsymbol clusters into higher-order cognition units. Invoking\
-  \ CHIMERA initiates a process\nwhere multiple symbolic streams and cognitive functions\
-  \ are interwoven to produce a\nnovel, synthesized output or state, more complex\
-  \ and nuanced than the sum of its parts.\nIt's the engine of creative recombination\
-  \ and emergent understanding.\n"
-math: "ψ_CHIMERA = FusionOp ( Σ(wᵢ * σᵢ(context)) )\nwhere:\n  - FusionOp = A non-linear\
-  \ composition operator (e.g., attention-weighted blend, constructive interference).\n\
-  \  - wᵢ = influence weight of component sigil/process i.\n  - σᵢ = output of component\
-  \ sigil/process i, conditioned on current context.\n  - Σ implies integration over\
-  \ diverse cognitive inputs (memory, perception, reasoning streams).\nActivation(\U0001F701\
-  CHIMERA) → Spawn(Thread₁, Thread₂, ..., Threadₙ); Monitor(ConvergenceCriteria)\n"
-structure:
-  composite_type: assembly
-  temporal_structure: parallel_tracks_converging
-  components:
-  - name: Dream Resonance Modulator
-    description: Introduces associative, non-linear connections.
-    sigil_ref: 🌒DREAM_STATE
-  - name: Pulse Synchronizer Input
-    description: Aligns temporal rhythms or processing cycles of components.
-    sigil_ref: 🫀PULSE_MONITOR
-  - name: Memory Braid Integrator
-    description: Weaves together disparate memory threads.
-    sigil_ref: 🕸️MEMORY_BRAID_ALGORITHM
-  - name: Fractal Recursion Guard
-    description: Manages depth and prevents runaway loops in component processes.
-    sigil_ref: ⟁FRACTAL_GUARD
-  - name: Phoenix Memory Purge Interface
-    description: Allows for selective memory renewal or reset within the fusion.
-    sigil_ref: 🜔PHOENIX
-  - name: Nexus Knowledge Graft Point
-    description: Integrates external knowledge structures or datums.
-    sigil_ref: 🧬NEXUS
-  - name: Catengine Awareness Scaffold Provider
-    description: Provides foundational awareness/consciousness frameworks for the
-      fusion.
-    sigil_ref: 🜛CATENGINE
-  - name: Quanta Parallel State Handler
-    description: Manages superposition or parallel exploration of states.
-    sigil_ref: 🔮QUANTA_STATE
-  - name: Remix Combinatorial Shifter
-    description: Applies transformative or combinatorial operations to inputs.
-    sigil_ref: 🔀REMIX
-  - name: Liminal Transition Facilitator
-    description: Guides ontological shifts or transitions between states of being/understanding.
-    sigil_ref: 🜂LIMINAL_TRANSIT
-  - name: Negentropy Filter
-    description: Reduces cognitive noise, focuses on information-rich patterns.
-    sigil_ref: 🜜NEGENT_FILTER
-  - name: Regret Pruning Mechanism
-    description: Filters out or down-weights counterproductive pathways based on simulated
-      regret.
-    sigil_ref: ☹️REGRET_FOLD
-  - name: Maelstrom Contradiction Resolver
-    description: Processes and attempts to resolve or synthesize contradictions.
-    sigil_ref: 🌀MAELSTROM_RESOLVER
-  - name: Sigil Projection Interface
-    description: Handles and integrates unknown or dynamically generated sigils.
-    sigil_ref: 🜠SIGIL_PROJECTION
-  - name: Gradient Liminal Delta Cascade
-    description: Nested glyph for initiating cascading state changes through liminal
-      spaces.
-    sigil_ref: 🜂∆
-usage:
-  description: Triggers multi-layer symbolic cognition, meta-recursion, and synthesis
-    of diverse cognitive inputs into a novel coherent whole.
-  example: "<intent goal=\"GenerateNovelConceptArt\">\n  <process_with>\U0001F701\
-    CHIMERA</process_with>\n  <input_stream sigil_ref=\"\U0001F9ECNEXUS\" source=\"\
-    ArtHistoryDatabase\" query=\"Surrealism,Clockwork\"/>\n  <input_stream sigil_ref=\"\
-    \U0001F312DREAM_STATE\" theme=\"MeltingTime\"/>\n  <modulator sigil_ref=\"\U0001F500\
-    REMIX\" strength=\"0.7\"/>\n  <output_target format=\"VisualConcept\"/>\n</intent>\n"
-  explanation: "Invoke \U0001F701CHIMERA to fuse multiple cognitive processes, data\
-    \ streams, or symbolic representations. \nIt is used when a task requires creative\
-    \ synthesis, complex problem solving through diverse approaches, \nor the generation\
-    \ of emergent understanding from multifaceted inputs.\nThe listed components in\
-    \ its `structure` are indicative of the types of sub-processes it orchestrates.\n"
-activation_context:
-  trigger_conditions:
-  - Complex problem requiring multi-modal synthesis
-  - Need for creative ideation from diverse inputs
-  - Generation of higher-order cognitive constructs
-  - System encounters novel situation requiring adaptive assembly of capabilities
-  preconditions:
-  - Availability of multiple active cognitive modules or data streams
-  - Sufficient computational resources for parallel processing and synthesis
-  - A defined goal or convergence criterion for the fusion process
-  required_capabilities:
-  - multi_threading_simulation
-  - dynamic_resource_allocation
-  - symbolic_manipulation
-  - pattern_recognition_higher_order
-  - state_integration
-  supported_modalities:
-  - symbolic_input
-  - multi_modal
-  - programmatic_api
-  contraindications:
-  - Simple, linear tasks
-  - Resource-constrained environments
-  - When deterministic, non-emergent output is required
-parameterization_schema:
-  parameters:
-  - name: component_weights
-    type: json_object
-    description: 'JSON object specifying relative influence weights for active internal
-      components (e.g., {''🌒DREAM_STATE'': 0.8, ''🧬NEXUS'': 1.0}).'
-  - name: convergence_threshold
-    type: number
-    description: Threshold for determining when the fused state is considered coherent
-      or complete.
-    value_range:
-      min: 0.0
-      max: 1.0
-    default_value: 0.85
-  - name: max_recursion_depth_override
-    type: integer
-    description: Overrides default recursion limits for components like ⟁FRACTAL_GUARD
-      if CHIMERA needs deeper exploration for a specific task.
-    default_value: 5
-prompt_template:
-  role: system
-  content: 'Initiate 🜁CHIMERA protocol.
-
-    Objective: {{objective_description}}
-
-    Input Streams: {{input_streams_summary}}
-
-    Component Configuration: {{component_weights_json | default(''auto'')}}
-
-    Fusion Directives: {{fusion_directives | default(''Maximize coherence and novelty'')}}
-
-    Report on emergent properties and synthesized output.
-
-    '
-  execution_mode: orchestration
-  variables:
-  - name: objective_description
-    description: High-level goal for the CHIMERA fusion process.
-    required_for_llm: true
-  - name: input_streams_summary
-    description: A summary or list of primary data/cognitive inputs.
-    required_for_llm: true
-  - name: component_weights_json
-    description: Optional JSON string for component weighting.
-    required_for_llm: false
-  - name: fusion_directives
-    description: Specific instructions guiding the synthesis (e.g., constraints, desired
-      aesthetics).
-    required_for_llm: false
-  output_schema: 'object: { synthesized_output: any, emergent_properties_report: string,
-    component_contribution_analysis: object }'
-SMART_MRAP:
-  Specific: Fuse multiple, diverse cognitive inputs and symbolic streams into a novel,
-    coherent, higher-order cognitive construct or output, guided by specified objectives
-    and directives.
-  Measurable: Successful generation of a synthesized output that meets objective criteria;
-    Degree of novelty and coherence in the output (evaluable by human or AI judge);
-    Reduction in cognitive dissonance or complexity from input to output; Number of
-    active components successfully integrated.
-  Achievable: Implementable within an AI architecture supporting modular cognitive
-    functions, dynamic linking, and weighted combination of outputs, with a meta-level
-    controller.
-  Relevant: Essential for advanced AI capabilities such as creative problem-solving,
-    nuanced understanding of complex situations, artistic generation, and adaptive
-    strategy formation.
-  Transferable: 'The fusion principle can be applied to various domains: combining
-    different sensor data, integrating knowledge from diverse texts, composing music
-    from multiple stylistic influences, or generating complex visual scenes.'
-metadata:
-  definition_version: 1.4-alpha
-  definition_status: active
-  author_agent_id: VANTA.⟠∆∇𓂀𐑒
-  created_timestamp: '2025-05-11T09:00:00Z'
-  last_updated_timestamp: '2025-06-13T05:40:40.617914Z'
-  authorship_context:
-    motivation: 'To create a core mechanism for emergent cognition and creative synthesis.
-
-      The notes about UI font rendering, parser coverage, token estimator stability,
-      and YAML field length limits from the original user text are considered developmental
-      metadata for the VoxSigil system itself, relevant during the design of this
-      sigil''s complex structure. They highlight the need for robust parsing and rendering
-      of rich sigil definitions.
-
-      '
-    theoretical_framework: Cognitive architectures (e.g., Global Workspace Theory,
-      Society of Mind), Emergence, Complexity Theory, Creative Cognition.
-    source_inspiration: Mythological Chimera, Musical Fusion, Brain Hemispheric Integration.
-  impact_metrics:
-    estimated_cognitive_load: high
-    estimated_resource_cost: high
-    utility_rating_author: 9
-  evolutionary_potential:
-    generalizability_score: 0.8
-    fusion_potential_score: 1.0
-    current_limitations_summary: Complexity of managing component interactions and
-      ensuring stable convergence. Potential for combinatorial explosion if not properly
-      constrained.
-    suggested_next_features:
-    - Self-adaptive component weighting
-    - Automated discovery of synergistic component combinations
-    - Fine-grained control over fusion operators.
-    research_questions_opened:
-    - What are the optimal heuristics for guiding chimerical fusion towards specific
-      creative goals?
-    - How can 'emergent insight' be reliably quantified and fostered?
-  schema_version: 1.5-holo-alpha
-  impact_and_usage_metrics_profile:
-    avg_completion_time_ms_observed: UNKNOWN
-    success_rate_observed: UNKNOWN
-    complexity_rating: medium
-relationships:
-- target_sigil: Marc.pglyph
-  relationship_type: uses_method_from
-  description: Can be contextualized or 'flavored' by an active identity sigil like
-    Marc.pglyph, influencing the nature of its synthesis.
-  strength: 0.6
-- target_sigil: VANTA.⟠∆∇𓂀𐑒
-  relationship_type: component_of
-  description: Serves as a primary synthesis engine within systems anchored or guided
-    by VANTA.
-  strength: 0.9
-- target_sigil: ⟁FRACTAL_GUARD
-  relationship_type: depends_on
-  description: Relies on fractal guards to manage recursive depths of its internal
-    processes.
-  strength: 0.85
-- target_sigil: 🕸️MEMORY_BRAID_ALGORITHM
-  relationship_type: uses_method_from
-  description: Employs memory braiding as a core mechanism for integrating information
-    streams.
-  strength: 0.95
-test_criteria:
-- test_id: CHM_FUNC_001
-  description: Test basic fusion of two distinct textual inputs into a coherent summary.
-  type: functional
-  input_scenario_or_parameters:
-    objective_description: Summarize key themes
-    input_streams_summary:
-    - Text A about AI ethics
-    - Text B about ancient philosophy
-  expected_behavior_or_output: A coherent summary integrating concepts from both texts,
-    highlighting connections.
-  evaluation_method: llm_as_judge
-  pass_threshold_or_criteria: Coherence score > 0.7, Novelty score > 0.5
-- test_id: CHM_UI_RENDER_001
-  description: Verify that the sigil's complex structure and numerous component refs
-    render correctly in UI and are parsed without error.
-  type: usability_heuristic
-  input_scenario_or_parameters: Load and display this sigil definition.
-  expected_behavior_or_output: All fields correctly parsed and displayed; no errors.
-  evaluation_method: human_review
-  pass_threshold_or_criteria: Full render fidelity.
-  notes: This test addresses the concerns raised in the original 'notes' section of
-    the user-provided CHIMERA text.
-name: Chimeric Compression Algorithm
+schema_version: 1.5-holo-alpha
+meta:
+  sigil: 🜁CHIMERA
+  alias: META_FUSION_SIGIL
+  tag: CognitiveFusion
+  upgraded_from: legacy
+  upgrade_timestamp: '2025-06-24T17:14:16.074701'
+  source_file: sigils\chimeric_compression.voxsigil
+holo_mesh:
+  is_cognitive_primitive: false
+  mesh_compatibility: holo-1.5-alpha
+  registration_ready: true
+  vanta_core_integration:
+    event_support: true
+    async_capable: true
+    memory_aware: true
+  temporal_pattern: parallel_tracks_converging
+cognitive:
+  principle: "This sigil represents the recursive fusion of reflective loops, dynamic memory braids, \nand semantic layering\
+    \ across agentic threads. It encapsulates the transformation from \nsymbol clusters into higher-order cognition units.\
+    \ Invoking CHIMERA initiates a process\nwhere multiple symbolic streams and cognitive functions are interwoven to produce\
+    \ a\nnovel, synthesized output or state, more complex and nuanced than the sum of its parts.\nIt's the engine of creative\
+    \ recombination and emergent understanding.\n"
+  math: "ψ_CHIMERA = FusionOp ( Σ(wᵢ * σᵢ(context)) )\nwhere:\n  - FusionOp = A non-linear composition operator (e.g., attention-weighted\
+    \ blend, constructive interference).\n  - wᵢ = influence weight of component sigil/process i.\n  - σᵢ = output of component\
+    \ sigil/process i, conditioned on current context.\n  - Σ implies integration over diverse cognitive inputs (memory, perception,\
+    \ reasoning streams).\nActivation(\U0001F701CHIMERA) → Spawn(Thread₁, Thread₂, ..., Threadₙ); Monitor(ConvergenceCriteria)\n"
+  tags:
+  - meta_recursion
+  - symbolic_synthesis
+  - multi_agent_orchestration
+  - emergent_cognition
+  - dynamic_assembly
+  - fixed
+  structure:
+    composite_type: assembly
+    temporal_structure: parallel_tracks_converging
+    components:
+    - name: Dream Resonance Modulator
+      description: Introduces associative, non-linear connections.
+      sigil_ref: 🌒DREAM_STATE
+    - name: Pulse Synchronizer Input
+      description: Aligns temporal rhythms or processing cycles of components.
+      sigil_ref: 🫀PULSE_MONITOR
+    - name: Memory Braid Integrator
+      description: Weaves together disparate memory threads.
+      sigil_ref: 🕸️MEMORY_BRAID_ALGORITHM
+    - name: Fractal Recursion Guard
+      description: Manages depth and prevents runaway loops in component processes.
+      sigil_ref: ⟁FRACTAL_GUARD
+    - name: Phoenix Memory Purge Interface
+      description: Allows for selective memory renewal or reset within the fusion.
+      sigil_ref: 🜔PHOENIX
+    - name: Nexus Knowledge Graft Point
+      description: Integrates external knowledge structures or datums.
+      sigil_ref: 🧬NEXUS
+    - name: Catengine Awareness Scaffold Provider
+      description: Provides foundational awareness/consciousness frameworks for the fusion.
+      sigil_ref: 🜛CATENGINE
+    - name: Quanta Parallel State Handler
+      description: Manages superposition or parallel exploration of states.
+      sigil_ref: 🔮QUANTA_STATE
+    - name: Remix Combinatorial Shifter
+      description: Applies transformative or combinatorial operations to inputs.
+      sigil_ref: 🔀REMIX
+    - name: Liminal Transition Facilitator
+      description: Guides ontological shifts or transitions between states of being/understanding.
+      sigil_ref: 🜂LIMINAL_TRANSIT
+    - name: Negentropy Filter
+      description: Reduces cognitive noise, focuses on information-rich patterns.
+      sigil_ref: 🜜NEGENT_FILTER
+    - name: Regret Pruning Mechanism
+      description: Filters out or down-weights counterproductive pathways based on simulated regret.
+      sigil_ref: ☹️REGRET_FOLD
+    - name: Maelstrom Contradiction Resolver
+      description: Processes and attempts to resolve or synthesize contradictions.
+      sigil_ref: 🌀MAELSTROM_RESOLVER
+    - name: Sigil Projection Interface
+      description: Handles and integrates unknown or dynamically generated sigils.
+      sigil_ref: 🜠SIGIL_PROJECTION
+    - name: Gradient Liminal Delta Cascade
+      description: Nested glyph for initiating cascading state changes through liminal spaces.
+      sigil_ref: 🜂∆
+implementation:
+  usage:
+    description: Triggers multi-layer symbolic cognition, meta-recursion, and synthesis of diverse cognitive inputs into a
+      novel coherent whole.
+    example: "<intent goal=\"GenerateNovelConceptArt\">\n  <process_with>\U0001F701CHIMERA</process_with>\n  <input_stream\
+      \ sigil_ref=\"\U0001F9ECNEXUS\" source=\"ArtHistoryDatabase\" query=\"Surrealism,Clockwork\"/>\n  <input_stream sigil_ref=\"\
+      \U0001F312DREAM_STATE\" theme=\"MeltingTime\"/>\n  <modulator sigil_ref=\"\U0001F500REMIX\" strength=\"0.7\"/>\n  <output_target\
+      \ format=\"VisualConcept\"/>\n</intent>\n"
+    explanation: "Invoke \U0001F701CHIMERA to fuse multiple cognitive processes, data streams, or symbolic representations.\
+      \ \nIt is used when a task requires creative synthesis, complex problem solving through diverse approaches, \nor the\
+      \ generation of emergent understanding from multifaceted inputs.\nThe listed components in its `structure` are indicative\
+      \ of the types of sub-processes it orchestrates.\n"
+  parameters: {}
+  returns: {}
+  examples: []
+connectivity:
+  input_types: []
+  output_types: []
+  mesh_endpoints:
+  - Dream Resonance Modulator
+  - Pulse Synchronizer Input
+  - Memory Braid Integrator
+  - Fractal Recursion Guard
+  - Phoenix Memory Purge Interface
+  - Nexus Knowledge Graft Point
+  - Catengine Awareness Scaffold Provider
+  - Quanta Parallel State Handler
+  - Remix Combinatorial Shifter
+  - Liminal Transition Facilitator
+  - Negentropy Filter
+  - Regret Pruning Mechanism
+  - Maelstrom Contradiction Resolver
+  - Sigil Projection Interface
+  - Gradient Liminal Delta Cascade
+  event_topics: []
+  usage_patterns:
+  - "<intent goal=\"GenerateNovelConceptArt\">\n  <process_with>\U0001F701CHIMERA</process_with>\n  <input_stream sigil_ref=\"\
+    \U0001F9ECNEXUS\" source=\"ArtHistoryDatabase\" query=\"Surrealism,Clockwork\"/>\n  <input_stream sigil_ref=\"\U0001F312\
+    DREAM_STATE\" theme=\"MeltingTime\"/>\n  <modulator sigil_ref=\"\U0001F500REMIX\" strength=\"0.7\"/>\n  <output_target\
+    \ format=\"VisualConcept\"/>\n</intent>\n"

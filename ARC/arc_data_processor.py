@@ -234,6 +234,81 @@ class ARCGridDataProcessor:
             "output_shape": output_shape,
         }
 
+    def load_arc_training_data(self) -> Dict[str, Dict[str, Any]]:
+        """
+        Load the standard ARC training data from the training_data directory.
+
+        Returns:
+            Dictionary of ARC tasks with inputs and outputs
+        """
+        current_dir = os.path.dirname(os.path.abspath(__file__))
+        training_data_dir = os.path.join(current_dir, "training_data")
+
+        challenges_path = os.path.join(
+            training_data_dir, "arc-agi_training_challenges.json"
+        )
+        solutions_path = os.path.join(
+            training_data_dir, "arc-agi_training_solutions.json"
+        )
+
+        if not os.path.exists(challenges_path):
+            logger.error(f"Training challenges file not found: {challenges_path}")
+            return {}
+
+        if not os.path.exists(solutions_path):
+            logger.warning(f"Training solutions file not found: {solutions_path}")
+            solutions_path = None
+
+        logger.info(f"Loading ARC training data from {training_data_dir}")
+        return self.load_arc_data(challenges_path, solutions_path)
+
+    def load_arc_evaluation_data(self) -> Dict[str, Dict[str, Any]]:
+        """
+        Load the standard ARC evaluation data from the training_data directory.
+
+        Returns:
+            Dictionary of ARC tasks with inputs and outputs
+        """
+        current_dir = os.path.dirname(os.path.abspath(__file__))
+        training_data_dir = os.path.join(current_dir, "training_data")
+
+        challenges_path = os.path.join(
+            training_data_dir, "arc-agi_evaluation_challenges.json"
+        )
+        solutions_path = os.path.join(
+            training_data_dir, "arc-agi_evaluation_solutions.json"
+        )
+
+        if not os.path.exists(challenges_path):
+            logger.error(f"Evaluation challenges file not found: {challenges_path}")
+            return {}
+
+        if not os.path.exists(solutions_path):
+            logger.warning(f"Evaluation solutions file not found: {solutions_path}")
+            solutions_path = None
+
+        logger.info(f"Loading ARC evaluation data from {training_data_dir}")
+        return self.load_arc_data(challenges_path, solutions_path)
+
+    def load_arc_test_data(self) -> Dict[str, Dict[str, Any]]:
+        """
+        Load the standard ARC test data from the training_data directory.
+
+        Returns:
+            Dictionary of ARC tasks with inputs and outputs (no solutions for test data)
+        """
+        current_dir = os.path.dirname(os.path.abspath(__file__))
+        training_data_dir = os.path.join(current_dir, "training_data")
+
+        challenges_path = os.path.join(training_data_dir, "arc-agi_test_challenges.json")
+
+        if not os.path.exists(challenges_path):
+            logger.error(f"Test challenges file not found: {challenges_path}")
+            return {}
+
+        logger.info(f"Loading ARC test data from {training_data_dir}")
+        return self.load_arc_data(challenges_path, None)
+
 
 class ARCDataset(Dataset):
     """
