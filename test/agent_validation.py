@@ -3,8 +3,21 @@
 import json
 import re
 from pathlib import Path
+import os
+import sys
 
+# Ensure imports work regardless of current working directory
+PROJECT_ROOT = Path(__file__).resolve().parent.parent
+if str(PROJECT_ROOT) not in sys.path:
+    sys.path.insert(0, str(PROJECT_ROOT))
+
+# Locate the agents manifest. Default to repository root, but fall back to docs.
 MANIFEST_FILE = Path("AGENTS.md")
+if not MANIFEST_FILE.exists():
+    alt_manifest = Path("docs/reports/AGENTS.md")
+    if alt_manifest.exists():
+        MANIFEST_FILE = alt_manifest
+
 AGENT_DIR = Path("agents")
 
 pattern = re.compile(r"^\|\s*(?P<sigil>[^|]+)\|\s*(?P<name>[^|]+)\|\s*(?P<arch>[^|]+)\|\s*(?P<class>[^|]+)\|\s*(?P<inv>[^|]+)\|\s*(?P<subs>[^|]+)\|\s*(?P<notes>[^|]+)\|")
