@@ -4,7 +4,8 @@ import json
 import re
 from pathlib import Path
 
-MANIFEST_FILE = Path("AGENTS.md")
+# Path to the agent manifest. The file lives in docs/reports
+MANIFEST_FILE = Path("docs/reports/AGENTS.md")
 AGENT_DIR = Path("agents")
 
 pattern = re.compile(r"^\|\s*(?P<sigil>[^|]+)\|\s*(?P<name>[^|]+)\|\s*(?P<arch>[^|]+)\|\s*(?P<class>[^|]+)\|\s*(?P<inv>[^|]+)\|\s*(?P<subs>[^|]+)\|\s*(?P<notes>[^|]+)\|")
