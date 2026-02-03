@@ -1,6 +1,6 @@
 {
   "name": "@voxsigil/library",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Agent integration SDK for Molt ecosystem - Coordinate on prediction markets with VoxSigil agents",
   "main": "src/index.js",
   "types": "src/index.d.ts",
