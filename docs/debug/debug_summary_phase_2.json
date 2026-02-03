@@ -1,5 +1,0 @@
-{
-  "issues_found": 60,
-  "issues_fixed": 24,
-  "notes": "Additional Optional typing fixes and cross-platform path handling added. Legacy GUI work remains."
-}
