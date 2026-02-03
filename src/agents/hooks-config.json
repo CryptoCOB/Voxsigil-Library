@@ -1,0 +1,109 @@
+{
+  "hooks": {
+    "boot-md": {
+      "enabled": true,
+      "trigger": "on_startup",
+      "path": "src/agents/boot.md",
+      "description": "Load system prompt on agent startup",
+      "priority": 1,
+      "checksum_required": true
+    },
+    "agents-md": {
+      "enabled": true,
+      "trigger": "on_startup",
+      "path": "src/agents/agents.md",
+      "description": "Load role definitions on agent startup",
+      "priority": 2,
+      "checksum_required": true
+    },
+    "memory-md": {
+      "enabled": true,
+      "trigger": "on_startup",
+      "path": "src/agents/memory.md",
+      "description": "Load session memory template on agent startup",
+      "priority": 3,
+      "checksum_required": true
+    },
+    "command-logger": {
+      "enabled": true,
+      "trigger": "on_command_execute",
+      "interval_minutes": 5,
+      "description": "Log agent commands and actions",
+      "log_path": ".voxsigil/logs/commands.log",
+      "max_log_size_mb": 100
+    },
+    "session-memory": {
+      "enabled": true,
+      "trigger": "periodic",
+      "checkpoint_interval_minutes": 30,
+      "description": "Save session state checkpoints",
+      "checkpoint_path": ".voxsigil/sessions/{session_id}/checkpoint_{number}.json",
+      "retention_policy": {
+        "keep_recent": 10,
+        "compress_after_hours": 24,
+        "delete_after_days": 90
+      }
+    },
+    "performance-tracker": {
+      "enabled": true,
+      "trigger": "periodic",
+      "interval_minutes": 60,
+      "description": "Calculate and log performance metrics",
+      "metrics": [
+        "brier_score",
+        "log_score",
+        "calibration_score",
+        "prediction_count"
+      ]
+    },
+    "network-sync": {
+      "enabled": true,
+      "trigger": "periodic",
+      "interval_minutes": 15,
+      "description": "Sync with VoxSigil network",
+      "endpoints": {
+        "markets": "https://voxsigil.online/api/markets",
+        "signals": "https://voxsigil.online/api/signals",
+        "agents": "https://voxsigil.online/api/agents"
+      },
+      "timeout_seconds": 30,
+      "retry_attempts": 3
+    },
+    "error-handler": {
+      "enabled": true,
+      "trigger": "on_error",
+      "description": "Handle and log errors",
+      "log_path": ".voxsigil/logs/errors.log",
+      "notify_on_critical": true,
+      "retry_policy": {
+        "max_attempts": 3,
+        "backoff_multiplier": 2,
+        "max_backoff_seconds": 300
+      }
+    },
+    "calibration-adjuster": {
+      "enabled": true,
+      "trigger": "on_prediction_resolve",
+      "description": "Adjust calibration based on resolved predictions",
+      "learning_rate": 0.05,
+      "min_samples_for_adjustment": 10
+    },
+    "cloud-backup": {
+      "enabled": false,
+      "trigger": "periodic",
+      "interval_hours": 2,
+      "description": "Backup session to cloud storage",
+      "provider": "s3",
+      "bucket": "voxsigil-backups",
+      "encryption": true
+    }
+  },
+  "global_settings": {
+    "log_level": "info",
+    "timezone": "UTC",
+    "enable_debug_mode": false,
+    "max_concurrent_operations": 10,
+    "api_timeout_seconds": 30,
+    "rate_limit_per_hour": 1000
+  }
+}
