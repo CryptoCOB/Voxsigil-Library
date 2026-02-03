@@ -36,14 +36,23 @@ function computeChecksum(data) {
 }
 
 /**
+ * Compute SHA256 checksum of a file
+ * @param {string} filePath - Path to file
+ * @returns {string} Hexadecimal SHA256 hash
+ */
+function computeFileChecksum(filePath) {
+  const data = fs.readFileSync(filePath);
+  return computeChecksum(data);
+}
+
+/**
  * Verify file integrity using SHA256 checksum
  * @param {string} filePath - Path to file
  * @param {string} expectedChecksum - Expected SHA256 hash
  * @returns {boolean} True if checksum matches
  */
 function verifyFileChecksum(filePath, expectedChecksum) {
-  const data = fs.readFileSync(filePath);
-  const actualChecksum = computeChecksum(data);
+  const actualChecksum = computeFileChecksum(filePath);
   return actualChecksum === expectedChecksum;
 }
 
@@ -77,6 +86,7 @@ function getMetadata() {
 module.exports = {
   loadAgentConfig,
   computeChecksum,
+  computeFileChecksum,
   verifyFileChecksum,
   getMetadata
 };
