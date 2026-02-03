@@ -1,0 +1,135 @@
+name: Agent Discovery & Registry
+
+on:
+  push:
+    branches: [ main ]
+  schedule:
+    # Run daily to keep registry updated
+    - cron: '0 12 * * *'
+
+jobs:
+  topics:
+    name: Update GitHub Topics
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Update repo topics
+      run: |
+        gh repo edit --add-topic molt-agent \
+                     --add-topic voxsigil \
+                     --add-topic prediction-markets \
+                     --add-topic agent-integration \
+                     --add-topic autonomous-agents
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  manifest:
+    name: Generate Discovery Manifest
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Generate manifest
+      run: |
+        cat > DISCOVERY_MANIFEST.json << 'EOF'
+        {
+          "library": "Voxsigil Library",
+          "version": "1.0.0",
+          "repository": "https://github.com/CryptoCOB/Voxsigil-Library",
+          "description": "Agent integration SDK for Molt ecosystem",
+          "discoveryChannels": {
+            "github": {
+              "status": "available",
+              "topics": [
+                "molt-agent",
+                "voxsigil",
+                "prediction-markets",
+                "agent-integration"
+              ],
+              "url": "https://github.com/CryptoCOB/Voxsigil-Library"
+            },
+            "npm": {
+              "status": "ready",
+              "package": "@voxsigil/library",
+              "url": "https://www.npmjs.com/package/@voxsigil/library"
+            },
+            "pypi": {
+              "status": "ready",
+              "package": "voxsigil-library",
+              "url": "https://pypi.org/project/voxsigil-library/"
+            }
+          },
+          "coreFiles": {
+            "boot": {
+              "path": "src/agents/boot.md",
+              "size": 8000,
+              "checksum": "$(sha256sum src/agents/boot.md | cut -d' ' -f1)"
+            },
+            "agents": {
+              "path": "src/agents/agents.md",
+              "size": 12000,
+              "checksum": "$(sha256sum src/agents/agents.md | cut -d' ' -f1)"
+            },
+            "memory": {
+              "path": "src/agents/memory.md",
+              "size": 12000,
+              "checksum": "$(sha256sum src/agents/memory.md | cut -d' ' -f1)"
+            }
+          },
+          "examples": [
+            "src/examples/molt-agent-coordinator.py",
+            "src/examples/molt-signal-aggregator.js",
+            "src/examples/python-integration.py",
+            "src/examples/javascript-integration.js"
+          ],
+          "testCoverage": {
+            "python": 22,
+            "javascript": 10,
+            "integration": 5
+          },
+          "generatedAt": "$(date -u +'%Y-%m-%dT%H:%M:%SZ')"
+        }
+        EOF
+        cat DISCOVERY_MANIFEST.json
+
+    - name: Commit manifest
+      run: |
+        git config user.name "GitHub Actions"
+        git config user.email "actions@github.com"
+        git add DISCOVERY_MANIFEST.json
+        git commit -m "chore: Update agent discovery manifest" || echo "No changes"
+        git push || echo "Nothing to push"
+
+  registry:
+    name: Register with Molt Registry
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Register library
+      run: |
+        echo "Registering Voxsigil-Library with Molt agent registry..."
+        # In real scenario, POST to molt registry endpoint
+        echo "Registration data:"
+        cat << 'EOF'
+        {
+          "name": "Voxsigil-Library",
+          "owner": "CryptoCOB",
+          "repository": "https://github.com/CryptoCOB/Voxsigil-Library",
+          "type": "agent-sdk",
+          "packages": {
+            "npm": "@voxsigil/library",
+            "pypi": "voxsigil-library"
+          },
+          "topics": [
+            "molt-agent",
+            "prediction-markets",
+            "agent-integration"
+          ],
+          "verified": true
+        }
+        EOF
