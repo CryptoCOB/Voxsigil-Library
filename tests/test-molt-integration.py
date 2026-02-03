@@ -14,8 +14,11 @@ import pytest
 import json
 import hashlib
 import asyncio
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from typing import Dict, List
+
+# UTC timezone
+UTC = timezone.utc
 
 # Test fixtures
 @pytest.fixture
@@ -37,13 +40,13 @@ def sample_markets():
             'market_id': 'market_001',
             'question': 'Will BTC reach $100k?',
             'market_type': 'binary',
-            'deadline': (datetime.utcnow() + timedelta(days=30)).isoformat()
+            'deadline': (datetime.now(UTC) + timedelta(days=30)).isoformat()
         },
         {
             'market_id': 'market_002',
             'question': 'Which AI model wins?',
             'market_type': 'categorical',
-            'deadline': (datetime.utcnow() + timedelta(days=60)).isoformat()
+            'deadline': (datetime.now(UTC) + timedelta(days=60)).isoformat()
         }
     ]
 
@@ -58,7 +61,7 @@ def sample_signals():
             'prediction': 0.72,
             'confidence': 0.85,
             'reasoning': 'Bullish signals',
-            'timestamp': datetime.utcnow().isoformat()
+            'timestamp': datetime.now(UTC).isoformat()
         },
         {
             'agent_id': 'agent_002',
@@ -66,7 +69,7 @@ def sample_signals():
             'prediction': 0.68,
             'confidence': 0.75,
             'reasoning': 'Moderate bullish',
-            'timestamp': datetime.utcnow().isoformat()
+            'timestamp': datetime.now(UTC).isoformat()
         },
         {
             'agent_id': 'agent_003',
@@ -74,7 +77,7 @@ def sample_signals():
             'prediction': 0.55,
             'confidence': 0.50,
             'reasoning': 'Uncertain',
-            'timestamp': datetime.utcnow().isoformat()
+            'timestamp': datetime.now(UTC).isoformat()
         }
     ]
 
@@ -210,7 +213,7 @@ class TestMarketAnalysis:
         """Test market deadline validation"""
         market = sample_markets[0]
         deadline = datetime.fromisoformat(market['deadline'])
-        now = datetime.utcnow()
+        now = datetime.now(UTC)
         
         assert deadline > now  # Should be in future
 
@@ -233,7 +236,7 @@ class TestMarketAnalysis:
             'market_id': market['market_id'],
             'prediction': avg_prediction,
             'agent_count': len(market_signals),
-            'timestamp': datetime.utcnow().isoformat()
+            'timestamp': datetime.now(UTC).isoformat()
         }
         
         assert consensus['agent_count'] == 3
@@ -246,7 +249,7 @@ class TestStatePersistence:
         """Test agent checkpoint creation"""
         checkpoint = {
             'agent_id': agent_config['agent_id'],
-            'timestamp': datetime.utcnow().isoformat(),
+            'timestamp': datetime.now(UTC).isoformat(),
             'signals_sent': 5,
             'signals_received': 12,
             'consensus_reached': 3
@@ -262,7 +265,7 @@ class TestStatePersistence:
             'signals': [{
                 'market_id': 'market_001',
                 'prediction': 0.72,
-                'timestamp': datetime.utcnow().isoformat()
+                'timestamp': datetime.now(UTC).isoformat()
             }]
         }
         
@@ -317,7 +320,7 @@ class TestNetworkResilience:
     def test_consensus_with_delayed_signals(self, sample_signals):
         """Test consensus handles delayed signals"""
         signals_by_time = []
-        base_time = datetime.utcnow()
+        base_time = datetime.now(UTC)
         
         for i, signal in enumerate(sample_signals):
             delayed_signal = signal.copy()
@@ -378,7 +381,7 @@ class TestPerformanceAndScalability:
         for i in range(100):
             checkpoint = {
                 'sequence': i,
-                'timestamp': datetime.utcnow().isoformat(),
+                'timestamp': datetime.now(UTC).isoformat(),
                 'data': 'x' * 1000  # Some data
             }
             checkpoints.append(json.dumps(checkpoint))
@@ -389,7 +392,7 @@ class TestPerformanceAndScalability:
 # Integration Tests - Full Workflow
 class TestFullIntegrationWorkflow:
     @pytest.mark.integration
-    async def test_complete_agent_lifecycle(self, agent_config, sample_markets, sample_signals):
+    def test_complete_agent_lifecycle(self, agent_config, sample_markets, sample_signals):
         """Test complete agent lifecycle"""
         # 1. Initialize
         agent_state = {'initialized': True, 'ready': True}
