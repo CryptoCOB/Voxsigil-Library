@@ -1,40 +1,21 @@
 #!/usr/bin/env node
-
 /**
  * Moltbot Launcher - Initialize and start molt agent coordination
- * 
- * This script launches a fully-configured moltbot agent that uses Voxsigil
- * for signal aggregation, consensus computation, and prediction market coordination.
- * 
- * Usage: node bin/moltbot-launch.js [agent-id] [--market MARKET] [--signal-interval MS]
- * 
- * Examples:
- *   1. Start default: node bin/moltbot-launch.js
- *   2. With market:   node bin/moltbot-launch.js prophet --market BTC
- *   3. Custom interval: node bin/moltbot-launch.js analyst --signal-interval 5000
  */
 
 const fs = require('fs');
 const path = require('path');
-const { MoltSignalAggregator } = require('../src/examples/molt-signal-aggregator.js');
+const { MoltSignalAggregator, MoltSignal } = require('../src/examples/molt-signal-aggregator.js');
 
-// ============================================================================
 // Configuration
-// ============================================================================
-
 const CONFIG = {
   agentId: process.argv[2] || 'moltbot-default',
-  market: extractArg('--market') || 'BTC',
+  market: extractArg('--market') || 'BTC_PREDICTION',
   signalInterval: parseInt(extractArg('--signal-interval') || '3000'),
   checkpointInterval: parseInt(extractArg('--checkpoint-interval') || '30000'),
-  consensusThreshold: 0.5,
   maxAgents: parseInt(extractArg('--max-agents') || '100'),
   verbose: process.argv.includes('--verbose'),
 };
-
-// ============================================================================
-// Utilities
-// ============================================================================
 
 function extractArg(flag) {
   const index = process.argv.indexOf(flag);
@@ -43,8 +24,7 @@ function extractArg(flag) {
 
 function log(level, message) {
   const timestamp = new Date().toISOString();
-  const prefix = `[${timestamp}] [${level}]`;
-  console.log(`${prefix} ${message}`);
+  console.log(`[${timestamp}] [${level}] ${message}`);
 }
 
 function getConfigPath() {
@@ -54,10 +34,6 @@ function getConfigPath() {
   }
   return path.join(configDir, `moltbot-${CONFIG.agentId}.json`);
 }
-
-// ============================================================================
-// Moltbot Agent Class
-// ============================================================================
 
 class MoltbotAgent {
   constructor(agentId) {
@@ -74,21 +50,16 @@ class MoltbotAgent {
     };
   }
 
-  /**
-   * Initialize agent from config file or create new
-   */
   initialize() {
     const configPath = getConfigPath();
-    
     if (fs.existsSync(configPath)) {
       log('INFO', `Loading agent configuration from ${configPath}`);
       const config = JSON.parse(fs.readFileSync(configPath, 'utf-8'));
       this.config = config;
-      this.aggregator = Object.assign(new MoltSignalAggregator(), config.aggregator);
     } else {
-      log('INFO', `Creating new agent configuration: ${CONFIG.agentId}`);
+      log('INFO', `Creating new agent configuration: ${this.agentId}`);
       this.config = {
-        agentId: CONFIG.agentId,
+        agentId: this.agentId,
         createdAt: new Date().toISOString(),
         lastActive: new Date().toISOString(),
       };
@@ -96,15 +67,14 @@ class MoltbotAgent {
     }
   }
 
-  /**
-   * Register a market for tracking
-   */
   registerMarket(marketName, description = '') {
     log('INFO', `Registering market: ${marketName}`);
     try {
-      this.aggregator.registerMarket(marketName, {
+      this.aggregator.registerMarket({
+        marketId: marketName,
+        question: `${marketName} Prediction Market`,
+        description: description || `Tracking ${marketName} predictions`,
         deadline: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(),
-        description,
       });
       return true;
     } catch (error) {
@@ -113,44 +83,39 @@ class MoltbotAgent {
     }
   }
 
-  /**
-   * Generate and broadcast a prediction signal
-   */
-  broadcastSignal(marketName, prediction, confidence) {
+  async broadcastSignal(marketName, prediction, confidence) {
     try {
-      const signal = {
+      const signal = new MoltSignal({
+        agentId: this.agentId,
+        marketId: marketName,
         prediction: Math.min(1, Math.max(0, prediction)),
         confidence: Math.min(1, Math.max(0, confidence)),
-        timestamp: Date.now(),
-        agentId: this.agentId,
-      };
+        reasoning: `Agent ${this.agentId} prediction`,
+        timestamp: new Date().toISOString(),
+        signature: Math.random().toString(36).substring(2, 18),
+      });
 
-      this.aggregator.addAgentSignal(marketName, this.agentId, signal);
+      await this.aggregator.addSignal(signal);
       this.metrics.signalsProcessed++;
 
       if (CONFIG.verbose) {
-        log('DEBUG', `Signal broadcast: ${marketName} -> ${(signal.prediction * 100).toFixed(1)}% (confidence: ${(signal.confidence * 100).toFixed(1)}%)`);
+        log('DEBUG', `Signal: ${(signal.prediction * 100).toFixed(1)}% confidence ${(signal.confidence * 100).toFixed(1)}%`);
       }
     } catch (error) {
-      log('ERROR', `Signal broadcast failed: ${error.message}`);
+      if (CONFIG.verbose) {
+        log('ERROR', `Signal broadcast failed: ${error.message}`);
+      }
     }
   }
 
-  /**
-   * Update consensus and get market insights
-   */
   updateConsensus() {
     try {
-      const markets = this.aggregator.markets;
-      
-      for (const [marketName, market] of Object.entries(markets)) {
+      for (const [marketId, market] of this.aggregator.markets) {
         if (market.signals.size === 0) continue;
-
-        const consensus = this.aggregator.computeConsensus(marketName);
+        const consensus = market.computeConsensus();
         this.metrics.consensusUpdates++;
-
         if (CONFIG.verbose) {
-          log('INFO', `Consensus updated: ${marketName} -> ${(consensus * 100).toFixed(1)}%`);
+          log('INFO', `Consensus ${marketId}: ${(consensus * 100).toFixed(1)}%`);
         }
       }
     } catch (error) {
@@ -158,9 +123,6 @@ class MoltbotAgent {
     }
   }
 
-  /**
-   * Save checkpoint for recovery
-   */
   saveCheckpoint() {
     try {
       const configPath = getConfigPath();
@@ -168,29 +130,23 @@ class MoltbotAgent {
         agentId: this.agentId,
         updatedAt: new Date().toISOString(),
         metrics: this.metrics,
-        aggregator: {
-          markets: Array.from(this.aggregator.markets.entries()).map(([name, market]) => ({
-            name,
-            signals: Array.from(market.signals.entries()),
-            consensus: market.consensus,
-          })),
-        },
+        markets: Array.from(this.aggregator.markets.entries()).map(([id, market]) => ({
+          marketId: id,
+          question: market.question,
+          signalCount: market.signals.size,
+          consensus: market.computeConsensus(),
+        })),
       };
-
       fs.writeFileSync(configPath, JSON.stringify(checkpoint, null, 2));
       this.metrics.checkpointsSaved++;
-
       if (CONFIG.verbose) {
-        log('DEBUG', `Checkpoint saved: ${configPath}`);
+        log('DEBUG', `Checkpoint saved`);
       }
     } catch (error) {
       log('ERROR', `Checkpoint save failed: ${error.message}`);
     }
   }
 
-  /**
-   * Save configuration
-   */
   saveConfig() {
     try {
       const configPath = getConfigPath();
@@ -201,13 +157,10 @@ class MoltbotAgent {
     }
   }
 
-  /**
-   * Print agent status
-   */
   printStatus() {
     const uptime = Math.floor((Date.now() - this.metrics.startTime) / 1000);
     const uptimeStr = `${Math.floor(uptime / 60)}m ${uptime % 60}s`;
-    
+    const totalSignals = Array.from(this.aggregator.markets.values()).reduce((sum, m) => sum + m.signals.size, 0);
     console.log(`
 ╔════════════════════════════════════════════════════════════╗
 ║                    MOLTBOT AGENT STATUS                    ║
@@ -222,23 +175,14 @@ Metrics:
   Consensus Updates:   ${this.metrics.consensusUpdates}
   Checkpoints Saved:   ${this.metrics.checkpointsSaved}
 
-Markets Tracked:       ${this.aggregator.markets.size}
-Total Signals:         ${Array.from(this.aggregator.markets.values()).reduce((sum, m) => sum + m.signals.size, 0)}
+Markets:               ${this.aggregator.markets.size}
+Total Signals:         ${totalSignals}
 
-Configuration:
-  Signal Interval:     ${CONFIG.signalInterval}ms
-  Checkpoint Interval: ${CONFIG.checkpointInterval}ms
-  Consensus Threshold: ${CONFIG.consensusThreshold}
-  Max Agents:          ${CONFIG.maxAgents}
-
-Press Ctrl+C to stop
+Config Path:           ${getConfigPath()}
     `);
   }
 
-  /**
-   * Start the agent
-   */
-  start() {
+  async start() {
     if (this.isRunning) {
       log('WARN', 'Agent is already running');
       return;
@@ -248,27 +192,30 @@ Press Ctrl+C to stop
     this.initialize();
     this.isRunning = true;
 
-    // Register initial market(s)
     this.registerMarket(CONFIG.market, `${CONFIG.market} prediction market`);
 
-    // Simulate incoming signals
-    this.signalIntervalId = setInterval(() => {
-      // Generate simulated agents' predictions
-      const numSimulatedAgents = Math.floor(Math.random() * 10) + 1;
-      
-      for (let i = 0; i < numSimulatedAgents; i++) {
-        const simAgentId = `sim-agent-${i}`;
-        const prediction = Math.random();
-        const confidence = 0.5 + Math.random() * 0.5; // 0.5 - 1.0
-        
-        this.broadcastSignal(CONFIG.market, prediction, confidence);
+    this.signalIntervalId = setInterval(async () => {
+      const numAgents = Math.floor(Math.random() * 10) + 1;
+      for (let i = 0; i < numAgents; i++) {
+        try {
+          const signal = new MoltSignal({
+            agentId: `agent-${i}`,
+            marketId: CONFIG.market,
+            prediction: Math.random(),
+            confidence: 0.5 + Math.random() * 0.5,
+            reasoning: `Prediction from agent-${i}`,
+            timestamp: new Date().toISOString(),
+            signature: Math.random().toString(36).substring(2, 18),
+          });
+          await this.aggregator.addSignal(signal);
+          this.metrics.signalsProcessed++;
+        } catch (error) {
+          // silently continue
+        }
       }
-
-      // Update consensus
       this.updateConsensus();
     }, CONFIG.signalInterval);
 
-    // Save checkpoints periodically
     this.checkpointIntervalId = setInterval(() => {
       this.saveCheckpoint();
     }, CONFIG.checkpointInterval);
@@ -277,9 +224,6 @@ Press Ctrl+C to stop
     this.printStatus();
   }
 
-  /**
-   * Stop the agent
-   */
   stop() {
     if (!this.isRunning) {
       log('WARN', 'Agent is not running');
@@ -287,25 +231,18 @@ Press Ctrl+C to stop
     }
 
     log('INFO', `Stopping moltbot agent: ${this.agentId}`);
-    
     if (this.signalIntervalId) clearInterval(this.signalIntervalId);
     if (this.checkpointIntervalId) clearInterval(this.checkpointIntervalId);
-    
     this.isRunning = false;
     this.saveCheckpoint();
-    
     log('INFO', `Moltbot agent stopped`);
     this.printStatus();
   }
 }
 
-// ============================================================================
-// Main Execution
-// ============================================================================
-
+// Main execution
 const agent = new MoltbotAgent(CONFIG.agentId);
 
-// Handle graceful shutdown
 process.on('SIGINT', () => {
   console.log('\n');
   agent.stop();
@@ -317,19 +254,15 @@ process.on('SIGTERM', () => {
   process.exit(0);
 });
 
-// Start the agent
-try {
-  agent.start();
-} catch (error) {
+agent.start().catch(error => {
   log('ERROR', `Failed to start agent: ${error.message}`);
   process.exit(1);
-}
+});
 
-// Print status periodically
 setInterval(() => {
   if (agent.isRunning && CONFIG.verbose) {
     agent.printStatus();
   }
-}, 60000); // Every 60 seconds
+}, 60000);
 
 module.exports = MoltbotAgent;

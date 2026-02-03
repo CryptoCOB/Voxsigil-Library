@@ -519,5 +519,14 @@ async function runDeepExample() {
   console.log('Agent is ready for full Molt network integration!');
 }
 
-// Run example
-runDeepExample().catch(console.error);
+// Export classes for use as module
+module.exports = {
+  MoltSignal,
+  MoltMarket,
+  MoltSignalAggregator
+};
+
+// Run example only if executed directly
+if (require.main === module) {
+  runDeepExample().catch(console.error);
+}
