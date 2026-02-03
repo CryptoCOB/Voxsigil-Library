@@ -8,13 +8,14 @@ import os
 import sys
 import json
 from pathlib import Path
-from datetime import datetime
+from datetime import datetime, timezone
 
-# Add src to path
+# Add parent directories to path
+sys.path.insert(0, str(Path(__file__).parent.parent.parent))
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
-from src.index import VoxSigilAgent, get_metadata
-from src.utils.validator import validate_signal, validate_agent_config
+from index import VoxSigilAgent, get_metadata
+from utils.validator import validate_signal, validate_agent_config
 
 
 def main():
@@ -79,7 +80,7 @@ def main():
         'market_id': 'market-example-001',
         'prediction': 0.67,
         'confidence': 0.85,
-        'timestamp': datetime.utcnow().isoformat() + 'Z',
+        'timestamp': datetime.now(timezone.utc).isoformat() + 'Z',
         'reasoning': 'Based on analysis of historical data and current trends',
         'tags': ['example', 'test']
     }
@@ -101,10 +102,10 @@ def main():
     session_state = {
         'metadata': {
             'agent_id': 'voxsigil-agent-example',
-            'session_id': f'session-{datetime.utcnow().strftime("%Y%m%d-%H%M%S")}',
+            'session_id': f'session-{datetime.now(timezone.utc).strftime("%Y%m%d-%H%M%S")}',
             'version': '1.0.0',
-            'created_at': datetime.utcnow().isoformat() + 'Z',
-            'last_updated': datetime.utcnow().isoformat() + 'Z',
+            'created_at': datetime.now(timezone.utc).isoformat() + 'Z',
+            'last_updated': datetime.now(timezone.utc).isoformat() + 'Z',
             'checkpoint_number': 1,
             'agent_type': 'prediction_market_analyst'
         },
@@ -122,8 +123,8 @@ def main():
                 'probability': 0.67,
                 'confidence_interval': [0.58, 0.76],
                 'confidence_level': 0.85,
-                'created_at': datetime.utcnow().isoformat() + 'Z',
-                'last_updated': datetime.utcnow().isoformat() + 'Z',
+                'created_at': datetime.now(timezone.utc).isoformat() + 'Z',
+                'last_updated': datetime.now(timezone.utc).isoformat() + 'Z',
                 'status': 'active',
                 'num_updates': 1
             }
@@ -138,7 +139,7 @@ def main():
         },
         'network_state': {
             'connected': True,
-            'last_sync': datetime.utcnow().isoformat() + 'Z',
+            'last_sync': datetime.now(timezone.utc).isoformat() + 'Z',
             'peer_agents': [],
             'api_usage': {
                 'requests_this_hour': 0,
