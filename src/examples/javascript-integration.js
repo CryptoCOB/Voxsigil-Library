@@ -8,7 +8,7 @@ const path = require('path');
 const voxsigil = require('../index');
 
 async function main() {
-  console.log('=' .repeat(70));
+  console.log('='.repeat(70));
   console.log('VoxSigil Library - JavaScript Integration Example');
   console.log('='.repeat(70));
   console.log();
