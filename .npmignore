@@ -1,0 +1,67 @@
+# Dependencies
+node_modules/
+.venv/
+__pycache__/
+
+# Development
+.git/
+.github/
+tests/
+test-*.py
+test-*.js
+*.test.js
+*.test.py
+pytest.ini
+
+# Build artifacts
+dist/
+build/
+*.egg-info/
+*.pyc
+*.pyo
+*.pyd
+
+# Documentation (keep README.md but exclude extras)
+docs/
+*.md
+!README.md
+!LICENSE
+
+# Config files
+.gitignore
+.python-version
+.env
+.env.*
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Large scaffold files (agents can fetch from GitHub if needed)
+scaffolds/
+sigils/
+tags/
+bin/
+
+# Scripts
+scripts/
+workers/
+
+# Extra files not needed for npm package
+wireguard.conf
+voxsigil.online/
+frontend/
+api/
+alembic/
+*.log
+*.lock
+uv.lock
+
+# Only include essential source files
+# (src/ will be included by default)
