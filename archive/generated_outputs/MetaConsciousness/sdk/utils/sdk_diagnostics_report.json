@@ -1,0 +1,72 @@
+{
+  "timestamp": "2025-04-01 15:06:44",
+  "environment": {
+    "python_version": "3.13.1",
+    "os": "Windows",
+    "os_version": "11",
+    "architecture": "AMD64",
+    "sdk_path_used": "C:\\Users\\16479\\Desktop\\MetaConsciouness",
+    "cwd": "C:\\Users\\16479\\Desktop\\MetaConsciouness"
+  },
+  "sdk_availability": false,
+  "dependencies": {
+    "numpy": {
+      "installed": true,
+      "version": "2.2.2"
+    },
+    "requests": {
+      "installed": true,
+      "version": "2.32.3"
+    }
+  },
+  "modules": {
+    "sdk_import_status": "FAIL (Core Import Failed)"
+  },
+  "components": {
+    "core_context": "Not Checked",
+    "art_controller": "Not Checked",
+    "omega3_agent": "Not Checked",
+    "meta_reflex": "Not Checked",
+    "pattern_memory": "SKIPPED (SDK Import Failed)",
+    "strategy_evolution": "SKIPPED (SDK Import Failed)",
+    "persistence": "Not Checked",
+    "rag_engine": "OK (RAGEngine Found)",
+    "status": "SKIPPED (SDK Import Failed)"
+  },
+  "connections": {
+    "reflex_to_art": "Not Checked",
+    "reflex_to_omega": "Not Checked",
+    "sdk_context_works": "Not Checked",
+    "status": "SKIPPED (SDKContext Unavailable)"
+  },
+  "utilities": {
+    "log_event": "Not Checked",
+    "add_trace_event": "Not Checked",
+    "status": "SKIPPED (SDK Import Failed)"
+  },
+  "tests": {
+    "status": "SKIPPED (SDK Import Failed)",
+    "summary": null,
+    "files": {}
+  },
+  "local_llm": {
+    "status": "OK (API Found)",
+    "api_found": "LM Studio",
+    "adapter_found": "LMStudioAdapter",
+    "models_detected": [
+      "text-embedding-nomic-embed-text-v1.5",
+      "gemma-3-12b-it",
+      "qwq-32b",
+      "deepseek-r1-distill-qwen-32b",
+      "qwen2.5-coder-14b-instruct",
+      "deepseek-r1-distill-qwen-7b",
+      "deepseek-r1-distill-llama-8b",
+      "qwen2.5-3b-instruct",
+      "llama-3.2-1b-instruct"
+    ],
+    "test_inference": null,
+    "stub_created": false
+  },
+  "overall_status": "FAIL (SDK Unavailable)",
+  "errors": []
+}

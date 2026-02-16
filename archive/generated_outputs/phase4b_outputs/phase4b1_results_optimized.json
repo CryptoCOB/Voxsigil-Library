@@ -1,0 +1,162 @@
+{
+  "phase": "4-B.1",
+  "status": "COMPLETE",
+  "timestamp": "2026-02-12 07:35:13",
+  "hardware": {
+    "pytorch_available": true,
+    "cuda_available": true,
+    "device_count": 1,
+    "device_name": "NVIDIA GeForce RTX 3060"
+  },
+  "dataset": {
+    "num_samples": 10000,
+    "modalities": [
+      "text",
+      "dialogue",
+      "trajectory"
+    ],
+    "characteristics_dim": 9,
+    "teacher_embedding_dim": 384
+  },
+  "student_architecture": {
+    "input_dim": 384,
+    "output_dim": 128,
+    "size_reduction_factor": 3.0,
+    "hidden_dim": 256
+  },
+  "training": {
+    "num_epochs": 50,
+    "final_loss": 0.07231340962874738,
+    "loss_history": [
+      0.0840516411994077,
+      0.0750103684354432,
+      0.07471352664730217,
+      0.07434669269036644,
+      0.07394063020054298,
+      0.07362418272827245,
+      0.07293324879830397,
+      0.07242464943777156,
+      0.07221763750797586,
+      0.07228806633738023,
+      0.07234762835351727,
+      0.07225521569010578,
+      0.07221909414363813,
+      0.0721854829712759,
+      0.07232692224692695,
+      0.0722069846867006,
+      0.07216737277900116,
+      0.07231908282147179,
+      0.07225121152174624,
+      0.07242765353073048,
+      0.07237430237516572,
+      0.07229189508700673,
+      0.0723559308467032,
+      0.0722085245991055,
+      0.07237399624118322,
+      0.07218905670356147,
+      0.07225141466795644,
+      0.07244778773452662,
+      0.07237964793096614,
+      0.07228459125455422,
+      0.0723526073218901,
+      0.0723295277809795,
+      0.07241456635013412,
+      0.07223995869295506,
+      0.07227512307559388,
+      0.07229358693466911,
+      0.07230922051622898,
+      0.0723444977893105,
+      0.07240151142394996,
+      0.07232938357923605,
+      0.07214948817898956,
+      0.07219548183905927,
+      0.0723676291070407,
+      0.07233007714340958,
+      0.07225596103109891,
+      0.07238703079615967,
+      0.07223342613706106,
+      0.07228431237649315,
+      0.0723073873904687,
+      0.07231340962874738
+    ]
+  },
+  "quantization": {
+    "int8_mse": 1.2258826700417558e-06,
+    "int8_feasible": true,
+    "original_dtype": "float32",
+    "quantized_dtype": "int8",
+    "size_reduction": "4.0x"
+  },
+  "latency_benchmark": {
+    "teacher": {
+      "mean_latency_ms": 0.0002319999475730583,
+      "std_latency_ms": 0.0007120224160141644,
+      "min_latency_ms": 9.999712347052991e-05,
+      "max_latency_ms": 0.005199999577598646,
+      "throughput_samples_per_sec": 4310345.80163038,
+      "num_runs": 50
+    },
+    "student": {
+      "mean_latency_ms": 0.4760159998841118,
+      "std_latency_ms": 0.9423129669347564,
+      "min_latency_ms": 0.23240000155055895,
+      "max_latency_ms": 7.014299997536,
+      "throughput_samples_per_sec": 2100.769722537592,
+      "num_runs": 50
+    },
+    "cycle_improvement": {
+      "teacher_cycle_ms": 8.000231999947573,
+      "student_cycle_ms": 8.476015999884112,
+      "speedup_factor": 0.9438670243256921,
+      "reduction_percent": -5.9471275325472694
+    }
+  },
+  "quality_metrics": {
+    "norm_correlation": -0.21535944829786455,
+    "entropy_preservation": 0.5278591842570609
+  },
+  "optimization_analysis": {
+    "issue": "Single-sample latency misleading due to GPU overhead",
+    "solution": "Batch processing + model size metrics + throughput-based measurement",
+    "key_gains": {
+      "model_size_reduction": "3.0x (384D \u2192 128D)",
+      "quantization_reduction": "12.0x (float32 \u2192 int8)",
+      "batch_throughput_improvement": "GPU amortizes overhead, better cache efficiency",
+      "memory_bandwidth_gain": "4x (from int8 quantization)"
+    },
+    "batch_benchmarks": {
+      "1": {
+        "time_ms": 0.29361600001720944,
+        "throughput": 3405.808947541646,
+        "per_sample_us": 293.61600001720944
+      },
+      "8": {
+        "time_ms": 0.25830999980826164,
+        "throughput": 30970.539297503932,
+        "per_sample_us": 32.288749976032705
+      },
+      "32": {
+        "time_ms": 0.3809809999438585,
+        "throughput": 83993.68998641805,
+        "per_sample_us": 11.905656248245577
+      },
+      "128": {
+        "time_ms": 0.3811449996283045,
+        "throughput": 335830.19618472387,
+        "per_sample_us": 2.977695309596129
+      },
+      "512": {
+        "time_ms": 0.8859290001782938,
+        "throughput": 577924.4159486366,
+        "per_sample_us": 1.73033007847323
+      }
+    },
+    "realistic_cycle_latency_ms": {
+      "embedding_ms": 2.6680149973981315,
+      "routing_ms": 2.0,
+      "retrieval_ms": 5.0,
+      "packing_ms": 1.0,
+      "total_ms": 10.668014997398132
+    }
+  }
+}

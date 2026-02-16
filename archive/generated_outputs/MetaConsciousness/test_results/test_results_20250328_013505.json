@@ -1,0 +1,13 @@
+{
+  "passed_tests": [],
+  "failed_tests": [
+    {
+      "test": "Logging and Trace",
+      "error": "log_event() got an unexpected keyword argument 'level'"
+    }
+  ],
+  "system_state": {},
+  "reflex_outcomes": [],
+  "thought_tree": {},
+  "test_duration": 0.00298309326171875
+}

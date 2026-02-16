@@ -1,0 +1,13 @@
+{
+  "passed_tests": [],
+  "failed_tests": [
+    {
+      "test": "Comprehensive Integration",
+      "error": "ARTController.train() got an unexpected keyword argument 'input_data'"
+    }
+  ],
+  "system_state": {},
+  "reflex_outcomes": [],
+  "thought_tree": {},
+  "test_duration": 0.00871896743774414
+}

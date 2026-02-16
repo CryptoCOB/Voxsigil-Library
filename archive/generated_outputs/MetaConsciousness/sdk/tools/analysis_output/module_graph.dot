@@ -1,0 +1,11 @@
+digraph G {
+  rankdir=LR;
+  node [shape=box, style=filled, fillcolor=lightblue];
+  overlap=false;
+  splines=true;
+  "MetaConsciousness___init__" [label="__init__"];
+  "MetaConsciousness_agent___init__" [label="agent.__init__"];
+  "MetaConsciousness_omega3_agent" [label="omega3.agent"];
+  "MetaConsciousness_omega3_decision" [label="omega3.decision"];
+  "MetaConsciousness_omega3___init__" [label="omega3.__init__"];
+}

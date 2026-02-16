@@ -1,0 +1,270 @@
+{
+  "total_sigils": 35,
+  "sample_schemas": [
+    {
+      "file": "Dream_state",
+      "schema": {
+        "is_primitive": false,
+        "has_math": true,
+        "schema_version": "unknown",
+        "structure": {
+          "composite_type": "state_machine",
+          "temporal_structure": "oscillatory",
+          "components": [
+            {
+              "name": "Semantic De-Focusser",
+              "description": "Broadens the activation spread in semantic networks."
+            },
+            {
+              "name": "Metaphor Engine",
+              "description": "Actively seeks and generates metaphorical links."
+            },
+            {
+              "name": "Narrative Fragment Generator",
+              "description": "Produces micro-stories or evocative scenes from conceptual inputs."
+            },
+            {
+              "name": "Emotional Resonance Amplifier",
+              "description": "Heightens the emotional coloring of concepts, influencing associations."
+            }
+          ]
+        },
+        "composite_type": "state_machine",
+        "temporal_structure": "oscillatory",
+        "n_components": 4,
+        "tags": [
+          "conceptual_blending",
+          "non_linear_thought",
+          "creativity_enhancement",
+          "latent_space_exploration",
+          "symbolic_drift"
+        ],
+        "tag_count": 5,
+        "principle_len": 388,
+        "math_len": 214,
+        "has_activation": false,
+        "has_usage": true,
+        "has_params": false,
+        "has_relationships": false,
+        "mesh_compatible": "holo-1.5-alpha",
+        "registration_ready": true,
+        "event_support": true,
+        "async_capable": true
+      }
+    },
+    {
+      "file": "Nexus",
+      "schema": {
+        "is_primitive": false,
+        "has_math": true,
+        "schema_version": "unknown",
+        "structure": {
+          "composite_type": "sequential",
+          "temporal_structure": "event_triggered_sequence",
+          "components": [
+            {
+              "name": "Query Formulator",
+              "description": "Translates an information need into an optimal query for external sources."
+            },
+            {
+              "name": "Source Selector & Retriever",
+              "description": "Identifies and accesses relevant knowledge bases or data streams."
+            },
+            {
+              "name": "Semantic Parser & Validator",
+              "description": "Extracts meaning and assesses the coherence/validity of retrieved information."
+            },
+            {
+              "name": "Linkage Engine",
+              "description": "Identifies and creates connections between new info and existing knowledge."
+            },
+            {
+              "name": "Model Updater",
+              "description": "Modifies internal cognitive models based on integrated knowledge."
+            }
+          ]
+        },
+        "composite_type": "sequential",
+        "temporal_structure": "event_triggered_sequence",
+        "n_components": 5,
+        "tags": [
+          "information_grafting",
+          "semantic_linking",
+          "knowledge_base_interface",
+          "data_assimilation",
+          "context_enrichment"
+        ],
+        "tag_count": 5,
+        "principle_len": 402,
+        "math_len": 218,
+        "has_activation": false,
+        "has_usage": true,
+        "has_params": false,
+        "has_relationships": false,
+        "mesh_compatible": "holo-1.5-alpha",
+        "registration_ready": true,
+        "event_support": true,
+        "async_capable": true
+      }
+    },
+    {
+      "file": "TestCognitiveEnhancer",
+      "schema": {
+        "is_primitive": false,
+        "has_math": false,
+        "schema_version": "unknown",
+        "structure": {
+          "cognitive_structure": {
+            "components": [
+              "Cognitive Amplifier",
+              "Neural Pattern Reinforcer"
+            ]
+          },
+          "components": [
+            {
+              "name": "DefaultComponent",
+              "description": "Default component - needs specification"
+            }
+          ]
+        },
+        "composite_type": "none",
+        "temporal_structure": "static",
+        "n_components": 1,
+        "tags": [
+          "Attention",
+          "Memory",
+          "Learning",
+          "Cognitive Enhancement"
+        ],
+        "tag_count": 4,
+        "principle_len": 3,
+        "math_len": 0,
+        "has_activation": false,
+        "has_usage": true,
+        "has_params": false,
+        "has_relationships": false,
+        "mesh_compatible": "holo-1.5-alpha",
+        "registration_ready": true,
+        "event_support": true,
+        "async_capable": true
+      }
+    },
+    {
+      "file": "anomaly_seeker",
+      "schema": {
+        "is_primitive": false,
+        "has_math": true,
+        "schema_version": "unknown",
+        "structure": {
+          "composite_type": "parallel",
+          "temporal_structure": "continuous_monitoring_feedback_loop",
+          "components": [
+            {
+              "name": "Expectation Modeler",
+              "description": "Builds or accesses a model of 'normal' or expected patterns."
+            },
+            {
+              "name": "Deviance Detector",
+              "description": "Compares incoming data/states against the expectation model to find discrepancies."
+            },
+            {
+              "name": "Significance Assessor",
+              "description": "Evaluates whether an anomaly is trivial noise or potentially significant."
+            },
+            {
+              "name": "Curiosity Prioritizer",
+              "description": "Ranks significant anomalies for further investigation based on potential insight."
+            },
+            {
+              "name": "Exploration Initiator",
+              "description": "Triggers deeper analysis or hypothesis generation around prioritized anomalies (may use \ud83c\udf12DREAM_STATE or \ud83d\udd2eORACLE_QUERY)."
+            }
+          ]
+        },
+        "composite_type": "parallel",
+        "temporal_structure": "continuous_monitoring_feedback_loop",
+        "n_components": 5,
+        "tags": [
+          "outlier_detection",
+          "divergent_thinking_catalyst",
+          "curiosity_drive",
+          "pattern_breaking",
+          "serendipity_engine"
+        ],
+        "tag_count": 5,
+        "principle_len": 406,
+        "math_len": 163,
+        "has_activation": false,
+        "has_usage": true,
+        "has_params": false,
+        "has_relationships": false,
+        "mesh_compatible": "holo-1.5-alpha",
+        "registration_ready": true,
+        "event_support": true,
+        "async_capable": true
+      }
+    },
+    {
+      "file": "c_structure",
+      "schema": {
+        "is_primitive": false,
+        "has_math": true,
+        "schema_version": "unknown",
+        "structure": {
+          "composite_type": "recursive_feedback_loop",
+          "temporal_structure": "sequential_phase_iterative",
+          "components": [
+            {
+              "name": "Categorization Unit (C)",
+              "description": "Segments inputs into meaningful cognitive classes using pattern matching or semantic clustering. Triggered by \ud83d\udf1bCATENGINE.",
+              "sigil_ref": "\ud83d\udf1bCATENGINE"
+            },
+            {
+              "name": "Analysis Engine (A)",
+              "description": "Unpacks symbolic structure, detects latent relationships, and performs logical decomposition of categorized inputs."
+            },
+            {
+              "name": "Testing & Simulation Module (T)",
+              "description": "Runs internal simulations, probes logical consistency, applies constraints, or evaluates against criteria."
+            },
+            {
+              "name": "Reflective Feedback Interface",
+              "description": "Integrates evaluative feedback (e.g., from <mirror>) to modulate subsequent loop iterations.",
+              "sigil_ref": "<mirror>"
+            },
+            {
+              "name": "Pulse Synchronization Control",
+              "description": "Regulates the cadence and rhythm of the C-A-T cycle, especially in layered or multi-threaded reasoning.",
+              "sigil_ref": "<pulse>"
+            },
+            {
+              "name": "Traceability Anchor",
+              "description": "Maintains memory continuity and identity across recursive iterations.",
+              "sigil_ref": "\u26a6TRACE"
+            }
+          ]
+        },
+        "composite_type": "recursive_feedback_loop",
+        "temporal_structure": "sequential_phase_iterative",
+        "n_components": 6,
+        "tags": [
+          "consciousness_scaffold",
+          "meta_reasoning",
+          "symbolic_evolution",
+          "self_inspection_loop"
+        ],
+        "tag_count": 4,
+        "principle_len": 642,
+        "math_len": 301,
+        "has_activation": false,
+        "has_usage": true,
+        "has_params": false,
+        "has_relationships": false,
+        "mesh_compatible": "holo-1.5-alpha",
+        "registration_ready": true,
+        "event_support": true,
+        "async_capable": true
+      }
+    }
+  ]
+}

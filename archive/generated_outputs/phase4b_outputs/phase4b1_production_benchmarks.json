@@ -1,0 +1,140 @@
+{
+  "phase": "4-B.1-production-grade",
+  "timestamp": "2026-02-12 07:49:22",
+  "benchmarks": {
+    "cold_start": {
+      "first_forward_ms": 128.13090000054217,
+      "model_load_ms": 2.5,
+      "cuda_init_ms": 150.0,
+      "total_cold_start_ms": 280.63090000054217
+    },
+    "cache_behavior": {
+      "hit_rate": 0.9,
+      "hit_latency_us": 0.16688891870823377,
+      "miss_latency_us": 165.01999991305638,
+      "speedup_cached": 988.8014206716459
+    },
+    "retrieval_drift": {
+      "recall_at_5_timeline": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "latency_timeline_ms": [
+        0.006999998731771484,
+        0.013900000340072438,
+        0.017400001524947584,
+        0.08739999975659885,
+        0.179899998329347
+      ],
+      "drift_detected": false
+    },
+    "conversation_stability": {
+      "total_turns": 200,
+      "memory_growth_rate": 199.0,
+      "entropy_start": -9.999999889225291e-09,
+      "entropy_end": 0.6931471605599454,
+      "entropy_drift": 0.6931471705599453,
+      "avg_pruning_rate": 0.075,
+      "context_collapse_detected": false
+    },
+    "entity_catastrophe": {
+      "total_inserts": 3,
+      "unique_entities": 3,
+      "overwrites": 0,
+      "duplicate_rate": 0.0,
+      "retention_consistency": "PASS"
+    },
+    "fragmentation": {
+      "total_storage_bytes": 277283,
+      "num_units": 1000,
+      "avg_unit_size": 277.283,
+      "retrieval_density": 3606.423762004883,
+      "fragmentation_ratio": 0.15
+    },
+    "distribution_collapse": {
+      "mean_norm": 11.300357818603516,
+      "std_norm": 0.6994138956069946,
+      "mean_variance_per_dim": 1.0013675689697266,
+      "std_variance_per_dim": 0.014270471408963203,
+      "collapse_detected": false,
+      "mean_pairwise_distance": 16.15972900390625,
+      "separability_score": 0.06548377126455307
+    },
+    "noise_divergence": {
+      "noise_levels": [
+        0.01,
+        0.05,
+        0.1,
+        0.2
+      ],
+      "cosine_similarities": [
+        0.9999529123306274,
+        0.9988261461257935,
+        0.995438277721405,
+        0.982369601726532
+      ],
+      "robustness_score": 0.982369601726532
+    },
+    "routing_stability": {
+      "routing_flip_rate": 0.0,
+      "stability_score": 1.0,
+      "is_stable": true
+    },
+    "schema_reconstruction": {
+      "dimension_r2_scores": [
+        0.12540572881698608,
+        0.11338871717453003,
+        0.08965164422988892,
+        0.09208714962005615,
+        0.10878342390060425,
+        0.08230918645858765,
+        0.09538841247558594,
+        0.08114367723464966,
+        0.11692732572555542
+      ],
+      "mean_r2": 0.10056502951516046,
+      "is_recoverable": false
+    },
+    "memory_pressure": {
+      "budget_degradation": [
+        {
+          "budget_mb": 1000,
+          "pruning_ratio": 0.1,
+          "degradation_acceptable": true
+        },
+        {
+          "budget_mb": 500,
+          "pruning_ratio": 0.1,
+          "degradation_acceptable": true
+        },
+        {
+          "budget_mb": 256,
+          "pruning_ratio": 0.1,
+          "degradation_acceptable": true
+        },
+        {
+          "budget_mb": 128,
+          "pruning_ratio": 0.44999999999999996,
+          "degradation_acceptable": true
+        },
+        {
+          "budget_mb": 64,
+          "pruning_ratio": 0.6249999999999999,
+          "degradation_acceptable": true
+        }
+      ],
+      "crash_detected": false,
+      "min_working_budget_mb": 64
+    },
+    "gpu_efficiency": {
+      "transfer_time_ms": 2.8253999989829026,
+      "compute_time_ms": 0.7968999998411164,
+      "gpu_utilization_percent": 21.99983436214091,
+      "is_compute_bound": false
+    }
+  },
+  "overall_status": "NEEDS OPTIMIZATION"
+}

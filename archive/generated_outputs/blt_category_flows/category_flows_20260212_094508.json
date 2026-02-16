@@ -1,0 +1,236 @@
+{
+  "metadata": {
+    "purpose": "Category-specific flows showing procedural sequences and inter-category coordination",
+    "model_used": "wizard-math:latest",
+    "categories_covered": [
+      "pglyph",
+      "tags",
+      "scaffolds",
+      "sigils",
+      "flows"
+    ],
+    "total_generated": 15,
+    "valid_count": 14,
+    "duplicate_count": 0,
+    "timestamp": "2026-02-12T09:45:08.764018"
+  },
+  "category_patterns": {
+    "pglyph_flows": [
+      "identity_initialization_sequence",
+      "recursive_anchor_binding_flow",
+      "system_identity_propagation",
+      "echo_inheritance_chain",
+      "core_orchestration_startup"
+    ],
+    "tag_flows": [
+      "attention_focus_switching_flow",
+      "cognitive_primitive_composition",
+      "tag_activation_cascade",
+      "selective_attention_routing",
+      "atomic_operation_pipeline"
+    ],
+    "scaffold_flows": [
+      "curriculum_progression_flow",
+      "learning_module_sequencing",
+      "framework_component_assembly",
+      "scaffold_initialization_protocol",
+      "hierarchical_structure_building"
+    ],
+    "sigil_flows": [
+      "anomaly_detection_investigation_flow",
+      "pattern_recognition_refinement",
+      "component_activation_sequence",
+      "operational_mode_transition",
+      "sigil_coordination_protocol"
+    ],
+    "meta_flows": [
+      "pglyph_to_scaffold_initialization",
+      "tag_activated_sigil_flow",
+      "scaffold_guided_tag_composition",
+      "full_system_bootstrap_sequence",
+      "category_coordination_protocol"
+    ]
+  },
+  "generated_flows": [
+    {
+      "target_category": "pglyph",
+      "flow_pattern": "recursive_anchor_binding_flow",
+      "base_sigil": "ai_recursive_mirrorfire",
+      "generated_content": "\nThe answer is: As an AI language model, I cannot create or edit files directly. However, I can provide you with a template for the VoxSigil FLOW YAML file, and you can fill in the details according to your requirements. Here's a template for you to use:\n\n```yaml\nschema_version: 1.5-holo-alpha\nmeta:\n  category: flows\n  tag: recursive_anchor_binding_flow\nholo_mesh:\n  temporal_pattern: sequential_enforced_ordering\ncognitive:\n  principle: \"This flow ensures clear and concise communication within the PGLYPH category, adhering to the ordering constraints.\"\n  ordering_constraints:\n    - Step 1: Define the problem statement.\n    - Step 2: Identify the relevant components and categories.\n    - Step 3: Apply the appropriate cognitive scaffolds.\n    - Step 4: Evaluate the results and iterate as necessary.\n  dependency_graph:\n    - Component A depends on Component B: Component B > Component A\n    - Component C depends on Component D: Component D > Component C\n  failure_modes:\n    - If the ordering constraints are violated, the flow may result in inconsistent or incorrect outputs.\n    - If the gates are not properly implemented, the flow may execute prematurely or not at all.\n  gates:\n    - Gate A: Ensures that Component B is completed before executing Component A.\n    - Gate B: Ensures that Component D is completed before executing Component C.\nimplementation:\n  - Gate A implementation details.\n  - Gate B implementation details.\nconnectivity:\n  inputs:\n    - Input A: From Category X\n    - Input B: From Category Y\n  outputs:\n    - Output A: To Category Z\n```\n\nReplace the placeholders with the appropriate components, steps, and categories specific to your flow, and you'll have a complete VoxSigil FLOW YAML file for the recursive_anchor_binding_flow in the pglyph context.",
+      "is_duplicate": false,
+      "is_valid_flow": true,
+      "tokens": 471,
+      "time_sec": 18.439801454544067,
+      "tokens_per_sec": 25.542574368876018,
+      "timestamp": "2026-02-12T09:42:18.752402"
+    },
+    {
+      "target_category": "pglyph",
+      "flow_pattern": "core_orchestration_startup",
+      "base_sigil": "ai_recursive_mirrorfire",
+      "generated_content": "\n```yaml\nschema_version: 1.5-holo-alpha\nmeta:\n  category: flows\n  tag: ProceduralFlow\n  name: core_orchestration_startup\n  description: A procedural sequence for starting up the system's core orchestration functions.\nholo_mesh:\n  temporal_pattern: sequential_enforced_ordering\ncognitive:\n  principle: \"Ensure that the system's core orchestration functions are started up in a well-defined order, preventing premature execution and ensuring proper initialization.\"\n  ordering_constraints:\n    - Step 1: Initialize core components (e.g., database, messaging service)\n    - Step 2: Start up the core services (e.g., monitoring, logging)\n    - Step 3: Bootstrap the system's core orchestration agent (e.g., initialize state, load configurations)\n    - Step 4: Begin execution of the core orchestration workflow\n  dependency_graph:\n    - Core components -> Core services\n    - Core services -> Core orchestration agent\n    - Core orchestration agent -> Core orchestration workflow\n  failure_modes:\n    - If the core components are not initialized properly, the system's functionality may be compromised.\n    - If the core services are not started up in the correct order, the system's coordination and monitoring may be affected.\n    - If the core orchestration agent is not properly bootstrapped, the overall system may not function as intended.\n  gates:\n    - Core components initialization gate: A lock ensuring that the core components are fully initialized before proceeding to the next step.\n    - Core services startup gate: A lock ensuring that the core services are started up in the correct order before proceeding to the next step.\n    - Core orchestration agent bootstrap gate: A lock ensuring that the core orchestration agent is properly initialized and loaded with the necessary configurations before proceeding to the next step.\nimplementation:\n  gates:\n    - The core components initialization gate can be released when all core components are fully initialized and ready for use.\n    - The core services startup gate can be released when all core services are started up in the correct order and ready for use.\n    - The core orchestration agent bootstrap gate can be released when the core orchestration agent is properly initialized and loaded with the necessary configurations.\nconnectivity:\n  inputs:\n    - Core components (from initialization process)\n    - Core services (from startup process)\n  outputs:\n    - Core orchestration workflow (to execution process)\n```\n\nThis YAML file defines a VoxSigil FLOW for the core_orchestration_startup procedure in the pglyph category. It includes all the required sections and provides a clear structure for the flow's ordering constraints, dependency graph, gates, failure modes, implementation details, and connectivity.",
+      "is_duplicate": false,
+      "is_valid_flow": true,
+      "tokens": 652,
+      "time_sec": 11.995845556259155,
+      "tokens_per_sec": 54.352150245865865,
+      "timestamp": "2026-02-12T09:42:31.250293"
+    },
+    {
+      "target_category": "pglyph",
+      "flow_pattern": "identity_initialization_sequence",
+      "base_sigil": "ai_recursive_mirrorfire",
+      "generated_content": "\n```yaml\nschema_version: 1.5-holo-alpha\nmeta:\n  category: flows\n  tag: ProceduralFlow\n  name: holo_identity_initialization_sequence\nholo_mesh:\n  temporal_pattern: sequential_enforced_ordering\ncognitive:\n  principle: \"This flow ensures the proper initialization of a HoloMesh identity in a sequence-dependent manner.\"\n  ordering_constraints:\n    - Step 1: Initialize HoloHost\n      prerequisites: []\n      gates: []\n    - Step 2: Bootstrap HoloAgent\n      prerequisites: [Step 1]\n      gates: [gate_holoagent_bootstrap]\n    - Step 3: Configure HoloApps\n      prerequisites: [Step 2]\n      gates: []\n    - Step 4: Activate HoloServices\n      prerequisites: [Step 3]\n      gates: []\n    - Step 5: Finalize Identity Initialization\n      prerequisites: [Step 4]\n      gates: []\n  dependency_graph:\n    HoloHost -> HoloAgent\n    HoloAgent -> HoloApps\n    HoloApps -> HoloServices\n  failure_modes:\n    - Violating the ordering constraints can lead to inconsistencies in the identity initialization process.\n    - For example, running Step 3 before Step 2 can result in incorrect configurations for HoloAgent.\n  gates:\n    gate_holoagent_bootstrap:\n      condition: HoloHost.initialized && HoloApps.configured\n      action: trigger HoloAgent.bootstrap\n  implementation: The gates are implemented as triggers that check the conditions and execute the corresponding actions when the conditions are met.\nconnectivity:\n  inputs:\n    - input1: HoloHost.initialized\n    - input2: HoloApps.configured\n  outputs:\n    - output1: HoloAgent.bootstrapped\n    - output2: HoloServices.activated\n```\n\nReplace the placeholders (HoloHost, HoloAgent, etc.) with actual components or services specific to your implementation. This YAML file can then be used as a template for creating a VoxSigil FLOW in the pglyph category named \"holo_identity_initialization_sequence\".",
+      "is_duplicate": false,
+      "is_valid_flow": true,
+      "tokens": 536,
+      "time_sec": 9.361143350601196,
+      "tokens_per_sec": 57.25796304204408,
+      "timestamp": "2026-02-12T09:42:41.113829"
+    },
+    {
+      "target_category": "tags",
+      "flow_pattern": "atomic_operation_pipeline",
+      "base_sigil": "abyss_threshold",
+      "generated_content": "```yaml\n# voxsigil.yaml\nschema_version: 1.5-holo-alpha\nmeta:\n  category: flows\n  tag: ProceduralFlow\n  upgraded_from: legacy\n  upgrade_timestamp: '2025-06-24T17:14:16.442726'\n  source_file: flows\\atomic_operation_pipeline.voxsigil\nholo_mesh:\n  temporal_pattern: sequential_enforced_ordering\ncognitive:\n  principle: \"Ensures that atomic operations are executed in a specific order to prevent race conditions and ensure correct results.\"\n  ordering_constraints:\n    - Step 1: Perform operation A\n      prerequisites: []\n    - Step 2: Perform operation B\n      prerequisites: [Step 1]\n    - Step 3: Perform operation C\n      prerequisites: [Step 2]\n  dependency_graph:\n    A: [B]\n    B: [C]\n  failure_modes:\n    - If Step 1 is not completed before starting Step 2, the results of Step 2 will be incorrect.\n    - If Step 2 is not completed before starting Step 3, the results of Step 3 will be incorrect.\n  gates:\n    - Step 1 completion gate: Prevents access to Step 2 until Step 1 is complete.\n    - Step 2 completion gate: Prevents access to Step 3 until Step 2 is complete.\nimplementation:\n  Step 1 completion gate: Implemented using a semaphore lock that ensures only one thread can execute Step 1 at a time.\n  Step 2 completion gate: Implemented using a similar semaphore lock for Step 2.\nconnectivity:\n  inputs: []\n  outputs: [A, B, C]\n```\nThis is a complete VoxSigil FLOW YAML for the atomic_operation_pipeline in the tags context. It includes all the required sections and demonstrates how to enforce ordering constraints, handle failure modes, and implement gates.",
+      "is_duplicate": false,
+      "is_valid_flow": true,
+      "tokens": 484,
+      "time_sec": 8.653460502624512,
+      "tokens_per_sec": 55.931381422866316,
+      "timestamp": "2026-02-12T09:42:50.269663"
+    },
+    {
+      "target_category": "tags",
+      "flow_pattern": "cognitive_primitive_composition",
+      "base_sigil": "abyss_threshold",
+      "generated_content": "\n```yaml\n# This is a VoxSigil definition file for the FLOWS category.\n# It encodes a procedural sequence with ordering constraints, ensuring a specific cognitive process is followed.\n\nschema_version: 1.5-holo-alpha\nmeta:\n  category: flows\n  tag: ProceduralFlow\n  name: cognitive_primitive_composition\n  description: This flow ensures that atomic cognitive primitives are composed in a specific order, preventing cognitive stack overflow or catastrophic loss of coherence.\n\nholo_mesh:\n  temporal_pattern: sequential_enforced_ordering\n  is_cognitive_primitive: false\n  mesh_compatibility: holo-1.5-alpha\n  registration_ready: true\n  vanta_core_integration:\n    event_support: true\n    async_capable: true\n    memory_aware: true\n\ncognitive:\n  principle: \"Ensures that atomic cognitive primitives are composed in a specific order, preventing cognitive stack overflow or catastrophic loss of coherence.\"\n  ordering_constraints:\n    - Step 1: Identify the required atomic cognitive primitives (e.g., focus, attention) from the tags category.\n    - Step 2: Verify that the selected primitives have compatible operational parameters and do not conflict with each other.\n    - Step 3: Compose the primitives in a specific order, considering their interdependencies and cognitive load implications.\n    - Step 4: Monitor the compositional process and dynamically adjust the sequence if necessary to maintain cognitive safety.\n  dependency_graph:\n    - focus: [attention]\n    - attention: []\n    - ... (add more primitive dependencies here)\n  failure_modes:\n    - Violating the ordering constraints can lead to cognitive stack overflow or catastrophic loss of coherence.\n    - Incompatible operational parameters between primitives can cause confusion and diminished effectiveness.\n  gates:\n    - Ordering Gate: Enforces the specific order of composition, preventing premature execution of subsequent primitives.\n    - Compatibility Gate: Verifies that the selected primitives have compatible operational parameters and do not conflict with each other.\n  implementation:\n    - The Ordering Gate can be implemented using a simple sequential execution mechanism that ensures each primitive is executed in the specified order.\n    - The Compatibility Gate can be implemented by checking the operational parameters of the selected primitives during the composition process.\n  connectivity:\n    inputs: []\n    outputs: []\n```\n\nReplace the `...` with actual dependency information and add any additional gates or implementation details as needed. This file can then be used as a template for creating a new VoxSigil FLOW in the TAGS category.",
+      "is_duplicate": false,
+      "is_valid_flow": true,
+      "tokens": 633,
+      "time_sec": 10.487439632415771,
+      "tokens_per_sec": 60.357915962963126,
+      "timestamp": "2026-02-12T09:43:01.259136"
+    },
+    {
+      "target_category": "tags",
+      "flow_pattern": "atomic_operation_pipeline",
+      "base_sigil": "abyss_threshold",
+      "generated_content": "\n```yaml\n# Name of the VoxSigil\nname: atomic_operation_pipeline\n\n# Category of the VoxSigil\ncategory: flows\n\n# Version of the schema used to define the VoxSigil\nschema_version: 1.5-holo-alpha\n\n# Meta information about the VoxSigil\nmeta:\n  sigil: \ud83c\udf00\ud83d\uded1\ud83d\udcc9\n  alias: AtomicOperationPipeline\n  tag: ProceduralFlow\n  upgraded_from: legacy\n  upgrade_timestamp: '2025-06-24T17:14:16.442726'\n  source_file: flows\\atomic_operation_pipeline.voxsigil\n\n# HoloMesh information about the VoxSigil\nholo_mesh:\n  is_cognitive_primitive: false\n  mesh_compatibility: holo-1.5-alpha\n  registration_ready: true\n  vanta_core_integration:\n    event_support: true\n    async_capable: true\n    memory_aware: true\n  temporal_pattern: sequential_enforced_ordering\n\n# Cognitive information about the VoxSigil\ncognitive:\n  principle: \"Ensures that atomic operations are executed in a well-defined order to prevent race conditions and maintain the integrity of data and system state.\"\n\n# Ordering constraints for the flow\nordering_constraints:\n  step 1: Load dependencies\n  step 2: Execute operation A\n  step 3: Execute operation B\n  step 4: Commit changes\n\n# Dependency graph showing prerequisites\ndependency_graph:\n  Operation A: []\n  Operation B: [Operation A]\n\n# Gates that enforce ordering\ngates:\n  Execution Gate:\n    - Operation A\n    - Operation B\n  Commit Gate:\n    - Operation A\n    - Operation B\n\n# Failure modes and consequences\nfailure_modes:\n  Violating order: Race conditions, inconsistent system state, data corruption\n\n# Implementation details of the gates\nimplementation:\n  Execution Gate: Ensure that both operations are executed in the correct order using a sequential execution mechanism.\n  Commit Gate: Enforce that changes are committed only after both operations have been executed.\n\n# Inputs and outputs of the flow\nconnectivity:\n  inputs:\n    - tag: Operation A input\n    - tag: Operation B input\n  outputs:\n    - tag: AtomicOperationPipeline output\n```\n\nThis is a complete VoxSigil FLOW YAML for the atomic_operation_pipeline in the tags context. You can use this as a template to create your own VoxSigil FLOW. Make sure to change the name, alias, and tag according to your needs.",
+      "is_duplicate": false,
+      "is_valid_flow": true,
+      "tokens": 649,
+      "time_sec": 11.24999189376831,
+      "tokens_per_sec": 57.68893045687433,
+      "timestamp": "2026-02-12T09:43:13.010724"
+    },
+    {
+      "target_category": "scaffolds",
+      "flow_pattern": "curriculum_progression_flow",
+      "base_sigil": "affective_ethical_modulator_scaffold",
+      "generated_content": "\n```yaml\n# VoxSigil FLOW definition for curriculum_progression_flow in the scaffolds category\n# This is a generated example and should not be used as-is. Please customize according to your specific flow requirements.\n\nschema_version: 1.5-holo-alpha\nmeta:\n  category: flows\n  tag: CurriculumProgressionFlow\n  upgraded_from: legacy\n  upgrade_timestamp: '2025-06-24T17:14:15.613762'\n  source_file: flows\\curriculum_progression_flow.voxsigil\nholo_mesh:\n  temporal_pattern: sequential_enforced_ordering\ncognitive:\n  principle: \"The Curriculum Progression Flow ensures a structured and ordered progression through a learning curriculum, promoting effective knowledge acquisition and skill development.\"\n  ordering_constraints:\n    - Step 1: Identify learning goals and objectives\n      Prerequisites: None\n    - Step 2: Design learning activities and assessments\n      Prerequisites: Step 1\n    - Step 3: Implement the curriculum\n      Prerequisites: Step 2\n    - Step 4: Evaluate and refine the curriculum\n      Prerequisites: Step 3\n  dependency_graph:\n    - learning_goals: [Step 1, Step 2, Step 3, Step 4]\n    - learning_activities: [Step 2, Step 3]\n    - assessments: [Step 2, Step 3]\n    - curriculum_evaluation: [Step 4]\n  failure_modes:\n    - Violating the ordering constraints can lead to incomplete or incorrect knowledge acquisition.\n    - Skipping steps without proper evaluation can result in poorly refined curricula.\n  gates:\n    - OrderingGate: Ensures that each step is completed before proceeding to the next one.\n  implementation:\n    - The OrderingGate is implemented using a sequential workflow engine, which enforces the ordered execution of steps.\n  connectivity:\n    - inputs: [learning_goals, learning_activities, assessments]\n    - outputs: [curriculum_evaluation]\n```\n\nReplace the placeholders with your specific flow details and requirements. This example demonstrates how a VoxSigil FLOW definition for curriculum_progression_flow in the scaffolds category could be structured.",
+      "is_duplicate": false,
+      "is_valid_flow": true,
+      "tokens": 560,
+      "time_sec": 9.898353576660156,
+      "tokens_per_sec": 56.575065303835295,
+      "timestamp": "2026-02-12T09:43:23.411052"
+    },
+    {
+      "target_category": "scaffolds",
+      "flow_pattern": "curriculum_progression_flow",
+      "base_sigil": "affective_ethical_modulator_scaffold",
+      "generated_content": "\n```yaml\nschema_version: 1.5-holo-alpha\nmeta:\n  category: flows\n  tag: CurriculumProgressionFlow\n  upgraded_from: legacy\n  upgrade_timestamp: '2025-06-24T17:14:15.613762'\n  source_file: flows\\curriculum_progression_flow.voxsigil\nholo_mesh:\n  temporal_pattern: sequential_enforced_ordering\ncognitive:\n  principle: \"The Curriculum Progression Flow ensures a structured and organized approach to learning, ensuring that prerequisite skills are acquired before moving on to more advanced topics.\"\n  ordering_constraints:\n    - Step 1: Foundational Skills (e.g., focus, attention, memory)\n      Prerequisites: None\n    - Step 2: Core Concepts (e.g., cognitive primitives, scaffolds, flows)\n      Prerequisites: Step 1\n    - Step 3: Advanced Techniques (e.g., anomaly detection, event-triggered sequences)\n      Prerequisites: Step 2\n    - Step 4: Expert Applications (e.g., cognitive systems design, holistic problem-solving)\n      Prerequisites: Step 3\n  dependency_graph:\n    Foundational Skills: [Core Concepts]\n    Core Concepts: [Advanced Techniques]\n    Advanced Techniques: [Expert Applications]\n  failure_modes:\n    - Violating the ordering constraints can lead to misunderstanding of prerequisite knowledge, causing confusion and potentially hindering progress.\n    - Skipping steps can result in gaps in understanding, making it difficult to build upon previous knowledge and leading to potential failures in complex tasks.\n  gates:\n    - Step 1 completion gate: This gate ensures that all learners have acquired the necessary foundational skills before moving on to the next step.\n    - Step 2 completion gate: This gate ensures that learners have a solid understanding of core concepts before proceeding to advanced techniques.\n    - Step 3 completion gate: This gate ensures that learners have mastered the advanced techniques before proceeding to expert applications.\n  implementation:\n    - The gates are implemented as checkpoints within each step, where learners must demonstrate proficiency in the required skills or concepts before advancing to the next step.\n    - The gates can be automatically enforced by the learning management system, preventing learners from skipping ahead or progressing prematurely.\n  connectivity:\n    inputs: [scaffolds]\n    outputs: [sigils, flows]\n```\n\nThis VoxSigil FLOW YAML defines a new flow called 'CurriculumProgressionFlow' in the 'flows' category. It ensures a structured and organized approach to learning by enforcing ordering constraints, prerequisites, and gates. The flow relates to the 'scaffolds' category operations by inputting from and outputting to the 'scaffolds' category.",
+      "is_duplicate": false,
+      "is_valid_flow": true,
+      "tokens": 689,
+      "time_sec": 11.314522743225098,
+      "tokens_per_sec": 60.89518892103151,
+      "timestamp": "2026-02-12T09:43:35.227440"
+    },
+    {
+      "target_category": "scaffolds",
+      "flow_pattern": "curriculum_progression_flow",
+      "base_sigil": "affective_ethical_modulator_scaffold",
+      "generated_content": "```yaml\n# Name the VoxSigil with a unique name and specify the category as \"flows\"\nname: curriculum_progression_flow\ncategory: flows\nschema_version: 1.5-holo-alpha\nmeta:\n  tag: ProceduralFlow\n  source_file: flows\\curriculum_progression_flow.voxsigil\n  upgraded_from: legacy\n  upgrade_timestamp: '2025-06-24T17:14:15.613762'\nholo_mesh:\n  is_cognitive_primitive: false\n  temporal_pattern: sequential_enforced_ordering\n  vanta_core_integration:\n    event_support: true\n    async_capable: true\n    memory_aware: true\ncognitive:\n  principle: \"The Curriculum Progression Flow ensures a structured approach to learning, promoting logical step-by-step advancement through a curriculum.\"\n  ordering_constraints:\n    - Step 1: Identify learning objectives\n    - Step 2: Design learning activities aligned with objectives\n    - Step 3: Implement and deliver the learning activities\n    - Step 4: Assess learner progress and provide feedback\n    - Step 5: Evaluate the effectiveness of the curriculum and make improvements as needed\n  dependency_graph:\n    - Learning Objectives: [Design Activities, Assess Progress]\n    - Design Activities: [Implement Activities, Assess Progress]\n    - Implement Activities: [Assess Progress, Evaluate Effectiveness]\n    - Assess Progress: [Evaluate Effectiveness]\n  failure_modes:\n    - Violating the ordering constraints may lead to ineffective learning, as activities may not be properly designed, implemented, or assessed.\n    - Skipping steps may result in gaps in learning and understanding.\n  gates:\n    - Step completion gate: A gate that ensures each step is completed before moving on to the next.\n    - Prerequisite knowledge gate: A gate that requires learners to demonstrate mastery of previous concepts before proceeding to more advanced topics.\n  implementation:\n    - The step completion gate can be implemented by using a simple counter for each step, incremented upon successful completion. The flow will only progress to the next step if all counters are greater than zero.\n    - The prerequisite knowledge gate can be implemented by requiring learners to pass an assessment or demonstrate understanding of previous concepts before accessing new material. This can be enforced using role-based access control mechanisms.\n  connectivity:\n    inputs: []\n    outputs: []\n```\n\nReplace the placeholder names and customize as needed for your specific flow.",
+      "is_duplicate": false,
+      "is_valid_flow": true,
+      "tokens": 607,
+      "time_sec": 10.688211679458618,
+      "tokens_per_sec": 56.791539894983245,
+      "timestamp": "2026-02-12T09:43:46.417481"
+    },
+    {
+      "target_category": "sigils",
+      "flow_pattern": "anomaly_detection_investigation_flow",
+      "base_sigil": "anomaly_seeker",
+      "generated_content": "\n```yaml\nschema_version: 1.5-holo-alpha\nmeta:\n  category: flows\n  name: anomaly_detection_investigation_flow\n  tag: ProceduralFlow\n  upgraded_from: legacy\n  upgrade_timestamp: '2025-06-24T17:14:16.047302'\n  source_file: flows\\anomaly_detection_investigation_flow.voxsigil\nholo_mesh:\n  is_cognitive_primitive: false\n  mesh_compatibility: holo-1.5-alpha\n  registration_ready: true\n  temporal_pattern: sequential_enforced_ordering\n  vanta_core_integration:\n    event_support: true\n    async_capable: true\n    memory_aware: true\ncognitive:\n  principle: \"This flow ensures the systematic detection, investigation, and evaluation of anomalies within a given dataset or system. It focuses on identifying unusual patterns, outliers, or deviations from expected behavior, and promotes the exploration of potential causes and consequences.\"\n  ordering_constraints:\n    - Step 1: Data Preparation\n      Prerequisites: None\n      Dependencies: None\n      Gates: None\n      Failure Modes: None\n    - Step 2: Anomaly Detection\n      Prerequisites: Step 1\n      Dependencies: None\n      Gates: Gate 1 (Anomaly Detection Gate)\n      Failure Modes: If Gate 1 is violated, the investigation may be hindered or incorrect conclusions drawn.\n    - Step 3: Anomaly Investigation\n      Prerequisites: Step 2\n      Dependencies: None\n      Gates: Gate 2 (Investigation Gate)\n      Failure Modes: If Gate 2 is violated, the investigation may be prematurely concluded or crucial information overlooked.\n    - Step 4: Anomaly Evaluation and Remediation\n      Prerequisites: Step 3\n      Dependencies: None\n      Gates: Gate 3 (Remediation Gate)\n      Failure Modes: If Gate 3 is violated, the anomaly may not be properly addressed or its impact underestimated.\n  implementation:\n    - Gate 1: Anomaly Detection Gate\n      Implementation: Anomaly detection algorithm applies to identify unusual data points or patterns.\n    - Gate 2: Investigation Gate\n      Implementation: Human or automated investigation of identified anomalies, collecting additional context and information.\n    - Gate 3: Remediation Gate\n      Implementation: Action taken to address the anomaly, such as correcting data errors or adjusting system parameters.\n  connectivity:\n    inputs: [anomaly_seeker]\n    outputs: [investigation_report, remediation_plan]\n```\n\nThis YAML defines a new flow called \"anomaly_detection_investigation_flow\" in the \"flows\" category. It includes all the required sections and follows the critical requirements for a VoxSigil FLOW.",
+      "is_duplicate": false,
+      "is_valid_flow": false,
+      "tokens": 725,
+      "time_sec": 13.408984184265137,
+      "tokens_per_sec": 54.068226946732935,
+      "timestamp": "2026-02-12T09:44:00.329654"
+    },
+    {
+      "target_category": "sigils",
+      "flow_pattern": "anomaly_detection_investigation_flow",
+      "base_sigil": "anomaly_seeker",
+      "generated_content": "\n```yaml\nschema_version: 1.5-holo-alpha\nmeta:\n  category: flows\n  name: anomaly_detection_investigation_flow\n  tag: ProceduralFlow\n  source_file: flows\\anomaly_detection_investigation_flow.voxsigil\nholo_mesh:\n  temporal_pattern: sequential_enforced_ordering\ncognitive:\n  principle: This flow ensures a systematic approach to detecting and investigating anomalies in a given dataset.\n  ordering_constraints:\n    - Step 1: Identify the dataset and its parameters\n    - Step 2: Apply the anomaly detection algorithm\n    - Step 3: Visualize the results\n    - Step 4: Investigate potential anomalies by analyzing their context and characteristics\n    - Step 5: Verify and validate the detected anomalies\n    - Step 6: Document the findings and share with relevant stakeholders\n  dependency_graph:\n    - Anomaly Detection Algorithm: Identify, Visualization, Investigation, Verification\n    - Contextual Analysis: Investigation\n    - Stakeholder Communication: Documentation, Sharing\n  failure_modes:\n    - Violating the ordering constraints can lead to incomplete or incorrect analysis results.\n    - Failing to verify and validate the detected anomalies can result in false positives or missed anomalies.\n    - Inadequate contextual analysis can lead to misunderstanding the nature of the anomaly.\n  gates:\n    - Ordering Gate: Ensures that each step is completed before proceeding to the next, preventing premature execution.\n    - Verification Gate: Blocks progress until the detected anomalies are verified and validated.\n  implementation:\n    - The Ordering Gate can be implemented using a simple counter or flag system, where each step increments a counter or flips a flag before allowing progress to the next step.\n    - The Verification Gate can be implemented by requiring manual approval or automatic validation of the detected anomalies before proceeding to the next step.\n  connectivity:\n    inputs:\n      - Dataset\n      - Parameters\n    outputs:\n      - Anomaly Detection Results\n      - Investigation Reports\n      - Verified Anomalies\n      - Stakeholder Communications\n```\n\nThis YAML file defines a VoxSigil flow named \"anomaly_detection_investigation_flow\" in the \"flows\" category. It includes all the required sections and provides a clear structure for detecting and investigating anomalies in a systematic manner. The flow ensures that each step is completed in order, with gates preventing premature execution and enforcing verification of detected anomalies. The potential failure modes are also outlined, as well as the inputs and outputs of the flow.",
+      "is_duplicate": false,
+      "is_valid_flow": true,
+      "tokens": 636,
+      "time_sec": 11.968900918960571,
+      "tokens_per_sec": 53.13771116548209,
+      "timestamp": "2026-02-12T09:44:12.801586"
+    },
+    {
+      "target_category": "sigils",
+      "flow_pattern": "operational_mode_transition",
+      "base_sigil": "anomaly_seeker",
+      "generated_content": "\n```\nschema_version: 1.5-holo-alpha\nmeta:\n  category: flows\n  tag: ProceduralFlow\n  upgraded_from: legacy\n  upgrade_timestamp: '2025-06-24T17:14:16.047302'\n  source_file: sigils\\operational_mode_transition.voxsigil\nholo_mesh:\n  is_cognitive_primitive: false\n  mesh_compatibility: holo-1.5-alpha\n  registration_ready: true\n  vanta_core_integration:\n    event_support: true\n    async_capable: true\n    memory_aware: true\n  temporal_pattern: sequential_enforced_ordering\ncognitive:\n  principle: \"This flow ensures a structured transition between different operational modes, \n\n  ordering_constraints:\n    1. Identify current operational mode (A)\n    2. Assess criteria for transition to next mode (B)\n    3. Evaluate readiness for transition based on criteria (C)\n    4. If readiness met, execute transition to next mode (D)\n    5. If readiness not met, reassess criteria and repeat steps 2-4 (E)\n    6. Monitor performance in new mode and feedback into criteria (F)\n    7. Repeat steps 2-6 as needed for subsequent mode transitions (G)\n    8. If no transition necessary, maintain current mode (H)\n    9. Review transition process and update criteria as needed (I)\n    10. Maintain awareness of external factors impacting mode transitions (J)\n\n  dependency_graph:\n    A -> B\n    B -> C\n    C -> D\n    D -> E\n    E -> B\n    F -> G\n    G -> H\n    H -> I\n    I -> J\n    \n  failure_modes:\n    - Violating ordering constraints leads to confusion, inefficiency, and potential \n      operational disruptions.\n    - Inadequate criteria may result in premature or unnecessary mode transitions.\n    - Inflexible criteria may hinder adaptation to changing conditions.\n    - Over-reliance on automation without human oversight can lead to errors or misunderstandings.\n    \n  gates:\n    - Transition Gate: Prevents transition to next mode until readiness is met.\n    - Review Gate: Ensures regular evaluation and updating of criteria.\n    - Feedback Gate: Facilitates incorporation of performance data into criteria development.\n    \n  implementation:\n    - Transition Gate: Monitors readiness based on established criteria. If criteria are met, it \n      unlocks the transition to the next mode. If not, it maintains the current mode until criteria \n      are met.\n    - Review Gate: Periodically reviews the criteria and updates them as needed to ensure they \n      remain relevant and effective.\n    - Feedback Gate: Collects performance data from the current mode and incorporates it into \n      the development of future criteria. This helps refine the criteria over time based on real-world \n      experiences.\n    \n  connectivity:\n    inputs:\n      - Current Operational Mode\n      - Performance Data\n    outputs:\n      - Transition Readiness\n      - Updated Criteria\n```\nThis is a complete VoxSigil FLOW YAML for the operational_mode_transition in the sigils context. Please note that you will need to replace the placeholder 'anomaly_seeker' with your chosen name for the flow.",
+      "is_duplicate": false,
+      "is_valid_flow": true,
+      "tokens": 813,
+      "time_sec": 14.279400110244751,
+      "tokens_per_sec": 56.93516490351114,
+      "timestamp": "2026-02-12T09:44:27.582978"
+    },
+    {
+      "target_category": "flows",
+      "flow_pattern": "full_system_bootstrap_sequence",
+      "base_sigil": "design_implement_deploy",
+      "generated_content": "```yaml\nschema_version: 1.5-holo-alpha\nmeta:\n  sigil: \ud83d\udd2e\u2192\u2699\ufe0f\u2192\ud83c\udf10 BOOTSTRAP_FLOW\n  alias: FullSystemBootstrapFlow\n  tag: ProceduralFlow\n  category: flows\n  created: '2026-02-12'\nholo_mesh:\n  is_cognitive_primitive: false\n  mesh_compatibility: holo-1.5-alpha\n  registration_ready: true\n  temporal_pattern: sequential_enforced_ordering\n\ncognitive:\n  principle: |\n    This FLOW enforces a full-system bootstrap sequence, ensuring proper system onboarding and initialization.\n    \n    Prevents premature access to system resources or functionality before they are available.\n    \n  flow_type: sequential_with_gates_and_feedback_loops\n  \n  ordering_constraints:\n    - step: 1\n      operation: system_onboarding\n      description: Complete system onboarding and initialization\n      prerequisites: []\n      gates_open: [system_resources]\n      \n    - step: 2\n      operation: system_resources\n      description: Access and configure system resources\n      prerequisites: [system_onboarding]\n      gates_open: [system_functionality]\n      \n    - step: 3\n      operation: system_functionality\n      description: Test and validate system functionality\n      prerequisites: [system_resources]\n      gates_open: []\n      \n  dependency_graph:\n    - node: system_onboarding\n      dependencies: []\n      \n    - node: system_resources\n      dependencies: [system_onboarding]\n      \n    - node: system_functionality\n      dependencies: [system_resources]\n      \n  failure_modes:\n    - Violating ordering constraints can lead to incomplete or incorrect system initialization, potentially causing functionality issues or security vulnerabilities.\n    \n  gates:\n    - name: system_resources_gate\n      description: Prevents access to system resources before onboarding and initialization are complete.\n      \n    - name: system_functionality_gate\n      description: Prevents testing and validation of system functionality before resources are available.\n      \nimplementation:\n  gates:\n    - name: system_resources_gate\n      implementation: resource_access_control_list\n      \n    - name: system_functionality_gate\n      implementation: functional_capability_check\n      \nconnectivity:\n  inputs: [system_onboarding]\n  outputs: [system_functionality]\n```\n\nThis is a complete VoxSigil FLOW YAML for the \"full_system_bootstrap_sequence\" in the \"flows\" category. It encodes the ordering constraints, dependency graph, failure modes, and gates to enforce the flow. The name of this flow is \"FullSystemBootstrapFlow\".",
+      "is_duplicate": false,
+      "is_valid_flow": true,
+      "tokens": 688,
+      "time_sec": 12.717426776885986,
+      "tokens_per_sec": 54.09899440116651,
+      "timestamp": "2026-02-12T09:44:40.803914"
+    },
+    {
+      "target_category": "flows",
+      "flow_pattern": "category_coordination_protocol",
+      "base_sigil": "design_implement_deploy",
+      "generated_content": "\nFirst, let's create the base structure of the VoxSigil FLOW YAML file according to the requirements you provided. We will use a different name for the flow than 'design_implement_deploy'. Here's the basic structure:\n\n```yaml\n# flows/category_coordination_protocol.yml\nschema_version: 1.5-holo-alpha\nmeta:\n  sigil: \ud83d\udd17\u2192\ud83d\udd2e\u2192\ud83d\udd0e CATEGORY_COORDINATION_PROTOCOL\n  alias: CategoryCoordinationProtocolFlow\n  tag: ProceduralFlow\n  category: flows\n  created: '2026-02-12'\nholo_mesh:\n  is_cognitive_primitive: false\n  mesh_compatibility: holo-1.5-alpha\n  registration_ready: true\n  temporal_pattern: sequential_enforced_ordering\ncognitive:\n  principle: |\n    This FLOW ensures that the category coordination protocol is followed,\n    which includes clear communication, role definition, and decision-making processes.\n  \n  ordering_constraints:\n    - step: 1\n      operation: establish_clear_communication\n      description: Ensure all parties involved understand each other's roles and expectations\n      prerequisites: []\n      gates_open: [define_roles, make_decisions]\n      \n    - step: 2\n      operation: define_roles\n      description: Clarify responsibilities and accountabilities for each category involved\n      prerequisites: [establish_clear_communication]\n      gates_open: [make_decisions]\n      \n    - step: 3\n      operation: make_decisions\n      description: Consensus-based decision-making process considering all perspectives\n      prerequisites: [define_roles]\n      gates_open: []\n      \n  dependency_graph: # Add the dependency graph here\n  failure_modes: # Add the failure modes and consequences here\n  gates: # Add the gates and their implementation here\nimplementation: # Add the implementation details here\nconnectivity: # Add the inputs/outputs here\n```\n\nThis YAML file follows the structure you provided, and it includes all the required sections. You can now fill in the details for each section according to the flow you want to create.\n\nRemember that the final VoxSigil FLOW YAML file should be valid YAML syntax and should clearly define the ordering constraints, dependency graph, failure modes, gates, implementation, and connectivity for the category_coordination_protocol flow in the flows category.",
+      "is_duplicate": false,
+      "is_valid_flow": true,
+      "tokens": 599,
+      "time_sec": 10.938283205032349,
+      "tokens_per_sec": 54.76179294063437,
+      "timestamp": "2026-02-12T09:44:52.245360"
+    },
+    {
+      "target_category": "flows",
+      "flow_pattern": "full_system_bootstrap_sequence",
+      "base_sigil": "design_implement_deploy",
+      "generated_content": "\n```yaml\n# Full System Bootstrap Sequence - FLOWS category\n# Version: 1.0.0\n# Author: John Doe <johndoe@example.com>\n\nschema_version: 1.5-holo-alpha\nmeta:\n  sigil: \ud83d\udd27\u2192\ud83d\uddbc\u2192\u2699\ufe0f\u2192\ud83d\ude80 FULL_SYSTEM_BOOTSTRAP_SEQUENCE\n  alias: FullSystemBootstrapFlow\n  tag: ProceduralFlow\n  category: flows\n  created: '2026-02-12'\n\nholo_mesh:\n  is_cognitive_primitive: false\n  mesh_compatibility: holo-1.5-alpha\n  registration_ready: true\n  temporal_pattern: sequential_enforced_ordering\n\ncognitive:\n  principle: |\n    This FLOW ensures a systematic approach to bootstrapping a full system,\n    which involves the following steps:\n    1. Plan: Define system requirements and architecture.\n    2. Design: Create detailed designs for each component.\n    3. Implement: Develop the system components according to the design.\n    4. Test: Perform thorough testing and validation of the system.\n    5. Deploy: Release the system into production.\n    This process promotes engineering discipline, reduces risks, and ensures a robust system.\n  \n  flow_type: sequential_with_gates_and_feedback_loops\n  \n  ordering_constraints:\n    - step: 1\n      operation: plan_requirements\n      description: Define system requirements and architecture\n      prerequisites: []\n      gates_open: [design_system]\n      \n    - step: 2\n      operation: design_system\n      description: Create detailed designs for each component\n      prerequisites: [plan_requirements]\n      gates_open: [implement_components]\n      \n    - step: 3\n      operation: implement_components\n      description: Develop the system components according to the design\n      prerequisites: [design_system]\n      gates_open: [test_validation]\n      \n    - step: 4\n      operation: test_validation\n      description: Perform thorough testing and validation of the system\n      prerequisites: [implement_components]\n      gates_open: [deploy_production]\n      \n    - step: 5\n      operation: deploy_production\n      description: Release the system into production\n      prerequisites: [test_validation]\n      \n  dependency_graph:\n    plan_requirements: []\n    design_system: [plan_requirements]\n    implement_components: [design_system]\n    test_validation: [implement_components]\n    deploy_production: [test_validation]\n  \n  failure_modes:\n    - Violating the ordering constraints can lead to premature deployment of incomplete or untested systems.\n    - Skipping steps can result in overlooked issues, which may cause system failures or security vulnerabilities.\n    - Not following the gates mechanism can result in parallel execution of steps, leading to confusion and potential conflicts.\n  \n  gates:\n    design_system: [implement_components]\n    implement_components: [test_validation]\n    test_validation: [deploy_production]\n    \nimplementation:\n  - The gates are implemented as semaphores, ensuring that only one step can execute at a time.\n  - The ordering constraints are enforced by checking the prerequisites and opening the gates accordingly.\n\nconnectivity:\n  inputs: [plan_requirements]\n  outputs: [deploy_production]\n```",
+      "is_duplicate": false,
+      "is_valid_flow": true,
+      "tokens": 838,
+      "time_sec": 15.51145339012146,
+      "tokens_per_sec": 54.02459582115523,
+      "timestamp": "2026-02-12T09:45:08.260092"
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+architecture: "9D\u219264D(ReLU)\u2192128D"
+epochs: 10
+final_loss: 0.002491782249580286
+input_dim: 9
+latency_ms_avg: 0.046486854553222656
+latency_ms_p95: 0.053715705871582024
+model_name: StudentEmbedder-128D
+output_dim: 128
+phase: 4-B.1
+success: true
+target_latency_ms: 4.0
+timestamp: '2026-02-13T02:47:39.187911'
+training_samples: 10000

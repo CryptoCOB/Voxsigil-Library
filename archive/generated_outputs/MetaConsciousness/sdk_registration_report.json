@@ -1,0 +1,89 @@
+{
+  "summary": {
+    "total_issues": 5,
+    "direct_register_count": 2,
+    "missing_context_guard_count": 2,
+    "potential_duplicate_registrations_count": 1,
+    "recommended_patterns_count": 7
+  },
+  "results": {
+    "direct_register": [
+      {
+        "path": "C:\\Users\\16479\\Desktop\\MetaConsciouness\\MetaConsciousness\\agent\\context_check_in_agent.py",
+        "rel_path": "MetaConsciousness\\agent\\context_check_in_agent.py",
+        "issues": [
+          "Uses SDKContext.register without context guard"
+        ]
+      },
+      {
+        "path": "C:\\Users\\16479\\Desktop\\MetaConsciouness\\MetaConsciousness\\agent\\__init__.py",
+        "rel_path": "MetaConsciousness\\agent\\__init__.py",
+        "issues": [
+          "Uses SDKContext.register without context guard"
+        ]
+      }
+    ],
+    "missing_context_guard": [
+      {
+        "path": "C:\\Users\\16479\\Desktop\\MetaConsciouness\\MetaConsciousness\\agent\\context_check_in_agent.py",
+        "rel_path": "MetaConsciousness\\agent\\context_check_in_agent.py",
+        "issues": [
+          "Uses SDKContext.register without context guard"
+        ]
+      },
+      {
+        "path": "C:\\Users\\16479\\Desktop\\MetaConsciouness\\MetaConsciousness\\agent\\__init__.py",
+        "rel_path": "MetaConsciousness\\agent\\__init__.py",
+        "issues": [
+          "Uses SDKContext.register without context guard"
+        ]
+      }
+    ],
+    "potential_duplicate_registrations": [
+      {
+        "path": "C:\\Users\\16479\\Desktop\\MetaConsciouness\\MetaConsciousness\\core\\cluster_adapters.py",
+        "rel_path": "MetaConsciousness\\core\\cluster_adapters.py",
+        "issues": [
+          "High number of registrations (24)"
+        ]
+      }
+    ],
+    "recommended_patterns": [
+      {
+        "path": "C:\\Users\\16479\\Desktop\\MetaConsciouness\\MetaConsciousness\\frameworks\\compression_cluster.py",
+        "rel_path": "MetaConsciousness\\frameworks\\compression_cluster.py",
+        "issues": []
+      },
+      {
+        "path": "C:\\Users\\16479\\Desktop\\MetaConsciouness\\MetaConsciousness\\frameworks\\meta_learning_cluster.py",
+        "rel_path": "MetaConsciousness\\frameworks\\meta_learning_cluster.py",
+        "issues": []
+      },
+      {
+        "path": "C:\\Users\\16479\\Desktop\\MetaConsciouness\\MetaConsciousness\\frameworks\\narrative_cluster.py",
+        "rel_path": "MetaConsciousness\\frameworks\\narrative_cluster.py",
+        "issues": []
+      },
+      {
+        "path": "C:\\Users\\16479\\Desktop\\MetaConsciouness\\MetaConsciousness\\tools\\fix_all_issues.py",
+        "rel_path": "MetaConsciousness\\tools\\fix_all_issues.py",
+        "issues": []
+      },
+      {
+        "path": "C:\\Users\\16479\\Desktop\\MetaConsciouness\\MetaConsciousness\\tools\\missing_detections.py",
+        "rel_path": "MetaConsciousness\\tools\\missing_detections.py",
+        "issues": []
+      },
+      {
+        "path": "C:\\Users\\16479\\Desktop\\MetaConsciouness\\MetaConsciousness\\tools\\sdk_registration.py",
+        "rel_path": "MetaConsciousness\\tools\\sdk_registration.py",
+        "issues": []
+      },
+      {
+        "path": "C:\\Users\\16479\\Desktop\\MetaConsciouness\\MetaConsciousness\\core\\utils\\context_guard.py",
+        "rel_path": "MetaConsciousness\\core\\utils\\context_guard.py",
+        "issues": []
+      }
+    ]
+  }
+}

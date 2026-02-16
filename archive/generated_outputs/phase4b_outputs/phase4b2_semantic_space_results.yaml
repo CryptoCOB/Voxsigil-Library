@@ -1,0 +1,29 @@
+epochs: 10
+final_test_loss: 0.6622845865786076
+final_train_loss: 0.6583197340965271
+name: Schema-Grounded Semantic Space
+phase: 4-B.2
+projection_network: SemanticSpaceProjector-128D
+reconstruction_network: RoutingReconstructor-3-class
+reversibility_satisfied: !!python/object/apply:numpy._core.multiarray.scalar
+- !!python/object/apply:numpy.dtype
+  args:
+  - b1
+  - false
+  - true
+  state: !!python/tuple
+  - 3
+  - '|'
+  - null
+  - null
+  - null
+  - -1
+  - -1
+  - 0
+- !!binary |
+  AA==
+route_reconstruction_accuracy: 0.8927
+success: true
+test_samples: 2000
+timestamp: '2026-02-13T02:51:27.429210'
+training_samples: 8000

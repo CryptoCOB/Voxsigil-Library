@@ -1,0 +1,22 @@
+{
+  "timestamp": "2025-03-31 16:18:28",
+  "stats": {
+    "files_checked": 3,
+    "files_to_review": "set()",
+    "files_fixed": "set()",
+    "actions_taken": 0,
+    "reported_issues": {},
+    "errors": [
+      [
+        "MetaConsciousness/meta_core.py",
+        "Target file not found for fix 'meta_core_instance'"
+      ]
+    ],
+    "actions_by_file": {}
+  },
+  "modified_files_details": {},
+  "reported_issues_details": {},
+  "error_details": [
+    "MetaConsciousness\\meta_core.py: Target file not found for fix 'meta_core_instance'"
+  ]
+}

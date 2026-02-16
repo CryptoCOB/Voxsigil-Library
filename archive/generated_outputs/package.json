@@ -1,0 +1,39 @@
+{
+  "name": "@voxsigil/library",
+  "version": "2.1.0",
+  "description": "OpenClawd-VoxBridge integration SDK - AI agents for prediction markets and consensus coordination",
+  "main": "src/index.js",
+  "types": "src/index.d.ts",
+  "keywords": [
+    "molt-agent",
+    "voxsigil",
+    "openclawd",
+    "voxbridge",
+    "prediction",
+    "agent",
+    "markets",
+    "ai-agent",
+    "coordination",
+    "cronos",
+    "eip-191",
+    "agent-connectivity"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/CryptoCOB/Voxsigil-Library.git"
+  },
+  "bugs": {
+    "url": "https://github.com/CryptoCOB/Voxsigil-Library/issues"
+  },
+  "homepage": "https://github.com/CryptoCOB/Voxsigil-Library#readme",
+  "author": "CryptoCOB",
+  "license": "MIT",
+  "scripts": {
+    "test": "node tests/test-integration.js",
+    "lint": "echo 'Linting not configured yet'",
+    "build": "echo 'Build not configured yet'"
+  },
+  "engines": {
+    "node": ">=14.0.0"
+  }
+}

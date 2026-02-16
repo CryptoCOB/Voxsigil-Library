@@ -1,0 +1,46 @@
+{
+  "passed_tests": [
+    "Reflex Loop Activation"
+  ],
+  "failed_tests": [],
+  "system_state": {
+    "timestamp": "2025-03-28T01:39:10.355916",
+    "awareness": 0.52,
+    "regulation": 0.1,
+    "meta_state": "LEARNING",
+    "vigilance": 0.4,
+    "omega3_stats": {
+      "current_vigilance": 0.6499999999999999,
+      "smoothed_vigilance": 0.587,
+      "last_update": 1743140350.3549132,
+      "decision_count": 2,
+      "emotional_state": "neutral"
+    },
+    "art_stats": {
+      "total_categories": 1,
+      "vigilance": 0.4,
+      "resonance_threshold": 0.7,
+      "novelty_counter": 1,
+      "stability_counter": 1,
+      "categories": [
+        {
+          "id": 0,
+          "samples": 2,
+          "stability": 1.0,
+          "performance": null
+        }
+      ]
+    }
+  },
+  "reflex_outcomes": [
+    {
+      "pattern": "checkerboard",
+      "risk_level": "low",
+      "vigilance_original": 0.4,
+      "vigilance_new": 0.7,
+      "meta_state": "LEARNING"
+    }
+  ],
+  "thought_tree": {},
+  "test_duration": 0.02585124969482422
+}

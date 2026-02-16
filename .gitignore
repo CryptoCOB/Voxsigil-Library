@@ -1,18 +1,111 @@
-.venv/
-pyproject.toml
-uv.lock
+# Python
 __pycache__/
-*.pyc
-*.pyo
-*.pyd
-.Python
+*.py[cod]
+*$py.class
 *.so
-*.egg
-*.egg-info/
-dist/
+.Python
 build/
-node_modules/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+pip-wheel-metadata/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# Virtual environments
+.venv/
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*.sublime-*
+.DS_Store
+Thumbs.db
+
+# Testing
+.pytest_cache/
+.coverage
+htmlcov/
+.tox/
+.hypothesis/
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# IPython
+profile_default/
+ipython_config.py
+
+# Project specific
 .voxsigil/
 .env
-.DS_Store
+.env.local
+.env.*.local
+pyproject.toml
+uv.lock
+
+# Security
+*.key
+*.pem
+secrets.json
+config.local.json
+
+# Logs
 *.log
+logs/
+
+# Data files (large)
+*.bin
+*.pt
+*.pth
+*.model
+*.pkl
+*.pickle
+
+# Checkpoints & weights
+checkpoints/
+weights/
+!models/README.md
+
+# Temporary files
+temp_*
+tmp_*
+*.tmp
+.tmp
+*.bak
+
+# OS
+.DS_Store
+._*
+Thumbs.db
+desktop.ini
+
+# npm
+node_modules/
+npm-debug.log*
+yarn-error.log*
+package-lock.json
+yarn.lock
+
+# Archive files
+*.tar.gz
+*.zip
+*.rar

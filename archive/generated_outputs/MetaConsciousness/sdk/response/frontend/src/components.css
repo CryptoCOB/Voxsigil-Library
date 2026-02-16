@@ -1,0 +1,43 @@
+/* === Custom Component Classes === */
+/* Define reusable component styles using Tailwind's @apply directive. */
+/* Use these classes in your React components for consistency. */
+
+/* Base card styling */
+.card {
+  @apply bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden;
+  /* Consider adding default padding if always needed: @apply p-4; */
+}
+
+/* Base button styling */
+.btn {
+  @apply inline-flex items-center justify-center px-3 py-1.5 border border-transparent rounded-md text-sm font-medium shadow-sm transition-colors duration-150 focus:outline-none focus:ring-2 focus:ring-offset-1 dark:focus:ring-offset-gray-800;
+  /* Adjusted padding/font-size for consistency */
+}
+
+/* Primary button variant */
+.btn-primary {
+  @apply bg-indigo-600 hover:bg-indigo-700 text-white focus:ring-indigo-500;
+  /* Example using CSS var: @apply bg-[var(--primary)] hover:bg-[var(--primary-dark)] text-white focus:ring-[var(--primary)]; */
+}
+
+/* Secondary button variant */
+.btn-secondary {
+  @apply bg-teal-500 hover:bg-teal-600 text-white focus:ring-teal-400;
+}
+
+/* Outline button variant */
+.btn-outline {
+  @apply bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 focus:ring-indigo-500; 
+  /* Matched focus ring */
+}
+
+/* Base input styling */
+.input {
+  @apply block w-full px-3 py-1.5 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm text-sm
+         bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-300
+         placeholder-gray-500 dark:placeholder-gray-400
+         focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500;
+  /* Adjusted padding/font-size */
+}
+
+/* You can add more custom component styles or utility overrides below */

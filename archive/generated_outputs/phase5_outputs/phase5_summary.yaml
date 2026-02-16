@@ -1,0 +1,16 @@
+attributions_enhanced: 10
+components_integrated:
+- 'Phase 4-B.1: Student Embedder (0.05ms latency)'
+- 'Phase 4-B.2: Semantic Space Projector (89.3% routing)'
+- 'Phase 4-B.3: SHEAF Archetypes (20 consolidated profiles)'
+- 'Phase D: Attribution Framework & Tier System'
+name: Attribution & Reward Distribution Integration
+phase: '5'
+routing_distribution:
+  retrieval: 4
+  semantic: 6
+  skip: 0
+success: true
+timestamp: '2026-02-13T02:58:30.365331'
+total_reward_pool: 1000.0
+users_in_distribution: 10

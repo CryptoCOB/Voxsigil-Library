@@ -1,0 +1,38 @@
+{
+  "passed_tests": [
+    "Comprehensive Integration"
+  ],
+  "failed_tests": [],
+  "system_state": {
+    "timestamp": "2025-03-28T01:26:56.963813",
+    "awareness": 0.86,
+    "regulation": 0.1,
+    "meta_state": null,
+    "vigilance": 0.4,
+    "omega3_stats": {
+      "current_vigilance": 0.20000000000000007,
+      "smoothed_vigilance": 0.30294095,
+      "last_update": 1743139616.9630787,
+      "decision_count": 6,
+      "emotional_state": "neutral"
+    },
+    "art_stats": {
+      "total_categories": 1,
+      "vigilance": 0.4,
+      "resonance_threshold": 0.7,
+      "novelty_counter": 1,
+      "stability_counter": 10,
+      "categories": [
+        {
+          "id": 0,
+          "samples": 11,
+          "stability": 0.9999999999999998,
+          "performance": null
+        }
+      ]
+    }
+  },
+  "reflex_outcomes": [],
+  "thought_tree": {},
+  "test_duration": 0.01304006576538086
+}

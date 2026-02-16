@@ -1,0 +1,33 @@
+{
+  "gate_6_r2_score": 0.723327656586965,
+  "gate_6_per_dimension": [
+    0.732688844203949,
+    0.7384928464889526,
+    0.7136167287826538,
+    0.7675596475601196,
+    0.7167336940765381,
+    0.7160726189613342,
+    0.6448705792427063,
+    0.6979385614395142,
+    0.7819753885269165
+  ],
+  "gate_6_pass": true,
+  "all_gates_summary": {
+    "gate_1_cold_start": true,
+    "gate_2_cache_effective": true,
+    "gate_3_no_context_collapse": true,
+    "gate_4_entity_retention": true,
+    "gate_5_routing_stable": true,
+    "gate_6_schema_recovery": true,
+    "gate_7_memory_pressure_ok": true,
+    "gate_8_gpu_compute_bound": true,
+    "gate_9_deterministic": true,
+    "gate_10_quantization_safe": true,
+    "gate_11_entropy_aligned": true,
+    "gate_12_tail_latency_ok": true,
+    "gate_13_no_crashes": true
+  },
+  "total_passed": 13,
+  "total_gates": 13,
+  "status": "ALL_13_GATES_PASS"
+}
