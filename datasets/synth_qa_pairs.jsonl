@@ -1,0 +1,13 @@
+# Synthetic Q&A dataset: queries that require retrieving specific facts
+# Format: {query, relevant_fact_ids, answer_keywords}
+# These queries expect specific facts from synth_facts_10k.jsonl to answer correctly
+{"query_id": "q_0001", "query": "What is the capital of France?", "relevant_facts": ["fact_0001"], "answer_keywords": ["Paris"], "difficulty": "easy"}
+{"query_id": "q_0002", "query": "Who designed the Eiffel Tower and when was it completed?", "relevant_facts": ["fact_0002"], "answer_keywords": ["Gustave Eiffel", "1889"], "difficulty": "medium"}
+{"query_id": "q_0003", "query": "What is the population of Paris?", "relevant_facts": ["fact_0004"], "answer_keywords": ["2.2 million"], "difficulty": "easy"}
+{"query_id": "q_0004", "query": "What is the official language spoken in France?", "relevant_facts": ["fact_0005"], "answer_keywords": ["French"], "difficulty": "easy"}
+{"query_id": "q_0005", "query": "What currency is used in France now?", "relevant_facts": ["fact_0006"], "answer_keywords": ["Euro"], "difficulty": "easy"}
+{"query_id": "q_0006", "query": "Describe the location and purpose of the Palace of Versailles.", "relevant_facts": ["fact_0008"], "answer_keywords": ["Palace of Versailles", "southwest of Paris", "royal residence"], "difficulty": "medium"}
+{"query_id": "q_0007", "query": "Why is France a popular tourist destination and how many visitors?", "relevant_facts": ["fact_0009"], "answer_keywords": ["most visited", "89 million"], "difficulty": "medium"}
+{"query_id": "q_0008", "query": "What area does France cover in square kilometers?", "relevant_facts": ["fact_0003"], "answer_keywords": ["643,801"], "difficulty": "easy"}
+{"query_id": "q_0009", "query": "What cathedral was used for coronations of French monarchs?", "relevant_facts": ["fact_0010"], "answer_keywords": ["Notre-Dame de Reims"], "difficulty": "medium"}
+{"query_id": "q_0010", "query": "Since when is France a member of the European Union?", "relevant_facts": ["fact_0007"], "answer_keywords": ["1993", "Maastricht"], "difficulty": "medium"}

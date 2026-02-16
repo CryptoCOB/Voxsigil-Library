@@ -1,0 +1,214 @@
+{
+  "phase": "D",
+  "stage": "Attribution & Rewards Framework",
+  "timestamp": "2026-02-12T08:56:47.415292",
+  "summary": {
+    "total_users_evaluated": 10,
+    "total_attributions_recorded": 50,
+    "attribution_types": [
+      "behavioral_insight",
+      "semantic_enrichment",
+      "pattern_discovery",
+      "blt_validation",
+      "cycle_completion",
+      "data_quality"
+    ],
+    "average_user_score": 0.8613275634536544,
+    "score_std_dev": 0.030077804444445584
+  },
+  "user_attributions": {
+    "user_07": {
+      "user_id": "user_07",
+      "total_attribution_score": 0.9320159508576037,
+      "attribution_count": 5,
+      "by_type": {
+        "behavioral_insight": 0.9074746574496138,
+        "semantic_enrichment": 0.8768691009710123,
+        "pattern_discovery": 0.8930166591711147,
+        "blt_validation": 0.9827193366962773,
+        "cycle_completion": 1.0
+      },
+      "average_quality": 0.9320159508576037,
+      "consistency_score": 0.9467176351227857,
+      "reward_tier": "platinum"
+    },
+    "user_09": {
+      "user_id": "user_09",
+      "total_attribution_score": 0.8785039461227935,
+      "attribution_count": 5,
+      "by_type": {
+        "behavioral_insight": 0.997223780808546,
+        "semantic_enrichment": 0.68901577640611,
+        "pattern_discovery": 0.901709956157611,
+        "blt_validation": 0.8045702172417006,
+        "cycle_completion": 1.0
+      },
+      "average_quality": 0.8785039461227935,
+      "consistency_score": 0.8647335610228122,
+      "reward_tier": "gold"
+    },
+    "user_05": {
+      "user_id": "user_05",
+      "total_attribution_score": 0.8738802509761527,
+      "attribution_count": 5,
+      "by_type": {
+        "behavioral_insight": 0.9282939138904128,
+        "semantic_enrichment": 0.8678263312503658,
+        "pattern_discovery": 0.7096006113522262,
+        "blt_validation": 0.863680398387759,
+        "cycle_completion": 1.0
+      },
+      "average_quality": 0.8738802509761527,
+      "consistency_score": 0.8903713228616335,
+      "reward_tier": "gold"
+    },
+    "user_10": {
+      "user_id": "user_10",
+      "total_attribution_score": 0.8715606828589365,
+      "attribution_count": 5,
+      "by_type": {
+        "behavioral_insight": 0.9738006548475054,
+        "semantic_enrichment": 0.7040306690241793,
+        "pattern_discovery": 0.7111660156920236,
+        "blt_validation": 0.9688060747309745,
+        "cycle_completion": 1.0
+      },
+      "average_quality": 0.8715606828589365,
+      "consistency_score": 0.8460710033688461,
+      "reward_tier": "gold"
+    },
+    "user_01": {
+      "user_id": "user_01",
+      "total_attribution_score": 0.8692708621047232,
+      "attribution_count": 5,
+      "by_type": {
+        "behavioral_insight": 0.9181976555051771,
+        "semantic_enrichment": 0.774138006162098,
+        "pattern_discovery": 0.8502021035540847,
+        "blt_validation": 0.8038165453022561,
+        "cycle_completion": 1.0
+      },
+      "average_quality": 0.8692708621047232,
+      "consistency_score": 0.9063921254657037,
+      "reward_tier": "gold"
+    },
+    "user_02": {
+      "user_id": "user_02",
+      "total_attribution_score": 0.8498425394153826,
+      "attribution_count": 5,
+      "by_type": {
+        "behavioral_insight": 0.7967380562325118,
+        "semantic_enrichment": 0.6055856384628183,
+        "pattern_discovery": 0.977861169802386,
+        "blt_validation": 0.8690278325791967,
+        "cycle_completion": 1.0
+      },
+      "average_quality": 0.8498425394153826,
+      "consistency_score": 0.8323092786587539,
+      "reward_tier": "gold"
+    },
+    "user_06": {
+      "user_id": "user_06",
+      "total_attribution_score": 0.849644105985367,
+      "attribution_count": 5,
+      "by_type": {
+        "behavioral_insight": 0.7023194110870883,
+        "semantic_enrichment": 0.7419341671210845,
+        "pattern_discovery": 0.8067162019233699,
+        "blt_validation": 0.9972507497952926,
+        "cycle_completion": 1.0
+      },
+      "average_quality": 0.849644105985367,
+      "consistency_score": 0.8517245589901701,
+      "reward_tier": "gold"
+    },
+    "user_04": {
+      "user_id": "user_04",
+      "total_attribution_score": 0.8357156265651561,
+      "attribution_count": 5,
+      "by_type": {
+        "behavioral_insight": 0.9266525709001765,
+        "semantic_enrichment": 0.6043622879882243,
+        "pattern_discovery": 0.7869560370251213,
+        "blt_validation": 0.8606072369122586,
+        "cycle_completion": 1.0
+      },
+      "average_quality": 0.8357156265651561,
+      "consistency_score": 0.8380757293005082,
+      "reward_tier": "gold"
+    },
+    "user_03": {
+      "user_id": "user_03",
+      "total_attribution_score": 0.8322579832096023,
+      "attribution_count": 5,
+      "by_type": {
+        "behavioral_insight": 0.7738768184737583,
+        "semantic_enrichment": 0.6490280471363851,
+        "pattern_discovery": 0.9791692395805791,
+        "blt_validation": 0.7592158108572888,
+        "cycle_completion": 1.0
+      },
+      "average_quality": 0.8322579832096023,
+      "consistency_score": 0.8371766023040444,
+      "reward_tier": "gold"
+    },
+    "user_08": {
+      "user_id": "user_08",
+      "total_attribution_score": 0.8205836864408258,
+      "attribution_count": 5,
+      "by_type": {
+        "behavioral_insight": 0.7252350503293002,
+        "semantic_enrichment": 0.6004133123154409,
+        "pattern_discovery": 0.861039393063552,
+        "blt_validation": 0.9162306764958356,
+        "cycle_completion": 1.0
+      },
+      "average_quality": 0.8205836864408258,
+      "consistency_score": 0.8274018864574766,
+      "reward_tier": "gold"
+    }
+  },
+  "reward_distribution": {
+    "platinum": {
+      "user_count": 1,
+      "pool_size": 500.0,
+      "per_user_reward": 500.0,
+      "users": [
+        "user_07"
+      ]
+    },
+    "gold": {
+      "user_count": 9,
+      "pool_size": 300.0,
+      "per_user_reward": 33.333333333333336,
+      "users": [
+        "user_01",
+        "user_02",
+        "user_03",
+        "user_04",
+        "user_05",
+        "user_06",
+        "user_08",
+        "user_09",
+        "user_10"
+      ]
+    },
+    "silver": {
+      "user_count": 0,
+      "pool_size": 0,
+      "per_user_reward": 0,
+      "users": []
+    },
+    "bronze": {
+      "user_count": 0,
+      "pool_size": 0,
+      "per_user_reward": 0,
+      "users": []
+    }
+  },
+  "next_phase": {
+    "phase_e": "Reward Distribution",
+    "estimated_timeline": "When dataset reaches equilibrium",
+    "dependent_on": "User contribution milestones"
+  }
+}

@@ -1,0 +1,13 @@
+# Synthetic knowledge base: 10 facts (can be expanded to 10K)
+# Format: one JSON object per line
+# Each fact is a standalone sentence used in retrieval tests
+{"id": "fact_0001", "fact": "Paris is the capital of France and is located on the Seine River.", "category": "geography", "importance": "high"}
+{"id": "fact_0002", "fact": "The Eiffel Tower was completed in 1889 and was designed by Gustave Eiffel.", "category": "history", "importance": "high"}
+{"id": "fact_0003", "fact": "France is in Western Europe and covers an area of about 643,801 square kilometers.", "category": "geography", "importance": "medium"}
+{"id": "fact_0004", "fact": "The population of Paris is approximately 2.2 million people within the city limits.", "category": "demographics", "importance": "medium"}
+{"id": "fact_0005", "fact": "French is the official language of France and is spoken by nearly 100% of the population.", "category": "language", "importance": "high"}
+{"id": "fact_0006", "fact": "The Euro is the official currency of France since 2002, replacing the French Franc.", "category": "economics", "importance": "medium"}
+{"id": "fact_0007", "fact": "France has been a member of the European Union since 1993 (Maastricht Treaty).", "category": "politics", "importance": "medium"}
+{"id": "fact_0008", "fact": "The Palace of Versailles is located 17 kilometers southwest of Paris and served as royal residence.", "category": "history", "importance": "high"}
+{"id": "fact_0009", "fact": "France is the world's most visited country with over 89 million international tourists per year.", "category": "tourism", "importance": "high"}
+{"id": "fact_0010", "fact": "The Notre-Dame de Reims cathedral was used for the coronation of French monarchs since 1027.", "category": "history", "importance": "high"}

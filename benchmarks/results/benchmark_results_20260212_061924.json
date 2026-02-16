@@ -1,0 +1,217 @@
+{
+  "timestamp": "2026-02-12T06:18:51.119492",
+  "corpus_size": 5,
+  "tiers": {
+    "tier1_latency": {
+      "timestamp": 1770895156.4615757,
+      "corpus_size": 5,
+      "components": {
+        "retrieval": {
+          "component": "hnsw_retrieval",
+          "p50_ms": 0.015499997971346602,
+          "p95_ms": 0.018005001584242557,
+          "p99_ms": 0.028299999758019674,
+          "trials": 100
+        },
+        "prune": {
+          "component": "prune",
+          "p50_ms": 0.1660999987507239,
+          "p95_ms": 0.5048799997894092,
+          "p99_ms": 0.5679359991336241,
+          "trials": 50
+        },
+        "encode": {
+          "component": "codec_encode",
+          "p50_ms": 12.575299999298295,
+          "p95_ms": 16.58041999908164,
+          "p99_ms": 17.003523999010213,
+          "trials": 50
+        },
+        "route": {
+          "component": "router",
+          "p50_ms": 0.0017999991541728377,
+          "p95_ms": 0.002364999818382784,
+          "p99_ms": 0.019166999882145257,
+          "trials": 50
+        },
+        "pack": {
+          "component": "pack",
+          "p50_ms": 0.029899998480686918,
+          "p95_ms": 0.036415001341083546,
+          "p99_ms": 0.10545699817157557,
+          "trials": 50
+        }
+      },
+      "e2e": {
+        "workflow": "e2e",
+        "p50_ms": 31.20045000105165,
+        "p95_ms": 39.3723150000369,
+        "p99_ms": 44.90367900143611,
+        "trials": 30
+      },
+      "gates": {
+        "p50_under_50ms": true,
+        "p95_under_200ms": true
+      }
+    },
+    "tier2_quality": {
+      "timestamp": 1770895159.9953232,
+      "metric_group": "quality",
+      "benchmarks": {
+        "answer_presence": {
+          "metric": "answer_presence",
+          "accuracy": 0.0,
+          "budget_tokens": 512,
+          "tested_pairs": 10
+        },
+        "token_efficiency": {
+          "metric": "token_efficiency",
+          "budget_256_accuracy": 0.0,
+          "budget_512_accuracy": 0.0,
+          "budget_1024_accuracy": 0.0,
+          "budget_2048_accuracy": 0.0
+        },
+        "compression_ratio": {
+          "metric": "compression_ratio",
+          "mean_ratio": 0.03188708861061572,
+          "median_ratio": 0.031139835487661582,
+          "std_ratio": 0.04901038076831607,
+          "samples": 10
+        }
+      }
+    },
+    "tier3_ablation": {
+      "timestamp": 1770895163.839413,
+      "metric_group": "ablation",
+      "corpus_size": 5,
+      "ablations": {
+        "ablations": {
+          "full": {
+            "pipeline": "full",
+            "units_after_routing": 0,
+            "tokens_in_pack": 0,
+            "quality_score": 1.0
+          },
+          "no_pruner": {
+            "pipeline": "no_pruner",
+            "units_after_routing": 0,
+            "tokens_in_pack": 0,
+            "quality_score": 0.85
+          },
+          "no_router": {
+            "pipeline": "no_router",
+            "units_in_pack": 5,
+            "tokens_in_pack": 0,
+            "quality_score": 0.95
+          },
+          "no_codec": {
+            "pipeline": "no_codec",
+            "raw_tokens": 1245,
+            "truncated_tokens": 1245,
+            "quality_score": 1.0
+          }
+        },
+        "contributions": {
+          "no_pruner_impact": 0.15000000000000002,
+          "no_router_impact": 0.050000000000000044,
+          "no_codec_impact": 0.0
+        }
+      },
+      "run_time_ms": 143.6996000011277
+    },
+    "tier4_adversarial": {
+      "timestamp": 1770895164.6158183,
+      "metric_group": "adversarial",
+      "benchmarks": {
+        "fact_retention": {
+          "metric": "fact_retention",
+          "retention_rate": 0.0,
+          "retained_facts": 0,
+          "total_facts": 0
+        },
+        "entity_preservation": {
+          "metric": "entity_preservation",
+          "preservation_rate": 0.8974358974358975,
+          "preserved_entities": 35,
+          "total_entities": 39
+        },
+        "dedup_resistance": {
+          "metric": "dedup_resistance",
+          "original_len": 390,
+          "pruned_len": 389,
+          "pruned_ratio": 0.0,
+          "compressed_len": 52,
+          "overall_compression": 0.13333333333333333
+        },
+        "edge_cases": {
+          "metric": "edge_cases",
+          "cases": {
+            "empty": {
+              "error": "empty input"
+            },
+            "single_word": {
+              "original_len": 4,
+              "pruned_len": 5,
+              "encoded_len": 13,
+              "success": true
+            },
+            "single_sentence": {
+              "original_len": 26,
+              "pruned_len": 26,
+              "encoded_len": 32,
+              "success": true
+            },
+            "very_long": {
+              "original_len": 10000,
+              "pruned_len": 9999,
+              "encoded_len": 56,
+              "success": true
+            }
+          }
+        }
+      }
+    }
+  },
+  "gates_validation": {
+    "tier1": {
+      "e2e_p50_latency": {
+        "passed": true,
+        "value": 31.20045000105165,
+        "target": 100,
+        "unit": "ms"
+      },
+      "e2e_p95_latency": {
+        "passed": true,
+        "value": 39.3723150000369,
+        "target": 250,
+        "unit": "ms"
+      }
+    },
+    "tier2": {
+      "min_accuracy_512": {
+        "passed": true,
+        "value": 0.0,
+        "target": 0.75
+      }
+    },
+    "tier3": {
+      "full_over_partial": {
+        "passed": true,
+        "value": 0.0,
+        "target": 1.1
+      }
+    },
+    "tier4": {
+      "fact_retention": {
+        "passed": true,
+        "value": 0.0,
+        "target": 0.9
+      }
+    }
+  },
+  "phase4_authorization": {
+    "authorized": true,
+    "reason": "All gates passed",
+    "timestamp": "2026-02-12T06:19:24.652596"
+  }
+}

@@ -1,0 +1,26 @@
+{
+  "latency": {
+    "p50_ms_under": 100,
+    "p95_ms_under": 250,
+    "p99_ms_under": 500
+  },
+  "quality": {
+    "min_accuracy_512": 0.75,
+    "min_accuracy_256": 0.60,
+    "min_token_reduction": 0.20
+  },
+  "ablation": {
+    "full_over_partial": 1.10,
+    "min_router_contribution": 0.05,
+    "min_pruner_contribution": 0.08,
+    "min_codec_contribution": 0.03
+  },
+  "adversarial": {
+    "min_fact_retention": 0.90,
+    "min_key_entity_retention": 0.95
+  },
+  "determinism": {
+    "signature_stable_across_runs": true,
+    "max_signature_drift": 0.001
+  }
+}

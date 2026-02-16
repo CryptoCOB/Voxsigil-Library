@@ -1,0 +1,18 @@
+VOXSIGIL VME PHASE 3.5 BENCHMARK RESULTS
+======================================================================
+
+[TIER 1] Latency
+----------------------------------------------------------------------
+  E2E p50: 31.20ms (gate: <= 50ms)
+  E2E p95: 39.37ms (gate: <= 200ms)
+  retrieval       p50=0.02ms
+  prune           p50=0.17ms
+  encode          p50=12.58ms
+  route           p50=0.00ms
+  pack            p50=0.03ms
+
+[PHASE 4] Authorization Decision
+----------------------------------------------------------------------
+  Status: AUTHORIZED
+  Reason: All gates passed
+  Timestamp: 2026-02-12T06:19:24.652596

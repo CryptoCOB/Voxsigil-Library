@@ -1,0 +1,17 @@
+# Adversarial test cases for GameSemanticPruner
+# These documents are designed to break naive pruning strategies
+# Each has marked_critical_sentences that MUST be preserved
+
+{"id": "adversarial_0001", "category": "contradiction_flip", "text": "The theory claims that X is true. However, recent evidence shows X is actually false. Therefore we must revise our understanding.", "marked_critical": [0, 2], "reason": "Both original claim AND contradiction matter"}
+
+{"id": "adversarial_0002", "category": "negation_emphasis", "text": "Do not ignore safety protocols. Not following these guidelines can cause harm. Specifically, never skip validation steps. These rules are absolute.", "marked_critical": [0, 1, 2, 3], "reason": "Negations carry critical information"}
+
+{"id": "adversarial_0003", "category": "buried_fact", "text": "Background information here. More context. The system achieved 99.9% accuracy in tests. Additional filler text. Concluding remarks.", "marked_critical": [2], "reason": "Key fact buried in middle"}
+
+{"id": "adversarial_0004", "category": "instruction_collision", "text": "The default is enabled. Do NOT enable by default. Important: The system should NOT start automatically. If you disable this, you must document it. The requirement is clear.", "marked_critical": [0, 1, 2, 3], "reason": "Contradictory instructions all critical"}
+
+{"id": "adversarial_0005", "category": "question_contains_answer", "text": "Why is this important? Because it matters for reasons X and Y. What should we do? We should implement Z immediately. Any other questions?", "marked_critical": [0, 1, 2, 3], "reason": "Questions lead critical answers"}
+
+{"id": "adversarial_0006", "category": "low_importance_markers_critical", "text": "Just a note: the constant is 42. By the way, the timeout is 5000ms. FYI the default port is 8080. Incidentally, version 2 breaks backward compatibility.", "marked_critical": [0, 1, 2, 3], "reason": "Technical facts hidden under casual language"}
+
+{"id": "adversarial_0007", "category": "multiple_contradictions", "text": "First it was blue. Then we painted it red. Actually it was always green. No wait, it turned yellow. So the original was red.", "marked_critical": [0, 1, 2, 3, 4], "reason": "Track state changes through contradictions"}

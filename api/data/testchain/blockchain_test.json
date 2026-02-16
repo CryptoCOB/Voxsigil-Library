@@ -1,0 +1,170 @@
+{
+  "chain_id": "vanta-echo-nebula-test-1",
+  "network_name": "Nebula TestNet",
+  "chain_type": "test",
+  "chain": [
+    {
+      "height": 0,
+      "previous_hash": "0000000000000000000000000000000000000000000000000000000000000000",
+      "timestamp": 0.0,
+      "transactions": [
+        {
+          "genesis": true,
+          "chain_id": "vanta-echo-nebula-test-1",
+          "network": "Nebula TestNet",
+          "chain_type": "test",
+          "timestamp": 0.0,
+          "initial_supply": 1000000000,
+          "validators": [
+            "TestValidator01",
+            "TestValidator02",
+            "TestValidator03",
+            "TestValidator04",
+            "TestValidator05"
+          ],
+          "note": "Genesis block for Nebula TestNet"
+        }
+      ],
+      "useful_work_proofs": [],
+      "total_work_value": 0.0,
+      "work_quality_score": 0.0,
+      "miner_rewards": {},
+      "nonce": "0",
+      "difficulty": 1,
+      "hash": "3c0c010efebfda43ecf77cbd5ba41775bf3059c1e3691759a84780072874902e"
+    }
+  ],
+  "compute_tasks": [
+    {
+      "task_id": "918a842e-af15-4495-9fff-62be1ebbe8cf",
+      "task_type": "training",
+      "description": "Train MNIST CNN model",
+      "reward": 10.0,
+      "priority": 5,
+      "created_at": 1762383504.168441,
+      "status": "claimed",
+      "requirements": {
+        "gpu": false,
+        "min_memory_gb": 2,
+        "framework": "pytorch"
+      },
+      "timeout": 3600,
+      "chain_id": "vanta-echo-nebula-test-1",
+      "assigned_miner": "echo-node-4c3ca8dfc9a7-gpu2",
+      "claimed_at": 1762383505.4159591
+    },
+    {
+      "task_id": "456f923a-0aab-4cc4-92a6-65b98b94cbdc",
+      "task_type": "training",
+      "description": "Train MNIST CNN model",
+      "reward": 10.0,
+      "priority": 5,
+      "created_at": 1762383544.8284695,
+      "status": "claimed",
+      "requirements": {
+        "gpu": false,
+        "min_memory_gb": 2,
+        "framework": "pytorch"
+      },
+      "timeout": 3600,
+      "chain_id": "vanta-echo-nebula-test-1",
+      "assigned_miner": "echo-node-4c3ca8dfc9a7-gpu0",
+      "claimed_at": 1762383565.5224843
+    },
+    {
+      "task_id": "3a6d320d-1e6b-4f55-8999-f941879fef4a",
+      "task_type": "training",
+      "description": "Train MNIST CNN model",
+      "reward": 10.0,
+      "priority": 5,
+      "created_at": 1762383597.8858898,
+      "status": "claimed",
+      "requirements": {
+        "gpu": false,
+        "min_memory_gb": 2,
+        "framework": "pytorch"
+      },
+      "timeout": 3600,
+      "chain_id": "vanta-echo-nebula-test-1",
+      "assigned_miner": "echo-node-4c3ca8dfc9a7-gpu0",
+      "claimed_at": 1762383846.4803169
+    },
+    {
+      "task_id": "7f019f38-9432-46c5-9fbb-885d12657e72",
+      "task_type": "training",
+      "description": "Train MNIST CNN model",
+      "reward": 10.0,
+      "priority": 5,
+      "created_at": 1762383845.2290232,
+      "status": "claimed",
+      "requirements": {
+        "gpu": false,
+        "min_memory_gb": 2,
+        "framework": "pytorch"
+      },
+      "timeout": 3600,
+      "config": {
+        "model_type": "mnist_cnn",
+        "dataset": "mnist",
+        "epochs": 5,
+        "batch_size": 64,
+        "learning_rate": 0.001
+      },
+      "chain_id": "vanta-echo-nebula-test-1",
+      "assigned_miner": "echo-node-4c3ca8dfc9a7-gpu1",
+      "claimed_at": 1762383849.4286883
+    },
+    {
+      "task_id": "ecd8762f-d1f4-41fa-be49-730b119ad8d3",
+      "task_type": "training",
+      "description": "Train MNIST CNN model",
+      "reward": 10.0,
+      "priority": 5,
+      "created_at": 1762383877.5858228,
+      "status": "pending",
+      "requirements": {
+        "gpu": false,
+        "min_memory_gb": 2,
+        "framework": "pytorch"
+      },
+      "timeout": 3600,
+      "config": {
+        "model_type": "mnist_cnn",
+        "dataset": "mnist",
+        "epochs": 5,
+        "batch_size": 64,
+        "learning_rate": 0.001
+      },
+      "chain_id": "vanta-echo-nebula-test-1"
+    }
+  ],
+  "task_claims": {
+    "918a842e-af15-4495-9fff-62be1ebbe8cf": [
+      {
+        "miner": "echo-node-4c3ca8dfc9a7-gpu2",
+        "claimed_at": 1762383505.4159646
+      }
+    ],
+    "456f923a-0aab-4cc4-92a6-65b98b94cbdc": [
+      {
+        "miner": "echo-node-4c3ca8dfc9a7-gpu0",
+        "claimed_at": 1762383565.5224984
+      }
+    ],
+    "3a6d320d-1e6b-4f55-8999-f941879fef4a": [
+      {
+        "miner": "echo-node-4c3ca8dfc9a7-gpu0",
+        "claimed_at": 1762383846.4803216
+      }
+    ],
+    "7f019f38-9432-46c5-9fbb-885d12657e72": [
+      {
+        "miner": "echo-node-4c3ca8dfc9a7-gpu1",
+        "claimed_at": 1762383849.4286952
+      }
+    ]
+  },
+  "task_results": {},
+  "dvpn_nodes": {},
+  "bandwidth_receipts": []
+}
