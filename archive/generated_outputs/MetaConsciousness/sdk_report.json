@@ -1,0 +1,90 @@
+{
+  "timestamp": 1743906962.2264223,
+  "duration": 0.0022568702697753906,
+  "components": {
+    "counts": {
+      "total": 8,
+      "healthy": 8,
+      "unhealthy": 0
+    },
+    "core_components": [
+      "meta_decision_router"
+    ],
+    "memory_components": [],
+    "agent_components": [],
+    "tool_components": [],
+    "art_components": [],
+    "omega_components": [],
+    "rag_components": [],
+    "compression_components": [
+      "compression.game"
+    ],
+    "meta_learning_components": [],
+    "narrative_components": [],
+    "other_components": [
+      "get_functor",
+      "list_functors",
+      "list_frameworks",
+      "functor_registry",
+      "framework_registry",
+      "decision_router"
+    ]
+  },
+  "health": {
+    "get_functor": true,
+    "list_functors": true,
+    "list_frameworks": true,
+    "functor_registry": true,
+    "framework_registry": true,
+    "compression.game": true,
+    "decision_router": true,
+    "meta_decision_router": true
+  },
+  "clusters": {
+    "Memory Cluster": {
+      "available": false
+    },
+    "Agent Cluster": {
+      "available": false
+    },
+    "Tool Cluster": {
+      "available": false
+    },
+    "ART Cluster": {
+      "available": false
+    },
+    "Omega Cluster": {
+      "available": false
+    },
+    "RAG Cluster": {
+      "available": false
+    },
+    "Compression Cluster": {
+      "available": false
+    },
+    "Meta-Learning Cluster": {
+      "available": false
+    },
+    "Narrative Cluster": {
+      "available": false
+    }
+  },
+  "orphan_scan": {
+    "clustered_components": {
+      "orphaned": [
+        "get_functor",
+        "list_functors",
+        "list_frameworks",
+        "functor_registry",
+        "framework_registry",
+        "compression.game",
+        "decision_router"
+      ]
+    },
+    "stats": {
+      "total_components": 8,
+      "orphaned_components": 7
+    }
+  },
+  "feature_flags": {}
+}

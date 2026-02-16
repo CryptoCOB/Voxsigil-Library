@@ -1,0 +1,110 @@
+{
+  "analysis_timestamp": 1743883673.6552079,
+  "sdk_path": "C:\\Users\\16479\\Desktop\\MetaConsciouness\\MetaConsciousness\\tools",
+  "sdk_package": "MetaConsciousness",
+  "stats": {
+    "total_modules": 5,
+    "total_dependencies": 0,
+    "average_dependencies_per_module": 0.0,
+    "average_dependents_per_module": 0.0,
+    "average_degree": 0.0,
+    "orphaned_components_count": 0,
+    "unreachable_modules_count": 2,
+    "circular_dependencies_count": 0,
+    "external_dependencies_count": 0,
+    "api_surface_elements": 0
+  },
+  "modules": {
+    "MetaConsciousness.__init__": {
+      "file_path": "C:\\Users\\16479\\Desktop\\MetaConsciouness\\MetaConsciousness\\tools\\MetaConsciousness\\__init__.py",
+      "dependencies": [],
+      "dependents": [],
+      "definitions": {},
+      "imports": {
+        "direct": "set()",
+        "from": {},
+        "all_potential": "set()",
+        "relative_levels": {}
+      },
+      "usages_count": 0,
+      "complexity_metrics": {}
+    },
+    "MetaConsciousness.agent.__init__": {
+      "file_path": "C:\\Users\\16479\\Desktop\\MetaConsciouness\\MetaConsciousness\\tools\\MetaConsciousness\\agent\\__init__.py",
+      "dependencies": [],
+      "dependents": [],
+      "definitions": {},
+      "imports": {
+        "direct": "set()",
+        "from": {
+          ".metaconscious_agent": "{'MetaconsciousAgent'}"
+        },
+        "all_potential": "{'.metaconscious_agent.MetaconsciousAgent'}",
+        "relative_levels": {
+          ".metaconscious_agent": 1
+        }
+      },
+      "usages_count": 0,
+      "complexity_metrics": {}
+    },
+    "MetaConsciousness.omega3.agent": {
+      "file_path": "C:\\Users\\16479\\Desktop\\MetaConsciouness\\MetaConsciousness\\tools\\MetaConsciousness\\omega3\\agent.py",
+      "dependencies": [],
+      "dependents": [],
+      "definitions": {},
+      "imports": {},
+      "usages_count": 0,
+      "complexity_metrics": {}
+    },
+    "MetaConsciousness.omega3.decision": {
+      "file_path": "C:\\Users\\16479\\Desktop\\MetaConsciouness\\MetaConsciousness\\tools\\MetaConsciousness\\omega3\\decision.py",
+      "dependencies": [],
+      "dependents": [],
+      "definitions": {},
+      "imports": {},
+      "usages_count": 0,
+      "complexity_metrics": {}
+    },
+    "MetaConsciousness.omega3.__init__": {
+      "file_path": "C:\\Users\\16479\\Desktop\\MetaConsciouness\\MetaConsciousness\\tools\\MetaConsciousness\\omega3\\__init__.py",
+      "dependencies": [],
+      "dependents": [],
+      "definitions": {},
+      "imports": {
+        "direct": "set()",
+        "from": {
+          ".agent": "{'Omega3Agent'}",
+          ".decision": "{'DecisionConfidence', 'StrategyType'}"
+        },
+        "all_potential": "{'.agent.Omega3Agent', '.decision.StrategyType', '.decision.DecisionConfidence'}",
+        "relative_levels": {
+          ".agent": 1,
+          ".decision": 1
+        }
+      },
+      "usages_count": 0,
+      "complexity_metrics": {}
+    }
+  },
+  "orphaned_components": [],
+  "unreachable_modules": [
+    [
+      "MetaConsciousness.omega3.agent",
+      "AST Parsing Failed"
+    ],
+    [
+      "MetaConsciousness.omega3.decision",
+      "AST Parsing Failed"
+    ]
+  ],
+  "circular_dependencies": [],
+  "external_dependencies": {},
+  "api_surface": {},
+  "typing_imports_summary": {},
+  "docstring_coverage": {
+    "total": 0,
+    "documented": 0,
+    "missing": [],
+    "by_type": {}
+  }
+}

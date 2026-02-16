@@ -1,0 +1,13 @@
+{
+  "passed_tests": [],
+  "failed_tests": [
+    {
+      "test": "Comprehensive Integration",
+      "error": "detect_checkerboard() got an unexpected keyword argument 'blur_kernel'"
+    }
+  ],
+  "system_state": {},
+  "reflex_outcomes": [],
+  "thought_tree": {},
+  "test_duration": 0.00411224365234375
+}

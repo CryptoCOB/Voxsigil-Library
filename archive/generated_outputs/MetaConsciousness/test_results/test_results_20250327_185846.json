@@ -1,0 +1,13 @@
+{
+  "passed_tests": [],
+  "failed_tests": [
+    {
+      "test": "Comprehensive Integration",
+      "error": "'MetaConsciousness' object has no attribute 'update'"
+    }
+  ],
+  "system_state": {},
+  "reflex_outcomes": [],
+  "thought_tree": {},
+  "test_duration": 0.0041692256927490234
+}

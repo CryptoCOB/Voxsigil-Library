@@ -1,0 +1,44 @@
+=== TEST DIALOGUE: MULTI_SPEAKER ===
+
+=== ORIGINAL DIALOGUE ===
+
+[0] * Alice: What does everyone think about topic 1?
+[1] Bob: I have opinion 1 about the current topic.
+[2] Charlie: I have opinion 2 about the current topic.
+[3] David: I have opinion 3 about the current topic.
+[4] Alice: I have opinion 4 about the current topic.
+[5] * Bob: I have opinion 5 about the current topic.
+[6] * Charlie: I have opinion 6 about the current topic.
+[7] * David: What does everyone think about topic 2?
+[8] * Alice: I have opinion 8 about the current topic.
+[9] * Bob: I have opinion 9 about the current topic.
+[10] * Charlie: I have opinion 10 about the current topic.
+[11] * David: I have opinion 11 about the current topic.
+[12] * Alice: I have opinion 12 about the current topic.
+[13] * Bob: I have opinion 13 about the current topic.
+[14] * Charlie: What does everyone think about topic 3?
+
+
+=== RECONSTRUCTED DIALOGUE ===
+
+[0] * Alice: What does everyone think about topic 1?
+[1] Bob: That's a complex issue.
+[2] Charlie: I see.
+[3] David: On a related note...
+[4] Alice: Also, consider that...
+[5] * Bob: I have opinion 5 about the current topic.
+[6] * Charlie: I have opinion 6 about the current topic.
+[7] * David: What does everyone think about topic 2?
+[8] * Alice: I have opinion 8 about the current topic.
+[9] * Bob: I have opinion 9 about the current topic.
+[10] * Charlie: I have opinion 10 about the current topic.
+[11] * David: I have opinion 11 about the current topic.
+[12] * Alice: I have opinion 12 about the current topic.
+[13] * Bob: I have opinion 13 about the current topic.
+[14] * Charlie: What does everyone think about topic 3?
+
+=== METADATA ===
+Compression ratio: 0.733
+Key turns: 11 out of 15
+Speakers: Bob, Charlie, Alice, David
+Patterns detected: 2

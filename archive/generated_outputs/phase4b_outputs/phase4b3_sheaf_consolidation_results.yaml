@@ -1,0 +1,19 @@
+consistency:
+  all_profiles_valid: true
+  profiles_affected: 20
+consolidation:
+  archetypes_created: 20
+  compression_ratio: 500.0
+  initial_traces: 10000
+consolidation_history:
+- compression_ratio: 500.0
+  input_traces: 10000
+  output_archetypes: 20
+incremental_update:
+  new_traces: 1000
+  success: true
+mutations_applied: 3
+name: SHEAF Meta-Consolidation
+phase: 4-B.3
+success: true
+timestamp: '2026-02-13T02:52:04.521831'

@@ -1,0 +1,154 @@
+{
+  "timestamp": "2026-02-13T02:58:30.363505",
+  "total_users": 10,
+  "total_reward_pool": 1000.0,
+  "tiers": {
+    "platinum": {
+      "count": 1,
+      "total_reward": 550.0,
+      "avg_score": 0.9032166579761038
+    },
+    "gold": {
+      "count": 8,
+      "total_reward": 2160.0,
+      "avg_score": 0.8319005551968065
+    },
+    "silver": {
+      "count": 1,
+      "total_reward": 165.0,
+      "avg_score": 0.7952276505298044
+    }
+  },
+  "users": [
+    {
+      "user_id": "user_07",
+      "tier": "platinum",
+      "combined_score": 0.9032166579761038,
+      "records_count": 1,
+      "semantic_routed": 1,
+      "base_reward": 500.0,
+      "route_weight": 1.0,
+      "semantic_boost": 1.1,
+      "final_reward": 550.0,
+      "vesting_days": 0,
+      "vesting_date": "2026-02-13"
+    },
+    {
+      "user_id": "user_09",
+      "tier": "gold",
+      "combined_score": 0.8530273316852326,
+      "records_count": 1,
+      "semantic_routed": 0,
+      "base_reward": 300.0,
+      "route_weight": 0.7,
+      "semantic_boost": 1.0,
+      "final_reward": 210.0,
+      "vesting_days": 7,
+      "vesting_date": "2026-02-20"
+    },
+    {
+      "user_id": "user_05",
+      "tier": "gold",
+      "combined_score": 0.8468773512209897,
+      "records_count": 1,
+      "semantic_routed": 1,
+      "base_reward": 300.0,
+      "route_weight": 1.0,
+      "semantic_boost": 1.1,
+      "final_reward": 330.0,
+      "vesting_days": 7,
+      "vesting_date": "2026-02-20"
+    },
+    {
+      "user_id": "user_10",
+      "tier": "gold",
+      "combined_score": 0.8446294577585954,
+      "records_count": 1,
+      "semantic_routed": 1,
+      "base_reward": 300.0,
+      "route_weight": 1.0,
+      "semantic_boost": 1.1,
+      "final_reward": 330.0,
+      "vesting_days": 7,
+      "vesting_date": "2026-02-20"
+    },
+    {
+      "user_id": "user_01",
+      "tier": "gold",
+      "combined_score": 0.8440620071036863,
+      "records_count": 1,
+      "semantic_routed": 0,
+      "base_reward": 300.0,
+      "route_weight": 0.7,
+      "semantic_boost": 1.0,
+      "final_reward": 210.0,
+      "vesting_days": 7,
+      "vesting_date": "2026-02-20"
+    },
+    {
+      "user_id": "user_02",
+      "tier": "gold",
+      "combined_score": 0.8251971057723365,
+      "records_count": 1,
+      "semantic_routed": 0,
+      "base_reward": 300.0,
+      "route_weight": 0.7,
+      "semantic_boost": 1.0,
+      "final_reward": 210.0,
+      "vesting_days": 7,
+      "vesting_date": "2026-02-20"
+    },
+    {
+      "user_id": "user_06",
+      "tier": "gold",
+      "combined_score": 0.8233901031104193,
+      "records_count": 1,
+      "semantic_routed": 1,
+      "base_reward": 300.0,
+      "route_weight": 1.0,
+      "semantic_boost": 1.1,
+      "final_reward": 330.0,
+      "vesting_days": 7,
+      "vesting_date": "2026-02-20"
+    },
+    {
+      "user_id": "user_04",
+      "tier": "gold",
+      "combined_score": 0.8114798733947666,
+      "records_count": 1,
+      "semantic_routed": 0,
+      "base_reward": 300.0,
+      "route_weight": 0.7,
+      "semantic_boost": 1.0,
+      "final_reward": 210.0,
+      "vesting_days": 7,
+      "vesting_date": "2026-02-20"
+    },
+    {
+      "user_id": "user_03",
+      "tier": "gold",
+      "combined_score": 0.8065412115284256,
+      "records_count": 1,
+      "semantic_routed": 1,
+      "base_reward": 300.0,
+      "route_weight": 1.0,
+      "semantic_boost": 1.1,
+      "final_reward": 330.0,
+      "vesting_days": 7,
+      "vesting_date": "2026-02-20"
+    },
+    {
+      "user_id": "user_08",
+      "tier": "silver",
+      "combined_score": 0.7952276505298044,
+      "records_count": 1,
+      "semantic_routed": 1,
+      "base_reward": 150.0,
+      "route_weight": 1.0,
+      "semantic_boost": 1.1,
+      "final_reward": 165.0,
+      "vesting_days": 30,
+      "vesting_date": "2026-03-15"
+    }
+  ]
+}

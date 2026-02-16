@@ -1,0 +1,18 @@
+{
+  "min_compression_length": 100,
+  "compression_entropy_threshold": 0.3,
+  "max_compression_level": 9,
+  "use_quantum_simulation": true,
+  "quantum_circuit_depth": 3,
+  "allow_lossy_compression": false,
+  "token_threshold": 50,
+  "adaptive_compression": true,
+  "block_compression_enabled": true,
+  "compression_logging": true,
+  "quantum_parameters": {
+    "superposition_weight": 0.75,
+    "entanglement_distance": 8,
+    "interference_periods": [2, 3, 5, 7],
+    "measurement_threshold": 0.5
+  }
+}

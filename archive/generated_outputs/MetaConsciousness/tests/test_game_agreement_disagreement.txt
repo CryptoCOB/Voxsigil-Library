@@ -1,0 +1,34 @@
+=== TEST DIALOGUE: AGREEMENT_DISAGREEMENT ===
+
+=== ORIGINAL DIALOGUE ===
+
+[0] * Alice: I believe statement 1 is correct.
+[1] * Bob: I agree with you about statement 1.
+[2] Alice: I believe statement 2 is correct.
+[3] * Bob: I disagree with statement 2 because of reason 2.
+[4] Alice: I believe statement 3 is correct.
+[5] * Bob: I agree with you about statement 3.
+[6] * Alice: I believe statement 4 is correct.
+[7] * Bob: I disagree with statement 4 because of reason 4.
+[8] * Alice: I believe statement 5 is correct.
+[9] * Bob: I agree with you about statement 5.
+
+
+=== RECONSTRUCTED DIALOGUE ===
+
+[0] * Alice: I believe statement 1 is correct.
+[1] * Bob: I agree with you about statement 1.
+[2] Alice: I see it differently.
+[3] * Bob: I disagree with statement 2 because of reason 2.
+[4] Alice: It's also worth mentioning that...
+[5] * Bob: I agree with you about statement 3.
+[6] * Alice: I believe statement 4 is correct.
+[7] * Bob: I disagree with statement 4 because of reason 4.
+[8] * Alice: I believe statement 5 is correct.
+[9] * Bob: I agree with you about statement 5.
+
+=== METADATA ===
+Compression ratio: 0.800
+Key turns: 8 out of 10
+Speakers: Bob, Alice
+Patterns detected: 9

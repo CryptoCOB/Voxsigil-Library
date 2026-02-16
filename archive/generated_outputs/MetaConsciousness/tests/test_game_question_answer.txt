@@ -1,0 +1,34 @@
+=== TEST DIALOGUE: QUESTION_ANSWER ===
+
+=== ORIGINAL DIALOGUE ===
+
+[0] * Alice: What do you think about topic 1?
+[1] * Bob: I think topic 1 is interesting because of reason 1.
+[2] Alice: What do you think about topic 2?
+[3] * Bob: I think topic 2 is interesting because of reason 2.
+[4] Alice: What do you think about topic 3?
+[5] * Bob: I think topic 3 is interesting because of reason 3.
+[6] * Alice: What do you think about topic 4?
+[7] * Bob: I think topic 4 is interesting because of reason 4.
+[8] * Alice: What do you think about topic 5?
+[9] * Bob: I think topic 5 is interesting because of reason 5.
+
+
+=== RECONSTRUCTED DIALOGUE ===
+
+[0] * Alice: What do you think about topic 1?
+[1] * Bob: I think topic 1 is interesting because of reason 1.
+[2] Alice: It's also worth mentioning that...
+[3] * Bob: I think topic 2 is interesting because of reason 2.
+[4] Alice: Furthermore...
+[5] * Bob: I think topic 3 is interesting because of reason 3.
+[6] * Alice: What do you think about topic 4?
+[7] * Bob: I think topic 4 is interesting because of reason 4.
+[8] * Alice: What do you think about topic 5?
+[9] * Bob: I think topic 5 is interesting because of reason 5.
+
+=== METADATA ===
+Compression ratio: 0.800
+Key turns: 8 out of 10
+Speakers: Bob, Alice
+Patterns detected: 5

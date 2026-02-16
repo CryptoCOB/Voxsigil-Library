@@ -1,0 +1,29 @@
+=== ORIGINAL DIALOGUE ===
+
+[0] Alice: Hello, what do you think about the weather?
+[1] Bob: It's quite nice today.
+[2] Alice: I agree, it's very pleasant.
+[3] Bob: Do you think it will rain tomorrow?
+[4] Alice: I don't think so, the forecast said it would be sunny.
+[5] Bob: That's great! We could go for a picnic.
+[6] Alice: That's a good idea. Let's plan on that.
+[7] Bob: What time would work for you?
+[8] Alice: How about noon?
+[9] Bob: Noon works for me.
+
+
+=== RECONSTRUCTED DIALOGUE ===
+
+[0] Alice: Hello, what do you think about the weather?
+[1] Bob: It's quite nice today.
+[2] Alice: I agree, it's very pleasant.
+[3] Bob: Do you think it will rain tomorrow?
+[4] Alice: I don't think so, the forecast said it would be sunny.
+[5] Bob: That's great! We could go for a picnic.
+[6] Alice: That's a good idea. Let's plan on that.
+[7] Bob: What time would work for you?
+[8] Alice: How about noon?
+[9] Bob: Noon works for me.
+
+Compression ratio: 1.0
+Functor: DialogueStrategyFunctor

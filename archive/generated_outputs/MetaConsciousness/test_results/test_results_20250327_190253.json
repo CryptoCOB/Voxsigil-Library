@@ -1,0 +1,13 @@
+{
+  "passed_tests": [],
+  "failed_tests": [
+    {
+      "test": "Comprehensive Integration",
+      "error": "'ARTController' object has no attribute 'train'"
+    }
+  ],
+  "system_state": {},
+  "reflex_outcomes": [],
+  "thought_tree": {},
+  "test_duration": 0.006190776824951172
+}

@@ -1,0 +1,69 @@
+/* Reset CSS to be imported before any other styles */
+*,
+*::before,
+*::after {
+  /* Apply box-sizing universally */
+  box-sizing: border-box;
+  /* Reset margin and padding */
+  margin: 0;
+  padding: 0;
+  /* Optional: Reset border styles added by some resets/frameworks if needed */
+  /* border-width: 0; */
+  /* border-style: solid; */
+  /* border-color: transparent; */ /* Use appropriate default if needed */
+}
+
+/* Modern focus styling for accessibility without visual noise on mouse click */
+*:focus-visible {
+  outline: 2px solid #4f46e5; /* Indigo-600 */
+  outline-offset: 2px;
+  border-radius: 2px; /* Optional: Slightly round the focus outline */
+}
+
+/* Improve page defaults */
+html {
+  /* Set base line height */
+  line-height: 1.5;
+  /* Prevent adjustments of font size after orientation changes in iOS. */
+  -webkit-text-size-adjust: 100%;
+  /* Smooth scrolling for users who prefer reduced motion */
+  /* @media (prefers-reduced-motion: no-preference) { */
+  /*   scroll-behavior: smooth; */
+  /* } */
+}
+
+
+/* Base body settings */
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  /* Improve text rendering */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  /* Base colors are set inline in index.html and controlled by Tailwind dark mode */
+}
+
+/* Ensure images and other media are responsive by default */
+img, picture, video, canvas, svg {
+  display: block; /* Prevent bottom spacing */
+  max-width: 100%;
+  height: auto; /* Maintain aspect ratio */
+}
+
+/* Remove built-in form typography styles */
+input, button, textarea, select {
+  font: inherit;
+}
+
+/* Avoid text overflows */
+p, h1, h2, h3, h4, h5, h6 {
+  overflow-wrap: break-word;
+}
+
+/* More accessible button reset */
+button {
+  background-color: transparent;
+  background-image: none;
+  cursor: pointer;
+}

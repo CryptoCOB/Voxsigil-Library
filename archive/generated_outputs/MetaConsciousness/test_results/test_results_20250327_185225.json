@@ -1,0 +1,13 @@
+{
+  "passed_tests": [],
+  "failed_tests": [
+    {
+      "test": "Comprehensive Integration",
+      "error": "Omega3Agent.suggest_vigilance() got an unexpected keyword argument 'current_vigilance'"
+    }
+  ],
+  "system_state": {},
+  "reflex_outcomes": [],
+  "thought_tree": {},
+  "test_duration": 0.002794504165649414
+}

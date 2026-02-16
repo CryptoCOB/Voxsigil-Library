@@ -1,0 +1,61 @@
+{
+  "phase": "4-B.1-advanced-benchmarks",
+  "timestamp": "2026-02-12 07:49:33",
+  "benchmarks": {
+    "determinism": {
+      "max_difference": 0.0,
+      "is_deterministic": true,
+      "thread_errors": 0,
+      "threads_completed": 8
+    },
+    "quantization_noise": {
+      "cosine_shift": 0.0010008463868871331,
+      "distance_shift": 0.012181129306554794,
+      "geometry_preserved": true
+    },
+    "entropy_alignment": {
+      "text_entropy": 3.3743938834648404,
+      "pruned_entropy": 3.2028195296720883,
+      "embedding_entropy": 2.7824612431377647,
+      "byte_entropy": 7.34584984848865,
+      "entropy_align_score": 0.8245810475097006
+    },
+    "worst_case_latency": {
+      "p50_ms": 0.1357000001007691,
+      "p99_ms": 0.46749999819439836,
+      "p999_ms": 0.8244999989983626,
+      "max_ms": 0.8244999989983626,
+      "tail_latency_ratio": 3.445099468292106
+    },
+    "failure_modes": {
+      "corrupted_bytes_detected": true,
+      "corrupted_bytes_recoverable": true,
+      "invalid_shape_crashed": true,
+      "invalid_shape_graceful": true,
+      "memory_failure_detected": true,
+      "memory_failure_graceful": true,
+      "empty_router_detected": true,
+      "empty_router_handled": true,
+      "oom_recovery": true,
+      "oom_graceful_degrade": true
+    }
+  },
+  "validation_gates": {
+    "gate_1_cold_start": false,
+    "gate_2_cache_effective": false,
+    "gate_3_no_context_collapse": false,
+    "gate_4_entity_retention": false,
+    "gate_5_routing_stable": false,
+    "gate_6_schema_recovery": false,
+    "gate_7_memory_pressure_ok": true,
+    "gate_8_gpu_compute_bound": false,
+    "gate_9_deterministic": true,
+    "gate_10_quantization_safe": true,
+    "gate_11_entropy_aligned": true,
+    "gate_12_tail_latency_ok": true,
+    "gate_13_no_crashes": false
+  },
+  "gates_passed": 5,
+  "gates_total": 13,
+  "overall_status": "NEEDS OPTIMIZATION"
+}

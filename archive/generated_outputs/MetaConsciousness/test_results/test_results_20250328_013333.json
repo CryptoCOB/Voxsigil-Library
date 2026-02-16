@@ -1,0 +1,119 @@
+{
+  "passed_tests": [
+    "Thought Engine Simulation"
+  ],
+  "failed_tests": [],
+  "system_state": {},
+  "reflex_outcomes": [],
+  "thought_tree": {
+    "chain_steps": [
+      {
+        "step_id": "step_249f2122",
+        "reasoning": "The system should analyze patterns in input data",
+        "evidence": {
+          "observation": "High entropy detected"
+        },
+        "confidence": 0.8,
+        "timestamp": "2025-03-28T01:33:33.987973",
+        "parent_id": null,
+        "metadata": {}
+      },
+      {
+        "step_id": "step_aa495e7c",
+        "reasoning": "Higher vigilance is needed for complex patterns",
+        "evidence": {
+          "test_result": "Improved recognition at 0.7 vigilance"
+        },
+        "confidence": 0.75,
+        "timestamp": "2025-03-28T01:33:33.988228",
+        "parent_id": "step_249f2122",
+        "metadata": {}
+      }
+    ],
+    "branches": [
+      {
+        "branch_id": "branch_75bde307",
+        "steps": [
+          {
+            "step_id": "step_ef2d104c",
+            "reasoning": "Consider using adaptive vigilance control",
+            "evidence": {},
+            "confidence": 0.85,
+            "timestamp": "2025-03-28T01:33:33.988912",
+            "parent_id": null,
+            "metadata": {}
+          },
+          {
+            "step_id": "step_bffbfd36",
+            "reasoning": "Test with varying pattern complexities",
+            "evidence": {},
+            "confidence": 0.765,
+            "timestamp": "2025-03-28T01:33:33.988923",
+            "parent_id": null,
+            "metadata": {}
+          },
+          {
+            "step_id": "step_db6453ed",
+            "reasoning": "Analyze recognition performance metrics",
+            "evidence": {},
+            "confidence": 0.6885,
+            "timestamp": "2025-03-28T01:33:33.988929",
+            "parent_id": null,
+            "metadata": {}
+          }
+        ],
+        "confidence": 0.85,
+        "evaluation_score": 0.9,
+        "timestamp": "2025-03-28T01:33:33.988945",
+        "parent_id": null,
+        "metadata": {}
+      },
+      {
+        "branch_id": "branch_c9890d3a",
+        "steps": [
+          {
+            "step_id": "step_f1a3f18a",
+            "reasoning": "Alternative approach: fixed vigilance with post-processing",
+            "evidence": {},
+            "confidence": 0.7,
+            "timestamp": "2025-03-28T01:33:33.989364",
+            "parent_id": null,
+            "metadata": {}
+          },
+          {
+            "step_id": "step_de046ede",
+            "reasoning": "Apply statistical validation on results",
+            "evidence": {},
+            "confidence": 0.63,
+            "timestamp": "2025-03-28T01:33:33.989373",
+            "parent_id": null,
+            "metadata": {}
+          },
+          {
+            "step_id": "step_cc48892b",
+            "reasoning": "Compare with adaptive approach",
+            "evidence": {},
+            "confidence": 0.567,
+            "timestamp": "2025-03-28T01:33:33.989378",
+            "parent_id": null,
+            "metadata": {}
+          }
+        ],
+        "confidence": 0.7,
+        "evaluation_score": 0.8,
+        "timestamp": "2025-03-28T01:33:33.989387",
+        "parent_id": null,
+        "metadata": {}
+      }
+    ],
+    "decision": {
+      "decision_id": "decision_test_001",
+      "timestamp": "2025-03-28T01:33:33.989881",
+      "chosen_branch_id": "branch_75bde307",
+      "chain_steps": null,
+      "explanation": "Implement adaptive vigilance control based on pattern complexity",
+      "confidence": 0.5
+    }
+  },
+  "test_duration": 0.002445697784423828
+}

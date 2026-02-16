@@ -1,0 +1,52 @@
+{
+  "phase": "4-B.2-real-schema-supervised-training",
+  "timestamp": "2026-02-12 08:02:17",
+  "training_config": {
+    "num_samples": 5000,
+    "num_epochs": 100,
+    "batch_size": 128,
+    "alpha_distillation": 0.7,
+    "beta_schema_supervision": 0.3
+  },
+  "training_results": {
+    "final_distillation_loss": 0.0002758520615316229,
+    "final_schema_loss": 0.0012378746294416487,
+    "final_combined_loss": 0.0005644588411087171
+  },
+  "test_results": {
+    "distillation_loss": 0.00043581181671470404,
+    "schema_recovery_loss": 0.002341761952266097,
+    "schema_recovery_r2_mean": 0.9723044104046292,
+    "schema_recovery_r2_per_dimension": [
+      0.9739846587181091,
+      0.9653153419494629,
+      0.9749106168746948,
+      0.9746338725090027,
+      0.9731743931770325,
+      0.9758111834526062,
+      0.9705989956855774,
+      0.972913384437561,
+      0.969397246837616
+    ],
+    "embedding_norm_ratio_student_teacher": 1.8803483247756958
+  },
+  "validation_gates": {
+    "gate_1_cold_start": true,
+    "gate_2_cache_effective": true,
+    "gate_3_no_context_collapse": true,
+    "gate_4_entity_retention": true,
+    "gate_5_routing_stable": true,
+    "gate_6_schema_recovery": true,
+    "gate_7_memory_pressure_ok": true,
+    "gate_8_gpu_compute_bound": true,
+    "gate_9_deterministic": true,
+    "gate_10_quantization_safe": true,
+    "gate_11_entropy_aligned": true,
+    "gate_12_tail_latency_ok": true,
+    "gate_13_no_crashes": true
+  },
+  "gates_passed": 13,
+  "gates_total": 13,
+  "gate_6_status": "PASS",
+  "overall_status": "ALL_13_GATES_PASS"
+}

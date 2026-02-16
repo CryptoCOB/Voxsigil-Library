@@ -1,0 +1,54 @@
+=== TEST DIALOGUE: NARRATIVE_POSITIVE ===
+
+=== ORIGINAL DIALOGUE ===
+
+[0] * Narrator: Once upon a time in a distant land...
+[1] Narrator: There lived two friends who were inseparable.
+[2] Character1: I've always valued our friendship.
+[3] Character2: As have I. We've been through so much together.
+[4] * Narrator: But one day, something unexpected happened.
+[5] Narrator: A mysterious stranger arrived in town.
+[6] * Character2: Who do you think that could be?
+[7] * Character1: I'm not sure, but they seem familiar somehow.
+[8] Narrator: The stranger approached them with an urgent message.
+[9] * Character1: What news do you bring?
+[10] Narrator: "I bring news of great importance," the stranger said.
+[11] * Narrator: "A darkness is coming that threatens everything."
+[12] * Character2: What kind of darkness? What do you mean?
+[13] * Narrator: The stranger explained about an ancient prophecy.
+[14] * Character1: I don't believe in prophecies.
+[15] * Character2: But what if it's true? We should prepare.
+[16] * Character1: You're right. Better safe than sorry.
+[17] * Narrator: And so they began their preparations.
+[18] * Narrator: Little did they know, the prophecy was indeed real.
+[19] * Narrator: And their journey was just beginning...
+
+
+=== RECONSTRUCTED DIALOGUE ===
+
+[0] * Narrator: Once upon a time in a distant land...
+[1] Narrator: That's a good point.
+[2] Character1: This is becoming such a productive discussion!
+[3] Character2: I appreciate your view, but I think...
+[4] * Narrator: But one day, something unexpected happened.
+[5] Narrator: I'm excited to get your perspective on something!
+[6] * Character2: Who do you think that could be?
+[7] * Character1: I'm not sure, but they seem familiar somehow.
+[8] Narrator: Since you're so insightful, I'd love to know...
+[9] * Character1: What news do you bring?
+[10] Narrator: Excellent question!
+[11] * Narrator: "A darkness is coming that threatens everything."
+[12] * Character2: What kind of darkness? What do you mean?
+[13] * Narrator: The stranger explained about an ancient prophecy.
+[14] * Character1: I don't believe in prophecies.
+[15] * Character2: But what if it's true? We should prepare.
+[16] * Character1: You're right. Better safe than sorry.
+[17] * Narrator: And so they began their preparations.
+[18] * Narrator: Little did they know, the prophecy was indeed real.
+[19] * Narrator: And their journey was just beginning...
+
+=== METADATA ===
+Compression ratio: 0.700
+Key turns: 14 out of 20
+Speakers: Narrator, Character1, Character2
+Patterns detected: 4
