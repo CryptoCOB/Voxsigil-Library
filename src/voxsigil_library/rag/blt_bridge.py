@@ -175,9 +175,10 @@ class BLTBridge:
 
         # ---- Deprecated / sealed lifecycle ----------------------------
         lifecycle = _get_lifecycle(sigil)
-        if "deprecated" in lifecycle or "sealed" in lifecycle:
-            violations.append(f"lifecycle:{lifecycle}")
-            score -= 0.50
+        for bad_lc in ("deprecated", "sealed"):
+            if bad_lc in lifecycle:
+                violations.append(f"lifecycle:{bad_lc}")
+                score -= 0.50
 
         # ---- Schema-level validation (full check) ----------------------
         if _SCHEMA_AVAILABLE:
@@ -280,13 +281,15 @@ def _check_scaffold_rule(
         delta -= 0.10
 
     # Assembly must not act directly.
-    if getattr(rule, "scaffold_type", None) and str(rule.scaffold_type) == "assembly":
+    scaffold_val = getattr(rule, "scaffold_type", None)
+    scaffold_str = scaffold_val.value if hasattr(scaffold_val, "value") else str(scaffold_val)
+    if scaffold_str == "assembly":
         if sigil.get("acts_directly"):
             violations.append("assembly_acts_directly")
             delta -= 0.25
 
     # Flow must be ordered.
-    if getattr(rule, "scaffold_type", None) and str(rule.scaffold_type) == "flow":
+    if scaffold_str == "flow":
         flow_def = sigil.get("flow_definition", {})
         if isinstance(flow_def, dict) and not flow_def.get("ordered", True):
             violations.append("flow_unordered")

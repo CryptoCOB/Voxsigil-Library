@@ -15,6 +15,12 @@ Quick start::
         ScoredSigil,
         LineageStore,
         PipelineResult,
+        SigilDeduplicator,
+        DedupStatus,
+        DedupResult,
+        CognitiveCycleEngine,
+        GeneratorConfig,
+        WorldView,
     )
 
     # Build from a list of sigil dicts
@@ -25,14 +31,20 @@ Quick start::
         QueryContext(scaffold_type="flow", entropy_budget=0.7)
     )
 
-    # Full pipeline
-    result = mw.run_pipeline(
-        QueryContext(scaffold_type="identity", intent="oracle cognition"),
-        generator_fn=lambda ctx: ctx["sigils"][0],
+    # Cognitive loop
+    engine = CognitiveCycleEngine.create(
+        generators=[GeneratorConfig(kind="ollama", model="llama3.2:latest")],
     )
+    engine.run(target_corpus_size=1000)
 """
 
 from .blt_bridge import BLTBridge, ScoredSigil
+from .cognitive_loop import (
+    CognitiveCycleEngine,
+    GeneratorConfig,
+    WorldView,
+)
+from .deduplicator import DedupResult, DedupStatus, SigilDeduplicator
 from .embedder import SigilEmbedder
 from .middleware import LineageStore, PipelineResult, SymbolicRAGMiddleware
 from .retriever import FAISSRetriever, NumpyRetriever, QueryContext, SigilRetriever
@@ -52,4 +64,12 @@ __all__ = [
     # BLT layer
     "BLTBridge",
     "ScoredSigil",
+    # 3-layer deduplicator
+    "SigilDeduplicator",
+    "DedupStatus",
+    "DedupResult",
+    # Cognitive loop
+    "CognitiveCycleEngine",
+    "GeneratorConfig",
+    "WorldView",
 ]
