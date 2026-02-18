@@ -23,6 +23,29 @@ from .vme_client import (
     VMEEncodeError,
     VMEReceiptError,
 )
+from .schema_bridge import (
+    ScaffoldType,
+    CANONICAL_SCAFFOLDS,
+    TAG_CLASSES,
+    classify_schema_version,
+    normalize_to_2_0_omega,
+    validate_interconnected_schema,
+)
+from .schema_pipeline import (
+    VoxSigilSchemaPipeline,
+    run_default_pipeline,
+)
+from .rag import (
+    SymbolicRAGMiddleware,
+    QueryContext,
+    FAISSRetriever,
+    NumpyRetriever,
+    SigilEmbedder,
+    BLTBridge,
+    ScoredSigil,
+    LineageStore,
+    PipelineResult,
+)
 
 __version__ = "2.2.0"
 __all__ = [
@@ -39,4 +62,24 @@ __all__ = [
     "VMEBootstrapError",
     "VMEEncodeError",
     "VMEReceiptError",
+    # Schema bridge
+    "ScaffoldType",
+    "CANONICAL_SCAFFOLDS",
+    "TAG_CLASSES",
+    "classify_schema_version",
+    "normalize_to_2_0_omega",
+    "validate_interconnected_schema",
+    # Schema pipeline
+    "VoxSigilSchemaPipeline",
+    "run_default_pipeline",
+    # Symbolic RAG Middleware
+    "SymbolicRAGMiddleware",
+    "QueryContext",
+    "FAISSRetriever",
+    "NumpyRetriever",
+    "SigilEmbedder",
+    "BLTBridge",
+    "ScoredSigil",
+    "LineageStore",
+    "PipelineResult",
 ]
