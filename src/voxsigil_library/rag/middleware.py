@@ -44,8 +44,9 @@ from __future__ import annotations
 import json
 import os
 import time
-from dataclasses import dataclass, field
-from typing import Any, Callable, Dict, List, Optional
+from dataclasses import dataclass
+from enum import Enum
+from typing import Any, Callable, Dict, List, Optional, Sequence
 
 from .blt_bridge import BLTBridge
 from .embedder import SigilEmbedder
@@ -67,12 +68,23 @@ class LineageStore:
 
     def __init__(self) -> None:
         self._log: List[Dict[str, Any]] = []
+        self._feedback_by_artifact: Dict[str, float] = {}
 
     def append(self, entry: Dict[str, Any]) -> None:
         self._log.append(entry)
 
     def recent(self, n: int = 50) -> List[Dict[str, Any]]:
         return self._log[-n:]
+
+    def add_feedback(self, artifact_id: str, delta: float) -> float:
+        """Apply additive feedback delta and clamp to [-1.0, 1.0]."""
+        current = self._feedback_by_artifact.get(artifact_id, 0.0)
+        updated = max(-1.0, min(1.0, current + delta))
+        self._feedback_by_artifact[artifact_id] = updated
+        return updated
+
+    def feedback_weight(self, artifact_id: str) -> float:
+        return self._feedback_by_artifact.get(artifact_id, 0.0)
 
     def to_jsonl(self, path: str) -> None:
         os.makedirs(os.path.dirname(os.path.abspath(path)), exist_ok=True)
@@ -102,8 +114,26 @@ class PipelineResult:
     legal_count: int
     context: Dict[str, Any]
     generator_output: Optional[Any] = None
+    compressed_output: Optional[Dict[str, Any]] = None
     duration_ms: float = 0.0
     lineage_entry: Optional[Dict[str, Any]] = None
+
+
+class FeedbackVerdict(str, Enum):
+    """User feedback signal applied after output compression."""
+
+    APPROVE = "approve"
+    REJECT = "reject"
+    REFINE = "refine"
+    REDIRECT = "redirect"
+
+
+_FEEDBACK_DELTA: Dict[FeedbackVerdict, float] = {
+    FeedbackVerdict.APPROVE: 0.30,
+    FeedbackVerdict.REJECT: -0.40,
+    FeedbackVerdict.REFINE: 0.10,
+    FeedbackVerdict.REDIRECT: -0.10,
+}
 
 
 # ---------------------------------------------------------------------------
@@ -198,6 +228,7 @@ class SymbolicRAGMiddleware:
 
         # Step 1: retrieve
         raw = self.retriever.retrieve(query, top_k=k * 2)  # over-fetch
+        self._apply_feedback_weights(raw)
 
         # Step 2: BLT compress + score
         scored = self.blt.compress_and_score(raw)
@@ -249,6 +280,7 @@ class SymbolicRAGMiddleware:
 
         # --- Retrieve + enrich -----------------------------------------
         raw = self.retriever.retrieve(query, top_k=k * 2)
+        self._apply_feedback_weights(raw)
         scored = self.blt.compress_and_score(raw)
         legal = self.blt.filter_illegal(scored)[:k]
         context = self.blt.emit_canonical_context(legal)
@@ -262,8 +294,10 @@ class SymbolicRAGMiddleware:
 
         # --- Generate (optional) --------------------------------------
         generator_output: Optional[Any] = None
+        compressed_output: Optional[Dict[str, Any]] = None
         if generator_fn is not None:
             generator_output = generator_fn(context)
+            compressed_output = self._compress_output(generator_output)
 
         duration_ms = (time.perf_counter() - t0) * 1000.0
 
@@ -275,6 +309,7 @@ class SymbolicRAGMiddleware:
             "retrieved": len(raw),
             "legal": len(legal),
             "avg_blt_score": context.get("avg_blt_score", 0.0),
+            "output_accepted": (compressed_output or {}).get("count", 0),
             "duration_ms": round(duration_ms, 2),
         }
         if lineage_tag:
@@ -289,9 +324,48 @@ class SymbolicRAGMiddleware:
             legal_count=len(legal),
             context=context,
             generator_output=generator_output,
+            compressed_output=compressed_output,
             duration_ms=duration_ms,
             lineage_entry=lineage_entry,
         )
+
+    def apply_user_feedback(
+        self,
+        artifacts: Sequence[Any],
+        verdict: FeedbackVerdict | str,
+        note: Optional[str] = None,
+    ) -> Dict[str, Any]:
+        """
+        Apply user feedback as a selection signal.
+
+        Artifacts can be sigil dicts or artifact-id strings.
+        Feedback updates persistent lineage weights and propagates those
+        weights into currently indexed retriever items.
+        """
+        if isinstance(verdict, FeedbackVerdict):
+            verdict_enum = verdict
+        else:
+            verdict_enum = FeedbackVerdict(str(verdict))
+        delta = _FEEDBACK_DELTA[verdict_enum]
+
+        touched: List[Dict[str, Any]] = []
+        for artifact in artifacts:
+            artifact_id = artifact if isinstance(artifact, str) else self._artifact_id(artifact)
+            new_weight = self.lineage.add_feedback(artifact_id, delta)
+            touched.append({"artifact_id": artifact_id, "weight": new_weight})
+
+        self._propagate_feedback_to_retriever()
+
+        entry = {
+            "ts": time.time(),
+            "feedback": verdict_enum.value,
+            "delta": delta,
+            "count": len(touched),
+            "note": note or "",
+            "artifacts": touched,
+        }
+        self.lineage.append(entry)
+        return entry
 
     # ------------------------------------------------------------------
     # Index persistence
@@ -344,3 +418,42 @@ class SymbolicRAGMiddleware:
                     f"({r.get('duration_ms',0):.1f}ms)"
                 )
         return "\n".join(lines)
+
+    # ------------------------------------------------------------------
+    # Internal helpers
+    # ------------------------------------------------------------------
+
+    @staticmethod
+    def _artifact_id(sigil: Dict[str, Any]) -> str:
+        return SigilEmbedder.sigil_id(sigil)
+
+    def _apply_feedback_weights(self, sigils: List[Dict[str, Any]]) -> None:
+        for sigil in sigils:
+            artifact_id = self._artifact_id(sigil)
+            sigil["feedback_weight"] = self.lineage.feedback_weight(artifact_id)
+
+    def _propagate_feedback_to_retriever(self) -> None:
+        # Best-effort propagation for current in-memory retrievers.
+        sigils = getattr(self.retriever, "_sigils", None)
+        if not isinstance(sigils, list):
+            return
+        self._apply_feedback_weights(sigils)
+
+    def _compress_output(self, output: Any) -> Optional[Dict[str, Any]]:
+        """
+        BLT output gate: compress and legality-filter model output *after* generation.
+        Returns canonical context for output sigils, or None if output does not
+        contain sigil-like dicts.
+        """
+        items: List[Dict[str, Any]] = []
+        if isinstance(output, dict) and "sigil" in output:
+            items = [output]
+        elif isinstance(output, list):
+            items = [x for x in output if isinstance(x, dict) and "sigil" in x]
+
+        if not items:
+            return None
+
+        scored = self.blt.compress_and_score(items)
+        legal = self.blt.filter_illegal(scored)
+        return self.blt.emit_canonical_context(legal)

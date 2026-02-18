@@ -46,7 +46,12 @@ from .cognitive_loop import (
 )
 from .deduplicator import DedupResult, DedupStatus, SigilDeduplicator
 from .embedder import SigilEmbedder
-from .middleware import LineageStore, PipelineResult, SymbolicRAGMiddleware
+from .middleware import (
+    FeedbackVerdict,
+    LineageStore,
+    PipelineResult,
+    SymbolicRAGMiddleware,
+)
 from .retriever import FAISSRetriever, NumpyRetriever, QueryContext, SigilRetriever
 
 __all__ = [
@@ -55,6 +60,7 @@ __all__ = [
     "QueryContext",
     "PipelineResult",
     "LineageStore",
+    "FeedbackVerdict",
     # Retrieval backends
     "SigilRetriever",
     "FAISSRetriever",

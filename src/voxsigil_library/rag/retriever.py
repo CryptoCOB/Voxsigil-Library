@@ -154,6 +154,23 @@ class SigilRetriever(ABC):
             return 0.05
         return 0.0
 
+    @staticmethod
+    def _feedback_boost(sigil: Dict[str, Any]) -> float:
+        """
+        Feedback-derived retrieval boost.
+
+        Expected field on sigil: ``feedback_weight`` in [-1.0, +1.0].
+        The score impact is intentionally modest to avoid overwhelming
+        structural similarity.
+        """
+        value = sigil.get("feedback_weight", 0.0)
+        try:
+            weight = float(value)
+        except (TypeError, ValueError):
+            return 0.0
+        weight = max(-1.0, min(1.0, weight))
+        return weight * 0.08
+
 
 # ---------------------------------------------------------------------------
 # Pure-numpy fallback backend
@@ -206,6 +223,7 @@ class NumpyRetriever(SigilRetriever):
             # Cosine similarity (vecs are unit-normalised → dot product).
             score = sum(a * b for a, b in zip(query_vec, vec))
             score += self._lineage_boost(sigil, query.lineage)
+            score += self._feedback_boost(sigil)
             scores.append((score, i))
 
         scores.sort(key=lambda x: x[0], reverse=True)
@@ -342,6 +360,7 @@ class FAISSRetriever(SigilRetriever):
             if not self._passes_entropy_budget(sigil, query.entropy_budget):
                 continue
             score = float(dist) + self._lineage_boost(sigil, query.lineage)
+            score += self._feedback_boost(sigil)
             results.append((score, sigil))
 
         results.sort(key=lambda x: x[0], reverse=True)
