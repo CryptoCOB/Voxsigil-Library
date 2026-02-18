@@ -1,0 +1,37 @@
+{
+  "generated_at": "2026-02-18T00:32:47.277391+00:00",
+  "repo_root": "C:\\UBLT",
+  "target_size": 36000,
+  "rows_written": 36000,
+  "shard_size": 4000,
+  "shard_count": 9,
+  "seed": 20260217,
+  "include_normalized": true,
+  "unique_source_records": 168,
+  "source_buckets": [
+    "normalized_scaffolds",
+    "normalized_sigils",
+    "normalized_tags",
+    "scaffolds",
+    "sigils",
+    "tags"
+  ],
+  "output_files": {
+    "dataset_shards": [
+      "C:\\UBLT\\training\\datasets\\voxsigil_training_dataset_36000.part-00001.jsonl",
+      "C:\\UBLT\\training\\datasets\\voxsigil_training_dataset_36000.part-00002.jsonl",
+      "C:\\UBLT\\training\\datasets\\voxsigil_training_dataset_36000.part-00003.jsonl",
+      "C:\\UBLT\\training\\datasets\\voxsigil_training_dataset_36000.part-00004.jsonl",
+      "C:\\UBLT\\training\\datasets\\voxsigil_training_dataset_36000.part-00005.jsonl",
+      "C:\\UBLT\\training\\datasets\\voxsigil_training_dataset_36000.part-00006.jsonl",
+      "C:\\UBLT\\training\\datasets\\voxsigil_training_dataset_36000.part-00007.jsonl",
+      "C:\\UBLT\\training\\datasets\\voxsigil_training_dataset_36000.part-00008.jsonl",
+      "C:\\UBLT\\training\\datasets\\voxsigil_training_dataset_36000.part-00009.jsonl"
+    ],
+    "manifest_json": "C:\\UBLT\\training\\datasets\\voxsigil_training_manifest.json"
+  },
+  "notes": [
+    "Deterministic expansion from available VoxSigil corpus.",
+    "Includes full source document payload for downstream BLT/VME training."
+  ]
+}
